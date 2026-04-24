@@ -27,7 +27,9 @@ This file is the **running plan**: what we intend to do, what we have done, and 
   - [x] `src/data/podcasts.js` — `Podcast`, episodes, `PODCAST_CATEGORIES`.
   - [x] `src/data/radioStations.js` — `RadioStation`, `RADIO_STATION_CATEGORIES`, international nesting noted as follow-up in file + figma map.
 - [x] `docs/react-learning.md` — started; append entries as we implement (swimlanes, Router, BottomNav, …).
-- [ ] `App.jsx` / routing / shell / Home UI — not implemented yet (placeholder only).
+- [x] `src/index.css` — global design tokens (spacing, colors, card + nav placeholders), theme overrides, `.app-shell` / `.content-inset` / `.home-screen`.
+- [x] `docs/design-tokens.md` — designer workflow; Figma + `index.css` as sources of truth; MCP note.
+- [ ] `App.jsx` — placeholder shell only; routing and Home UI still to come.
 
 ---
 
@@ -55,8 +57,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 ## Next steps (near term)
 
 - [ ] Add `react-router-dom`, `BrowserRouter`, routes for main tabs and stacked flows (per Figma when confirmed).
-- [ ] Flesh out `src/index.css`: tokens (`--space-content-inline`, `--space-screen-gap`, phone frame max-width 460px), `app-shell`, theme base.
-- [ ] **Cards** (music / podcast / radio) + **swimlane** component + **Home** with three data-backed lanes.
+- [ ] **Cards** (music / podcast / radio) using tokenized layout + **swimlane** component + **Home** with three data-backed lanes; refine `--card-tile-*` from Figma card component.
 - [ ] Append to `docs/react-learning.md` when introducing swimlane or NavLink work here (append-only, short entries).
 
 ---
@@ -78,4 +79,4 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-16*
+*Last updated: 2026-04-17*

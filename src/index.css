@@ -1,0 +1,156 @@
+/**
+ * Global design tokens and layout primitives for the SM MPR mobile prototype.
+ *
+ * Values are a first pass aligned with `docs/figma-nodes.md` (460×990 frame, ~30px gutter).
+ * Update here when Figma variables or inspection change — see `docs/design-tokens.md`.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* —— Color (Light default) — align names with Figma variable sets when mapped — */
+  --color-bg: #f4f4f5;
+  --color-text: rgba(24, 24, 27, 0.88);
+  --color-text-muted: #71717a;
+  --color-accent: #0070e0;
+  --color-accent2: #902992;
+  --color-on-accent2: #ffffff;
+  --color-nav-bar-bg: #e8e8e8;
+  --color-surface: #ffffff;
+  --color-border-subtle: rgba(24, 24, 27, 0.08);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* —— Layout & spacing — */
+  --app-max-width: 460px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  /* Screen edge / swimlane header / scroll-inner gutters (Figma ~30px) */
+  --space-content-inline: 30px;
+  --space-screen-gap: var(--space-5);
+
+  /* —— Radius — */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  /* Square media in swimlane / grid cards (adjust to match Figma card component) */
+  --radius-media-thumb: 15px;
+
+  /* —— Swimlane “tile” cards (horizontal row); width from Figma card component */
+  --card-tile-width: 175px;
+  --card-tile-gap: var(--space-3);
+
+  /* —— Typography — */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-size-card-title: 0.875rem;
+  --font-weight-card-title: 600;
+  --line-height-card-title: 1.25;
+  --font-size-card-subtitle: 0.8125rem;
+  --font-weight-card-subtitle: 400;
+
+  /* —— Bottom nav (stack height for .app-shell padding; tune to Figma main menu) — */
+  --bottom-nav-padding-top: 14px;
+  --bottom-nav-icon-size: 30px;
+  --bottom-nav-gap-icon-label: 6px;
+  --bottom-nav-gap-to-indicator: 10px;
+  --bottom-nav-indicator-height: 4px;
+  --bottom-nav-label-size: 16px;
+  --bottom-nav-stack-height: calc(
+    var(--bottom-nav-padding-top) + var(--bottom-nav-icon-size) +
+      var(--bottom-nav-gap-icon-label) + var(--bottom-nav-label-size) +
+      var(--bottom-nav-gap-to-indicator) + var(--bottom-nav-indicator-height)
+  );
+  --z-bottom-nav: 100;
+}
+
+/* System dark when no manual theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: #18181b;
+    --color-text: rgba(250, 250, 250, 0.88);
+    --color-text-muted: #a1a1aa;
+    --color-accent: #338de6;
+    --color-accent2: #a654a8;
+    --color-on-accent2: #ffffff;
+    --color-nav-bar-bg: #27272a;
+    --color-surface: #27272a;
+    --color-border-subtle: rgba(250, 250, 250, 0.1);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+}
+
+html[data-theme="light"] {
+  --color-bg: #f4f4f5;
+  --color-text: rgba(24, 24, 27, 0.88);
+  --color-text-muted: #71717a;
+  --color-accent: #0070e0;
+  --color-accent2: #902992;
+  --color-on-accent2: #ffffff;
+  --color-nav-bar-bg: #e8e8e8;
+  --color-surface: #ffffff;
+  --color-border-subtle: rgba(24, 24, 27, 0.08);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="dark"] {
+  --color-bg: #18181b;
+  --color-text: rgba(250, 250, 250, 0.88);
+  --color-text-muted: #a1a1aa;
+  --color-accent: #338de6;
+  --color-accent2: #a654a8;
+  --color-on-accent2: #ffffff;
+  --color-nav-bar-bg: #27272a;
+  --color-surface: #27272a;
+  --color-border-subtle: rgba(250, 250, 250, 0.1);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/* Mobile frame — `docs/figma-nodes.md` */
+.app-shell {
+  margin: 0 auto;
+  max-width: var(--app-max-width);
+  min-height: 100dvh;
+  padding: var(--space-content-inline) 0
+    calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px));
+}
+
+.content-inset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-screen-gap);
+  width: 100%;
+  min-width: 0;
+  padding-inline: var(--space-content-inline);
+}
+
+.home-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-screen-gap);
+  width: 100%;
+  min-width: 0;
+}

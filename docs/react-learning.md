@@ -2,6 +2,8 @@
 
 Short **append-only** notes for concepts introduced while building this repo. The project rules (`.cursor/rules/stingray-music-prototype.mdc`) summarize patterns for implementation; this file is the **longer memory** when you need a refresher.
 
+**Design tokens (colors, spacing, card sizes)** — not React-specific, but the workflow for you and for UI passes lives in **`docs/design-tokens.md`**, with values in **`src/index.css`**.
+
 **Context:** This prototype continues the same React learning journey as the sibling **karaoke** mobile prototype (layout, swimlanes, bottom nav). Company priorities moved work here; ideas you already practiced there still apply—this document records what we do **in this codebase** (music, podcasts, radio, Figma `UX-SM-MPR-Mobile-2604`).
 
 ---
