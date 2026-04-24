@@ -1,0 +1,78 @@
+/* Figma: inset header + full-bleed horizontal scroll; inner row gutters — see project rules. */
+.content-swimlane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+.content-swimlane__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-width: 0;
+  padding-inline: var(--space-content-inline);
+}
+
+.content-swimlane__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-block: 0.1em;
+}
+
+.content-swimlane__more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 3px 12px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  font-family: inherit;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1.5px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+  border-radius: 9999px;
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.content-swimlane__scroll {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: var(--space-2);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content-swimlane__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.content-swimlane__scroll-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--card-tile-gap);
+  width: max-content;
+  padding-inline: var(--space-content-inline);
+}

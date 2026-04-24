@@ -20,7 +20,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 ## Swimlane layout pattern (Figma column + full-bleed scroll)
 
 - **Idea:** The **page column** (header, titles) uses the content inset; each **horizontal row** of cards is **full width** under the phone shell, with **padding on the inner flex row** so the first/last cards align with the column. See project rules → _Swimlane layout_ for the full checklist (`--space-content-inline`, siblings of `.content-inset`, hidden horizontal scrollbar, scroll-snap caution).
-- **This repo:** When you add a swimlane component (e.g. a `ContentSwimlane` or music-specific row), wire the same DOM shape: `section` with a padded **header** + **`overflow-x: auto`** scrollport + **inner** row with `padding-inline: var(--space-content-inline)`.
+- **This repo:** `src/components/ContentSwimlane.jsx` + `ContentSwimlane.css` — `section` with padded **header** (title + “More”) + **`overflow-x: auto`** scrollport + **inner** flex row with `padding-inline: var(--space-content-inline)` and `gap: var(--card-tile-gap)`. Pass any combination of the `*Card` components as **children** to fill the row.
 - **Sibling reference:** The karaoke prototype’s `SongSwimlane.jsx` + `SongSwimlane.css` is a working example of the same geometry with different card content.
 
 ---
