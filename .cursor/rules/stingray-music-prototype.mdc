@@ -1,0 +1,94 @@
+---
+description: Music, Podcasts, Radio streaming mobile prototype — scope, docs, Figma workflow, swimlane + bottom nav layout, coding norms
+alwaysApply: true
+---
+
+# Music, Podcasts, Radio streaming mobile prototype (Cursor rules — draft)
+
+## What this repo is
+
+- Clickable **UX prototype** for a **mobile-first** music, podcasts and radio streaming app; **not** a production ship.
+- **React + Vite** (`src/`), JavaScript + JSX. Prefer simple components; avoid advanced patterns unless needed.
+- **Routing** — **React Router** (`react-router-dom`). Use `<BrowserRouter>`, `<Routes>`, `<Route>`, and navigation components (`<Link>`, `<NavLink>`, `useNavigate`) for screen changes. Keep route modules small; add new screens under `src/pages/` unless a feature folder makes more sense. **Primary bottom tabs** follow the **Bottom navigation** pattern below (`NavLink`, URL-driven active state).
+- **Fake data only** — static arrays/objects in `src/` (or a small `src/data/`). No real backends, auth, or persistence unless explicitly requested for flow stubs.
+
+## Mobile-native prototype (UX target)
+
+- The implementation is **React in the browser**, but the **product target is a mobile native app**. UI and interaction should **read and behave like a phone app**, not a desktop web app with mouse-first affordances.
+- Prefer **touch-first** patterns: adequate **tap targets**, **horizontal scroll** where swimlanes/lists need it, **momentum-friendly** scrolling, **full-screen or stacked flows** for navigation, and **thumb-friendly** placement when Figma implies it (e.g. primary actions toward the bottom).
+- Do **not** default to **hover-only** states, tiny click-only targets, or dense multi-column layouts unless the task explicitly calls for desktop or a breakpoint test.
+- Use the **mobile frame** and sizing guidance in **`docs/figma-nodes.md`** as the layout reference; consider **safe-area** / notch behavior when it affects the design intent.
+
+## Swimlane layout (Figma column + full-bleed scroll)
+
+Standard pattern for **horizontal swimlanes** (and similar carousels) in this prototype: **inset column** for titles/headers, **full-width** scroll row for cards. **Full write-up:** `docs/react-learning.md` → _Swimlane layout pattern_; **reference implementation:** `SongSwimlane.jsx` + `SongSwimlane.css`.
+
+- **One horizontal gutter token:** `--space-content-inline` in **`src/index.css`** (Figma screen edge inset, e.g. 30px). Use it for **all** column padding and swimlane gutters — do not duplicate ad hoc pixel values.
+- **Screen structure:** `main.app-shell` has **no** horizontal padding (vertical only). On Home, **`div.home-screen`** wraps **`div.content-inset`** (inset blocks: header, banner, …) and **`section.song-swimlane`** rows with **`display: flex; flex-direction: column; gap: var(--space-screen-gap)`** (Figma Home `homeContent`). **`.content-inset`** also uses **column `gap: var(--space-screen-gap)`** between its children. Prefer **parent `gap`** over **`margin-bottom`** on each component for this vertical stack. **Swimlanes** are **siblings** of the inset column (full width under **`app-shell`**) so the card row does not need negative-margin breakout.
+- **Swimlane header** uses **`padding-inline: var(--space-content-inline)`** so titles align with text inside **`.content-inset`**.
+- **Card scroller** is **`width: 100%`** with **`overflow-x: auto`** (scrollport / horizontal clip). **`padding-inline: var(--space-content-inline)`** on the **inner** flex row (`.song-swimlane__scroll-inner`) gives **leading and trailing** gutters — no leading spacer div required.
+- **Scrollbar:** hide the native horizontal bar on the scroller (e.g. `scrollbar-width: none` + `::-webkit-scrollbar { display: none }`); keep touch/trackpad scroll.
+- **Page-level horizontal scroll:** **`overflow-x: hidden` on `body`** is OK to contain breakout; **avoid** `overflow-x: hidden` on **`app-shell`** if **fixed** overlays (nav, mini player) will live inside it.
+- **`scroll-snap`:** avoid unless **`scroll-padding-inline`** matches **`--space-content-inline`** (snap fights gutters otherwise). See learning doc.
+
+When adding a new swimlane-like row, **reuse or mirror** this structure rather than inventing a new padding/breakout scheme.
+
+## Bottom navigation (fixed tab bar) — reuse across mobile prototypes
+
+Standard pattern for a **primary app menu** at the bottom of the phone frame: **fixed** to the viewport, **above** scrolling content (**higher `z-index`**), same **max-width** as the mobile shell (e.g. 460px) and **horizontally centered**. **Figma reference** (this file): `docs/figma-nodes.md` → Bottom Nav. **Code reference:** `BottomNav.jsx` + `BottomNav.css` (+ `BottomNavIcons.jsx`).
+
+- **React Router:** Implement tabs with **`<NavLink>`**, not `<button>` + local `useState` for “selected,” when the tab **is a real route**. The **URL is the source of truth**; use **`className={({ isActive }) => …}`** (or `style`) to apply an active modifier class. **`aria-current="page"`** is set on the active `NavLink` automatically.
+- **Root tab:** For **`to="/"`**, pass **`end`** so the home tab is not active on every path that merely starts with `/`.
+- **Data-driven list:** Prefer a **`NAV_ITEMS`** (or equivalent) array: stable **`id`** (for `key`), **`to`** (must match **`Route path`** strings), optional **`end`**, **`label`**, and **icon component**. Map to **`NavLink`** children in one loop.
+- **Tokens** (extend in **`src/index.css`** per project): e.g. **`--color-nav-bar-bg`**, **`--color-accent2`** (active indicator), **`--bottom-nav-*`** stack height pieces, **`--z-bottom-nav`**. **Do not** hard-code one-off bottom padding on pages; reserve space for the bar on scrollable **page chrome** (here: **`.app-shell`** **`padding-bottom`**) using **`calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px))`** (or the project’s equivalent) so the last content is not hidden behind the fixed bar.
+- **App shell:** Mount **`<BottomNav />`** as a **sibling** of **`<Routes>`** inside the router (e.g. `App.jsx`) so the bar appears on **all** tab destinations without duplicating it per page.
+- **`NavLink` renders `<a>`:** Reset default link appearance on the tab root (e.g. **`text-decoration: none`**, **`color: inherit`**, **`cursor: pointer`**) so Figma-driven active/inactive colors on inner elements / **`currentColor`** icons win. Provide a visible **`focus-visible`** style for keyboard users.
+- **Icons:** Prefer **inline SVG** with **`fill="currentColor"`** (or stroke) so light/dark tokens apply; keep **`public/`** SVG copies optional for export/reference.
+
+**Full write-up:** `docs/react-learning.md` → _BottomNav_.
+
+## Styling and themes
+
+- **Global tokens** live in **`src/index.css`**: CSS custom properties (e.g. `--color-bg`, `--color-text`) for colors, spacing, radii, and typography. **Components should use `var(--token)`** (or classes that map to those tokens), not one-off hex values for things that repeat.
+- **Light and dark** — align variable sets with **Figma Light / Dark** (or equivalent modes). Implementation pattern in this repo:
+  - **Default**: `:root` = light; **system dark** via `@media (prefers-color-scheme: dark)` on `:root:not([data-theme])`.
+  - **Explicit override** for testing or a future in-app toggle: set `data-theme="light"` or `data-theme="dark"` on `<html>` so it wins over system preference.
+- When pulling screens from Figma, **map frame modes to these variables** rather than hard-coding two separate UIs.
+
+## Design source of truth
+
+- **`docs/figma-nodes.md`** — canonical list of Figma screens and components (URLs with `node-id`). Prefer linking to a **specific frame** over the whole page when implementing a screen.
+- **Product / UX intent (`docs/`)** — narrative and screen-level **behavior** in this repo (complement to Figma frames):
+  - **`docs/Home-screen-story.md`** — Home screen story: role of header, banner, swimlanes (music → podcasts → radio, Listen again, Favorites, Recommendations), footer (tabs, mini player), ads, and **user-type** layout differences (guest, provided, subscribed).
+  - **Add** further design or product notes under `docs/*.md` as the prototype grows; when implementing a screen, check **Figma** + any **relevant `docs/` file** for that feature.
+- **[In-Car OEM Radio / MPR documentation](https://in-car-music-documentation.stingray.com/)** — Stingray’s published docs for **music, podcasts, and radio** in the car (OEM). This **mobile** prototype is the **phone counterpart** to that in-car product: **content types, browse/listen flows, and feature vocabulary** align in spirit; **layout, touch patterns, and chrome** follow **Figma + this repo**. Use the site for **terminology and parity questions**, not pixel layout. (The separate **karaoke** in-car docs are not the product reference here.)
+- When building UI from Figma: use the **official Figma MCP** (`get_design_context`, `get_screenshot`, `get_metadata` as needed). Treat MCP output as **reference** — adapt structure, naming, and styles to **this** repo (existing components, `index.css`, patterns in `src/`).
+- From a Figma URL: `fileKey` = segment after `/design/`; `node-id=1-2` → node id `1:2` for tools.
+
+## Learning notes
+
+- **`docs/react-learning.md`** — project-specific, **append-only** notes for React concepts as you learn and build this prototype (swimlanes, routing, etc.). **Update** it when you ask to record a new lesson or after a meaningful first use of a pattern in **this** repo. Cursor rules summarize the same patterns for day-to-day implementation.
+
+## Project plan document
+
+- **Living plan / history:** `docs/plan.md` — what we plan to do, what we have done, and what is next. It is a **return-from-hiatus** refresher; **update it** when finishing meaningful work (same PR or follow-up) so it stays accurate.
+- **Do not** let `plan.md` replace `docs/Home-screen-story.md` (product story) or `docs/figma-nodes.md` (Figma index); it **coordinates** them for implementation.
+- **Agents:** When a task implements or scopes a user-visible or structural slice, **check whether `docs/plan.md` should be updated** (done / next / backlog) before considering the work complete.
+
+## Code changes
+
+- Match style and structure already in the file (imports, formatting, component shape).
+- Keep edits **scoped** to the task — no drive-by refactors or unrelated files.
+- Comments only where they teach or clarify non-obvious prototype behavior.
+
+## Out of scope (unless the user explicitly asks)
+
+- Production hardening (security, secrets, rate limits, compliance).
+- Real APIs, databases, serverless, OAuth, uploads, email/SMS.
+- CI/CD, Docker, deploy pipelines, monitoring.
+- Pixel-perfect Figma match — aim for structure, hierarchy, and spacing; minor deviations OK unless the user calls out a screen.
+
+## Communication (project channel)
+
+- Default tone: clear, concise, patient-teacher level — minimal filler.
+- For multi-item answers, use bullet lists. Briefly explain **new** React concepts when first used.
