@@ -27,8 +27,9 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## React Router (`BrowserRouter`, `Routes`, `NavLink`)
 
-- _To be expanded when routing is added to this project._  
-- **Reminder:** `BrowserRouter` wraps anything that uses `Routes`, `Route`, or hooks like `useNavigate` / `useMatch`. Often lives in `main.jsx` or `App.jsx`.
+- **This project:** `BrowserRouter` wraps the app in **`src/main.jsx`**. **`src/App.jsx`** defines **`<Routes>`** / **`<Route>`** (start with **`path="/"`** → **`<Home />`** in `src/pages/Home.jsx`). Add tab routes and detail routes here as you build screens.
+- **Why two files?** The router must wrap the tree that contains `Routes`; keeping `BrowserRouter` in `main.jsx` is a common pattern so `App` stays a pure route table. Page components (Home, etc.) own **`main.app-shell`** and their layout.
+- **Next:** `NavLink` in `BottomNav` with matching `Route` paths — URL = selected tab. See project rules → _Bottom navigation_.
 
 ---
 

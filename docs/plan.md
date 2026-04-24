@@ -31,7 +31,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] `docs/design-tokens.md` — designer workflow; Figma + `index.css` as sources of truth; MCP note.
 - [x] **Card components** — `ContentTileCard` (shared layout) + `MusicChannelCard`, `PodcastCard`, `RadioStationCard` in `src/components/` (tokenized `--card-tile-*` / type styles in `index.css`).
 - [x] **ContentSwimlane** — `src/components/ContentSwimlane` (inset title + More, full-bleed scroll, inner `padding-inline`).
-- [ ] `App.jsx` — dev shell with **three data-backed swimlanes**; add routing and a real **Home** page when Router lands.
+- [x] **`react-router-dom`** — `BrowserRouter` in `main.jsx`; **`Home`** at `/` in `src/pages/Home.jsx`; `App.jsx` holds `<Routes>`.
+- [ ] **Chrome** — BottomNav, header, banner, mini player (per step 4).
 
 ---
 
@@ -43,8 +44,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 2. **Swimlane / row** — **done** (`ContentSwimlane`). Inset **title + “More”**, full-bleed **horizontal scroll** with inner `padding-inline: var(--space-content-inline)`.
 
-3. **Home page (first vertical slice)**  
-   `App` already uses `main.app-shell` → `div.home-screen` + `content-inset` + **swimlane `section`s as siblings** (music / podcasts / radio). Next: move to a **`Home` route** and add chrome when ready.
+3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes. **Chrome** (nav, header, …) in step 4.
 
 4. **Chrome after core content**  
    `BottomNav`, `Home` header (branding, Upgrade / provider), banner, `padding-bottom` for nav + safe area. Then Listen again, Favorites, Recommendations, ads, mini player — with mock state where needed.
@@ -56,11 +56,11 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## Next steps (near term)
 
-- [ ] Add `react-router-dom`, `BrowserRouter`, routes for main tabs and stacked flows (per Figma when confirmed).
-- [x] **Cards** (music / podcast / radio) — shared tile + three wrappers.
-- [x] **Swimlane** row — `ContentSwimlane` + three lanes in `App.jsx` (mock slice length).
-- [ ] **Router** + dedicated **Home** page; refine `--card-tile-*` from Figma if needed.
-- [ ] Append to `docs/react-learning.md` when introducing swimlane or NavLink work here (append-only, short entries).
+- [x] `react-router-dom` + `BrowserRouter` + **`Home`** at `/`.
+- [ ] **More routes** — tab destinations, stacked detail/player flows (per Figma when confirmed) + `BottomNav` with `NavLink`.
+- [x] **Cards** + **swimlane** (see above).
+- [ ] Refine `--card-tile-*` from Figma if needed.
+- [ ] Append to `docs/react-learning.md` when adding `NavLink` / BottomNav here.
 
 ---
 
@@ -81,4 +81,4 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-24* (swimlane row)
+*Last updated: 2026-04-24* (Home route)
