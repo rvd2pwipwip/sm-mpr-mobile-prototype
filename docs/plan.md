@@ -29,7 +29,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] `docs/react-learning.md` — started; append entries as we implement (swimlanes, Router, BottomNav, …).
 - [x] `src/index.css` — global design tokens (spacing, colors, card + nav placeholders), theme overrides, `.app-shell` / `.content-inset` / `.home-screen`.
 - [x] `docs/design-tokens.md` — designer workflow; Figma + `index.css` as sources of truth; MCP note.
-- [ ] `App.jsx` — placeholder shell only; routing and Home UI still to come.
+- [x] **Card components** — `ContentTileCard` (shared layout) + `MusicChannelCard`, `PodcastCard`, `RadioStationCard` in `src/components/` (tokenized `--card-tile-*` / type styles in `index.css`).
+- [ ] `App.jsx` — currently shows a **stacked card preview**; swap for routed Home + swimlanes when those land.
 
 ---
 
@@ -37,8 +38,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 **Recommended order** (aligns with component-first UX work):
 
-1. **Card components (three content types)**  
-   Music channel, podcast show, radio station — default tile; plan for a **small / no-label** variant later (Listen again).
+1. **Card components (three content types)** — **done** (default tile; **small / no-label** variant later for Listen again).
 
 2. **Swimlane / row**  
    Inset **title + “More”**, full-bleed **horizontal scroll** with inner `padding-inline: var(--space-content-inline)` (see project rules; karaoke `SongSwimlane` is the pattern reference in the sibling prototype).
@@ -57,7 +57,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 ## Next steps (near term)
 
 - [ ] Add `react-router-dom`, `BrowserRouter`, routes for main tabs and stacked flows (per Figma when confirmed).
-- [ ] **Cards** (music / podcast / radio) using tokenized layout + **swimlane** component + **Home** with three data-backed lanes; refine `--card-tile-*` from Figma card component.
+- [x] **Cards** (music / podcast / radio) — shared tile + three wrappers; import into Home when swimlanes exist.
+- [ ] **Swimlane** row component + **Home** with three data-backed horizontal lanes; refine `--card-tile-*` from Figma card component if needed.
 - [ ] Append to `docs/react-learning.md` when introducing swimlane or NavLink work here (append-only, short entries).
 
 ---
@@ -79,4 +80,4 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-17*
+*Last updated: 2026-04-24*

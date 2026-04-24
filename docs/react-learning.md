@@ -8,6 +8,15 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Content tile cards (shared layout + three wrappers)
+
+- **Idea:** One **presentational** component (`ContentTileCard`) owns the **visual pattern**: fixed width (`--card-tile-width`), square image with `--radius-media-thumb`, one-line **title** + optional **subtitle**, and a **`<div>`** with `onClick` for touch interaction. This stack targets a **native mobile** feel in the browser — **not** full web a11y or keyboard support (on purpose for this prototype). It takes plain strings + `imageUrl` — it does not know about music vs podcast.
+- **Domain cards** (`MusicChannelCard`, `PodcastCard`, `RadioStationCard`) are **thin**: they read from the mock objects in `src/data/*`, map fields to `title` / `subtitle` (e.g. radio uses `frequencyLabel` when set, else `categoryLabel`), and pass an optional `onSelect` for later navigation.
+- **Why:** Same layout in every swimlane; only the data mapping changes. A future **small / no-label** “Listen again” tile can be a `variant` on `ContentTileCard` or a separate class — without duplicating the three domain components’ data logic.
+- **Files:** `src/components/ContentTileCard.jsx` + `ContentTileCard.css`, and the three `*Card.jsx` files next to it.
+
+---
+
 ## Swimlane layout pattern (Figma column + full-bleed scroll)
 
 - **Idea:** The **page column** (header, titles) uses the content inset; each **horizontal row** of cards is **full width** under the phone shell, with **padding on the inner flex row** so the first/last cards align with the column. See project rules → _Swimlane layout_ for the full checklist (`--space-content-inline`, siblings of `.content-inset`, hidden horizontal scrollbar, scroll-snap caution).
