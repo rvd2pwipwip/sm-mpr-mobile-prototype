@@ -32,6 +32,8 @@ My footer also features the miniplayer, anchored at the top of the main menu, wh
 
 I’ve also been mandated to display visual ads for unsubscribed and unprovided users.
 
+**Prototype mapping (code):** see **`docs/visual-ads-and-user-types.md`** — `guest` / `provided` show the footer ad placeholder under the tab bar and on the music player; `subscribed` does not.
+
 These ads can be displayed below the main menu in my footer and also between my content swimlanes.
 
 I’ve already mentioned that our app caters to different types of users, so I must make sure user types are easily identified through my layout and visuals.

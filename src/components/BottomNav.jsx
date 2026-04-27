@@ -1,4 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useUserType } from "../context/UserTypeContext";
+import { showVisualAds } from "../utils/showVisualAds";
+import VisualAdStrip from "./VisualAdStrip";
 import "./BottomNav.css";
 
 const NAV_ITEMS = [
@@ -27,6 +30,8 @@ const NAV_ITEMS = [
 export default function BottomNav({ className = "" }) {
   const rootClass = ["bottom-nav", className].filter(Boolean).join(" ");
   const location = useLocation();
+  const { userType } = useUserType();
+  const adsOn = showVisualAds(userType);
 
   return (
     <nav className={rootClass}>
@@ -66,6 +71,7 @@ export default function BottomNav({ className = "" }) {
           );
         })}
       </div>
+      {adsOn ? <VisualAdStrip variant="nav" /> : null}
     </nav>
   );
 }

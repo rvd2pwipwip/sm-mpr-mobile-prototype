@@ -105,8 +105,30 @@
   padding-inline: var(--space-content-inline);
 }
 
+/* When there is no bottom ad strip, share the vertical gap between the main art block and the transport (instead of a single void above the controls). */
+.music-player__body--no-player-ad {
+  justify-content: flex-start;
+}
+
+.music-player__body--no-player-ad .music-player__top {
+  flex: 1 1 0;
+  min-height: 0;
+  /* Keep title + art stacked from the top of this band (with padding) — do not
+     vertical-center the whole block or the h1 can sit under / clip against chrome. */
+  justify-content: flex-start;
+  padding-bottom: var(--space-3);
+}
+
+.music-player__body--no-player-ad .music-player__controls {
+  flex: 1 1 0;
+  min-height: 0;
+  justify-content: center;
+  padding: var(--space-4) 0;
+}
+
 .music-player__top {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
@@ -238,7 +260,7 @@
 }
 
 .music-player__controls {
-  flex-shrink: 0;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -362,25 +384,4 @@
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-}
-
-.music-player__ad {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: calc(100% + 2 * var(--space-content-inline));
-  margin-left: calc(-1 * var(--space-content-inline));
-  margin-right: calc(-1 * var(--space-content-inline));
-  min-height: 86px;
-  margin-bottom: env(safe-area-inset-bottom, 0px);
-  background-color: color-mix(
-    in srgb,
-    var(--color-text-muted) 55%,
-    var(--color-surface)
-  );
-  color: var(--color-on-accent2);
-  font-size: 1.25rem;
-  font-weight: 200;
-  letter-spacing: 0.02em;
 }

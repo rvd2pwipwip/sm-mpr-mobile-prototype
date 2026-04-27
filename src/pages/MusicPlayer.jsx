@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import UpgradeButton from "../components/UpgradeButton";
+import VisualAdStrip from "../components/VisualAdStrip";
 import { useUserType } from "../context/UserTypeContext";
+import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
 import "./MusicPlayer.css";
 
@@ -54,7 +57,9 @@ export default function MusicPlayer() {
   const { channelId } = useParams();
   const navigate = useNavigate();
   const { userType } = useUserType();
-  const [playing, setPlaying] = useState(true);
+  const needsPreroll = showPlayerPreroll(userType);
+  const [prerollComplete, setPrerollComplete] = useState(() => !needsPreroll);
+  const [playing, setPlaying] = useState(() => !needsPreroll);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
 
@@ -66,6 +71,14 @@ export default function MusicPlayer() {
 
   return (
     <main className="app-shell music-player-screen">
+      {needsPreroll && !prerollComplete ? (
+        <PlayerPrerollAd
+          onComplete={() => {
+            setPrerollComplete(true);
+            setPlaying(true);
+          }}
+        />
+      ) : null}
       <header className="music-player__header">
         <button
           type="button"
@@ -91,7 +104,14 @@ export default function MusicPlayer() {
         </button>
       </header>
 
-      <div className="music-player__body">
+      <div
+        className={[
+          "music-player__body",
+          !showVisualAds(userType) ? "music-player__body--no-player-ad" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <div className="music-player__top">
           <h1 className="music-player__channel-name">{channel.name}</h1>
           <div className="music-player__meta-actions">
@@ -167,13 +187,7 @@ export default function MusicPlayer() {
           </div>
         </div>
 
-        <div
-          className="music-player__ad"
-          role="img"
-          aria-label="Ad placeholder"
-        >
-          Ad footer
-        </div>
+        {showVisualAds(userType) ? <VisualAdStrip variant="player" /> : null}
       </div>
     </main>
   );

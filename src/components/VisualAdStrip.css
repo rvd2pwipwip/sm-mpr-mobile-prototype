@@ -1,0 +1,28 @@
+.visual-ad-strip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--visual-ad-strip-min-height);
+  box-sizing: border-box;
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-muted) 55%,
+    var(--color-surface)
+  );
+  color: var(--color-on-accent2);
+  font-size: 1.25rem;
+  font-weight: 200;
+  letter-spacing: 0.02em;
+}
+
+.visual-ad-strip--nav {
+  width: 100%;
+}
+
+.visual-ad-strip--player {
+  width: calc(100% + 2 * var(--space-content-inline));
+  margin-left: calc(-1 * var(--space-content-inline));
+  margin-right: calc(-1 * var(--space-content-inline));
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}

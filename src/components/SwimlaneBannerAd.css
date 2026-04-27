@@ -1,0 +1,51 @@
+/* In-feed banner — node `13548:75362` (align inset with `.content-inset` on Home). */
+.swimlane-banner-ad {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.swimlane-banner-ad__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-height: 240px;
+  padding: var(--space-5) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-accent) 12%, var(--color-surface)) 0%,
+    color-mix(in srgb, var(--color-accent2) 10%, var(--color-surface)) 100%
+  );
+  box-shadow: var(--shadow-card);
+}
+
+.swimlane-banner-ad__badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background-color: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.swimlane-banner-ad__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.swimlane-banner-ad__meta {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--color-text) 65%, transparent);
+}
