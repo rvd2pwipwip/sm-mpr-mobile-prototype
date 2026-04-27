@@ -1,0 +1,24 @@
+.music-player-screen.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.music-player-screen__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(var(--screen-header-height) + var(--space-3)) var(--space-content-inline)
+    var(--space-8);
+}
+
+.music-player-screen__stub {
+  margin: 0;
+  font-size: 1rem;
+}

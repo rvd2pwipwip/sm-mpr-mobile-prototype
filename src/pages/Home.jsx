@@ -26,7 +26,11 @@ export default function Home() {
 
           <ContentSwimlane title="Music">
             {MUSIC_CHANNELS.slice(0, LANE_SIZE).map((channel) => (
-              <MusicChannelCard key={channel.id} channel={channel} />
+              <MusicChannelCard
+                key={channel.id}
+                channel={channel}
+                onSelect={() => navigate(`/music/${channel.id}`)}
+              />
             ))}
           </ContentSwimlane>
 

@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import { UserTypeProvider } from "./context/UserTypeContext";
 import Home from "./pages/Home";
+import MusicChannelInfo from "./pages/MusicChannelInfo";
+import MusicPlayer from "./pages/MusicPlayer";
 import Search from "./pages/Search";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -13,6 +15,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/upgrade" element={<Subscription />} />
+        <Route path="/music/:channelId" element={<MusicChannelInfo />} />
+        <Route path="/music/:channelId/play" element={<MusicPlayer />} />
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
       </Routes>

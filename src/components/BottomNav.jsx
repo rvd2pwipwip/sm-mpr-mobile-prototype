@@ -19,7 +19,9 @@ export default function BottomNav({ className = "" }) {
         {NAV_ITEMS.map((item) => {
           const { id, to, end, label, Icon: NavIcon } = item;
 
-          const homeStackActive = id === "home" && location.pathname === "/upgrade";
+          const homeStackActive =
+            id === "home" &&
+            (location.pathname === "/upgrade" || location.pathname.startsWith("/music"));
 
           return (
             <NavLink

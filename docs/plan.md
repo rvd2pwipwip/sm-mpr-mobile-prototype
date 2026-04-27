@@ -34,6 +34,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **`react-router-dom`** — `BrowserRouter` in `main.jsx`; **`Home`** at `/` in `src/pages/Home.jsx`; `App.jsx` holds `<Routes>`.
 - [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Mini player, ads** — later.
 - [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. *Follow-up:* ads / mini player driven by user type.
+- [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
+- [x] **Music Channel Info + play route (baseline)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**: hero, Play / Like / Share, description + **More…**, tag row, related **`ContentTileCard`** row); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (**stub** until Figma **`23:20013`**); **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`BottomNav`**: **`/music/*`** counts as **Home** tab (matches channel-info Figma).
 
 ---
 
@@ -53,16 +55,24 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 5. **User mode stub** — **done (baseline)**  
    **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`Home-screen-story.md`).
 
+6. **Stacked routes (music first)** — **done (baseline)**  
+   Channel Info + play **URL** shipped; **full Music Player UI** still to match Figma **`23:20013`**. Then mirror for podcast / radio.
+
 ---
 
 ## Next steps (near term)
 
-- [x] `react-router-dom` + `BrowserRouter` + **`Home`** at `/` + **Search** `/search` + **Info** `/info` + **`BottomNav`** (`NavLink`).
-- [x] **Subscription (Upgrade) screen** — **`/upgrade`**, Figma `220:40551`, **user type** context + **`HomeHeader`** variants.
-- [ ] **Stacked routes** (detail / player) when those screens exist.
-- [x] **Cards** + **swimlane** (see above).
-- [ ] Refine nav/header/card tokens and **swap placeholder SVGs** (icons, logo) from Figma.
-- [ ] `docs/react-learning` — mini player when added.
+Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
+
+1. [ ] **Music Player screen** — replace **`MusicPlayer.jsx`** stub with full layout from Figma **`23:20013`** (controls, art, scrubber, etc.).
+
+2. [ ] **Podcast & radio stacks** — same stacked pattern as music (detail + player routes, Figma nodes in **`docs/figma-nodes.md`** when implementing).
+
+3. [ ] **Search & Browse** — replace **`Search`** stub with browse / grid flows (Figma **150+** / **1000+** channel variants); ties to territory story later.
+
+4. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
+
+5. [ ] **`docs/react-learning`** — **mini player** when that chrome exists (music stack + **`useParams`** noted in file).
 
 ---
 
@@ -71,7 +81,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [ ] **Listen again** — mixed small tiles; `recentlyPlayed` mock.
 - [ ] **Favorites** — liked content rail (sparse by design).
 - [ ] **Recommendations** — generic stub, then “informed by” fake history.
-- [ ] Detail screens: music channel info, podcast info, station info; then players + mini player.
+- [ ] **Podcast & radio** — info + full player stacks after the music pattern ships.
 - [ ] **International radio** hierarchy — `radioStations.js` + `docs/figma-nodes.md` notes.
 - [ ] **Territory** variants (150+ vs 1000+ channels) for browse, when building Search & Browse.
 
@@ -83,4 +93,4 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-27* (shipped: Subscription / Upgrade + UserTypeContext)
+*Last updated: 2026-04-27* (shipped **Music Channel Info**; **Next steps** → Music Player UI)

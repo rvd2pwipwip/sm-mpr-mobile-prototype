@@ -1,0 +1,245 @@
+/* Channel Info — Figma `musicInfo` `25:7067`; scrolls under `ScreenHeader`; bottom nav from `.app-shell`. */
+
+.music-info.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.music-info__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: calc(var(--screen-header-height) + var(--space-3));
+}
+
+/* Same vertical rhythm as Home: inset blocks + full-bleed horizontal lanes (see `ContentSwimlane`). */
+.music-info__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  min-width: 0;
+  padding-bottom: var(--space-8);
+  box-sizing: border-box;
+}
+
+.music-info__inset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  min-width: 0;
+  padding-inline: var(--space-content-inline);
+  box-sizing: border-box;
+}
+
+.music-info__name {
+  margin: 0;
+  max-width: 600px;
+  font-size: clamp(1.5rem, 5vw, 2.125rem);
+  font-weight: 900;
+  line-height: 1.15;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+}
+
+.music-info__hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-5);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.music-info__thumb-wrap {
+  flex-shrink: 0;
+  width: 230px;
+  height: 230px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-text) 50%, transparent);
+  box-shadow: var(--shadow-card);
+}
+
+.music-info__thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.music-info__actions-col {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* Figma `button_sm` — 40px row, 16px label */
+.music-info__btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  margin: 0;
+  border: 2px solid transparent;
+  border-radius: var(--button-pill-radius);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.music-info__btn--play {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.music-info__btn--outline {
+  color: var(--color-text);
+  background-color: transparent;
+  border-color: var(--color-button-secondary-border);
+}
+
+.music-info__btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.music-info__desc-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.music-info__description {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+  white-space: pre-wrap;
+}
+
+.music-info__description--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.music-info__more {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.music-info__more:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Full-bleed horizontal row: scrollport edge-to-edge; gutters on inner only (`ContentSwimlane` pattern). */
+.music-info__h-lane {
+  width: 100%;
+  min-width: 0;
+}
+
+.music-info__swimlane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  min-width: 0;
+}
+
+.music-info__swimlane-title {
+  margin: 0;
+  padding-inline: var(--space-content-inline);
+  font-size: 1.375rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.music-info__h-scroll {
+  width: 100%;
+  min-width: 0;
+  max-height: 130px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--space-2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.music-info__swimlane .music-info__h-scroll {
+  max-height: none;
+}
+
+.music-info__h-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.music-info__h-scroll-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  width: max-content;
+  padding-inline: var(--space-content-inline);
+  box-sizing: border-box;
+}
+
+.music-info__h-scroll-inner--tags {
+  gap: 14px;
+}
+
+.music-info__h-scroll-inner--cards {
+  gap: var(--card-tile-gap);
+}
+
+.music-info__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 2px solid var(--color-button-secondary-border);
+  border-radius: var(--button-pill-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+}
+
+.music-info__swimlane .content-tile__title {
+  font-size: 1.125rem;
+  font-weight: 400;
+}

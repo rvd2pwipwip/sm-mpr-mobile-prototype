@@ -45,7 +45,15 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Idea:** **`createContext`** + **`UserTypeProvider`** in **`src/context/UserTypeContext.jsx`** hold prototype-wide **`userType`**: **`guest`**, **`provided`**, or **`subscribed`**. **`useUserType()`** returns **`{ userType, setUserType }`**. Wrap the tree that needs it (here: entire **`App`** inside **`App.jsx`**) so **`HomeHeader`**, **`Subscription`**, and later ads can read the same state without **prop drilling**.
 - **Route:** **`/upgrade`** → **`src/pages/Subscription.jsx`** (+ **`Subscription.css`**), aligned with Figma **`220:40551`**: fixed blurred **back** bar, headline + price, bullet benefits, **Upgrade now** ( **`Button`** **`variant="subscribe-primary"`** — blue **`--color-accent`** fill via **`btn--subscribe-primary`**), **Select provider** (secondary + external-link icon; sets **provided** and opens Stingray provider SSO in a new tab), legal copy + Terms/Privacy links, and a dashed **Preview as** control row to flip type for demos.
 - **`HomeHeader`** reads **`userType`**: guest shows **Upgrade**; provided shows an outlined **Provider** pill; subscribed shows **only** the centered wordmark (see **`Home-screen-story.md`**).
-- **Router note:** **`BottomNav`** treats **`/upgrade`** as part of the **Home** tab ( **`useLocation`** + extra active check) so the bottom bar matches the Figma comp while the URL stays **`/upgrade`**.
+- **Router note:** **`BottomNav`** treats **`/upgrade`** and **`/music/*`** as part of the **Home** tab ( **`useLocation`** + extra active check) so the bottom bar matches Figma while stacked URLs stay bookmarkable.
+
+---
+
+## Music Channel Info + `useParams` (stacked URLs)
+
+- **Idea:** **URL parameters** identify which fake catalog row you are viewing. **`useParams()`** from **`react-router-dom`** returns an object like **`{ channelId: "pop__channel-slug" }`** when the path is **`/music/:channelId`**. The page calls **`getMusicChannelById(channelId)`** from **`src/data/musicChannels.js`**; if **`null`**, render **`<Navigate to="/" replace />`** so bad links bounce home.
+- **Routes:** **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (stub until **`23:20013`**). **`Home`** passes **`onSelect={() => navigate(`/music/${channel.id}`)}`** into **`MusicChannelCard`**. **Related** tiles reuse **`ContentTileCard`** with **`navigate(`/music/${rel.id}`)`**.
+- **`BottomNav`:** Paths under **`/music`** keep the **Home** tab visually active (same idea as **`/upgrade`**), matching the channel-info Figma comp that shows the main menu.
 
 ---
 
