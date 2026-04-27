@@ -30,6 +30,10 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 
 - [UX SM MPR Mobile 2604 (file / Mobile Portrait)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=0-1&p=f&t=NvKDs20ElRoIwSUC-0)
 
+## Components
+
+- [Button / md — CTA + secondary (subscribe pattern)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115) — `src/components/Button.jsx` + `index.css` button tokens
+
 ## Screens
 
 - [Home](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=1-2&t=NvKDs20ElRoIwSUC-0)

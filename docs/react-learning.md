@@ -17,6 +17,21 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Button (`Button.jsx` — CTA vs secondary)
+
+- **Idea:** One **`<button>`** with a **`variant`** prop: **`cta`** = solid brand fill (`--color-accent2` / `--color-on-accent2`); **`secondary`** = **no fill**, **2px** border (`--color-button-secondary-border` from `color-mix` on `--color-text`). Optional **`startIcon`** / **`endIcon`** are any **React nodes** (usually small inline **SVG** with `currentColor` so the icon matches the label).
+- **Tokens:** `--button-height-md`, `--button-icon-size`, `--font-size-button`, etc. in **`index.css`** — tune to Figma `button/md` without editing the component.
+- **Figma:** [Button / md — CTA + secondary](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115).
+
+---
+
+## Home header (fixed bar + `useHomeHeaderOffset`)
+
+- **Idea:** `HomeHeader` is **fixed** top chrome; the scroll column (`.home-body-scroll`) needs **`padding-top: var(--home-header-offset)`** so content starts below the bar. Because the bar is out of flow, the **measured** header height is written to `--home-header-offset` on `<html>` via **`useHomeHeaderOffset()`** in **`HomeHeader.jsx`** — **`useRef`**, **`useLayoutEffect`**, and **`ResizeObserver`**. Figma “hug” + padding = one **`offsetHeight`**; variants with different content heights **re-measure** automatically.
+- **Long tutorial (step by step):** **`docs/Header.md`**.
+
+---
+
 ## Swimlane layout pattern (Figma column + full-bleed scroll)
 
 - **Idea:** The **page column** (header, titles) uses the content inset; each **horizontal row** of cards is **full width** under the phone shell, with **padding on the inner flex row** so the first/last cards align with the column. See project rules → _Swimlane layout_ for the full checklist (`--space-content-inline`, siblings of `.content-inset`, hidden horizontal scrollbar, scroll-snap caution).
@@ -35,8 +50,9 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Bottom navigation (tabs)
 
-- _To be expanded when `BottomNav` (or equivalent) is added here._  
-- **Ideas you can reuse:** URL as source of truth with `NavLink`, `end` on the home tab, `NAV_ITEMS` array mapped to tabs, tokens for bar height and `.app-shell` bottom padding. See project rules → _Bottom navigation_.
+- **This project:** `src/components/BottomNav.jsx` + `BottomNav.css`, icon paths in `MprNavIcons.jsx` (replace when Figma exports land). **`App.jsx`** mounts `<BottomNav />` as a **sibling of `<Routes>`** so the bar appears on **Home, Search, and Info**. Tab items = **`NAV_ITEMS`** array → **`NavLink`** with `end` on Home (`/`). Active tab = `className={({ isActive }) => …}` + `--active` styles.
+- **Padding:** `main.app-shell` uses **`calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom))`** bottom padding so scrollable content does not sit under the fixed bar (see `index.css`). **Top** inset on non-Home shell uses **`--safe-area-inset-top` (30px)** (prototype token, not `env(safe-area-inset-top)`). **Home:** fixed **`HomeHeader`** + **`home-body-scroll`** `padding-top` / **`--home-header-offset`** — see **`docs/Header.md`** and the **Home header** section above. As you scroll, content moves **up behind** the header (same `z-chrome` layer as the bottom bar).
+- **Project rules** have the full token checklist → _Bottom navigation_.
 
 ---
 

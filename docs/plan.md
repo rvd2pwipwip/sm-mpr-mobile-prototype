@@ -32,7 +32,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Card components** — `ContentTileCard` (shared layout) + `MusicChannelCard`, `PodcastCard`, `RadioStationCard` in `src/components/` (tokenized `--card-tile-*` / type styles in `index.css`).
 - [x] **ContentSwimlane** — `src/components/ContentSwimlane` (inset title + More, full-bleed scroll, inner `padding-inline`).
 - [x] **`react-router-dom`** — `BrowserRouter` in `main.jsx`; **`Home`** at `/` in `src/pages/Home.jsx`; `App.jsx` holds `<Routes>`.
-- [ ] **Chrome** — BottomNav, header, banner, mini player (per step 4).
+- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** (wordmark + guest Upgrade) + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Mini player, ads, user-mode header variations** — later (steps 4 detail / 5).
 
 ---
 
@@ -46,8 +46,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes. **Chrome** (nav, header, …) in step 4.
 
-4. **Chrome after core content**  
-   `BottomNav`, `Home` header (branding, Upgrade / provider), banner, `padding-bottom` for nav + safe area. Then Listen again, Favorites, Recommendations, ads, mini player — with mock state where needed.
+4. **Chrome after core content** — **done (baseline)**  
+   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. *Follow-up:* mini player, ads, user-type header, Listen again / Favorites / Recommendations rails, full banner art / SVGs from Figma.
 
 5. **User mode stub**  
    Context or simple state: guest | provided | subscribed — drives header CTA, ad visibility, and footer content height per `Home-screen-story.md`.
@@ -56,11 +56,11 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## Next steps (near term)
 
-- [x] `react-router-dom` + `BrowserRouter` + **`Home`** at `/`.
-- [ ] **More routes** — tab destinations, stacked detail/player flows (per Figma when confirmed) + `BottomNav` with `NavLink`.
+- [x] `react-router-dom` + `BrowserRouter` + **`Home`** at `/` + **Search** `/search` + **Info** `/info` + **`BottomNav`** (`NavLink`).
+- [ ] **Stacked routes** (detail / player) when those screens exist.
 - [x] **Cards** + **swimlane** (see above).
-- [ ] Refine `--card-tile-*` from Figma if needed.
-- [ ] Append to `docs/react-learning.md` when adding `NavLink` / BottomNav here.
+- [ ] Refine nav/header/card tokens and **swap placeholder SVGs** (icons, logo) from Figma.
+- [ ] `docs/react-learning` — user-mode / mini player when added.
 
 ---
 
@@ -81,4 +81,4 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-24* (Home route)
+*Last updated: 2026-04-24* (Home chrome: nav, header, banner)

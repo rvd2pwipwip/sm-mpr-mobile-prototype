@@ -1,0 +1,87 @@
+/* Top chrome: same layer as `BottomNav` (see Figma). Content scrolls behind. */
+.home-header--fixed {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-chrome);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--app-max-width);
+  min-width: 0;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 0;
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--space-5);
+  padding-left: var(--space-content-inline);
+  padding-right: var(--space-content-inline);
+  background-color: var(--color-bg);
+  /* box-shadow: 0 1px 0 var(--color-border-subtle); */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.home-header__brand {
+  flex: 1;
+  min-width: 0;
+  line-height: 0;
+}
+
+/* Logo — tune height to Figma header row; `object-fit` keeps aspect. */
+.home-header__wordmark {
+  display: block;
+  height: auto;
+  max-height: 40px;
+  width: auto;
+  max-width: min(220px, 100%);
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Light / dark: matches `index.css` (system + `data-theme` on `html`). */
+.home-header__wordmark--light {
+  display: block;
+}
+.home-header__wordmark--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .home-header__wordmark--light {
+    display: none;
+  }
+  :root:not([data-theme]) .home-header__wordmark--dark {
+    display: block;
+  }
+}
+
+html[data-theme="light"] .home-header__wordmark--light {
+  display: block;
+}
+html[data-theme="light"] .home-header__wordmark--dark {
+  display: none;
+}
+html[data-theme="dark"] .home-header__wordmark--light {
+  display: none;
+}
+html[data-theme="dark"] .home-header__wordmark--dark {
+  display: block;
+}
+
+.home-header__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Header chrome: use compact button if 60px is too tall — override tokens in scope. */
+/* .home-header--fixed .btn {
+  min-height: 2.5rem;
+  --font-size-button: 0.875rem;
+  --button-icon-size: 1.25rem;
+} */

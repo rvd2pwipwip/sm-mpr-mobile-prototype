@@ -27,9 +27,16 @@
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
   /* Screen edge / swimlane header / scroll-inner gutters (Figma ~30px) */
   --space-content-inline: 30px;
-  --space-screen-gap: var(--space-5);
+  /* Prototype: fixed top inset instead of `env(safe-area-inset-top)` from the device. */
+  --safe-area-inset-top: 30px;
+  --space-screen-gap: var(--space-7);
 
   /* —— Radius — */
   --radius-sm: 8px;
@@ -49,6 +56,23 @@
   --font-size-card-subtitle: 0.8125rem;
   --font-weight-card-subtitle: 400;
 
+  /* —— Button `button/md` (Figma node 19726:48115 — CTA + secondary) — */
+  --button-pill-radius: 9999px;
+  --button-height-md: 3.75rem; /* 60px */
+  --button-padding-inline: 1.5rem; /* 24px Figma; ~26 end — tune */
+  --button-icon-size: 1.875rem; /* 30px */
+  --button-icon-gap: 0.625rem; /* 10px */
+  --font-size-button: 1.5rem; /* 24px*/
+  --font-weight-button: 400;
+  --letter-spacing-button: 0.03em;
+  /* --line-height-button: 1.5; */
+  /* Secondary variant outline — ~30% of foreground on light; flips in dark. */
+  --color-button-secondary-border: color-mix(
+    in srgb,
+    var(--color-text) 32%,
+    transparent
+  );
+
   /* —— Bottom nav (stack height for .app-shell padding; tune to Figma main menu) — */
   --bottom-nav-padding-top: 14px;
   --bottom-nav-icon-size: 30px;
@@ -61,6 +85,14 @@
       var(--bottom-nav-gap-icon-label) + var(--bottom-nav-label-size) +
       var(--bottom-nav-gap-to-indicator) + var(--bottom-nav-indicator-height)
   );
+  /* Home only: set at runtime in `HomeHeader` from measured `offsetHeight` (hugs logo + CTA). */
+  --home-header-offset: calc(
+    var(--safe-area-inset-top) + var(--space-2) + var(--button-height-md)
+  );
+  /* Gap between fixed header and first scroll content (not part of `offsetHeight`; avoid baking into --home-header-offset — JS overwrites that var on `<html>`). */
+  --home-header-scroll-gap: var(--space-3);
+  /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
+  --z-chrome: 100;
   --z-bottom-nav: 100;
 }
 
@@ -134,7 +166,8 @@ body {
   margin: 0 auto;
   max-width: var(--app-max-width);
   min-height: 100dvh;
-  padding: var(--space-content-inline) 0
+  /* Top: see `--safe-area-inset-top`; bottom: real home indicator when available. */
+  padding: var(--safe-area-inset-top) 0
     calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px));
 }
 
@@ -153,4 +186,38 @@ body {
   gap: var(--space-screen-gap);
   width: 100%;
   min-width: 0;
+}
+
+/* Home: main scrolls under fixed header; header matches bottom bar z-index. */
+.app-shell--home {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding-top: 0;
+  /* One vertical scroller: `home-body-scroll` only. */
+  overflow: hidden;
+}
+
+.home-body-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Pushes first content below the fixed header; scrolls away so lanes slide under the bar. */
+  padding-top: calc(var(--home-header-offset) + var(--home-header-scroll-gap));
+}
+
+/* At least the “middle” band: viewport below `HomeHeader` and above the tab bar. */
+.app-shell--home .home-body-scroll .home-screen {
+  flex: 1 0 auto;
+  min-height: calc(
+    100dvh - var(--home-header-offset) - var(--home-header-scroll-gap) -
+      var(--bottom-nav-stack-height) - env(safe-area-inset-bottom, 0px)
+  );
 }

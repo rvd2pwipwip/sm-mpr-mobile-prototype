@@ -1,0 +1,75 @@
+/* Figma: pill, touch-friendly row; CTA = fill, secondary = 2px outline only. */
+.btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: var(--button-icon-gap);
+  min-height: var(--button-height-md);
+  padding: 0 var(--button-padding-inline);
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+  border-radius: var(--button-pill-radius);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-button);
+  font-weight: var(--font-weight-button);
+  line-height: var(--line-height-button);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* CTA — solid brand (Figma: secondary accent fill, on-accent label + icons). */
+.btn--cta {
+  color: var(--color-on-accent2);
+  background-color: var(--color-accent2);
+  box-shadow: var(--shadow-card);
+}
+
+/* Secondary — no fill, outline on foreground @ ~32%. */
+.btn--secondary {
+  color: var(--color-text);
+  background-color: transparent;
+  box-shadow: none;
+  border: 2px solid var(--color-button-secondary-border);
+}
+
+.btn__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: var(--letter-spacing-button);
+}
+
+.btn__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+  line-height: 0;
+  color: inherit;
+}
+
+/* SVG or raster assets — scale to the slot. */
+.btn__icon :is(svg, .btn__icon-asset) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Optional: when only icons differ in asset color, `currentColor` on paths inherits `.btn` color. */
+.btn__icon :is(svg) {
+  flex-shrink: 0;
+}
