@@ -20,7 +20,10 @@
   padding-bottom: var(--space-5);
   padding-left: var(--space-content-inline);
   padding-right: var(--space-content-inline);
-  background-color: var(--color-bg);
+  /* Match `ScreenHeader` / tokens: `--color-header-bg` + blur. */
+  background-color: var(--color-header-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
   /* box-shadow: 0 1px 0 var(--color-border-subtle); */
   -webkit-tap-highlight-color: transparent;
 }

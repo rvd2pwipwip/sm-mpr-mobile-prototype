@@ -22,6 +22,14 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Idea:** One **`<button>`** with a **`variant`** prop: **`cta`** = solid brand fill (`--color-accent2` / `--color-on-accent2`); **`subscribe-primary`** = subscription primary (**`--color-accent`** / **`--color-on-accent`**, Figma blue on the Upgrade screen); **`secondary`** = **no fill**, **2px** border (`--color-button-secondary-border` from `color-mix` on `--color-text`). Optional **`startIcon`** / **`endIcon`** are any **React nodes** (usually small inline **SVG** with `currentColor` so the icon matches the label).
 - **Tokens:** `--button-height-md`, `--button-icon-size`, `--font-size-button`, etc. in **`index.css`** — tune to Figma `button/md` without editing the component.
 - **Figma:** [Button / md — CTA + secondary](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115).
+- **`UpgradeButton`:** **`src/components/UpgradeButton.jsx`** wraps **`Button`** **`variant="cta"`** with **`startIcon`** = **`/upgrade.svg`** and label **Upgrade** — same chrome as **`HomeHeader`**; pass **`onClick`** (e.g. **`navigate('/upgrade')`**). Use on **music player** and future player screens so the CTA stays consistent.
+
+---
+
+## ButtonSmall (`ButtonSmall.jsx` — compact CTA / secondary)
+
+- **Idea:** Figma **`button_sm`** (~40px row, 16px label) — same roles as big **`Button`** but smaller: **`variant="cta"`** = **`--color-accent`** fill + **`--color-on-accent`** label/icons (Channel Info **Play**); **`variant="secondary"`** = transparent + **`--color-button-secondary-border`** outline (**Like** / **Share**). Optional **`startIcon`** / **`endIcon`** (e.g. 20×20 SVG with **`currentColor`**). **`fullWidth`** defaults **`false`** (**hug** content); set **`fullWidth`** so the control **`width: 100%`** inside a flex column (e.g. **`music-info__actions-col`**).
+- **Tokens:** **`--button-sm-*`** in **`index.css`**; styles in **`ButtonSmall.css`**.
 
 ---
 
@@ -52,8 +60,8 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 ## Music Channel Info + `useParams` (stacked URLs)
 
 - **Idea:** **URL parameters** identify which fake catalog row you are viewing. **`useParams()`** from **`react-router-dom`** returns an object like **`{ channelId: "pop__channel-slug" }`** when the path is **`/music/:channelId`**. The page calls **`getMusicChannelById(channelId)`** from **`src/data/musicChannels.js`**; if **`null`**, render **`<Navigate to="/" replace />`** so bad links bounce home.
-- **Routes:** **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (stub until **`23:20013`**). **`Home`** passes **`onSelect={() => navigate(`/music/${channel.id}`)}`** into **`MusicChannelCard`**. **Related** tiles reuse **`ContentTileCard`** with **`navigate(`/music/${rel.id}`)`**.
-- **`BottomNav`:** Paths under **`/music`** keep the **Home** tab visually active (same idea as **`/upgrade`**), matching the channel-info Figma comp that shows the main menu.
+- **Routes:** **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**). **`Home`** passes **`onSelect={() => navigate(`/music/${channel.id}`)}`** into **`MusicChannelCard`**. **Related** tiles reuse **`ContentTileCard`** with **`navigate(`/music/${rel.id}`)`**. Action row uses **`ButtonSmall`** (**`fullWidth`** in the side column).
+- **`BottomNav`:** Paths under **`/music`** but **not** ending in **`/play`** keep the **Home** tab visually active (same idea as **`/upgrade`**). On **`/music/:channelId/play`**, **`App.jsx`** omits **`BottomNav`** (`useLocation` + regex) so the player is full-screen; **`MusicPlayer`** uses its own top chrome and **`.music-player-screen.app-shell`** overrides default bottom padding (no tab bar stack height).
 
 ---
 
@@ -67,7 +75,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Bottom navigation (tabs)
 
-- **This project:** `src/components/BottomNav.jsx` + `BottomNav.css`, icon paths in `MprNavIcons.jsx` (replace when Figma exports land). **`App.jsx`** mounts `<BottomNav />` as a **sibling of `<Routes>`** so the bar appears on **Home, Search, and Info**. Tab items = **`NAV_ITEMS`** array → **`NavLink`** with `end` on Home (`/`). Active tab = `className={({ isActive }) => …}` + `--active` styles; **`pathname === '/upgrade'`** also marks **Home** active (subscription flow lives under the Home tab in Figma).
+- **This project:** `src/components/BottomNav.jsx` + `BottomNav.css`; tab icons are **`public/home.svg`**, **`search.svg`**, **`infoGear.svg`** applied with **CSS `mask-image`** + **`background-color: currentColor`** so active/inactive tints still work. **`App.jsx`** mounts `<BottomNav />` as a **sibling of `<Routes>`** (hidden on **`/music/…/play`**). Tab items = **`NAV_ITEMS`** → **`NavLink`** with `end` on Home (`/`). Active tab = `className={({ isActive }) => …}` + `--active` styles; **`/upgrade`** and **`/music/*`** (except **`/play`**) keep **Home** active where Figma shows that stack.
 - **Padding:** `main.app-shell` uses **`calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom))`** bottom padding so scrollable content does not sit under the fixed bar (see `index.css`). **Top** inset on non-Home shell uses **`--safe-area-inset-top` (30px)** (prototype token, not `env(safe-area-inset-top)`). **Home:** fixed **`HomeHeader`** + **`home-body-scroll`** `padding-top` / **`--home-header-offset`** — see **`docs/Header.md`** and the **Home header** section above. As you scroll, content moves **up behind** the header (same `z-chrome` layer as the bottom bar).
 - **Project rules** have the full token checklist → _Bottom navigation_.
 

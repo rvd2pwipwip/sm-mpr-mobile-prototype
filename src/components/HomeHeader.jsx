@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { useUserType } from "../context/UserTypeContext";
-import Button from "./Button";
+import UpgradeButton from "./UpgradeButton";
 import "./HomeHeader.css";
 
 /**
@@ -33,19 +33,6 @@ function useHomeHeaderOffset() {
   }, []);
 
   return ref;
-}
-
-function UpgradeStartIcon() {
-  return (
-    <img
-      className="btn__icon-asset"
-      src="/upgrade.svg"
-      alt=""
-      width="30"
-      height="30"
-      decoding="async"
-    />
-  );
 }
 
 function WordmarkPair() {
@@ -97,9 +84,7 @@ export default function HomeHeader({ onUpgrade }) {
       </div>
       <div className="home-header__actions">
         {userType === "guest" ? (
-          <Button variant="cta" onClick={onUpgrade} startIcon={<UpgradeStartIcon />}>
-            Upgrade
-          </Button>
+          <UpgradeButton onClick={onUpgrade} />
         ) : (
           <span className="home-header__provider-pill" title="Provider access (prototype)">
             Provider

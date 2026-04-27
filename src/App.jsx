@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import { UserTypeProvider } from "./context/UserTypeContext";
 import Home from "./pages/Home";
@@ -8,10 +8,12 @@ import Search from "./pages/Search";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
 
-/** Route table; `BottomNav` is a sibling of `Routes` so tabs show on every main destination. */
-function App() {
+function AppRoutes() {
+  const location = useLocation();
+  const hideBottomNav = /^\/music\/[^/]+\/play\/?$/.test(location.pathname);
+
   return (
-    <UserTypeProvider>
+    <>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/upgrade" element={<Subscription />} />
@@ -20,7 +22,16 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
       </Routes>
-      <BottomNav />
+      {hideBottomNav ? null : <BottomNav />}
+    </>
+  );
+}
+
+/** Route table; `BottomNav` is a sibling of `Routes` (hidden on full-screen music player). */
+function App() {
+  return (
+    <UserTypeProvider>
+      <AppRoutes />
     </UserTypeProvider>
   );
 }

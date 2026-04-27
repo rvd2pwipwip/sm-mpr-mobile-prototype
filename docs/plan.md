@@ -35,7 +35,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Mini player, ads** — later.
 - [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. *Follow-up:* ads / mini player driven by user type.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
-- [x] **Music Channel Info + play route (baseline)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**: hero, Play / Like / Share, description + **More…**, tag row, related **`ContentTileCard`** row); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (**stub** until Figma **`23:20013`**); **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`BottomNav`**: **`/music/*`** counts as **Home** tab (matches channel-info Figma).
+- [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
 
 ---
 
@@ -55,8 +55,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 5. **User mode stub** — **done (baseline)**  
    **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`Home-screen-story.md`).
 
-6. **Stacked routes (music first)** — **done (baseline)**  
-   Channel Info + play **URL** shipped; **full Music Player UI** still to match Figma **`23:20013`**. Then mirror for podcast / radio.
+6. **Stacked routes (music first)** — **done (music)**  
+   Info + player + **no tab bar** on player. Then mirror for podcast / radio.
 
 ---
 
@@ -64,15 +64,13 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Music Player screen** — replace **`MusicPlayer.jsx`** stub with full layout from Figma **`23:20013`** (controls, art, scrubber, etc.).
+1. [ ] **Podcast & radio stacks** — same stacked pattern as music (detail + player routes, Figma nodes in **`docs/figma-nodes.md`** when implementing).
 
-2. [ ] **Podcast & radio stacks** — same stacked pattern as music (detail + player routes, Figma nodes in **`docs/figma-nodes.md`** when implementing).
+2. [ ] **Search & Browse** — replace **`Search`** stub with browse / grid flows (Figma **150+** / **1000+** channel variants); ties to territory story later.
 
-3. [ ] **Search & Browse** — replace **`Search`** stub with browse / grid flows (Figma **150+** / **1000+** channel variants); ties to territory story later.
+3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
-4. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
-
-5. [ ] **`docs/react-learning`** — **mini player** when that chrome exists (music stack + **`useParams`** noted in file).
+4. [ ] **`docs/react-learning`** — **mini player** when that chrome exists (music stack + **`useParams`** noted in file).
 
 ---
 
@@ -93,4 +91,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-27* (shipped **Music Channel Info**; **Next steps** → Music Player UI)
+*Last updated: 2026-04-27* (shipped **Music Player** Figma **`23:20013`**; **BottomNav** off on **`/music/…/play`**)

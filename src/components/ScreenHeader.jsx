@@ -35,22 +35,7 @@ export default function ScreenHeader({ title, startSlot, endSlot, className = ""
   );
 }
 
-/** Chevron back — pair with `screen-header__icon-btn` (50×50 tap target). */
+/** Back control — `public/back.svg` via mask; pair with `screen-header__icon-btn` (50×50 tap target). */
 export function ScreenHeaderChevronBack() {
-  return (
-    <svg
-      className="screen-header__chevron"
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.25"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden={true}
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
+  return <span className="screen-header__back-icon" aria-hidden={true} />;
 }

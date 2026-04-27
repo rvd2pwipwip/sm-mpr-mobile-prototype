@@ -10,13 +10,23 @@
 
   /* —— Color (Light default) — align names with Figma variable sets when mapped — */
   --color-bg: #f4f4f5;
+  --color-bg2: #ffffff;
+  /* Full-viewport screen fill (body + any shell that must match). */
+  --app-screen-bg: linear-gradient(
+    180deg,
+    var(--color-bg) 30%,
+    var(--color-bg2) 100%
+  );
   --color-text: rgba(24, 24, 27, 0.88);
   --color-text-muted: #71717a;
   --color-accent: #0070e0;
   --color-on-accent: #ffffff;
   --color-accent2: #902992;
   --color-on-accent2: #ffffff;
-  --color-nav-bar-bg: #e8e8e8;
+  /* Fixed top chrome (`ScreenHeader`, `HomeHeader`, player header) vs bottom tab bar (`BottomNav`). */
+  --color-header-bg: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  --color-nav-bar-bg: color-mix(in srgb, var(--color-bg2) 80%, transparent);
+
   --color-surface: #ffffff;
   --color-border-subtle: rgba(24, 24, 27, 0.08);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
@@ -74,9 +84,17 @@
     transparent
   );
 
+  /* Figma `button_sm` — Channel Info row (~40px, 16px label) */
+  --button-sm-min-height: 40px;
+  --button-sm-padding-inline: var(--space-4);
+  --button-sm-gap: var(--space-2);
+  --button-sm-font-size: 1rem;
+  --button-sm-font-weight: 500;
+  --button-sm-icon-size: 20px;
+
   /* —— Bottom nav (stack height for .app-shell padding; tune to Figma main menu) — */
   --bottom-nav-padding-top: 14px;
-  --bottom-nav-icon-size: 30px;
+  --bottom-nav-icon-size: 40px;
   --bottom-nav-gap-icon-label: 6px;
   --bottom-nav-gap-to-indicator: 10px;
   --bottom-nav-indicator-height: 4px;
@@ -95,6 +113,8 @@
   /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
   --z-chrome: 100;
   --z-bottom-nav: 100;
+  /* Shared frosted glass for `BottomNav` + `HomeHeader`. */
+  --chrome-backdrop-blur: 6px;
 
   /* Screen stack header — Figma `.screenHeader` in `screenHeaders` (e.g. node 19737:48141); not the Home chrome bar. */
   --screen-header-height: 80px;
@@ -107,14 +127,16 @@
 /* System dark when no manual theme is set */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-bg: #18181b;
+    --color-bg: #0e2338;
+    --color-bg2: #000000;
     --color-text: rgba(250, 250, 250, 0.88);
     --color-text-muted: #a1a1aa;
     --color-accent: #338de6;
     --color-on-accent: #ffffff;
     --color-accent2: #a654a8;
     --color-on-accent2: #ffffff;
-    --color-nav-bar-bg: #27272a;
+    --color-header-bg: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    --color-nav-bar-bg: color-mix(in srgb, var(--color-bg2) 80%, transparent);
     --color-surface: #27272a;
     --color-border-subtle: rgba(250, 250, 250, 0.1);
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
@@ -123,13 +145,20 @@
 
 html[data-theme="light"] {
   --color-bg: #f4f4f5;
+  --color-bg2: #ffffff;
+  --app-screen-bg: linear-gradient(
+    180deg,
+    var(--color-bg) 0%,
+    var(--color-bg2) 100%
+  );
   --color-text: rgba(24, 24, 27, 0.88);
   --color-text-muted: #71717a;
   --color-accent: #0070e0;
   --color-on-accent: #ffffff;
   --color-accent2: #902992;
   --color-on-accent2: #ffffff;
-  --color-nav-bar-bg: #e8e8e8;
+  --color-header-bg: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  --color-nav-bar-bg: color-mix(in srgb, var(--color-bg2) 80%, transparent);
   --color-surface: #ffffff;
   --color-border-subtle: rgba(24, 24, 27, 0.08);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
@@ -137,13 +166,20 @@ html[data-theme="light"] {
 
 html[data-theme="dark"] {
   --color-bg: #18181b;
+  --color-bg2: #09090b;
+  --app-screen-bg: linear-gradient(
+    180deg,
+    var(--color-bg) 0%,
+    var(--color-bg2) 100%
+  );
   --color-text: rgba(250, 250, 250, 0.88);
   --color-text-muted: #a1a1aa;
   --color-accent: #338de6;
   --color-on-accent: #ffffff;
   --color-accent2: #a654a8;
   --color-on-accent2: #ffffff;
-  --color-nav-bar-bg: #27272a;
+  --color-header-bg: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  --color-nav-bar-bg: color-mix(in srgb, var(--color-bg2) 80%, transparent);
   --color-surface: #27272a;
   --color-border-subtle: rgba(250, 250, 250, 0.1);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
@@ -159,7 +195,8 @@ body {
   margin: 0;
   min-height: 100dvh;
   font-family: var(--font-sans);
-  background-color: var(--color-bg);
+  background: var(--app-screen-bg);
+  background-attachment: fixed;
   color: var(--color-text);
   overflow-x: hidden;
 }
@@ -209,6 +246,8 @@ body {
   height: 100dvh;
   max-height: 100dvh;
   padding-top: 0;
+  /* Scroll column fills the viewport; tab bar + scroll padding handle insets. */
+  padding-bottom: 0;
   /* One vertical scroller: `home-body-scroll` only. */
   overflow: hidden;
 }
@@ -222,13 +261,17 @@ body {
   -webkit-overflow-scrolling: touch;
   /* Pushes first content below the fixed header; scrolls away so lanes slide under the bar. */
   padding-top: calc(var(--home-header-offset) + var(--home-header-scroll-gap));
+  /* Scrollable inset so the last lane clears the tab bar + home indicator; content still scrolls behind it. */
+  padding-bottom: calc(
+    var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px)
+  );
 }
 
-/* At least the “middle” band: viewport below `HomeHeader` and above the tab bar. */
+/* At least the “middle” band: viewport below `HomeHeader` (nav overlays the bottom). */
 .app-shell--home .home-body-scroll .home-screen {
   flex: 1 0 auto;
   min-height: calc(
     100dvh - var(--home-header-offset) - var(--home-header-scroll-gap) -
-      var(--bottom-nav-stack-height) - env(safe-area-inset-bottom, 0px)
+      env(safe-area-inset-bottom, 0px)
   );
 }
