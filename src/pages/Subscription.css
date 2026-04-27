@@ -1,0 +1,200 @@
+/* Subscription (Upgrade) — Figma `220:40551`; scrolls under fixed top bar; bottom nav from `.app-shell`. */
+
+.subscription-screen.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.subscription-screen__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: calc(var(--screen-header-height) + var(--space-3));
+}
+
+.subscription-screen__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-screen-gap);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding-inline: var(--space-content-inline);
+  padding-bottom: var(--space-8);
+}
+
+.subscription-screen__hero {
+  text-align: center;
+  width: 100%;
+}
+
+.subscription-screen__title {
+  margin: 0 0 var(--space-5);
+  font-size: clamp(1.75rem, 6.5vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.subscription-screen__price-intro,
+.subscription-screen__price {
+  margin: 0;
+  font-size: clamp(1.25rem, 4.2vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.subscription-screen__price {
+  margin-top: var(--space-1);
+}
+
+.subscription-screen__benefits {
+  align-self: stretch;
+  margin: 0;
+  padding-left: 1.75rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.subscription-screen__benefits li {
+  margin-bottom: var(--space-1);
+}
+
+.subscription-screen__benefits li:last-child {
+  margin-bottom: 0;
+}
+
+.subscription-screen__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-screen-gap);
+  width: 100%;
+}
+
+.subscription-screen__btn-primary {
+  width: 100%;
+  max-width: 251px;
+}
+
+.subscription-screen__btn-secondary {
+  max-width: 100%;
+}
+
+.subscription-screen__provider-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.subscription-screen__provider-label {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.subscription-screen__legal {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.subscription-screen__legal-text {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.subscription-screen__legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.subscription-screen__legal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  font-size: 0.625rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.subscription-screen__legal-link:hover {
+  text-decoration: underline;
+}
+
+.subscription-screen__legal-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Prototype-only: switch user type without leaving the screen */
+.subscription-screen__prototype {
+  align-self: stretch;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
+}
+
+.subscription-screen__prototype-label {
+  margin: 0 0 var(--space-3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.subscription-screen__prototype-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.subscription-screen__prototype-btn {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-button-secondary-border);
+  border-radius: var(--button-pill-radius);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background-color: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.subscription-screen__prototype-btn--on {
+  color: var(--color-on-accent2);
+  background-color: var(--color-accent2);
+  border-color: var(--color-accent2);
+}
+
+.subscription-screen__prototype-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

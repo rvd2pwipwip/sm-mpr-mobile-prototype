@@ -2,6 +2,7 @@ import "./Button.css";
 
 /**
  * Figma `button/md` (node 19726:48115): CTA = solid `accent2` fill; secondary = 2px outline, transparent fill.
+ * `subscribe-primary` = blue `accent` fill (Subscription screen, Figma `220:40551`).
  * Optional `startIcon` / `endIcon` (e.g. `<svg />` with `currentColor`, or `<img className="btn__icon-asset" src="…" alt="" />`).
  */
 export default function Button({

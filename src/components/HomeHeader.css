@@ -79,6 +79,37 @@ html[data-theme="dark"] .home-header__wordmark--dark {
   justify-content: flex-end;
 }
 
+.home-header--subscribed {
+  justify-content: center;
+}
+
+.home-header__brand--solo {
+  flex: 0 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.home-header--subscribed .home-header__brand--solo .home-header__wordmark {
+  object-position: center center;
+}
+
+.home-header__provider-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-height-md);
+  padding: 0 var(--button-padding-inline);
+  border-radius: var(--button-pill-radius);
+  border: 2px solid var(--color-button-secondary-border);
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-button);
+  color: var(--color-text);
+  background-color: transparent;
+  cursor: default;
+  user-select: none;
+}
+
 /* Header chrome: use compact button if 60px is too tall — override tokens in scope. */
 /* .home-header--fixed .btn {
   min-height: 2.5rem;

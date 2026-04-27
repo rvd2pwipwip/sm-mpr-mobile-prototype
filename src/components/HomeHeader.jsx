@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+import { useUserType } from "../context/UserTypeContext";
 import Button from "./Button";
 import "./HomeHeader.css";
 
@@ -47,43 +48,63 @@ function UpgradeStartIcon() {
   );
 }
 
+function WordmarkPair() {
+  return (
+    <>
+      <img
+        className="home-header__wordmark home-header__wordmark--light"
+        src="/stingrayMusic.svg"
+        alt=""
+        width="160"
+        height="32"
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        className="home-header__wordmark home-header__wordmark--dark"
+        src="/stingrayMusicDark.svg"
+        alt=""
+        width="160"
+        height="32"
+        loading="eager"
+        decoding="async"
+      />
+    </>
+  );
+}
+
 /**
- * Home top bar: logo (`public/stingrayMusic*.svg`) + guest “Upgrade” CTA.
- * User-type variants (subscribed, provider) come later — see `docs/Home-screen-story.md`.
+ * Home top bar: wordmark; guest sees Upgrade — provided / subscribed per `docs/Home-screen-story.md`.
  */
 export default function HomeHeader({ onUpgrade }) {
   const headerRef = useHomeHeaderOffset();
+  const { userType } = useUserType();
+
+  if (userType === "subscribed") {
+    return (
+      <header ref={headerRef} className="home-header--fixed home-header--subscribed">
+        <div className="home-header__brand home-header__brand--solo">
+          <WordmarkPair />
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header ref={headerRef} className="home-header--fixed">
       <div className="home-header__brand">
-        <img
-          className="home-header__wordmark home-header__wordmark--light"
-          src="/stingrayMusic.svg"
-          alt=""
-          width="160"
-          height="32"
-          loading="eager"
-          decoding="async"
-        />
-        <img
-          className="home-header__wordmark home-header__wordmark--dark"
-          src="/stingrayMusicDark.svg"
-          alt=""
-          width="160"
-          height="32"
-          loading="eager"
-          decoding="async"
-        />
+        <WordmarkPair />
       </div>
       <div className="home-header__actions">
-        <Button
-          variant="cta"
-          onClick={onUpgrade}
-          startIcon={<UpgradeStartIcon />}
-        >
-          Upgrade
-        </Button>
+        {userType === "guest" ? (
+          <Button variant="cta" onClick={onUpgrade} startIcon={<UpgradeStartIcon />}>
+            Upgrade
+          </Button>
+        ) : (
+          <span className="home-header__provider-pill" title="Provider access (prototype)">
+            Provider
+          </span>
+        )}
       </div>
     </header>
   );

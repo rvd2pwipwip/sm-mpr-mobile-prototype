@@ -32,7 +32,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Card components** — `ContentTileCard` (shared layout) + `MusicChannelCard`, `PodcastCard`, `RadioStationCard` in `src/components/` (tokenized `--card-tile-*` / type styles in `index.css`).
 - [x] **ContentSwimlane** — `src/components/ContentSwimlane` (inset title + More, full-bleed scroll, inner `padding-inline`).
 - [x] **`react-router-dom`** — `BrowserRouter` in `main.jsx`; **`Home`** at `/` in `src/pages/Home.jsx`; `App.jsx` holds `<Routes>`.
-- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** (wordmark + guest Upgrade) + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Mini player, ads, user-mode header variations** — later (steps 4 detail / 5).
+- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Mini player, ads** — later.
+- [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. *Follow-up:* ads / mini player driven by user type.
 
 ---
 
@@ -47,20 +48,21 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes. **Chrome** (nav, header, …) in step 4.
 
 4. **Chrome after core content** — **done (baseline)**  
-   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. *Follow-up:* mini player, ads, user-type header, Listen again / Favorites / Recommendations rails, full banner art / SVGs from Figma.
+   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. *Follow-up:* mini player, ads, Listen again / Favorites / Recommendations rails, full banner art / SVGs from Figma.
 
-5. **User mode stub**  
-   Context or simple state: guest | provided | subscribed — drives header CTA, ad visibility, and footer content height per `Home-screen-story.md`.
+5. **User mode stub** — **done (baseline)**  
+   **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`Home-screen-story.md`).
 
 ---
 
 ## Next steps (near term)
 
 - [x] `react-router-dom` + `BrowserRouter` + **`Home`** at `/` + **Search** `/search` + **Info** `/info` + **`BottomNav`** (`NavLink`).
+- [x] **Subscription (Upgrade) screen** — **`/upgrade`**, Figma `220:40551`, **user type** context + **`HomeHeader`** variants.
 - [ ] **Stacked routes** (detail / player) when those screens exist.
 - [x] **Cards** + **swimlane** (see above).
 - [ ] Refine nav/header/card tokens and **swap placeholder SVGs** (icons, logo) from Figma.
-- [ ] `docs/react-learning` — user-mode / mini player when added.
+- [ ] `docs/react-learning` — mini player when added.
 
 ---
 
@@ -81,4 +83,4 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-24* (Home chrome: nav, header, banner)
+*Last updated: 2026-04-27* (shipped: Subscription / Upgrade + UserTypeContext)

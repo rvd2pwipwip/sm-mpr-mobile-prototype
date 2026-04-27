@@ -35,6 +35,13 @@
   box-shadow: var(--shadow-card);
 }
 
+/* Figma subscription primary — blue `accent` fill (Upgrade now). */
+.btn--subscribe-primary {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  box-shadow: var(--shadow-card);
+}
+
 /* Secondary — no fill, outline on foreground @ ~32%. */
 .btn--secondary {
   color: var(--color-text);

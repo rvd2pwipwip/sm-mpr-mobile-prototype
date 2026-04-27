@@ -1,0 +1,108 @@
+/* Figma: `screenHeaders` (e.g. 19737:48141) — fixed 80px, blurred bar; title geometric center. */
+
+.screen-header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-chrome);
+  width: 100%;
+  max-width: var(--app-max-width);
+  height: var(--screen-header-height);
+  box-sizing: border-box;
+  background-color: color-mix(in srgb, var(--color-bg) 90%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  /* border-bottom: 1px solid var(--color-border-subtle); */
+}
+
+.screen-header__chrome {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Side controls: true horizontal center of title is unaffected by asymmetric slots. */
+.screen-header__side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.screen-header__side--start {
+  left: var(--screen-header-inline);
+}
+
+.screen-header__side--end {
+  right: var(--screen-header-inline);
+}
+
+.screen-header__side > * {
+  pointer-events: auto;
+}
+
+.screen-header__title-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: calc(var(--screen-header-inline) + 50px);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.screen-header__title {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--screen-header-title-size);
+  font-weight: var(--screen-header-title-weight);
+  line-height: 1.1;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.screen-header__title-slot {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--screen-header-title-size);
+  font-weight: var(--screen-header-title-weight);
+  line-height: 1.1;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+}
+
+.screen-header__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-text);
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.screen-header__icon-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.screen-header__chevron {
+  display: block;
+}

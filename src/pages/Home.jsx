@@ -1,6 +1,7 @@
 import { MUSIC_CHANNELS } from "../data/musicChannels";
 import { PODCASTS } from "../data/podcasts";
 import { RADIO_STATIONS } from "../data/radioStations";
+import { useNavigate } from "react-router-dom";
 import ContentSwimlane from "../components/ContentSwimlane";
 import HomeBanner from "../components/HomeBanner";
 import HomeHeader from "../components/HomeHeader";
@@ -12,9 +13,11 @@ const LANE_SIZE = 8;
 
 /** Home: fixed `HomeHeader` (top chrome); `home-body-scroll` is the main column so lanes scroll under the header. */
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <main className="app-shell app-shell--home">
-      <HomeHeader onUpgrade={() => {}} />
+      <HomeHeader onUpgrade={() => navigate("/upgrade")} />
       <div className="home-body-scroll">
         <div className="home-screen">
           <div className="content-inset">

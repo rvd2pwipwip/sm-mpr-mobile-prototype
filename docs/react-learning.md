@@ -19,7 +19,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Button (`Button.jsx` — CTA vs secondary)
 
-- **Idea:** One **`<button>`** with a **`variant`** prop: **`cta`** = solid brand fill (`--color-accent2` / `--color-on-accent2`); **`secondary`** = **no fill**, **2px** border (`--color-button-secondary-border` from `color-mix` on `--color-text`). Optional **`startIcon`** / **`endIcon`** are any **React nodes** (usually small inline **SVG** with `currentColor` so the icon matches the label).
+- **Idea:** One **`<button>`** with a **`variant`** prop: **`cta`** = solid brand fill (`--color-accent2` / `--color-on-accent2`); **`subscribe-primary`** = subscription primary (**`--color-accent`** / **`--color-on-accent`**, Figma blue on the Upgrade screen); **`secondary`** = **no fill**, **2px** border (`--color-button-secondary-border` from `color-mix` on `--color-text`). Optional **`startIcon`** / **`endIcon`** are any **React nodes** (usually small inline **SVG** with `currentColor` so the icon matches the label).
 - **Tokens:** `--button-height-md`, `--button-icon-size`, `--font-size-button`, etc. in **`index.css`** — tune to Figma `button/md` without editing the component.
 - **Figma:** [Button / md — CTA + secondary](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115).
 
@@ -40,6 +40,15 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## User type context + Subscription (Upgrade) screen
+
+- **Idea:** **`createContext`** + **`UserTypeProvider`** in **`src/context/UserTypeContext.jsx`** hold prototype-wide **`userType`**: **`guest`**, **`provided`**, or **`subscribed`**. **`useUserType()`** returns **`{ userType, setUserType }`**. Wrap the tree that needs it (here: entire **`App`** inside **`App.jsx`**) so **`HomeHeader`**, **`Subscription`**, and later ads can read the same state without **prop drilling**.
+- **Route:** **`/upgrade`** → **`src/pages/Subscription.jsx`** (+ **`Subscription.css`**), aligned with Figma **`220:40551`**: fixed blurred **back** bar, headline + price, bullet benefits, **Upgrade now** ( **`Button`** **`variant="subscribe-primary"`** — blue **`--color-accent`** fill via **`btn--subscribe-primary`**), **Select provider** (secondary + external-link icon; sets **provided** and opens Stingray provider SSO in a new tab), legal copy + Terms/Privacy links, and a dashed **Preview as** control row to flip type for demos.
+- **`HomeHeader`** reads **`userType`**: guest shows **Upgrade**; provided shows an outlined **Provider** pill; subscribed shows **only** the centered wordmark (see **`Home-screen-story.md`**).
+- **Router note:** **`BottomNav`** treats **`/upgrade`** as part of the **Home** tab ( **`useLocation`** + extra active check) so the bottom bar matches the Figma comp while the URL stays **`/upgrade`**.
+
+---
+
 ## React Router (`BrowserRouter`, `Routes`, `NavLink`)
 
 - **This project:** `BrowserRouter` wraps the app in **`src/main.jsx`**. **`src/App.jsx`** defines **`<Routes>`** / **`<Route>`** (start with **`path="/"`** → **`<Home />`** in `src/pages/Home.jsx`). Add tab routes and detail routes here as you build screens.
@@ -50,7 +59,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Bottom navigation (tabs)
 
-- **This project:** `src/components/BottomNav.jsx` + `BottomNav.css`, icon paths in `MprNavIcons.jsx` (replace when Figma exports land). **`App.jsx`** mounts `<BottomNav />` as a **sibling of `<Routes>`** so the bar appears on **Home, Search, and Info**. Tab items = **`NAV_ITEMS`** array → **`NavLink`** with `end` on Home (`/`). Active tab = `className={({ isActive }) => …}` + `--active` styles.
+- **This project:** `src/components/BottomNav.jsx` + `BottomNav.css`, icon paths in `MprNavIcons.jsx` (replace when Figma exports land). **`App.jsx`** mounts `<BottomNav />` as a **sibling of `<Routes>`** so the bar appears on **Home, Search, and Info**. Tab items = **`NAV_ITEMS`** array → **`NavLink`** with `end` on Home (`/`). Active tab = `className={({ isActive }) => …}` + `--active` styles; **`pathname === '/upgrade'`** also marks **Home** active (subscription flow lives under the Home tab in Figma).
 - **Padding:** `main.app-shell` uses **`calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom))`** bottom padding so scrollable content does not sit under the fixed bar (see `index.css`). **Top** inset on non-Home shell uses **`--safe-area-inset-top` (30px)** (prototype token, not `env(safe-area-inset-top)`). **Home:** fixed **`HomeHeader`** + **`home-body-scroll`** `padding-top` / **`--home-header-offset`** — see **`docs/Header.md`** and the **Home header** section above. As you scroll, content moves **up behind** the header (same `z-chrome` layer as the bottom bar).
 - **Project rules** have the full token checklist → _Bottom navigation_.
 

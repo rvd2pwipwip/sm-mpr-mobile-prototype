@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { MprNavIconHome, MprNavIconInfo, MprNavIconSearch } from "./MprNavIcons";
 import "./BottomNav.css";
 
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
 /** Fixed tab bar: `NavLink` + URL = active state (URL-driven, see docs/react-learning). */
 export default function BottomNav({ className = "" }) {
   const rootClass = ["bottom-nav", className].filter(Boolean).join(" ");
+  const location = useLocation();
 
   return (
     <nav className={rootClass}>
@@ -18,13 +19,18 @@ export default function BottomNav({ className = "" }) {
         {NAV_ITEMS.map((item) => {
           const { id, to, end, label, Icon: NavIcon } = item;
 
+          const homeStackActive = id === "home" && location.pathname === "/upgrade";
+
           return (
             <NavLink
               key={id}
               to={to}
               end={Boolean(end)}
               className={({ isActive }) =>
-                ["bottom-nav__item", isActive ? "bottom-nav__item--active" : ""]
+                [
+                  "bottom-nav__item",
+                  isActive || homeStackActive ? "bottom-nav__item--active" : "",
+                ]
                   .filter(Boolean)
                   .join(" ")
               }
