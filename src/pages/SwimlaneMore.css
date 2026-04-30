@@ -1,15 +1,4 @@
-/* View More: fixed `ScreenHeader` + scroll; 2 equal columns, same tile width as swimlane (Figma). */
-
-.swimlane-more.app-shell {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  padding-top: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-}
+/* View More: fixed `ScreenHeader` + scroll behind fixed footer (see `index.css` `.app-shell--footer-fixed`). */
 
 .swimlane-more__scroll {
   flex: 1 1 auto;
@@ -17,6 +6,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-top: calc(var(--screen-header-height) + var(--space-3));
+  padding-bottom: var(--footer-stack-scroll-padding);
 }
 
 .swimlane-more__grid {
@@ -30,7 +20,7 @@
      two 175px cards + 30px between columns in the 380px content column (≈ `justify-between`). */
   --swimlane-more-inline: 40px;
   --swimlane-more-gap: 30px;
-  padding: 0 var(--swimlane-more-inline) var(--space-8);
+  padding: 0 var(--swimlane-more-inline) 0;
   grid-template-columns: repeat(2, var(--card-tile-width));
   column-gap: var(--swimlane-more-gap);
   row-gap: var(--swimlane-more-gap);

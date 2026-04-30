@@ -111,6 +111,11 @@
   /* Reserve space above the tab strip when MiniPlayer is visible (`PlaybackContext`). */
   --mini-player-height: 80px;
   --mini-player-offset: 0px;
+  /* Bottom inset for vertical scrollers under fixed footer (MiniPlayer + BottomNav [+ ads] + home indicator). */
+  --footer-stack-scroll-padding: calc(
+    var(--mini-player-offset) + var(--bottom-nav-stack-height) +
+      env(safe-area-inset-bottom, 0px)
+  );
   /* Home only: set at runtime in `HomeHeader` from measured `offsetHeight` (hugs logo + CTA). */
   --home-header-offset: calc(
     var(--safe-area-inset-top) + var(--space-2) + var(--button-height-md)
@@ -245,11 +250,7 @@ body {
   max-width: var(--app-max-width);
   min-height: 100dvh;
   /* Top: see `--safe-area-inset-top`; bottom: real home indicator when available. */
-  padding: var(--safe-area-inset-top) 0
-    calc(
-      var(--mini-player-offset) + var(--bottom-nav-stack-height) +
-        env(safe-area-inset-bottom, 0px)
-    );
+  padding: var(--safe-area-inset-top) 0 var(--footer-stack-scroll-padding);
 }
 
 .content-inset {
@@ -269,8 +270,14 @@ body {
   min-width: 0;
 }
 
-/* Home: main scrolls under fixed header; header matches bottom bar z-index. */
-.app-shell--home {
+/*
+ * Screens with fixed footer chrome (MiniPlayer + BottomNav + optional ad strip):
+ * `main` is full viewport with no vertical padding — content scrolls in an inner
+ * column (`home-body-scroll`, `*-__scroll`, or `.app-shell-footer-scroll`) behind
+ * the footer. Footer clearance = `var(--footer-stack-scroll-padding)`.
+ */
+.app-shell--home,
+.app-shell--footer-fixed {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -279,9 +286,7 @@ body {
   height: 100dvh;
   max-height: 100dvh;
   padding-top: 0;
-  /* Scroll column fills the viewport; tab bar + scroll padding handle insets. */
   padding-bottom: 0;
-  /* One vertical scroller: `home-body-scroll` only. */
   overflow: hidden;
 }
 
@@ -294,11 +299,17 @@ body {
   -webkit-overflow-scrolling: touch;
   /* Pushes first content below the fixed header; scrolls away so lanes slide under the bar. */
   padding-top: calc(var(--home-header-offset) + var(--home-header-scroll-gap));
-  /* Scrollable inset so the last lane clears the tab bar + home indicator; content still scrolls behind it. */
-  padding-bottom: calc(
-    var(--mini-player-offset) + var(--bottom-nav-stack-height) +
-      env(safe-area-inset-bottom, 0px)
-  );
+  padding-bottom: var(--footer-stack-scroll-padding);
+}
+
+/* Tab stubs (Search, Info): no fixed stack header — top inset from prototype safe-area token only. */
+.app-shell-footer-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--footer-stack-scroll-padding);
 }
 
 /* At least the “middle” band: viewport below `HomeHeader` (nav overlays the bottom). */

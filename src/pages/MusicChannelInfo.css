@@ -1,15 +1,4 @@
-/* Channel Info — Figma `musicInfo` `25:7067`; scrolls under `ScreenHeader`; bottom nav from `.app-shell`. */
-
-.music-info.app-shell {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  padding-top: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-}
+/* Channel Info — Figma `musicInfo` `25:7067`; scrolls under `ScreenHeader`; full-bleed behind fixed footer (see `index.css` `.app-shell--footer-fixed`). */
 
 .music-info__scroll {
   flex: 1 1 auto;
@@ -17,6 +6,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-top: calc(var(--screen-header-height) + var(--space-3));
+  padding-bottom: var(--footer-stack-scroll-padding);
 }
 
 /* Same vertical rhythm as Home: inset blocks + full-bleed horizontal lanes (see `ContentSwimlane`). */
@@ -26,7 +16,6 @@
   gap: var(--space-5);
   width: 100%;
   min-width: 0;
-  padding-bottom: var(--space-8);
   box-sizing: border-box;
 }
 

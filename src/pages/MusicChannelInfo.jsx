@@ -34,7 +34,7 @@ export default function MusicChannelInfo() {
   const goPlay = () => navigate(`/music/${channel.id}/play`);
 
   return (
-    <main className="app-shell music-info">
+    <main className="app-shell app-shell--footer-fixed music-info">
       <ScreenHeader
         startSlot={
           <button

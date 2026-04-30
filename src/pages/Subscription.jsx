@@ -59,7 +59,7 @@ export default function Subscription() {
   };
 
   return (
-    <main className="app-shell subscription-screen">
+    <main className="app-shell app-shell--footer-fixed subscription-screen">
       <ScreenHeader
         title="Upgrade"
         startSlot={

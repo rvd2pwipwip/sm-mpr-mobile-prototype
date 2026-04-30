@@ -10,7 +10,7 @@ This document explains **how scrollable content clears the footer stack** — **
 
 Fixed elements (**`BottomNav`**, **`MiniPlayer`**) sit **outside** the normal layout flow—the **viewport** still shows scrolling content underneath if you don’t reserve **equal** space **at the bottom of the scrolling region**.
 
-This repo uses **`padding-bottom`** on the **scroll containers** (**`.app-shell`**, **`home-body-scroll`**) expressed as **`calc(...)`** of **CSS variables** so:
+This repo uses **`padding-bottom`** on scroll containers (**`.app-shell`** or inner **`overflow-y: auto`** columns like **`.home-body-scroll`**) via **`var(--footer-stack-scroll-padding)`** (**`calc(...)`** of **CSS variables**) so:
 
 - Designers can tune **`--mini-player-height`** **once**.
 - **`PlaybackContext`** can flip **`--mini-player-offset`** **without** JSX passing inline styles into every **`main`**.
@@ -23,6 +23,7 @@ This repo uses **`padding-bottom`** on the **scroll containers** (**`.app-shell`
 |-------|---------|------|
 | **`--mini-player-height`** | **`80px`** | Matches Figma mini strip height (**`MiniPlayer`** **`min-height`**). |
 | **`--mini-player-offset`** | **`0px`** on **`:root`**; **`<html>`** inline style overrides when the mini strip is visible (**§4**). |
+| **`--footer-stack-scroll-padding`** | **`calc(...)`** | Single token for **`padding-bottom`** on **`main`** (default **`app-shell`**) **or** on inner **`overflow-y: auto`** scrollers — sum of **`--mini-player-offset`**, **`--bottom-nav-stack-height`**, **`env(safe-area-inset-bottom)`**. |
 | **`--bottom-nav-stack-height`** | **`calc(...)`** | Total **height of the bottom chrome column** from the bottom of the viewport **up through** tab row + optional ad strip (see **§3**). |
 | **`--bottom-nav-ad-height`** | **`0px`** by default | Becomes **`--visual-ad-strip-min-height`** when **`html[data-visual-ads]`** is set (**guest / provided**). |
 | **`--visual-ad-strip-min-height`** | **`86px`** | Placeholder ad block under tabs. |
@@ -74,40 +75,44 @@ When **`miniPlayerVisible`** becomes **`false`**, cleanup resets **`"--mini-play
 
 ---
 
-## 5. Bottom padding on scrollable shells — the same sum in two places
+## 5. Bottom padding on scrollable shells — `--footer-stack-scroll-padding`
 
-### 5.1 `.app-shell` (most pages)
-
-```css
-padding: var(--safe-area-inset-top) 0
-  calc(
-    var(--mini-player-offset) + var(--bottom-nav-stack-height) +
-      env(safe-area-inset-bottom, 0px)
-  );
-```
-
-**Reading order (bottom padding):**
-
-1. **`--mini-player-offset`** — space for **fixed** mini strip when visible ( **`0`** or **`var(--mini-player-height)`** ).
-2. **`--bottom-nav-stack-height`** — space for **fixed** tab bar (+ ad).
-3. **`env(safe-area-inset-bottom)`** — home indicator / device safe area.
-
-**Net effect:** The **last** line of scrollable content can scroll **up** until it clears **both** the mini bar and the tab stack.
-
-### 5.2 `.home-body-scroll` (Home-only inner scroller)
-
-**`.app-shell--home`** sets **`padding-bottom: 0`** — the **`home-body-scroll`** child owns bottom padding instead:
+Defined once on **`:root`**:
 
 ```css
-padding-bottom: calc(
+--footer-stack-scroll-padding: calc(
   var(--mini-player-offset) + var(--bottom-nav-stack-height) +
     env(safe-area-inset-bottom, 0px)
 );
 ```
 
-**Why duplicate the formula?** Home uses a **column flex** layout (**fixed **`HomeHeader`**, internal scroll **`.home-body-scroll`**). **Only** the **inner** scroller should get bottom padding so swimlanes stop **under** the header pattern without double-counting.
+**Reading order (terms):**
 
-**Rule:** Any **new** full-height screen with an **inner** scroll column should repeat this **`calc`** (or extract a shared CSS custom property **`*--footer-scroll-clearance`*` in a future refactor).
+1. **`--mini-player-offset`** — space for **fixed** mini strip when visible ( **`0`** or **`var(--mini-player-height)`** ).
+2. **`--bottom-nav-stack-height`** — space for **fixed** tab bar (+ ad).
+3. **`env(safe-area-inset-bottom)`** — home indicator / device safe area.
+
+### 5.1 `.app-shell` (default stacked pages — scroll is the shell)
+
+```css
+padding: var(--safe-area-inset-top) 0 var(--footer-stack-scroll-padding);
+```
+
+**Net effect:** When **`main`** is the scroll container (routes that **do not** use **`.app-shell--footer-fixed`**), the last line of content can scroll up until it clears the mini bar and the tab stack.
+
+### 5.2 Full-viewport **`main`** + inner scroller (**`.app-shell--home`**, **`.app-shell--footer-fixed`**)
+
+**Home** (**`.app-shell--home`**) and **Music Channel Info**, **Subscription**, **Swimlane “More”**, **Search**, **Info**, etc. set **`padding-top: 0`** and **`padding-bottom: 0`** on **`main`**, put **`overflow-y: auto`** on a **flex child**, and **`padding-bottom: var(--footer-stack-scroll-padding)`** on that same child so content **fills the viewport** and **scrolls behind** fixed **`BottomNav`** / **`MiniPlayer`**.
+
+Those inner scrollers (**`.home-body-scroll`**, **`.music-info__scroll`**, **`.subscription-screen__scroll`**, **`.swimlane-more__scroll`**, **`.app-shell-footer-scroll`**, …) share:
+
+```css
+padding-bottom: var(--footer-stack-scroll-padding);
+```
+
+**Tab stubs without a stacked screen header** use **`.app-shell-footer-scroll`** with **`padding-top: var(--safe-area-inset-top)`** only — no duplicate bottom **`calc`** in component CSS.
+
+**Rule:** Prefer **`var(--footer-stack-scroll-padding)`** on whichever element is **`overflow-y: auto`** — never subtract the footer twice (avoid bottom padding on both **`main`** and the inner scroller unless one is **`0`**).
 
 ---
 
@@ -162,7 +167,7 @@ Physically **`MiniPlayer`** is positioned **`bottom`** **above** **`BottomNav`**
 2. **`--mini-player-offset`** = extra scroll **padding** equal to **`--mini-player-height`** when the mini strip is visible.
 3. **`PlaybackContext`** sets **`--mini-player-offset`** on **`<html>`** — **`index.css`** consumes it in **`calc(...)`** for padding.
 4. **`html[data-visual-ads]`** increases **`--bottom-nav-stack-height`** — **`MiniPlayer`** **`bottom`** **and** scroll **`calc(...)`** both pick it up.
-5. **Home** repeats the same bottom **`calc(...)`** on **`.home-body-scroll`**, not on **`.app-shell--home`** (inner scroller owns padding under **`HomeHeader`**).
+5. **Full-footer screens** (**`.app-shell--home`**, **`.app-shell--footer-fixed`**) put **`padding-bottom: var(--footer-stack-scroll-padding)`** on the **inner** **`overflow-y: auto`** column, **`not`** on **`main`** ( **`main`** has **`padding-bottom: 0`** so the viewport is edge-to-edge and content scrolls under the stacks).
 
 ---
 
@@ -171,7 +176,7 @@ Physically **`MiniPlayer`** is positioned **`bottom`** **above** **`BottomNav`**
 1. In DevTools → **Elements** → **`<html>`** → **Styles**, watch **`--mini-player-offset`** flip when you show/hide the mini bar (music flow + minimize).
 2. Toggle **`data-visual-ads`** on **`<html>`** (or switch user type) and confirm **`--bottom-nav-stack-height`** changes in **Computed** — **`MiniPlayer`** should move up with the taller footer.
 3. Temporarily set **`--mini-player-height`** to **`120px`** in **`index.css`** — scroll gap and mini strip **min-height** should track if wiring is correct.
-4. Compare **`.app-shell`** and **`.home-body-scroll`** bottom padding on **Home** — the **`calc(...)`** terms should match.
+4. Inspect **Computed** **`--footer-stack-scroll-padding`** on **Home** vs **Music Channel Info** — it should track **`--mini-player-offset`** and **`--bottom-nav-stack-height`** identically wherever the footer shows.
 
 ---
 

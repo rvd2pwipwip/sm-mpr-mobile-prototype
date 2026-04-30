@@ -1,15 +1,4 @@
-/* Subscription (Upgrade) — Figma `220:40551`; scrolls under fixed top bar; bottom nav from `.app-shell`. */
-
-.subscription-screen.app-shell {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  padding-top: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-}
+/* Subscription (Upgrade) — Figma `220:40551`; scrolls under `ScreenHeader`; full-bleed behind fixed footer. */
 
 .subscription-screen__scroll {
   flex: 1 1 auto;
@@ -17,6 +6,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-top: calc(var(--screen-header-height) + var(--space-3));
+  padding-bottom: var(--footer-stack-scroll-padding);
 }
 
 .subscription-screen__inner {
@@ -28,7 +18,6 @@
   max-width: 500px;
   margin: 0 auto;
   padding-inline: var(--space-content-inline);
-  padding-bottom: var(--space-8);
 }
 
 .subscription-screen__hero {

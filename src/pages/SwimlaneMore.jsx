@@ -55,7 +55,7 @@ export default function SwimlaneMore() {
   const goBack = () => navigate(-1);
 
   return (
-    <main className="app-shell swimlane-more">
+    <main className="app-shell app-shell--footer-fixed swimlane-more">
       <ScreenHeader
         title={config.title}
         startSlot={
