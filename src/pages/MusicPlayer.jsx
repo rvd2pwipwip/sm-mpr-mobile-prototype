@@ -1,9 +1,15 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import MusicSkipButton from "../components/MusicSkipButton";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import UpgradeButton from "../components/UpgradeButton";
 import VisualAdStrip from "../components/VisualAdStrip";
+import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
@@ -14,9 +20,10 @@ import "./MusicPlayer.css";
 function PlayerHeaderIcon({ variant }) {
   return (
     <span
-      className={["music-player__header-icon-mask", `music-player__header-icon-mask--${variant}`].join(
-        " "
-      )}
+      className={[
+        "music-player__header-icon-mask",
+        `music-player__header-icon-mask--${variant}`,
+      ].join(" ")}
       aria-hidden={true}
     />
   );
@@ -26,9 +33,10 @@ function PlayerHeaderIcon({ variant }) {
 function PlayerMetaActionIcon({ variant }) {
   return (
     <span
-      className={["music-player__meta-action-icon", `music-player__meta-action-icon--${variant}`].join(
-        " "
-      )}
+      className={[
+        "music-player__meta-action-icon",
+        `music-player__meta-action-icon--${variant}`,
+      ].join(" ")}
       aria-hidden={true}
     />
   );
@@ -52,12 +60,16 @@ function PlayerPlayPauseIcon({ playing }) {
 /** Full-screen music player — Figma `23:20013`; no bottom tab bar on this route. */
 export default function MusicPlayer() {
   const { channelId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { session, upsertMusicSession } = usePlayback();
+  const { graceActive } = useGuestPrerollGrace();
   const { userType } = useUserType();
   const needsPreroll = showPlayerPreroll(userType);
-  const [prerollComplete, setPrerollComplete] = useState(() => !needsPreroll);
-  const [playing, setPlaying] = useState(() => !needsPreroll);
+  const expandFromMini = location.state?.expandFromMiniPlayer === true;
+  const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
+  const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
+  const [playing, setPlaying] = useState(() => skipPrerollGate);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
 

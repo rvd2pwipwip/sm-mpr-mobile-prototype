@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import "./PlayerPrerollAd.css";
 
 const DEFAULT_SECONDS = 15;
@@ -12,8 +13,13 @@ export default function PlayerPrerollAd({
   onComplete,
   title = "Advertisement",
 }) {
+  const { beginPrerollGracePeriod } = useGuestPrerollGrace();
   const [remaining, setRemaining] = useState(durationSeconds);
   const doneRef = useRef(false);
+
+  useEffect(() => {
+    beginPrerollGracePeriod();
+  }, [beginPrerollGracePeriod]);
 
   const complete = useCallback(() => {
     if (doneRef.current) return;

@@ -4,6 +4,7 @@ import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
 import MiniPlayer from "./components/MiniPlayer";
 import VisualAdsHtmlSync from "./components/VisualAdsHtmlSync";
 import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext";
+import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
@@ -53,9 +54,11 @@ function App() {
   return (
     <UserTypeProvider>
       <GuestMusicSkipProvider>
-        <PlaybackProvider>
-          <AppRoutes />
-        </PlaybackProvider>
+        <GuestPrerollGraceProvider>
+          <PlaybackProvider>
+            <AppRoutes />
+          </PlaybackProvider>
+        </GuestPrerollGraceProvider>
       </GuestMusicSkipProvider>
     </UserTypeProvider>
   );

@@ -37,7 +37,10 @@ export default function MiniPlayer() {
   const { variant, title, subtitle, thumbnail, isPaused, fullPlayerPath } = session;
 
   const openFullPlayer = () => {
-    if (fullPlayerPath) navigate(fullPlayerPath);
+    if (fullPlayerPath) {
+      /** Skip guest full-screen preroll — only show that on tune-from-browse (play), not expand. */
+      navigate(fullPlayerPath, { state: { expandFromMiniPlayer: true } });
+    }
   };
 
   return (
