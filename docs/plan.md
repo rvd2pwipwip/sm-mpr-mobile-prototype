@@ -32,8 +32,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Card components** — `ContentTileCard` (shared layout) + `MusicChannelCard`, `PodcastCard`, `RadioStationCard` in `src/components/` (tokenized `--card-tile-*` / type styles in `index.css`).
 - [x] **ContentSwimlane** — `src/components/ContentSwimlane` (inset title + More, full-bleed scroll, inner `padding-inline`).
 - [x] **`react-router-dom`** — `BrowserRouter` in `main.jsx`; **`Home`** at `/` in `src/pages/Home.jsx`; `App.jsx` holds `<Routes>`.
-- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Visual ad strip** — under tabs + music player when `showVisualAds(userType)`; **`html[data-visual-ads]`** extends **`--bottom-nav-stack-height`** (see **`docs/visual-ads-and-user-types.md`**). **Mini player** — later.
-- [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up:* mini player height; swimlane-level ads; finer **freeStingray** / **freeProvider** vs **`guest`** / **`provided`** if product requires it.
+- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Visual ad strip** — under tabs + music player when `showVisualAds(userType)`; **`html[data-visual-ads]`** extends **`--bottom-nav-stack-height`** (see **`docs/visual-ads-and-user-types.md`**). **`MiniPlayer`** + **`PlaybackContext`** — footer strip above **`BottomNav`** (Figma **`19777:32024`**); **`--mini-player-offset`** expands scroll padding when active; **`Info`** demo buttons for podcast/radio stubs.
+- [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up (after mini player baseline):* swimlane-level ads; finer **freeStingray** / **freeProvider** vs **`guest`** / **`provided`** if product requires it.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
 
@@ -50,7 +50,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes. **Chrome** (nav, header, …) in step 4.
 
 4. **Chrome after core content** — **done (baseline)**  
-   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. *Follow-up:* mini player, ads, Listen again / Favorites / Recommendations rails, full banner art / SVGs from Figma.
+   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). *Follow-up:* Listen again / Favorites / Recommendations rails, full banner art / SVGs from Figma.
 
 5. **User mode stub** — **done (baseline)**  
    **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`Home-screen-story.md`).
@@ -70,8 +70,6 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
-4. [ ] **`docs/react-learning`** — **mini player** when that chrome exists (music stack + **`useParams`** noted in file).
-
 ---
 
 ## Backlog / later
@@ -79,7 +77,7 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - [ ] **Listen again** — mixed small tiles; `recentlyPlayed` mock.
 - [ ] **Favorites** — liked content rail (sparse by design).
 - [ ] **Recommendations** — generic stub, then “informed by” fake history.
-- [ ] **Podcast & radio** — info + full player stacks after the music pattern ships.
+- [ ] **Podcast & radio** — info + full player stacks after the music pattern ships (miniplayer podcast/radio variants can ship first with stub routes if useful).
 - [ ] **International radio** hierarchy — `radioStations.js` + `docs/figma-nodes.md` notes.
 - [ ] **Territory** variants (150+ vs 1000+ channels) for browse, when building Search & Browse.
 
@@ -91,4 +89,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-27* (**`PlayerPrerollAd`** guest / music player; **`SwimlaneBannerAd`** on Home; see **`docs/visual-ads-and-user-types.md`**)
+*Last updated: 2026-04-28* — **Miniplayer shipped** (baseline); **next:** podcast/radio stacks, Search & Browse.

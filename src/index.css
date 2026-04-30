@@ -108,6 +108,9 @@
       var(--bottom-nav-gap-to-indicator) + var(--bottom-nav-indicator-height) +
       var(--bottom-nav-ad-height)
   );
+  /* Reserve space above the tab strip when MiniPlayer is visible (`PlaybackContext`). */
+  --mini-player-height: 80px;
+  --mini-player-offset: 0px;
   /* Home only: set at runtime in `HomeHeader` from measured `offsetHeight` (hugs logo + CTA). */
   --home-header-offset: calc(
     var(--safe-area-inset-top) + var(--space-2) + var(--button-height-md)
@@ -116,6 +119,7 @@
   --home-header-scroll-gap: var(--space-3);
   /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
   --z-chrome: 100;
+  --z-mini-player: 110;
   --z-bottom-nav: 100;
   /* Above player chrome — guest pre-roll overlay */
   --z-player-preroll: 250;
@@ -128,6 +132,11 @@
   /* h7/400 in file */
   --screen-header-title-size: 2.125rem;
   --screen-header-title-weight: 400;
+
+  /* MiniPlayer footer bar — inverse of main app shell (readable on scrolled content). */
+  --miniplayer-bg: rgba(25, 25, 25, 0.9);
+  --miniplayer-text: #fafafa;
+  --miniplayer-muted: rgba(250, 250, 250, 0.78);
 }
 
 /* Set by `VisualAdsHtmlSync` when `showVisualAds(userType)` — see `docs/visual-ads-and-user-types.md`. */
@@ -151,6 +160,10 @@ html[data-visual-ads] {
     --color-surface: #27272a;
     --color-border-subtle: rgba(250, 250, 250, 0.1);
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+    /* Inverse mini bar on dark app chrome */
+    --miniplayer-bg: rgba(248, 248, 250, 0.92);
+    --miniplayer-text: #18181b;
+    --miniplayer-muted: rgba(24, 24, 27, 0.68);
   }
 }
 
@@ -173,6 +186,9 @@ html[data-theme="light"] {
   --color-surface: #ffffff;
   --color-border-subtle: rgba(24, 24, 27, 0.08);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --miniplayer-bg: rgba(25, 25, 25, 0.9);
+  --miniplayer-text: #fafafa;
+  --miniplayer-muted: rgba(250, 250, 250, 0.78);
 }
 
 html[data-theme="dark"] {
@@ -194,6 +210,9 @@ html[data-theme="dark"] {
   --color-surface: #27272a;
   --color-border-subtle: rgba(250, 250, 250, 0.1);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --miniplayer-bg: rgba(248, 248, 250, 0.92);
+  --miniplayer-text: #18181b;
+  --miniplayer-muted: rgba(24, 24, 27, 0.68);
 }
 
 *,
@@ -227,7 +246,10 @@ body {
   min-height: 100dvh;
   /* Top: see `--safe-area-inset-top`; bottom: real home indicator when available. */
   padding: var(--safe-area-inset-top) 0
-    calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px));
+    calc(
+      var(--mini-player-offset) + var(--bottom-nav-stack-height) +
+        env(safe-area-inset-bottom, 0px)
+    );
 }
 
 .content-inset {
@@ -274,7 +296,8 @@ body {
   padding-top: calc(var(--home-header-offset) + var(--home-header-scroll-gap));
   /* Scrollable inset so the last lane clears the tab bar + home indicator; content still scrolls behind it. */
   padding-bottom: calc(
-    var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px)
+    var(--mini-player-offset) + var(--bottom-nav-stack-height) +
+      env(safe-area-inset-bottom, 0px)
   );
 }
 

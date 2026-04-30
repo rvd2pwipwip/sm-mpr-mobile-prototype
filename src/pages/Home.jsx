@@ -29,7 +29,10 @@ export default function Home() {
             <HomeBanner />
           </div>
 
-          <ContentSwimlane title="Music">
+          <ContentSwimlane
+            title="Music"
+            onMore={() => navigate("/more/music")}
+          >
             {MUSIC_CHANNELS.slice(0, LANE_SIZE).map((channel) => (
               <MusicChannelCard
                 key={channel.id}
@@ -39,7 +42,10 @@ export default function Home() {
             ))}
           </ContentSwimlane>
 
-          <ContentSwimlane title="Podcasts">
+          <ContentSwimlane
+            title="Podcasts"
+            onMore={() => navigate("/more/podcasts")}
+          >
             {PODCASTS.slice(0, LANE_SIZE).map((podcast) => (
               <PodcastCard key={podcast.id} podcast={podcast} />
             ))}
@@ -48,7 +54,10 @@ export default function Home() {
             {" "}
             {showBannerAd ? <SwimlaneBannerAd /> : null}
           </div>
-          <ContentSwimlane title="Radio">
+          <ContentSwimlane
+            title="Radio"
+            onMore={() => navigate("/more/radio")}
+          >
             {RADIO_STATIONS.slice(0, LANE_SIZE).map((station) => (
               <RadioStationCard key={station.id} station={station} />
             ))}

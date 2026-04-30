@@ -1,0 +1,45 @@
+/* View More: fixed `ScreenHeader` + scroll; 2 equal columns, same tile width as swimlane (Figma). */
+
+.swimlane-more.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.swimlane-more__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: calc(var(--screen-header-height) + var(--space-3));
+}
+
+.swimlane-more__grid {
+  display: grid;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  list-style: none;
+  /* Figma `more` 23:17518: `bodyMore` horizontal padding 40px; `//mostPopular` row gap 30;
+     two 175px cards + 30px between columns in the 380px content column (≈ `justify-between`). */
+  --swimlane-more-inline: 40px;
+  --swimlane-more-gap: 30px;
+  padding: 0 var(--swimlane-more-inline) var(--space-8);
+  grid-template-columns: repeat(2, var(--card-tile-width));
+  column-gap: var(--swimlane-more-gap);
+  row-gap: var(--swimlane-more-gap);
+  justify-content: center;
+}
+
+.swimlane-more__cell {
+  margin: 0;
+  padding: 0;
+  width: var(--card-tile-width);
+  min-width: 0;
+}

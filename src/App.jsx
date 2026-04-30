@@ -1,6 +1,8 @@
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
+import MiniPlayer from "./components/MiniPlayer";
 import VisualAdsHtmlSync from "./components/VisualAdsHtmlSync";
+import { PlaybackProvider } from "./context/PlaybackContext";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
 import MusicChannelInfo from "./pages/MusicChannelInfo";
@@ -8,6 +10,7 @@ import MusicPlayer from "./pages/MusicPlayer";
 import Search from "./pages/Search";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
+import SwimlaneMore from "./pages/SwimlaneMore";
 
 /** Remount when channel or user type changes so pre-roll + playback state reset. */
 function MusicPlayerRoute() {
@@ -26,12 +29,18 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/upgrade" element={<Subscription />} />
+        <Route path="/more/:categoryId" element={<SwimlaneMore />} />
         <Route path="/music/:channelId" element={<MusicChannelInfo />} />
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
       </Routes>
-      {hideBottomNav ? null : <BottomNav />}
+      {hideBottomNav ? null : (
+        <>
+          <MiniPlayer />
+          <BottomNav />
+        </>
+      )}
     </>
   );
 }
@@ -40,7 +49,9 @@ function AppRoutes() {
 function App() {
   return (
     <UserTypeProvider>
-      <AppRoutes />
+      <PlaybackProvider>
+        <AppRoutes />
+      </PlaybackProvider>
     </UserTypeProvider>
   );
 }

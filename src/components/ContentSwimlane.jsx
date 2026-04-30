@@ -22,9 +22,14 @@ export default function ContentSwimlane({
       <div className="content-swimlane__header">
         <h2 className="content-swimlane__title">{title}</h2>
         {showMore ? (
-          <div className="content-swimlane__more" onClick={onMore}>
+          <button
+            type="button"
+            className="content-swimlane__more"
+            onClick={onMore}
+            aria-label={`More in ${title}`}
+          >
             More
-          </div>
+          </button>
         ) : null}
       </div>
       <div className="content-swimlane__scroll">

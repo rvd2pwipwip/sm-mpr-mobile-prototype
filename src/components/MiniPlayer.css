@@ -1,0 +1,197 @@
+/* MiniPlayer — Figma `19777:32024`; fixed above `BottomNav`, inverse footer chrome. */
+
+.mini-player {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-mini-player);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--app-max-width);
+  min-height: var(--mini-player-height);
+  padding: 10px 15px 10px 10px;
+  color: var(--miniplayer-text);
+  background-color: var(--miniplayer-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
+  border-radius: var(--space-5) var(--space-5) 0 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mini-player__main {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mini-player__main--no-fullscreen {
+  cursor: default;
+}
+
+.mini-player__main:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.mini-player__thumb-wrap {
+  flex-shrink: 0;
+}
+
+.mini-player__thumb {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.mini-player__thumb--placeholder {
+  background: color-mix(in srgb, var(--miniplayer-text) 38%, transparent);
+}
+
+.mini-player__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  justify-content: center;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.mini-player__title {
+  overflow: hidden;
+  width: 100%;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.mini-player__title:not(.mini-player__title--podcast) {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mini-player__title--podcast {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.mini-player__subtitle {
+  overflow: hidden;
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--miniplayer-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mini-player[data-variant="podcasts"] .mini-player__subtitle {
+  font-size: 0.8125rem;
+}
+
+.mini-player__controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.mini-player__controls--podcast {
+  gap: var(--space-1);
+}
+
+.mini-player__ctrl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  color: var(--miniplayer-text);
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mini-player__ctrl:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.mini-player__ctrl--lg {
+  width: 60px;
+  height: 60px;
+}
+
+.mini-player__ctrl--sm {
+  width: 40px;
+  height: 40px;
+}
+
+.mini-player__ctrl--seek {
+  color: inherit;
+}
+
+.mini-player__mask-icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.mini-player__ctrl--lg .mini-player__mask-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.mini-player__mask-icon--pause {
+  mask-image: url("/playerCtrlPause.svg");
+  -webkit-mask-image: url("/playerCtrlPause.svg");
+}
+
+.mini-player__mask-icon--play {
+  mask-image: url("/playerCtrlPlay.svg");
+  -webkit-mask-image: url("/playerCtrlPlay.svg");
+}
+
+.mini-player__mask-icon--skip {
+  width: 24px;
+  height: 24px;
+  mask-image: url("/skip.svg");
+  -webkit-mask-image: url("/skip.svg");
+}
+
+.mini-player__svg-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+}

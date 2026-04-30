@@ -33,6 +33,7 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 ## Components
 
 - [Button / md — CTA + secondary (subscribe pattern)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115) — `src/components/Button.jsx` + `index.css` button tokens
+- [Miniplayer](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19777-32024&t=4UaBQ5Cdiloes4Qb-4)
 
 ## Screens
 

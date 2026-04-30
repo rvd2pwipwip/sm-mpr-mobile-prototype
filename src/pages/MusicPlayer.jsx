@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import UpgradeButton from "../components/UpgradeButton";
 import VisualAdStrip from "../components/VisualAdStrip";
+import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
@@ -56,12 +57,33 @@ function PlayerSkipIcon() {
 export default function MusicPlayer() {
   const { channelId } = useParams();
   const navigate = useNavigate();
+  const { session, upsertMusicSession } = usePlayback();
   const { userType } = useUserType();
   const needsPreroll = showPlayerPreroll(userType);
   const [prerollComplete, setPrerollComplete] = useState(() => !needsPreroll);
   const [playing, setPlaying] = useState(() => !needsPreroll);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
+
+  useLayoutEffect(() => {
+    if (!channel) return;
+    if (needsPreroll && !prerollComplete) return;
+    if (session.channelId === channel.id) setPlaying(!session.isPaused);
+    // Intentionally only when route / preroll gate changes — read `session` once to match mini state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channel?.id, needsPreroll, prerollComplete]);
+
+  useEffect(() => {
+    if (!channel) return;
+    if (needsPreroll && !prerollComplete) return;
+    upsertMusicSession({
+      channelId: channel.id,
+      thumbnail: channel.thumbnail,
+      title: "Song title (prototype)",
+      subtitle: "Artist name",
+      isPaused: !playing,
+    });
+  }, [channel, needsPreroll, prerollComplete, playing, upsertMusicSession]);
 
   if (!channel) {
     return <Navigate to="/" replace />;
