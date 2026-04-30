@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import MusicSkipButton from "../components/MusicSkipButton";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import UpgradeButton from "../components/UpgradeButton";
 import VisualAdStrip from "../components/VisualAdStrip";
@@ -46,11 +47,6 @@ function PlayerPlayPauseIcon({ playing }) {
       aria-hidden={true}
     />
   );
-}
-
-/** `public/skip.svg` — mask + `currentColor`. */
-function PlayerSkipIcon() {
-  return <span className="music-player__skip-icon" aria-hidden={true} />;
 }
 
 /** Full-screen music player — Figma `23:20013`; no bottom tab bar on this route. */
@@ -199,13 +195,7 @@ export default function MusicPlayer() {
             >
               <PlayerPlayPauseIcon playing={playing} />
             </button>
-            <button
-              type="button"
-              className="music-player__skip"
-              aria-label="Skip forward"
-            >
-              <PlayerSkipIcon />
-            </button>
+            <MusicSkipButton size="full" />
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { usePlayback } from "../context/PlaybackContext";
+import MusicSkipButton from "./MusicSkipButton";
 import "./MiniPlayer.css";
 
 function PlayPauseIcon({ paused }) {
@@ -12,10 +13,6 @@ function PlayPauseIcon({ paused }) {
       aria-hidden={true}
     />
   );
-}
-
-function SkipIcon() {
-  return <span className="mini-player__mask-icon mini-player__mask-icon--skip" aria-hidden={true} />;
 }
 
 function SeekReplay15Icon() {
@@ -114,16 +111,7 @@ export default function MiniPlayer() {
             >
               <PlayPauseIcon paused={isPaused} />
             </button>
-            <button
-              type="button"
-              className="mini-player__ctrl mini-player__ctrl--sm"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              aria-label="Skip forward"
-            >
-              <SkipIcon />
-            </button>
+            <MusicSkipButton size="mini" onClick={(e) => e.stopPropagation()} />
           </>
         ) : null}
 

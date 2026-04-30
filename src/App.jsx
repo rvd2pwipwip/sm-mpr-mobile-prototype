@@ -1,7 +1,9 @@
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
+import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
 import MiniPlayer from "./components/MiniPlayer";
 import VisualAdsHtmlSync from "./components/VisualAdsHtmlSync";
+import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
@@ -26,6 +28,7 @@ function AppRoutes() {
   return (
     <>
       <VisualAdsHtmlSync />
+      <GuestSkipLimitDialog />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/upgrade" element={<Subscription />} />
@@ -49,9 +52,11 @@ function AppRoutes() {
 function App() {
   return (
     <UserTypeProvider>
-      <PlaybackProvider>
-        <AppRoutes />
-      </PlaybackProvider>
+      <GuestMusicSkipProvider>
+        <PlaybackProvider>
+          <AppRoutes />
+        </PlaybackProvider>
+      </GuestMusicSkipProvider>
     </UserTypeProvider>
   );
 }

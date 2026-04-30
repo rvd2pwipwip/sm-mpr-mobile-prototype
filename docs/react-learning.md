@@ -90,6 +90,12 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Guest music skip limit (Context + hourly stamps)
+
+- **Idea:** **Guest** users on **music** only get a **prototype cap**: each skip adds an **expiry time** (`now + recovery`); at most **`GUEST_MUSIC_MAX_ACTIVE_SKIPS`** unexpired stamps. **`provided`** / **`subscribed`** bypass the list. **Constants** live in **`src/constants/guestMusicSkips.js`**; **state** in **`GuestMusicSkipProvider`** (**`src/context/GuestMusicSkipContext.jsx`**) — keyed inner provider **`key={userType}`** clears tallies when **`UserTypeContext`** flips (demo on **`/upgrade`**). **`expiriesRef`** updates **synchronously** on consume so fast double-taps cannot read stale **`useState`**. **Prune** expired stamps on an **interval** (`GUEST_MUSIC_SKIP_PRUNE_INTERVAL_MS`) so the **count overlay** drops without another tap. **`MusicSkipButton`** (`size` **`mini`** | **`full`**) — **digit only** (**`var(--color-bg)`** vs **`var(--miniplayer-bg)`** via **`--music-skip-count-on-*`** tokens; no shadow) over the skip icon. **`GuestSkipLimitDialog`** + **`--z-guest-skip-dialog`** at cap. **Long walkthrough:** **`docs/Guest-music-skip-limit-tutorial.md`**; Figma [**`23:20013`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013) (badge), [**`5568:166350`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5568-166350) (dialog).
+
+---
+
 ## How to use this file
 
 - When you learn something new with the AI or in docs, ask to **append a short section** here (or add it yourself).

@@ -128,6 +128,8 @@
   --z-bottom-nav: 100;
   /* Above player chrome — guest pre-roll overlay */
   --z-player-preroll: 250;
+  /* Guest hourly skip-cap dialog — above footer chrome when used outside full player */
+  --z-guest-skip-dialog: 260;
   /* Shared frosted glass for `BottomNav` + `HomeHeader`. */
   --chrome-backdrop-blur: 6px;
 
@@ -142,6 +144,13 @@
   --miniplayer-bg: rgba(25, 25, 25, 0.9);
   --miniplayer-text: #fafafa;
   --miniplayer-muted: rgba(250, 250, 250, 0.78);
+
+  /*
+   * Guest skip count digit: same “layer” as screen background for contrast on --color-text / --miniplayer-text glyphs.
+   * Full player: bg → icon --color-text → digit --color-bg · Mini: --miniplayer-bg → --miniplayer-text → --miniplayer-bg
+   */
+  --music-skip-count-on-full: var(--color-bg);
+  --music-skip-count-on-mini: var(--miniplayer-bg);
 }
 
 /* Set by `VisualAdsHtmlSync` when `showVisualAds(userType)` — see `docs/visual-ads-and-user-types.md`. */
