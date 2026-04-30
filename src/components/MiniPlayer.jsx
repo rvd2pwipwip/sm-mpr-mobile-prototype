@@ -18,49 +18,14 @@ function SkipIcon() {
   return <span className="mini-player__mask-icon mini-player__mask-icon--skip" aria-hidden={true} />;
 }
 
-/** Circular seek icons — Figma `replay15` / `fwd30`; simple inline SVG for prototype. */
-function SeekRewind15Icon() {
+function SeekReplay15Icon() {
   return (
-    <svg className="mini-player__svg-icon" viewBox="0 0 40 40" aria-hidden={true}>
-      <path
-        fill="currentColor"
-        d="M20 9a11 11 0 0 1 7.8 3.2 11 11 0 0 1 0 15.6 11 11 0 0 1-15.6 0L9.5 27l1.4-1.4 2.1 2.1a9 9 0 1 0 .3-12.7l1.7-1.7A11 11 0 0 1 20 9z"
-      />
-      <text
-        x="20"
-        y="24"
-        textAnchor="middle"
-        fontSize="10"
-        fontWeight="600"
-        fill="currentColor"
-        fontFamily="system-ui,sans-serif"
-      >
-        15
-      </text>
-    </svg>
+    <span className="mini-player__mask-icon mini-player__mask-icon--replay15" aria-hidden={true} />
   );
 }
 
-function SeekForward30Icon() {
-  return (
-    <svg className="mini-player__svg-icon" viewBox="0 0 40 40" aria-hidden={true}>
-      <path
-        fill="currentColor"
-        d="M20 9a11 11 0 0 0-7.8 3.2 11 11 0 0 0 15.6 15.6A11 11 0 0 0 28 27l-1.4-1.4-2.1 2.1a9 9 0 1 1-.3-12.7l-1.7-1.7A11 11 0 0 0 20 9z"
-      />
-      <text
-        x="20"
-        y="24"
-        textAnchor="middle"
-        fontSize="10"
-        fontWeight="600"
-        fill="currentColor"
-        fontFamily="system-ui,sans-serif"
-      >
-        30
-      </text>
-    </svg>
-  );
+function SeekFwd30Icon() {
+  return <span className="mini-player__mask-icon mini-player__mask-icon--fwd30" aria-hidden={true} />;
 }
 
 /** Fixed strip above `BottomNav` — Figma Miniplayer `19777:32024`. */
@@ -170,7 +135,7 @@ export default function MiniPlayer() {
               onClick={(e) => e.stopPropagation()}
               aria-label="Back 15 seconds"
             >
-              <SeekRewind15Icon />
+              <SeekReplay15Icon />
             </button>
             <button
               type="button"
@@ -189,7 +154,7 @@ export default function MiniPlayer() {
               onClick={(e) => e.stopPropagation()}
               aria-label="Forward 30 seconds"
             >
-              <SeekForward30Icon />
+              <SeekFwd30Icon />
             </button>
           </>
         ) : null}

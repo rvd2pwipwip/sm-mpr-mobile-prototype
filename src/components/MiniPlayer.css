@@ -2,7 +2,9 @@
 
 .mini-player {
   position: fixed;
-  bottom: calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px));
+  bottom: calc(
+    var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px)
+  );
   left: 50%;
   transform: translateX(-50%);
   z-index: var(--z-mini-player);
@@ -11,8 +13,10 @@
   justify-content: space-between;
   gap: var(--space-2);
   box-sizing: border-box;
-  width: 100%;
-  max-width: var(--app-max-width);
+  /* Inset from shell edges — wider than `--space-content-inline` content column, not edge-to-edge */
+  width: calc(100% - 2rem);
+  max-width: calc(var(--app-max-width) - 2rem);
+  min-width: 300px;
   min-height: var(--mini-player-height);
   padding: 10px 15px 10px 10px;
   color: var(--miniplayer-text);
@@ -157,8 +161,8 @@
 
 .mini-player__mask-icon {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 60px;
+  height: 60px;
   background-color: currentColor;
   mask-size: contain;
   mask-repeat: no-repeat;
@@ -169,29 +173,39 @@
 }
 
 .mini-player__ctrl--lg .mini-player__mask-icon {
-  width: 30px;
-  height: 30px;
+  width: 60px;
+  height: 60px;
 }
 
 .mini-player__mask-icon--pause {
-  mask-image: url("/playerCtrlPause.svg");
-  -webkit-mask-image: url("/playerCtrlPause.svg");
+  mask-image: url("/pause.svg");
+  -webkit-mask-image: url("/pause.svg");
 }
 
 .mini-player__mask-icon--play {
-  mask-image: url("/playerCtrlPlay.svg");
-  -webkit-mask-image: url("/playerCtrlPlay.svg");
+  mask-image: url("/play.svg");
+  -webkit-mask-image: url("/play.svg");
 }
 
 .mini-player__mask-icon--skip {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   mask-image: url("/skip.svg");
   -webkit-mask-image: url("/skip.svg");
 }
 
-.mini-player__svg-icon {
-  display: block;
+.mini-player__mask-icon--replay15,
+.mini-player__mask-icon--fwd30 {
   width: 40px;
   height: 40px;
+}
+
+.mini-player__mask-icon--replay15 {
+  mask-image: url("/replay15.svg");
+  -webkit-mask-image: url("/replay15.svg");
+}
+
+.mini-player__mask-icon--fwd30 {
+  mask-image: url("/fwd30.svg");
+  -webkit-mask-image: url("/fwd30.svg");
 }

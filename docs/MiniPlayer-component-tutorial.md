@@ -44,8 +44,8 @@ These are **plain function components** (no hooks). They keep **`MiniPlayer`** r
 
 Uses **`paused`** (**boolean**) to choose mask modifier classes:
 
-- **`mini-player__mask-icon--pause`** → **`/playerCtrlPause.svg`**
-- **`mini-player__mask-icon--play`** → **`playerCtrlPlay.svg`**
+- **`mini-player__mask-icon--pause`** → **`/pause.svg`**
+- **`mini-player__mask-icon--play`** → **`/play.svg`**
 
 Same **mask + `background-color: currentColor`** pattern as **`BottomNav`** / **`MiniPlayer.css`**—icons inherit **`var(--miniplayer-text)`**.
 
@@ -53,9 +53,9 @@ Same **mask + `background-color: currentColor`** pattern as **`BottomNav`** / **
 
 Single mask for **`skip.svg`**.
 
-### `SeekRewind15Icon` / `SeekForward30Icon`
+### `SeekReplay15Icon` / `SeekFwd30Icon`
 
-**Inline `<svg>`** with **`fill="currentColor"`** and numeric **`<text>`** labels—Figma uses bitmap assets; the prototype uses simple paths + “15” / “30” so podcast seek controls read clearly without extra files in **`public/`**.
+**Mask icons** — **`/replay15.svg`**, **`/fwd30.svg`** in **`public/`** (same **`mask-image`** + **`currentColor`** pattern as play/pause). Used only for the **podcasts** variant seek buttons.
 
 ---
 
@@ -213,7 +213,7 @@ Grouped by responsibility (line ranges approximate):
 | **Main column** | **`mini-player__main`**, **`__thumb`**, **`__text`**: flex, **`min-width: 0`** on text (**ellipsis** / **line-clamp**). Art **60×60**, **`radius-sm`**. |
 | **Titles** | Non-podcast: **nowrap** + ellipsis; **`mini-player__title--podcast`**: **`line-clamp: 2`**, **`1rem`**. **`[data-variant="podcasts"]`** subtitle fontsize tweak. |
 | **Transport** | **`mini-player__ctrl--lg`** **60×60**, **`--sm`** **40×40**. |
-| **Mask icons** | **`playerCtrlPause.svg`**, **`playerCtrlPlay.svg`**, **`skip.svg`** in **`public/`** — same **`mask-image`** technique as **`BottomNav`**; see [`react-learning.md`](react-learning.md). |
+| **Mask icons** | **`pause.svg`**, **`play.svg`** (full-screen **`MusicPlayer`**: **`playerCtrlPause.svg`**, **`playerCtrlPlay.svg`**). **Podcast seeks:** **`replay15.svg`**, **`fwd30.svg`**. **Music skip:** **`skip.svg`**. Same **`mask-image`** technique as **`BottomNav`**; see [`react-learning.md`](react-learning.md). |
 
 Full token flow **padding underneath scroll content** (**`var(--mini-player-offset)`**) is set in **`PlaybackContext`**—not in this stylesheet—planned doc **layout tokens**.
 
