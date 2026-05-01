@@ -3,9 +3,13 @@ import { PODCASTS } from "../data/podcasts";
 import { RADIO_STATIONS } from "../data/radioStations";
 import { useNavigate } from "react-router-dom";
 import ContentSwimlane from "../components/ContentSwimlane";
+import ContentTileCard from "../components/ContentTileCard";
 import HomeBanner from "../components/HomeBanner";
 import HomeHeader from "../components/HomeHeader";
+import ListenAgainCard from "../components/ListenAgainCard";
 import SwimlaneBannerAd from "../components/SwimlaneBannerAd";
+import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
+import { useListenHistory } from "../context/ListenHistoryContext";
 import { useUserType } from "../context/UserTypeContext";
 import { showVisualAds } from "../utils/showVisualAds";
 import MusicChannelCard from "../components/MusicChannelCard";
@@ -18,7 +22,13 @@ const LANE_SIZE = 8;
 export default function Home() {
   const navigate = useNavigate();
   const { userType } = useUserType();
+  const { items: listenAgainItems } = useListenHistory();
   const showBannerAd = showVisualAds(userType);
+
+  const listenGhostCount =
+    listenAgainItems.length >= LISTEN_AGAIN_RAIL_SLOT_CAP
+      ? 0
+      : LISTEN_AGAIN_RAIL_SLOT_CAP - listenAgainItems.length;
 
   return (
     <main className="app-shell app-shell--home">
@@ -28,6 +38,33 @@ export default function Home() {
           <div className="content-inset">
             <HomeBanner />
           </div>
+
+          {/* Favorites (future): render a swimlane here when the user has likes. */}
+
+          {listenAgainItems.length > 0 ? (
+            <ContentSwimlane
+              title="Listen again"
+              onMore={() => navigate("/more/listen-again")}
+            >
+              {listenAgainItems.map((item) => (
+                <ListenAgainCard
+                  key={`${item.kind}-${item.id}`}
+                  item={item}
+                  navigate={navigate}
+                  compact
+                />
+              ))}
+              {Array.from({ length: listenGhostCount }).map((_, i) => (
+                <ContentTileCard
+                  key={`listen-again-ghost-${i}`}
+                  ghost
+                  compact
+                  imageUrl=""
+                  title=""
+                />
+              ))}
+            </ContentSwimlane>
+          ) : null}
 
           <ContentSwimlane
             title="Music"
@@ -51,7 +88,6 @@ export default function Home() {
             ))}
           </ContentSwimlane>
           <div className="content-inset">
-            {" "}
             {showBannerAd ? <SwimlaneBannerAd /> : null}
           </div>
           <ContentSwimlane

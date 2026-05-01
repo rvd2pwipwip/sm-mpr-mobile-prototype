@@ -8,9 +8,9 @@ function genreLabel(categoryId) {
 /**
  * Swimlane tile for a music stream / channel from `src/data/musicChannels.js`.
  *
- * @param {{ channel: object, onSelect?: () => void }} props
+ * @param {{ channel: object, onSelect?: () => void, compact?: boolean }} props
  */
-export default function MusicChannelCard({ channel, onSelect }) {
+export default function MusicChannelCard({ channel, onSelect, compact = false }) {
   const subtitle = genreLabel(channel.categoryId);
 
   return (
@@ -19,6 +19,7 @@ export default function MusicChannelCard({ channel, onSelect }) {
       subtitle={subtitle}
       imageUrl={channel.thumbnail}
       onSelect={onSelect}
+      compact={compact}
     />
   );
 }

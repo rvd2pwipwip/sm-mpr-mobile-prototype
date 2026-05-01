@@ -36,7 +36,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up (after mini player baseline):* swimlane-level ads; finer **freeStingray** / **freeProvider** vs **`guest`** / **`provided`** if product requires it.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
-- [x] **Guest music skip limit (prototype)** — hourly cap for **`guest`** music only (`GuestMusicSkipProvider`, badge on skip in **`MiniPlayer`** + **`MusicPlayer`**, limit modal + **`/upgrade`** CTA; **`provided`** / **`subscribed`** unlimited). **Tutorial:** **`docs/Guest-music-skip-limit-tutorial.md`**.
+- [x] **Listen again (user history)** — **`ListenHistoryProvider`** (`src/context/ListenHistoryContext.jsx`); **Home** rail (compact tiles + ghost fillers to 12 slots); **`/more/listen-again`** → **`ListenAgainMore.jsx`** (**Clear** in **`ScreenHeader`**); history recorded from **`MusicPlayer`** when playback is allowed (after preroll). Constants **`src/constants/listenHistory.js`**; **`ListenAgainCard`**. Spec: **`docs/plan.md`** (§ **Listen again**).
 
 ---
 
@@ -44,20 +44,58 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 **Recommended order** (aligns with component-first UX work):
 
-1. **Card components (three content types)** — **done** (default tile; **small / no-label** variant later for Listen again).
+1. **Card components (three content types)** — **done** (default + **compact** / **ghost** on **`ContentTileCard`** for **Listen again**).
 
 2. **Swimlane / row** — **done** (`ContentSwimlane`). Inset **title + “More”**, full-bleed **horizontal scroll** with inner `padding-inline: var(--space-content-inline)`.
 
-3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes. **Chrome** (nav, header, …) in step 4.
+3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes + **Listen again** when history non-empty. **Chrome** (nav, header, …) in step 4.
 
 4. **Chrome after core content** — **done (baseline)**  
-   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). *Follow-up:* Listen again / Favorites / Recommendations rails, full banner art / SVGs from Figma.
+   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). *Follow-up:* **Favorites**, **Recommendations**, full banner art / SVGs from Figma.
 
 5. **User mode stub** — **done (baseline)**  
    **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`Home-screen-story.md`).
 
 6. **Stacked routes (music first)** — **done (music)**  
    Info + player + **no tab bar** on player. Then mirror for podcast / radio.
+
+---
+
+## Listen again (user history) — specification (shipped)
+
+**Product:** `docs/Home-screen-story.md`, `docs/Home - UX Principles.md` (continuity of listening; mixed types; compact tiles).
+
+**Figma**
+
+- Home rail / ghost fillers (designer temp variables on Home): [`1:2`](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=1-2).
+- **Listen again — More** screen with **Clear** (label-only control in header): [`19801:39250`](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19801-39250) — listed in `docs/figma-nodes.md`.
+
+**History model**
+
+- **Starts empty** on load; **in-memory** is enough (optional `localStorage` later).
+- **Updates from real listens** in the prototype (not a static mock list): e.g. when the user starts **music** playback (`PlaybackContext` / **`MusicPlayer`** / tune-from-browse — same moment “listening” is real for the demo). Extend with **podcast** / **radio** when those stacks fire the same kind of event.
+- **Dedupe + recency:** prepend or bump-on-repeat; cap stored entries for UI (rail shows up to **12** slots visually — see below).
+
+**Home — layout order (prepare for Favorites)**
+
+- Below **banner** (and existing `.content-inset` blocks): leave a clear **placeholder** for **Favorites** (future): render **Favorites** here when populated; **then** **Listen again** when history is non-empty; then existing **Music → Podcasts → …** lanes. Comments or a small wrapper in `Home.jsx` keep the slot obvious.
+
+**Home — Listen again swimlane**
+
+- **Hidden entirely** when there is **no** history (`length === 0`).
+- Reuse **`ContentSwimlane`** (title **Listen again**, **More** → full list route).
+- **Tiles:** **compact, no labels** (extend **`ContentTileCard`** / card wrappers + tokens in **`index.css`**).
+- **Ghost placeholders:** to the **right** of real history cards, render enough **non-interactive “ghost”** tile placeholders so the row visually **fills** the swimlane **up to 12 slots total** (real + ghosts ≤ 12). Match Figma intent (“filled rail”); tune opacity / skeleton via tokens. If real count ≥ 12, **no** ghosts (horizontal scroll only).
+
+**More screen — full history grid**
+
+- Route **`/more/listen-again`**; **mixed content** in one **full-width grid** (same pattern as **`SwimlaneMore`** / **View More**).
+- **`ScreenHeader`**: same bar as other stack screens — **back** in **`startSlot`**, centered title **Listen again**, **`endSlot` = text-only “Clear”** (label button, no icon per Figma). **Clear** wipes history and returns user expectation: empty Home lane; grid empties.
+- **Follow-up (later):** consider a **content-type tab strip** in the header area (à la **Search & Browse**) to filter Music / Podcasts / Radio; not in v1.
+
+**Implementation (shipped)**
+
+- **`src/constants/listenHistory.js`**, **`ListenHistoryProvider`**, **`ListenAgainCard.jsx`**, **`ListenAgainMore.jsx`**, **`MusicPlayer.jsx`** (record when preroll gate passes), **`Home.jsx`**, **`App.jsx`** (provider + route order), **`ContentTileCard`**, **`ScreenHeader__text-btn`**.
 
 ---
 
@@ -92,7 +130,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Podcast & radio stacks** — same stacked pattern as music (detail + player routes, Figma nodes in **`docs/figma-nodes.md`** when implementing).
+1. [ ] **Podcast & radio stacks** — same stacked pattern as music (detail + player routes, Figma nodes in **`docs/figma-nodes.md`** when implementing); hook **Listen again** history when those listens exist.
 
 2. [ ] **Search & Browse** — replace **`Search`** stub with browse / grid flows (Figma **150+** / **1000+** channel variants); ties to territory story later.
 
@@ -102,8 +140,7 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 ## Backlog / later
 
-- [ ] **Listen again** — mixed small tiles; `recentlyPlayed` mock.
-- [ ] **Favorites** — liked content rail (sparse by design).
+- [ ] **Favorites** — liked content rail (sparse by design); insert **above** **Listen again** on Home when populated (slot reserved in spec above).
 - [ ] **Recommendations** — generic stub, then “informed by” fake history.
 - [ ] **Podcast & radio** — info + full player stacks after the music pattern ships (miniplayer podcast/radio variants can ship first with stub routes if useful).
 - [ ] **International radio** hierarchy — `radioStations.js` + `docs/figma-nodes.md` notes.
@@ -117,4 +154,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-04-30* — **Guest music skip limit shipped** (prototype); **next:** podcast/radio stacks, Search & Browse.
+*Last updated: 2026-05-01* — **Listen again (user history)** shipped; **next:** podcast/radio (history hooks), Search & Browse.

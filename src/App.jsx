@@ -5,9 +5,11 @@ import MiniPlayer from "./components/MiniPlayer";
 import VisualAdsHtmlSync from "./components/VisualAdsHtmlSync";
 import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext";
 import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext";
+import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
+import ListenAgainMore from "./pages/ListenAgainMore";
 import MusicChannelInfo from "./pages/MusicChannelInfo";
 import MusicPlayer from "./pages/MusicPlayer";
 import Search from "./pages/Search";
@@ -33,6 +35,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/upgrade" element={<Subscription />} />
+        <Route path="/more/listen-again" element={<ListenAgainMore />} />
         <Route path="/more/:categoryId" element={<SwimlaneMore />} />
         <Route path="/music/:channelId" element={<MusicChannelInfo />} />
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
@@ -55,9 +58,11 @@ function App() {
     <UserTypeProvider>
       <GuestMusicSkipProvider>
         <GuestPrerollGraceProvider>
-          <PlaybackProvider>
-            <AppRoutes />
-          </PlaybackProvider>
+          <ListenHistoryProvider>
+            <PlaybackProvider>
+              <AppRoutes />
+            </PlaybackProvider>
+          </ListenHistoryProvider>
         </GuestPrerollGraceProvider>
       </GuestMusicSkipProvider>
     </UserTypeProvider>

@@ -10,6 +10,7 @@ import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import UpgradeButton from "../components/UpgradeButton";
 import VisualAdStrip from "../components/VisualAdStrip";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
+import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
@@ -63,6 +64,7 @@ export default function MusicPlayer() {
   const location = useLocation();
   const navigate = useNavigate();
   const { session, upsertMusicSession } = usePlayback();
+  const { recordMusicChannelListen } = useListenHistory();
   const { graceActive } = useGuestPrerollGrace();
   const { userType } = useUserType();
   const needsPreroll = showPlayerPreroll(userType);
@@ -92,6 +94,13 @@ export default function MusicPlayer() {
       isPaused: !playing,
     });
   }, [channel, needsPreroll, prerollComplete, playing, upsertMusicSession]);
+
+  /** History once playback is allowed (after preroll or when skipped) — not on pause toggles. */
+  useEffect(() => {
+    if (!channel) return;
+    if (needsPreroll && !prerollComplete) return;
+    recordMusicChannelListen(channel.id);
+  }, [channel?.id, needsPreroll, prerollComplete, recordMusicChannelListen]);
 
   if (!channel) {
     return <Navigate to="/" replace />;

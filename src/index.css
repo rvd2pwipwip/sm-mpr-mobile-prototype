@@ -57,6 +57,8 @@
 
   /* —— Swimlane “tile” cards (horizontal row); width from Figma card component */
   --card-tile-width: 175px;
+  /* Listen again rail — smaller square tile, no labels (see Figma Home). */
+  --card-tile-width-compact: 108px;
   --card-tile-gap: var(--space-3);
 
   /* —— Typography — */
@@ -136,6 +138,7 @@
   /* Screen stack header — Figma `.screenHeader` in `screenHeaders` (e.g. node 19737:48141); not the Home chrome bar. */
   --screen-header-height: 80px;
   --screen-header-inline: 10px;
+  --screen-header-right-label-inline: 30px;
   /* h7/400 in file */
   --screen-header-title-size: 2.125rem;
   --screen-header-title-weight: 400;

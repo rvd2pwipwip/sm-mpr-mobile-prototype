@@ -10,9 +10,9 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Content tile cards (shared layout + three wrappers)
 
-- **Idea:** One **presentational** component (`ContentTileCard`) owns the **visual pattern**: fixed width (`--card-tile-width`), square image with `--radius-media-thumb`, one-line **title** + optional **subtitle**, and a **`<div>`** with `onClick` for touch interaction. This stack targets a **native mobile** feel in the browser — **not** full web a11y or keyboard support (on purpose for this prototype). It takes plain strings + `imageUrl` — it does not know about music vs podcast.
-- **Domain cards** (`MusicChannelCard`, `PodcastCard`, `RadioStationCard`) are **thin**: they read from the mock objects in `src/data/*`, map fields to `title` / `subtitle` (e.g. radio uses `frequencyLabel` when set, else `categoryLabel`), and pass an optional `onSelect` for later navigation.
-- **Why:** Same layout in every swimlane; only the data mapping changes. A future **small / no-label** “Listen again” tile can be a `variant` on `ContentTileCard` or a separate class — without duplicating the three domain components’ data logic.
+- **Idea:** One **presentational** component (`ContentTileCard`) owns the **visual pattern**: fixed width (`--card-tile-width` or **compact** `--card-tile-width-compact`), square image with `--radius-media-thumb`, one-line **title** + optional **subtitle**, and a **`<button type="button">`** when `onSelect` is set (otherwise a **`<div>`**). Optional **`compact`** hides labels (e.g. **Listen again**); **`ghost`** renders a muted empty square for filler slots. Same **mobile-first** prototype scope — not full web a11y.
+- **Domain cards** (`MusicChannelCard`, `PodcastCard`, `RadioStationCard`) are **thin**: they map `src/data/*` fields to `ContentTileCard`, optional **`compact`**, and **`onSelect`**.
+- **Why:** Same layout in every swimlane; only the data mapping changes.
 - **Files:** `src/components/ContentTileCard.jsx` + `ContentTileCard.css`, and the three `*Card.jsx` files next to it.
 
 ---
@@ -103,6 +103,15 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Tune vs expand:** Channel **Play** uses **`navigate(\`/music/${id}/play\`)`** with **no** `state` → preroll runs for guests. **Open full player** from the mini strip uses the `state` object above → skip preroll.
 - **Caveat:** **`location.state`** is held in **history**, not the URL — it is **lost on a full page reload**. OK for this in-browser prototype.
 - **Files:** **`MiniPlayer.jsx`**, **`MusicPlayer.jsx`**.
+
+---
+
+## Listen again — `ListenHistoryProvider` + compact tiles
+
+- **Idea:** **Listening history** for the prototype lives in **`ListenHistoryProvider`** (`src/context/ListenHistoryContext.jsx`): **empty on load**, **in-memory**, **`recordMusicChannelListen(id)`** when **`MusicPlayer`** is allowed to play (after **guest preroll** completes or when preroll is skipped). **Dedup** = move existing id to **newest**; cap with **`LISTEN_HISTORY_MAX_STORED`** (`src/constants/listenHistory.js`). **Home** shows a **Listen again** **`ContentSwimlane`** only when `items.length > 0`, with **compact** **`MusicChannelCard`** + **ghost** **`ContentTileCard`** fillers up to **`LISTEN_AGAIN_RAIL_SLOT_CAP`** (12). **More:** **`/more/listen-again`** → **`ListenAgainMore.jsx`** (grid like **`SwimlaneMore`**), **`ScreenHeader`** **`endSlot`** = text **Clear** (`screen-header__text-btn`). **`renderListenAgainTile`** in **`ListenAgainCard.jsx`** centralizes **music** (podcast/radio later). **`Home`** keeps a **comment block** above the lane for future **Favorites**.
+- **Figma:** [Listen again — More + Clear](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19801-39250).
+- **Plan:** **`docs/plan.md`** → **Listen again (user history) — specification**.
+- **Walkthrough (wiring):** [`Listen-again-tutorial.md`](Listen-again-tutorial.md).
 
 ---
 

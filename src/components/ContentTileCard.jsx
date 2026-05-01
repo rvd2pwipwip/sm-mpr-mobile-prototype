@@ -9,12 +9,29 @@ import "./ContentTileCard.css";
  *   subtitle?: string | null,
  *   imageUrl: string,
  *   onSelect?: () => void,
+ *   compact?: boolean,
+ *   ghost?: boolean,
  * }} props
  */
-export default function ContentTileCard({ title, subtitle, imageUrl, onSelect }) {
-  return (
-    <div className="content-tile" onClick={onSelect}>
-      <div className="content-tile__media">
+export default function ContentTileCard({
+  title,
+  subtitle,
+  imageUrl,
+  onSelect,
+  compact = false,
+  ghost = false,
+}) {
+  const rootClass = [
+    "content-tile",
+    compact ? "content-tile--compact" : "",
+    ghost ? "content-tile--ghost" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const media = (
+    <div className="content-tile__media">
+      {!ghost ? (
         <img
           className="content-tile__img"
           src={imageUrl}
@@ -24,13 +41,34 @@ export default function ContentTileCard({ title, subtitle, imageUrl, onSelect })
           width={175}
           height={175}
         />
-      </div>
-      <div className="content-tile__body">
-        <span className="content-tile__title">{title}</span>
-        {subtitle ? (
-          <span className="content-tile__subtitle">{subtitle}</span>
-        ) : null}
-      </div>
+      ) : null}
     </div>
+  );
+
+  const showLabels = !compact && !ghost && (title || subtitle);
+
+  const body = showLabels ? (
+    <div className="content-tile__body">
+      <span className="content-tile__title">{title}</span>
+      {subtitle ? (
+        <span className="content-tile__subtitle">{subtitle}</span>
+      ) : null}
+    </div>
+  ) : null;
+
+  if (ghost || !onSelect) {
+    return (
+      <div className={rootClass} aria-hidden={true}>
+        {media}
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <button type="button" className={rootClass} onClick={onSelect}>
+      {media}
+      {body}
+    </button>
   );
 }

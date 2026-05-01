@@ -65,3 +65,24 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.content-tile--compact {
+  width: var(--card-tile-width-compact);
+  cursor: pointer;
+}
+
+.content-tile--compact .content-tile__media {
+  box-shadow: none;
+}
+
+.content-tile--ghost {
+  width: var(--card-tile-width-compact);
+  cursor: default;
+  pointer-events: none;
+}
+
+.content-tile--ghost .content-tile__media {
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--color-text-muted));
+  opacity: 0.45;
+  box-shadow: none;
+}
