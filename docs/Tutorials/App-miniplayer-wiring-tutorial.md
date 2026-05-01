@@ -1,10 +1,10 @@
 # Tutorial: Wiring `App.jsx` — router, PlaybackProvider, MiniPlayer & BottomNav
 
-This document walks through [`src/App.jsx`](../src/App.jsx) and how it plugs into [`src/main.jsx`](../main.jsx). It picks up after [`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md): you already know **what** **`PlaybackProvider`** stores; here you see **where** it lives in the tree and **why** the mini player mounts next to **`BottomNav`** (not inside a single page).
+This document walks through [`src/App.jsx`](../../src/App.jsx) and how it plugs into [`src/main.jsx`](../../src/main.jsx). It picks up after [`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md): you already know **what** **`PlaybackProvider`** stores; here you see **where** it lives in the tree and **why** the mini player mounts next to **`BottomNav`** (not inside a single page).
 
 It assumes JSX + basic **`Route` / `Routes`** familiarity.
 
-**Companion:** [`MiniPlayer-learning-plan.md`](MiniPlayer-learning-plan.md) lists the remaining deep dives.
+**Companion:** [`MiniPlayer-learning-plan.md`](../MiniPlayer-learning-plan.md) lists the remaining deep dives.
 
 ---
 
@@ -23,7 +23,7 @@ It intentionally **does not** put **`BottomNav`** or **`MiniPlayer`** inside **`
 
 ## 2. Entry tree: `main.jsx` (needed context for `App.jsx`)
 
-[`main.jsx`](../main.jsx):
+[`main.jsx`](../../src/main.jsx):
 
 ```jsx
 createRoot(document.getElementById("root")).render(
@@ -213,4 +213,4 @@ So the **regex is intentionally duplicated** (belt-and-suspenders): layout paddi
 | [`MiniPlayer-component-tutorial.md`](MiniPlayer-component-tutorial.md) | **`MiniPlayer.jsx`** + **`MiniPlayer.css`** variants, masks, **`navigate`** |
 | [`MiniPlayer-layout-tokens-tutorial.md`](MiniPlayer-layout-tokens-tutorial.md) | **`index.css`** **`calc`**, **`--bottom-nav-stack-height`**, **`data-visual-ads`**, **`z-index`** |
 
-[`MiniPlayer-learning-plan.md`](MiniPlayer-learning-plan.md) — roadmap for the rest.
+[`MiniPlayer-learning-plan.md`](../MiniPlayer-learning-plan.md) — roadmap for the rest.

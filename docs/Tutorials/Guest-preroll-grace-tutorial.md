@@ -4,12 +4,12 @@ This document explains the **guest-only full-screen preroll grace** feature: how
 
 **Companion files (not line-by-line here, but required for the full flow):**
 
-- [`src/constants/guestPrerollGrace.js`](../src/constants/guestPrerollGrace.js) — **`GUEST_PREROLL_GRACE_MS`**
-- [`src/pages/MusicPlayer.jsx`](../src/pages/MusicPlayer.jsx) — **`skipPrerollGate`**, **`graceActive`**, when **`PlayerPrerollAd`** mounts
-- [`src/components/MiniPlayer.jsx`](../src/components/MiniPlayer.jsx) — **`expandFromMiniPlayer`** navigation state (preroll skip path **without** starting grace)
-- [`src/App.jsx`](../src/App.jsx) — **`GuestPrerollGraceProvider`** wraps the app tree
+- [`src/constants/guestPrerollGrace.js`](../../src/constants/guestPrerollGrace.js) — **`GUEST_PREROLL_GRACE_MS`**
+- [`src/pages/MusicPlayer.jsx`](../../src/pages/MusicPlayer.jsx) — **`skipPrerollGate`**, **`graceActive`**, when **`PlayerPrerollAd`** mounts
+- [`src/components/MiniPlayer.jsx`](../../src/components/MiniPlayer.jsx) — **`expandFromMiniPlayer`** navigation state (preroll skip path **without** starting grace)
+- [`src/App.jsx`](../../src/App.jsx) — **`GuestPrerollGraceProvider`** wraps the app tree
 
-**Prerequisites:** **[`docs/visual-ads-and-user-types.md`](visual-ads-and-user-types.md)** (**`showPlayerPreroll`** / **`guest`**), **[`docs/react-learning.md`](react-learning.md)** → *React Router `navigate` + `location.state` (guest preroll vs mini expand)*.
+**Prerequisites:** **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** (**`showPlayerPreroll`** / **`guest`**), **[`react-learning.md`](../react-learning.md)** → *React Router `navigate` + `location.state` (guest preroll vs mini expand)*.
 
 ---
 
@@ -29,7 +29,7 @@ This document explains the **guest-only full-screen preroll grace** feature: how
 
 ## 2. Duration constant — `guestPrerollGrace.js`
 
-[`src/constants/guestPrerollGrace.js`](../src/constants/guestPrerollGrace.js)
+[`src/constants/guestPrerollGrace.js`](../../src/constants/guestPrerollGrace.js)
 
 | Export | Meaning |
 |--------|---------|
@@ -41,7 +41,7 @@ The **import** is used only in **`GuestPrerollGraceContext.jsx`** so the timeout
 
 ## 3. Line by line — `GuestPrerollGraceContext.jsx`
 
-File: [`src/context/GuestPrerollGraceContext.jsx`](../src/context/GuestPrerollGraceContext.jsx)
+File: [`src/context/GuestPrerollGraceContext.jsx`](../../src/context/GuestPrerollGraceContext.jsx)
 
 | Line(s) | What it does |
 |--------|----------------|
@@ -64,7 +64,7 @@ File: [`src/context/GuestPrerollGraceContext.jsx`](../src/context/GuestPrerollGr
 
 ## 4. Line by line — `PlayerPrerollAd.jsx`
 
-File: [`src/components/PlayerPrerollAd.jsx`](../src/components/PlayerPrerollAd.jsx)
+File: [`src/components/PlayerPrerollAd.jsx`](../../src/components/PlayerPrerollAd.jsx)
 
 | Line(s) | What it does |
 |--------|----------------|
@@ -154,6 +154,6 @@ These lines **connect** context + component; they are **not** duplicated line-by
 
 ## 8. Related documentation
 
-- **[`visual-ads-and-user-types.md`](visual-ads-and-user-types.md)** — **`showPlayerPreroll`**, where **`PlayerPrerollAd`** sits in the product story.
-- **[`react-learning.md`](react-learning.md)** — **navigate** `state` for **`expandFromMiniPlayer`** vs tune-from-browse.
-- **Styles:** [`src/components/PlayerPrerollAd.css`](../src/components/PlayerPrerollAd.css), token **`--z-player-preroll`** in **`index.css`**.
+- **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** — **`showPlayerPreroll`**, where **`PlayerPrerollAd`** sits in the product story.
+- **[`react-learning.md`](../react-learning.md)** — **navigate** `state` for **`expandFromMiniPlayer`** vs tune-from-browse.
+- **Styles:** [`src/components/PlayerPrerollAd.css`](../../src/components/PlayerPrerollAd.css), token **`--z-player-preroll`** in **`index.css`**.

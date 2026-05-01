@@ -2,7 +2,7 @@
 
 This document explains **how scrollable content clears the footer stack** — **mini player strip** + **bottom navigation** (+ optional **visual ad**) — **without hiding content behind fixed layers**. Central pieces live in **`src/index.css`**; **`--mini-player-offset`** is updated at runtime from **`PlaybackContext`**.
 
-**Prerequisites:** [`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md), [`MiniPlayer-component-tutorial.md`](MiniPlayer-component-tutorial.md) (fixed **`bottom`** in **`MiniPlayer.css`**), [`visual-ads-and-user-types.md`](visual-ads-and-user-types.md).
+**Prerequisites:** [`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md), [`MiniPlayer-component-tutorial.md`](MiniPlayer-component-tutorial.md) (fixed **`bottom`** in **`MiniPlayer.css`**), [`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md).
 
 ---
 
@@ -48,7 +48,7 @@ padding-top (tabs strip)
   + ad strip height (--bottom-nav-ad-height, often 0)
 ```
 
-Because **`VisualAdsHtmlSync`** sets **`html[data-visual-ads]`**, **`index.css`** can bump **`--bottom-nav-ad-height`** without JavaScript recomputing the whole **`calc`** by hand (**[`visual-ads-and-user-types.md`](visual-ads-and-user-types.md)**).
+Because **`VisualAdsHtmlSync`** sets **`html[data-visual-ads]`**, **`index.css`** can bump **`--bottom-nav-ad-height`** without JavaScript recomputing the whole **`calc`** by hand (**[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)**).
 
 **Why it matters:** **`MiniPlayer.css`** positions **`bottom: calc(var(--bottom-nav-stack-height) + env(safe-area-inset-bottom))`** — the strip’s **anchor** is measured from the viewport bottom past **tabs (+ ad)** + **safe area**.
 
@@ -187,9 +187,9 @@ Physically **`MiniPlayer`** is positioned **`bottom`** **above** **`BottomNav`**
 | [`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md) |
 | [`MiniPlayer-component-tutorial.md`](MiniPlayer-component-tutorial.md) |
 | [`App-miniplayer-wiring-tutorial.md`](App-miniplayer-wiring-tutorial.md) |
-| [`design-tokens.md`](design-tokens.md) — designer ↔ **`index.css`** workflow |
+| [`design-tokens.md`](../design-tokens.md) — designer ↔ **`index.css`** workflow |
 
-**Next in plan (Phase 3):** [`MusicPlayer-playback-sync-tutorial.md`](MiniPlayer-learning-plan.md) — **`MusicPlayer.jsx`** + **`upsertMusicSession`**.
+**Next in plan (Phase 3):** [`MusicPlayer-playback-sync-tutorial.md`](../MiniPlayer-learning-plan.md) — **`MusicPlayer.jsx`** + **`upsertMusicSession`**.
 
 ---
 

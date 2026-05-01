@@ -3,7 +3,7 @@
 **Code:** `src/components/HomeHeader.jsx` + `HomeHeader.css`  
 **Figma (example):** [Home / header area](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5527-77520) — parent **hug content**, with top / bottom padding as in the file.
 
-**Related learning:** `docs/react-learning.md` (short pointers) — this file is the **longer** step-by-step for `useRef`, `useLayoutEffect`, and `ResizeObserver`.
+**Related learning:** [`react-learning.md`](../react-learning.md) (short pointers) — this file is the **longer** step-by-step for `useRef`, `useLayoutEffect`, and `ResizeObserver`.
 
 ---
 

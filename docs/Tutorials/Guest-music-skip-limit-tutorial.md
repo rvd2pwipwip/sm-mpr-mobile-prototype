@@ -2,7 +2,7 @@
 
 This document walks through the **guest-only hourly skip cap** for **music** streaming: **constants**, **`GuestMusicSkipContext`** (timing + entitlement checks), **`MusicSkipButton`** (badge overlay), **`GuestSkipLimitDialog`**, and how **`MiniPlayer`** + **`MusicPlayer`** stay in sync without **prop drilling**.
 
-**Prerequisite:** **[`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md)** (where music vs mini/full lives), **`docs/visual-ads-and-user-types.md`** (**`guest`** vs **`provided`** / **`subscribed`**), **`UserTypeContext`**.
+**Prerequisite:** **[`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md)** (where music vs mini/full lives), **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** (**`guest`** vs **`provided`** / **`subscribed`**), **`UserTypeContext`**.
 
 **Figma:** Badge on skip control — **[`23:20013`](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013)**; hourly limit modal — **[`5568:166350`](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5568-166350)**.
 
@@ -28,7 +28,7 @@ This document walks through the **guest-only hourly skip cap** for **music** str
 
 ## 2. Tune the prototype numbers — `guestMusicSkips.js`
 
-[`src/constants/guestMusicSkips.js`](../src/constants/guestMusicSkips.js) exports three named values:
+[`src/constants/guestMusicSkips.js`](../../src/constants/guestMusicSkips.js) exports three named values:
 
 | Constant | Typical value | Meaning |
 |---------|---------------|---------|
@@ -54,7 +54,7 @@ Think of a **list of timestamps** (milliseconds since epoch). Each is “this sk
 
 ## 4. `GuestMusicSkipContext.jsx` — provider + keyed remount
 
-File: [`src/context/GuestMusicSkipContext.jsx`](../src/context/GuestMusicSkipContext.jsx).
+File: [`src/context/GuestMusicSkipContext.jsx`](../../src/context/GuestMusicSkipContext.jsx).
 
 ### 4a. Why two provider components?
 
@@ -99,7 +99,7 @@ Consumers: **`MusicSkipButton`**, **`GuestSkipLimitDialog`**.
 
 ## 5. UI: `MusicSkipButton.jsx`
 
-File: [`src/components/MusicSkipButton.jsx`](../src/components/MusicSkipButton.jsx) + **`MusicSkipButton.css`**.
+File: [`src/components/MusicSkipButton.jsx`](../../src/components/MusicSkipButton.jsx) + **`MusicSkipButton.css`**.
 
 ### Responsibilities
 
@@ -118,7 +118,7 @@ Digit only (**no chip fill**) in the triangle region of **`/skip.svg`**; **`font
 
 ## 6. UI: `GuestSkipLimitDialog.jsx`
 
-File: [`src/components/GuestSkipLimitDialog.jsx`](../src/components/GuestSkipLimitDialog.jsx) + **`GuestSkipLimitDialog.css`**.
+File: [`src/components/GuestSkipLimitDialog.jsx`](../../src/components/GuestSkipLimitDialog.jsx) + **`GuestSkipLimitDialog.css`**.
 
 - **Fixed overlay** + dim **scrim** (button that dismisses for tap-outside parity). **`z-index`** **`--z-guest-skip-dialog`** (see **`index.css`**, above bottom chrome / below pre-roll if both existed).
 - **Copy** uses **`skipLimitDialogMinutes`** from context.

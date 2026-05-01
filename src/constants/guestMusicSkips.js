@@ -3,7 +3,7 @@
  *
  * Adjust here only — UI reads behavior from GuestMusicSkipContext.
  *
- * @see docs/Guest-music-skip-limit-tutorial.md
+ * @see docs/Tutorials/Guest-music-skip-limit-tutorial.md
  */
 
 /** Max simultaneous “timed” skips (slots) for guest music streaming */

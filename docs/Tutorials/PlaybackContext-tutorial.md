@@ -1,8 +1,8 @@
 # Tutorial: Understanding `PlaybackContext.jsx`
 
-This document walks through [`src/context/PlaybackContext.jsx`](../src/context/PlaybackContext.jsx) as if you were building it yourself. It assumes you know **basic JavaScript and JSX** and have used **`useState`** at least once, but **not** necessarily React Context, **`useCallback`**, **`useMemo`**, or **`useLocation`**.
+This document walks through [`src/context/PlaybackContext.jsx`](../../src/context/PlaybackContext.jsx) as if you were building it yourself. It assumes you know **basic JavaScript and JSX** and have used **`useState`** at least once, but **not** necessarily React Context, **`useCallback`**, **`useMemo`**, or **`useLocation`**.
 
-**Companion:** Shorter “reminder” notes for the mini player also live in [`react-learning.md`](react-learning.md) → *Miniplayer* and *Bottom navigation* (padding + `--mini-player-offset`).
+**Companion:** Shorter “reminder” notes for the mini player also live in [`react-learning.md`](../react-learning.md) → *Miniplayer* and *Bottom navigation* (padding + `--mini-player-offset`).
 
 ---
 
@@ -11,7 +11,7 @@ This document walks through [`src/context/PlaybackContext.jsx`](../src/context/P
 **`PlaybackContext`** holds **prototype “now playing” state** for the whole app:
 
 - **What** is nominally streaming (titles, thumbnail, pause flag, music channel id).
-- **Which UX variant** the [`MiniPlayer`](../components/MiniPlayer.jsx) should render: **`music`**, **`podcasts`**, or **`radio`**.
+- **Which UX variant** the [`MiniPlayer`](../../src/components/MiniPlayer.jsx) should render: **`music`**, **`podcasts`**, or **`radio`**.
 - **Where** the full-screen music player lives in the router (**`fullPlayerPath`**, e.g. `/music/dance-hits/play`) so the mini bar can **`navigate()`** there—and **`null`** for podcast/radio stubs until real routes exist.
 - **`miniPlayerVisible`** — Derives whether the mini strip should render (session active **and** you are **not** on the full-screen player URL).
 - **Side effect** — Writes the CSS variable **`--mini-player-offset`** on **`<html>`** so **`index.css`** can add bottom padding under the fixed mini bar when it is visible.
@@ -283,4 +283,4 @@ User clears session (Info “Clear”) or leaves demo
 | **`index.css`** (footer tokens) | [`MiniPlayer-layout-tokens-tutorial.md`](MiniPlayer-layout-tokens-tutorial.md) — **`--mini-player-offset`**, **`--bottom-nav-stack-height`**, scroll padding |
 | **`App.jsx`** | [`App-miniplayer-wiring-tutorial.md`](App-miniplayer-wiring-tutorial.md) — router + provider tree, **`MiniPlayer`/`BottomNav`** sibling of **`Routes`** |
 
-A separate **learning plan** for the rest of the mini player implementation lives in [`MiniPlayer-learning-plan.md`](MiniPlayer-learning-plan.md).
+A separate **learning plan** for the rest of the mini player implementation lives in [`MiniPlayer-learning-plan.md`](../MiniPlayer-learning-plan.md).

@@ -1,6 +1,6 @@
 # Tutorial: Understanding `MiniPlayer.jsx` (+ `MiniPlayer.css`)
 
-This document walks through [`src/components/MiniPlayer.jsx`](../components/MiniPlayer.jsx) and [`MiniPlayer.css`](../components/MiniPlayer.css)—the visual **MiniPlayer** strip: layout, variants, **`usePlayback`**, and **`useNavigate`**.
+This document walks through [`src/components/MiniPlayer.jsx`](../../src/components/MiniPlayer.jsx) and [`MiniPlayer.css`](../../src/components/MiniPlayer.css)—the visual **MiniPlayer** strip: layout, variants, **`usePlayback`**, and **`useNavigate`**.
 
 **Prerequisite:** [`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md) (what **`session`** and **`miniPlayerVisible`** mean) and [`App-miniplayer-wiring-tutorial.md`](App-miniplayer-wiring-tutorial.md) (where **`MiniPlayer`** mounts).
 
@@ -213,7 +213,7 @@ Grouped by responsibility (line ranges approximate):
 | **Main column** | **`mini-player__main`**, **`__thumb`**, **`__text`**: flex, **`min-width: 0`** on text (**ellipsis** / **line-clamp**). Art **60×60**, **`radius-sm`**. |
 | **Titles** | Non-podcast: **nowrap** + ellipsis; **`mini-player__title--podcast`**: **`line-clamp: 2`**, **`1rem`**. **`[data-variant="podcasts"]`** subtitle fontsize tweak. |
 | **Transport** | **`mini-player__ctrl--lg`** **60×60**, **`--sm`** **40×40**. |
-| **Mask icons** | **`pause.svg`**, **`play.svg`** (full-screen **`MusicPlayer`**: **`playerCtrlPause.svg`**, **`playerCtrlPlay.svg`**). **Podcast seeks:** **`replay15.svg`**, **`fwd30.svg`**. **Music skip:** **`skip.svg`**. Same **`mask-image`** technique as **`BottomNav`**; see [`react-learning.md`](react-learning.md). |
+| **Mask icons** | **`pause.svg`**, **`play.svg`** (full-screen **`MusicPlayer`**: **`playerCtrlPause.svg`**, **`playerCtrlPlay.svg`**). **Podcast seeks:** **`replay15.svg`**, **`fwd30.svg`**. **Music skip:** **`skip.svg`**. Same **`mask-image`** technique as **`BottomNav`**; see [`react-learning.md`](../react-learning.md). |
 
 Full token flow **padding underneath scroll content** (**`var(--mini-player-offset)`**) is set in **`PlaybackContext`**—not in this stylesheet—planned doc **layout tokens**.
 
@@ -234,7 +234,7 @@ Keeping **`e.stopPropagation()`** guards against future refactors (e.g. wrapping
 3. **`variant`** drives **which JSX block renders** (**three mutually exclusive branches**).
 4. **`fullPlayerPath`** falsy → no **`navigate()`** call — tap does nothing productive; **`mini-player__main--no-fullscreen`** indicates preview-only (**cursor**) for podcast/radio demos.
 5. **CSS** handles **inverse** theme + stacking above tabs; **`--mini-player-offset`** on **`html`** adjusts scroll gutters (**PlaybackContext**)—see upcoming layout-token tutorial.
-6. **`data-variant`** + modifiers match **[`Miniplayer-component-story.md`](Miniplayer-component-story.md)** control sets (**music**: play + skip; **podcasts**: ±15/+30 + play; **radio**: play only).
+6. **`data-variant`** + modifiers match **[`Miniplayer-component-story.md`](../Stories/Miniplayer-component-story.md)** control sets (**music**: play + skip; **podcasts**: ±15/+30 + play; **radio**: play only).
 
 ---
 
@@ -257,4 +257,4 @@ Keeping **`e.stopPropagation()`** guards against future refactors (e.g. wrapping
 
 ---
 
-*Figma Miniplayer:* [`docs/figma-nodes.md`](figma-nodes.md) (**`19777:32024`**).
+*Figma Miniplayer:* [`figma-nodes.md`](../figma-nodes.md) (**`19777:32024`**).

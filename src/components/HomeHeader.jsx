@@ -61,7 +61,7 @@ function WordmarkPair() {
 }
 
 /**
- * Home top bar: wordmark; guest sees Upgrade — provided / subscribed per `docs/Home-screen-story.md`.
+ * Home top bar: wordmark; guest sees Upgrade — provided / subscribed per `docs/Stories/Home-screen-story.md`.
  */
 export default function HomeHeader({ onUpgrade }) {
   const headerRef = useHomeHeaderOffset();

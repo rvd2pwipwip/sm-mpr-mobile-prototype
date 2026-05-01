@@ -60,7 +60,7 @@ Standard pattern for a **primary app menu** at the bottom of the phone frame: **
 
 - **`docs/figma-nodes.md`** — canonical list of Figma screens and components (URLs with `node-id`). Prefer linking to a **specific frame** over the whole page when implementing a screen.
 - **Product / UX intent (`docs/`)** — narrative and screen-level **behavior** in this repo (complement to Figma frames):
-  - **`docs/Home-screen-story.md`** — Home screen story: role of header, banner, swimlanes (music → podcasts → radio, Listen again, Favorites, Recommendations), footer (tabs, mini player), ads, and **user-type** layout differences (guest, provided, subscribed).
+  - **`docs/Stories/Home-screen-story.md`** — Home screen story: role of header, banner, swimlanes (music → podcasts → radio, Listen again, Favorites, Recommendations), footer (tabs, mini player), ads, and **user-type** layout differences (guest, provided, subscribed).
   - **`docs/design-tokens.md`** — how **CSS tokens** in `src/index.css` map to Figma and how UI designers can change look/spacing without hunting through components.
   - **Add** further design or product notes under `docs/*.md` as the prototype grows; when implementing a screen, check **Figma** + any **relevant `docs/` file** for that feature.
 - **[In-Car OEM Radio / MPR documentation](https://in-car-music-documentation.stingray.com/)** — Stingray’s published docs for **music, podcasts, and radio** in the car (OEM). This **mobile** prototype is the **phone counterpart** to that in-car product: **content types, browse/listen flows, and feature vocabulary** align in spirit; **layout, touch patterns, and chrome** follow **Figma + this repo**. Use the site for **terminology and parity questions**, not pixel layout. (The separate **karaoke** in-car docs are not the product reference here.)
@@ -74,7 +74,7 @@ Standard pattern for a **primary app menu** at the bottom of the phone frame: **
 ## Project plan document
 
 - **Living plan / history:** `docs/plan.md` — what we plan to do, what we have done, and what is next. It is a **return-from-hiatus** refresher; **update it** when finishing meaningful work (same PR or follow-up) so it stays accurate.
-- **Do not** let `plan.md` replace `docs/Home-screen-story.md` (product story) or `docs/figma-nodes.md` (Figma index); it **coordinates** them for implementation.
+- **Do not** let `plan.md` replace `docs/Stories/Home-screen-story.md` (product story) or `docs/figma-nodes.md` (Figma index); it **coordinates** them for implementation.
 - **Agents:** When a task implements or scopes a user-visible or structural slice, **check whether `docs/plan.md` should be updated** (done / next / backlog) before considering the work complete.
 
 ## Code changes

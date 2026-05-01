@@ -2,7 +2,7 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
-**See also:** `docs/Home-screen-story.md` (product story for Home), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -20,7 +20,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] Vite + React project scaffold.
 - [x] Cursor project rules: `.cursor/rules/stingray-music-prototype.mdc` (swimlanes, bottom nav, tokens, fake data).
 - [x] `docs/figma-nodes.md` — design file and screen node links.
-- [x] `docs/Home-screen-story.md` — Home narrative (header, banner, swimlanes, footer, ads, user types).
+- [x] `docs/Stories/Home-screen-story.md` — Home narrative (header, banner, swimlanes, footer, ads, user types).
 - [x] `docs/plan.md` — this living plan (update as we ship scope).
 - [x] Mock data modules:
   - [x] `src/data/musicChannels.js` — `MusicChannel`, `MUSIC_GENRES`, related channels for info screen.
@@ -54,7 +54,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
    `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). *Follow-up:* **Favorites**, **Recommendations**, full banner art / SVGs from Figma.
 
 5. **User mode stub** — **done (baseline)**  
-   **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`Home-screen-story.md`).
+   **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`docs/Stories/Home-screen-story.md`).
 
 6. **Stacked routes (music first)** — **done (music)**  
    Info + player + **no tab bar** on player. Then mirror for podcast / radio.
@@ -63,7 +63,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## Listen again (user history) — specification (shipped)
 
-**Product:** `docs/Home-screen-story.md`, `docs/Home - UX Principles.md` (continuity of listening; mixed types; compact tiles).
+**Product:** `docs/Stories/Home-screen-story.md`, `docs/UX/Home - UX Principles.md` (continuity of listening; mixed types; compact tiles).
 
 **Figma**
 
@@ -119,7 +119,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 **Implementation (shipped)**
 
 - **`src/constants/guestMusicSkips.js`** — **`GUEST_MUSIC_MAX_ACTIVE_SKIPS`**, **`GUEST_MUSIC_SKIP_RECOVERY_MS`**, **`GUEST_MUSIC_SKIP_PRUNE_INTERVAL_MS`**.
-- **`GuestMusicSkipProvider`** — **`key={userType}`** inner tree reset; **`consumeGuestMusicSkip()`**; **`useGuestMusicSkips()`**; dialog state. **Tutorial:** **`docs/Guest-music-skip-limit-tutorial.md`**.
+- **`GuestMusicSkipProvider`** — **`key={userType}`** inner tree reset; **`consumeGuestMusicSkip()`**; **`useGuestMusicSkips()`**; dialog state. **Tutorial:** **`docs/Tutorials/Guest-music-skip-limit-tutorial.md`**.
 - **`MusicSkipButton`**, **`GuestSkipLimitDialog`**, **`MiniPlayer`** / **`MusicPlayer`** integration; **`--z-guest-skip-dialog`** in **`index.css`**.
 
 **Persistence:** In-memory is enough for the prototype (optional `localStorage` later if flows need reload survival).
@@ -152,6 +152,6 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 - After **meaningful** work (a feature, a milestone, or a clear scope change): update **What we have done** and **Next steps**; adjust **Backlog** as needed.
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
-- This file does **not** replace `Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
+- This file does **not** replace `docs/Stories/Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
 *Last updated: 2026-05-01* — **Listen again (user history)** shipped; **next:** podcast/radio (history hooks), Search & Browse.

@@ -1,6 +1,6 @@
 # Visual ads and user types (prototype)
 
-This note ties **`UserTypeContext`** to **footer ad placeholders** and documents how the clickable prototype behaves. **Product source:** narrative in **`docs/Home-screen-story.md`** (footer ads, swimlane ads, subscribed users without ads).
+This note ties **`UserTypeContext`** to **footer ad placeholders** and documents how the clickable prototype behaves. **Product source:** narrative in **`docs/Stories/Home-screen-story.md`** (footer ads, swimlane ads, subscribed users without ads).
 
 ## User types in code
 
@@ -36,4 +36,4 @@ In-feed banner: **`src/components/SwimlaneBannerAd.jsx`**.
 
 ## Mini player (not built)
 
-When a mini player exists above the tabs, **`Home-screen-story.md`** says the footer stack grows again; this prototype does **not** model mini player height yet — only tabs + optional ad strip.
+When a mini player exists above the tabs, **`docs/Stories/Home-screen-story.md`** says the footer stack grows again; this prototype does **not** model mini player height yet — only tabs + optional ad strip.

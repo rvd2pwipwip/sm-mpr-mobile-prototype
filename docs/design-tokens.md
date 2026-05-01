@@ -5,7 +5,7 @@ This project does **not** use a full separate design system. **Visual and layout
 1. **Figma** — frames and components in [`docs/figma-nodes.md`](figma-nodes.md) (e.g. [Home](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=1-2), [Channel Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067)).
 2. **`src/index.css`** — **CSS custom properties** (`:root`, dark overrides) that components consume via `var(--token-name)`.
 
-**Product and behavior** — see `docs/Home-screen-story.md` and the plan in `docs/plan.md`.
+**Product and behavior** — see `docs/Stories/Home-screen-story.md` and the plan in `docs/plan.md`.
 
 ---
 
