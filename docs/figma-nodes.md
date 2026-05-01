@@ -34,6 +34,7 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 
 - [Button / md — CTA + secondary (subscribe pattern)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115) — `src/components/Button.jsx` + `index.css` button tokens
 - [Miniplayer](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19777-32024&t=4UaBQ5Cdiloes4Qb-4)
+- [Episode Card](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19586-136643&t=8NQn3KeizdhIWSrR-4)
 
 ## Screens
 
@@ -44,6 +45,8 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [App Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7-3024&t=NvKDs20ElRoIwSUC-0)
 - [Music Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013&t=NvKDs20ElRoIwSUC-0)
 - [Channel Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067&t=NvKDs20ElRoIwSUC-0)
+- [Podcast Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19601-28077&t=8NQn3KeizdhIWSrR-4)
+- [Podcast Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19585-135699&t=8NQn3KeizdhIWSrR-4)
 - [Subscription (Upgrade)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=220-40551&t=NvKDs20ElRoIwSUC-0)
 - [Log in](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5638-214108&t=NvKDs20ElRoIwSUC-0)
 - [View More grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-17518&t=NvKDs20ElRoIwSUC-0)
