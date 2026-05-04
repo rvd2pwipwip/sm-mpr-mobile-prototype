@@ -1,0 +1,193 @@
+/* Episode row — Figma Episode Card (`19586:136643`); drives `EpisodeCard.jsx`. */
+
+.episode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+  width: 100%;
+  margin: 0;
+  padding: var(--space-4);
+  box-sizing: border-box;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  border: none;
+  color: inherit;
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  box-shadow: var(--shadow-card);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.episode-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.episode-card__top {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.episode-card__thumb-wrap {
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-text) 35%, transparent);
+}
+
+.episode-card__thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.episode-card__icon-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.episode-card__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  color: color-mix(in srgb, var(--color-text) 88%, transparent);
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.episode-card__icon-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.episode-card__icon-btn:active {
+  opacity: 0.85;
+}
+
+.episode-card__icon-btn--bookmark-active {
+  color: var(--color-accent);
+}
+
+.episode-card__glyph {
+  display: block;
+}
+
+.episode-card__title {
+  margin: 0;
+  flex: 1 1 auto;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
+}
+
+.episode-card__meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
+.episode-card__dot {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--color-text) 28%, transparent);
+  box-sizing: border-box;
+}
+
+.episode-card__dot--accent {
+  border: none;
+  background: var(--color-accent);
+}
+
+.episode-card__dot--complete {
+  border: none;
+  background: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.episode-card__meta-line {
+  margin: 0;
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: color-mix(in srgb, var(--color-text) 76%, transparent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.episode-card__progress-wrap {
+  visibility: hidden;
+  height: 3px;
+  margin-top: 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.episode-card__progress-wrap--visible {
+  visibility: visible;
+  margin-top: var(--space-1);
+}
+
+.episode-card__progress-track {
+  height: 3px;
+  background: color-mix(in srgb, var(--color-text) 9%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.episode-card__progress-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: var(--color-accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+}
+
+.episode-card__stub-resume {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-decoration: underline;
+  color: color-mix(in srgb, var(--color-accent) 90%, transparent);
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.episode-card__stub-resume:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

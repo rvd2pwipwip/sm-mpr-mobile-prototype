@@ -614,6 +614,24 @@ export function getPodcastEpisodeById(podcastId, episodeId) {
   return { podcast, episode };
 }
 
+/** `{ podcast, episode }` from a canonical `PodcastEpisode.id` (no separate podcast id passed). */
+export function findPodcastAndEpisode(episodeCompoundId) {
+  if (!episodeCompoundId) {
+    return null;
+  }
+  for (const podcast of PODCASTS) {
+    if (!episodeCompoundId.startsWith(`${podcast.id}__`)) {
+      continue;
+    }
+    const episode =
+      podcast.episodes.find((e) => e.id === episodeCompoundId) ?? null;
+    if (episode) {
+      return { podcast, episode };
+    }
+  }
+  return null;
+}
+
 export function getPodcastsByCategory(categoryId) {
   return PODCASTS.filter((p) => p.categoryId === categoryId);
 }

@@ -7,6 +7,7 @@ import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext";
 import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
+import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
 import ListenAgainMore from "./pages/ListenAgainMore";
@@ -76,9 +77,11 @@ function App() {
       <GuestMusicSkipProvider>
         <GuestPrerollGraceProvider>
           <ListenHistoryProvider>
-            <PlaybackProvider>
-              <AppRoutes />
-            </PlaybackProvider>
+            <PodcastUserStateProvider>
+              <PlaybackProvider>
+                <AppRoutes />
+              </PlaybackProvider>
+            </PodcastUserStateProvider>
           </ListenHistoryProvider>
         </GuestPrerollGraceProvider>
       </GuestMusicSkipProvider>

@@ -1,35 +1,38 @@
-/* Phase 1 podcast show shell — complements `MusicChannelInfo.css` layout classes. */
+/* `PodcastInfo.jsx` additions — complements `MusicChannelInfo.css`. */
 
-.podcast-info-phase1__note {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+.podcast-info__library-preview {
+  margin: var(--space-3) 0 0;
+  padding-inline: var(--space-content-inline);
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
 }
 
-.podcast-info-phase1__ep-list {
-  margin: 0;
-  padding-inline-start: 1.25rem;
-  color: var(--color-text);
+.podcast-info__episodes-section {
+  width: 100%;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
 }
 
-.podcast-info-phase1__ep-item {
-  margin-bottom: var(--space-2);
+/* Full-bleed episode column (similar swimlane breakout; scroll under header). */
+.podcast-info__episodes-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-.podcast-info-phase1__ep-link {
-  padding: 0;
-  border: none;
-  font: inherit;
-  text-align: left;
-  color: var(--color-accent);
-  text-decoration: underline;
-  background: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+.podcast-info__episodes-scroll::-webkit-scrollbar {
+  display: none;
 }
 
-.podcast-info-phase1__ep-link:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+.podcast-info__episodes-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding-inline: var(--space-content-inline);
+  padding-bottom: var(--footer-stack-scroll-padding);
+  box-sizing: border-box;
 }
