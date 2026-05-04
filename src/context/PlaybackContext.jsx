@@ -9,8 +9,9 @@ import {
 import { useLocation } from "react-router-dom";
 
 /**
- * Lightweight “now playing” state for MiniPlayer + sync with MusicPlayer when mounted.
- * `fullPlayerPath` is null for podcast/radio until those routes exist — tap-to-expand is a no-op then.
+ * Lightweight “now playing” state for MiniPlayer + sync with full players when mounted.
+ * **`fullPlayerPath`** is set for **`music`** via **`upsertMusicSession`**. Podcast/radio paths exist;
+ * podcast session wiring (`fullPlayerPath`) ships in Phase 5 — until then mini expand stays a demo for **`startPodcastDemo`**.
  */
 
 const PlaybackContext = createContext(null);
@@ -31,7 +32,9 @@ export function PlaybackProvider({ children }) {
   const location = useLocation();
   const [session, setSession] = useState(initialSession);
 
-  const hideMiniOnFullPlayer = /^\/music\/[^/]+\/play\/?$/.test(location.pathname);
+  const hideMiniOnFullPlayer =
+    /^\/music\/[^/]+\/play\/?$/.test(location.pathname) ||
+    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(location.pathname);
   const miniPlayerVisible = session.active && !hideMiniOnFullPlayer;
 
   useEffect(() => {

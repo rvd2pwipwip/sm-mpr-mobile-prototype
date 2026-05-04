@@ -84,7 +84,11 @@ export default function Home() {
             onMore={() => navigate("/more/podcasts")}
           >
             {PODCASTS.slice(0, LANE_SIZE).map((podcast) => (
-              <PodcastCard key={podcast.id} podcast={podcast} />
+              <PodcastCard
+                key={podcast.id}
+                podcast={podcast}
+                onSelect={() => navigate(`/podcast/${podcast.id}`)}
+              />
             ))}
           </ContentSwimlane>
           <div className="content-inset">

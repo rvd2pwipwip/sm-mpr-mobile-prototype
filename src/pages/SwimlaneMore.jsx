@@ -24,10 +24,13 @@ const CATEGORIES = {
   },
   podcasts: {
     title: "Podcasts",
-    render: () =>
+    render: (navigate) =>
       PODCASTS.map((podcast) => (
         <li key={podcast.id} className="swimlane-more__cell">
-          <PodcastCard podcast={podcast} />
+          <PodcastCard
+            podcast={podcast}
+            onSelect={() => navigate(`/podcast/${podcast.id}`)}
+          />
         </li>
       )),
   },

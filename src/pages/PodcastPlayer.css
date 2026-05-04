@@ -1,0 +1,9 @@
+/* Phase 1 podcast player shell */
+
+.podcast-player-shell__phase-note {
+  margin: 0;
+  padding-inline: var(--space-5);
+  font-size: 0.9rem;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}

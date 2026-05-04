@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 import ListenAgainMore from "./pages/ListenAgainMore";
 import MusicChannelInfo from "./pages/MusicChannelInfo";
 import MusicPlayer from "./pages/MusicPlayer";
+import PodcastInfo from "./pages/PodcastInfo";
+import PodcastPlayer from "./pages/PodcastPlayer";
 import Search from "./pages/Search";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -24,9 +26,22 @@ function MusicPlayerRoute() {
   return <MusicPlayer key={`${channelId}-${userType}`} />;
 }
 
+function PodcastPlayerRoute() {
+  const { podcastId, episodeId } = useParams();
+  const { userType } = useUserType();
+  return <PodcastPlayer key={`${podcastId}-${episodeId}-${userType}`} />;
+}
+
+function hideBottomNavForPath(pathname) {
+  return (
+    /^\/music\/[^/]+\/play\/?$/.test(pathname) ||
+    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(pathname)
+  );
+}
+
 function AppRoutes() {
   const location = useLocation();
-  const hideBottomNav = /^\/music\/[^/]+\/play\/?$/.test(location.pathname);
+  const hideBottomNav = hideBottomNavForPath(location.pathname);
 
   return (
     <>
@@ -39,6 +54,8 @@ function AppRoutes() {
         <Route path="/more/:categoryId" element={<SwimlaneMore />} />
         <Route path="/music/:channelId" element={<MusicChannelInfo />} />
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
+        <Route path="/podcast/:podcastId/play/:episodeId" element={<PodcastPlayerRoute />} />
+        <Route path="/podcast/:podcastId" element={<PodcastInfo />} />
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
       </Routes>
@@ -52,7 +69,7 @@ function AppRoutes() {
   );
 }
 
-/** Route table; `BottomNav` is a sibling of `Routes` (hidden on full-screen music player). */
+/** Route table; `BottomNav` is a sibling of `Routes` (hidden on full-screen music / podcast play). */
 function App() {
   return (
     <UserTypeProvider>

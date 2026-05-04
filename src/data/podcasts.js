@@ -600,6 +600,20 @@ export function getPodcastById(id) {
   return byId.get(id) ?? null;
 }
 
+/** Resolves `{ podcast, episode }` only if `episodeId` belongs to this show (`PodcastEpisode.id`). */
+export function getPodcastEpisodeById(podcastId, episodeId) {
+  const podcast = getPodcastById(podcastId);
+  if (!podcast || !episodeId) {
+    return null;
+  }
+  const episode =
+    podcast.episodes.find((e) => e.id === episodeId) ?? null;
+  if (!episode) {
+    return null;
+  }
+  return { podcast, episode };
+}
+
 export function getPodcastsByCategory(categoryId) {
   return PODCASTS.filter((p) => p.categoryId === categoryId);
 }
