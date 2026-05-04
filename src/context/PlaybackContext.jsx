@@ -10,8 +10,7 @@ import { useLocation } from "react-router-dom";
 
 /**
  * Lightweight “now playing” state for MiniPlayer + sync with full players when mounted.
- * **`fullPlayerPath`** is set for **`music`** via **`upsertMusicSession`**. Podcast/radio paths exist;
- * podcast session wiring (`fullPlayerPath`) ships in Phase 5 — until then mini expand stays a demo for **`startPodcastDemo`**.
+ * Music uses **`channelId`**; podcasts use **`podcastId`** + **`podcastEpisodeId`** (compound episode id).
  */
 
 const PlaybackContext = createContext(null);
@@ -25,6 +24,10 @@ const initialSession = {
   thumbnail: "",
   /** Music channel id when variant === music */
   channelId: null,
+  /** Show id when variant === podcasts */
+  podcastId: null,
+  /** `PodcastEpisode.id` compound string when variant === podcasts */
+  podcastEpisodeId: null,
   fullPlayerPath: null,
 };
 
@@ -55,6 +58,32 @@ export function PlaybackProvider({ children }) {
     setSession((s) => (s.active ? { ...s, isPaused: !s.isPaused } : s));
   }, []);
 
+  const upsertPodcastSession = useCallback(
+    ({
+      podcastId: pid,
+      episodeId,
+      thumbnail: thumb,
+      title: epTitle,
+      subtitle: showTitle,
+      isPaused,
+    }) => {
+      const fullPlayerPath = `/podcast/${pid}/play/${episodeId}`;
+      setSession({
+        active: true,
+        variant: "podcasts",
+        channelId: null,
+        podcastId: pid,
+        podcastEpisodeId: episodeId,
+        thumbnail: thumb,
+        title: epTitle,
+        subtitle: showTitle,
+        isPaused,
+        fullPlayerPath,
+      });
+    },
+    [],
+  );
+
   const upsertMusicSession = useCallback(
     ({
       channelId,
@@ -68,6 +97,8 @@ export function PlaybackProvider({ children }) {
         active: true,
         variant: "music",
         channelId,
+        podcastId: null,
+        podcastEpisodeId: null,
         thumbnail,
         title,
         subtitle,
@@ -83,6 +114,8 @@ export function PlaybackProvider({ children }) {
       active: true,
       variant: "podcasts",
       channelId: null,
+      podcastId: null,
+      podcastEpisodeId: null,
       thumbnail: "",
       title: "Podcast episode titles tend to be long so they’re allowed 2 lines",
       subtitle: "Podcast Name",
@@ -96,6 +129,8 @@ export function PlaybackProvider({ children }) {
       active: true,
       variant: "radio",
       channelId: null,
+      podcastId: null,
+      podcastEpisodeId: null,
       thumbnail: "",
       title: "CKKC 99.9",
       subtitle: "Now playing metadata",
@@ -115,6 +150,7 @@ export function PlaybackProvider({ children }) {
       setPaused,
       togglePlayPause,
       upsertMusicSession,
+      upsertPodcastSession,
       startPodcastDemo,
       startRadioDemo,
       clearSession,
@@ -125,6 +161,7 @@ export function PlaybackProvider({ children }) {
       setPaused,
       togglePlayPause,
       upsertMusicSession,
+      upsertPodcastSession,
       startPodcastDemo,
       startRadioDemo,
       clearSession,

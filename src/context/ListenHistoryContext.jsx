@@ -9,7 +9,7 @@ import { LISTEN_HISTORY_MAX_STORED } from "../constants/listenHistory";
 
 /**
  * Recently listened entries for “Listen again” (prototype). In-memory only; starts empty.
- * @typedef {{ kind: 'music', id: string }} ListenHistoryItem
+ * @typedef {{ kind: 'music', id: string } | { kind: 'podcast', id: string }} ListenHistoryItem
  */
 
 const ListenHistoryContext = createContext(null);
@@ -31,6 +31,14 @@ export function ListenHistoryProvider({ children }) {
     );
   }, []);
 
+  /** Podcast **show** id (`Podcast.id`). Listen again navigates to Podcast Info */
+  const recordPodcastShowListen = useCallback((podcastId) => {
+    if (!podcastId) return;
+    setItems((prev) =>
+      bumpItem(prev, { kind: "podcast", id: podcastId }),
+    );
+  }, []);
+
   const clearListenHistory = useCallback(() => {
     setItems([]);
   }, []);
@@ -39,9 +47,10 @@ export function ListenHistoryProvider({ children }) {
     () => ({
       items,
       recordMusicChannelListen,
+      recordPodcastShowListen,
       clearListenHistory,
     }),
-    [items, recordMusicChannelListen, clearListenHistory],
+    [items, recordMusicChannelListen, recordPodcastShowListen, clearListenHistory],
   );
 
   return (

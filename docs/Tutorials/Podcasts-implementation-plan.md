@@ -10,6 +10,7 @@ Teaching-oriented guide for **you** while we build podcasts in the Stingray Musi
 - Living repo plan: [`docs/plan.md`](../plan.md) — update “What we have done” when this slice ships
 - Ads, user types & pre-roll entry points: [`docs/visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)
 - Guest pre-roll grace (skip rules, **`expandFromMiniPlayer`**): [`docs/Tutorials/Guest-preroll-grace-tutorial.md`](Guest-preroll-grace-tutorial.md)
+- **Line-by-line / deep dive:** [`docs/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md`](Podcasts-and-episodes-deep-dive-tutorial.md)
 
 **No real audio in this prototype** — playback is **UI state only** (progress, play/pause, speed label, seek buttons). That is enough to validate journeys.
 
@@ -165,7 +166,7 @@ Deliverable: player matches **Stories** (“variant of music player”) and the 
 
 ---
 
-## Phase 5 — `PlaybackContext` + `MiniPlayer` (podcast mode)
+## Phase 5 — `PlaybackContext` + `MiniPlayer` (podcast mode) ✅ (prototype)
 
 **Goal:** Use the **same language and behavior as music**:
 
@@ -180,13 +181,13 @@ So: **start stream ⇒ full-screen player ⇒ collapse ⇒ show detail behind mi
 1. When the **play route** mounts, **`PlaybackContext`** sets **`variant: 'podcasts'`**, artwork, episode + show title lines, and **`fullPlayerPath`** = that play URL (**required** so mini has an expand target after collapse).
 2. Extend **`PlaybackContext`** **`hideMiniOnFullPlayer`** (or equivalent) so it treats **`/^\/podcast\/[^/]+\/play/`** like the music **`/music/…/play`** regex—otherwise the mini strip would wrongly show **on top of** full podcast player.
 3. **`MiniPlayer`** already branches on **`variant === 'podcasts'`** — wire **−15 / +30** (and pause) to the same progress helpers as the full player whether the route is **`/play/...`** or **info**.
-4. **Listen again** — when the user has “really listened” (define a simple rule: e.g. play pressed or progress > 0.05), push a **podcast show** (or episode — follow **Home story**) into **`ListenHistoryContext`**; align with existing music recording pattern.
+4. **Listen again** — when the user has “really listened”: after guest pre-roll (when applicable), **`recordPodcastShowListen(podcastId)`** when **play** is on **or** **`position > 0.05`** (one record per episode mount). **`ListenAgainCard`** **`kind === 'podcast'`** → **`PodcastCard`** → **`/podcast/:id`**.
 
 Deliverable: Podcast playback **reads** like channel playback: **full player on start**, **info + overlays after collapse**, **mini tap returns to full screen**.
 
 ---
 
-## Phase 6 — Home and “More” wiring
+## Phase 6 — Home and “More” wiring ✅ (prototype)
 
 | Place | Work |
 |-------|------|
@@ -196,7 +197,7 @@ Deliverable: Podcast playback **reads** like channel playback: **full player on 
 
 Deliverable: no dead-end podcast tiles.
 
----
+**Shipped:** `Home.jsx`, `SwimlaneMore.jsx` (`CATEGORIES.podcasts`), `ListenAgainCard` podcast branch (`/podcast/:id`).
 
 ## Phase 7 — Search tab → Browse Podcasts (`19805:39266`)
 

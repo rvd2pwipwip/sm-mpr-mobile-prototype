@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import ContentTileCard from "../components/ContentTileCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { getMusicChannelById } from "../data/musicChannels";
 import "./MusicChannelInfo.css";
 
@@ -31,7 +32,10 @@ export default function MusicChannelInfo() {
   }
 
   const goBack = () => navigate(-1);
-  const goPlay = () => navigate(`/music/${channel.id}/play`);
+  const goPlay = () =>
+    navigate(`/music/${channel.id}/play`, {
+      state: playOverDetailNavigateState(),
+    });
 
   return (
     <main className="app-shell app-shell--footer-fixed music-info">

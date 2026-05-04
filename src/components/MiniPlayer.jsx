@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { usePlayback } from "../context/PlaybackContext";
+import { usePodcastUserState } from "../context/PodcastUserStateContext";
+import { findPodcastAndEpisode } from "../data/podcasts";
+import { approxDurationSecondsFromLabel } from "../utils/podcastDuration";
 import MusicSkipButton from "./MusicSkipButton";
 import "./MiniPlayer.css";
 
@@ -29,17 +33,36 @@ function SeekFwd30Icon() {
 export default function MiniPlayer() {
   const navigate = useNavigate();
   const { session, miniPlayerVisible, togglePlayPause } = usePlayback();
+  const { getEpisodeProgress, setEpisodeProgress } = usePodcastUserState();
 
   if (!miniPlayerVisible) {
     return null;
   }
 
-  const { variant, title, subtitle, thumbnail, isPaused, fullPlayerPath } = session;
+  const { variant, title, subtitle, thumbnail, isPaused, fullPlayerPath } =
+    session;
+
+  const bumpPodcastProgressSeconds = (deltaSec) => {
+    const episodeId = session.podcastEpisodeId;
+    if (!episodeId) return;
+    const bundle = findPodcastAndEpisode(episodeId);
+    if (!bundle) return;
+    const dur = approxDurationSecondsFromLabel(bundle.episode.duration);
+    if (!(dur > 0)) return;
+    const frac = getEpisodeProgress(episodeId, 0);
+    const next01 = Math.min(1, Math.max(0, (frac * dur + deltaSec) / dur));
+    setEpisodeProgress(episodeId, next01);
+  };
 
   const openFullPlayer = () => {
     if (fullPlayerPath) {
       /** Skip guest full-screen preroll — only show that on tune-from-browse (play), not expand. */
-      navigate(fullPlayerPath, { state: { expandFromMiniPlayer: true } });
+      navigate(
+        fullPlayerPath,
+        {
+          state: playOverDetailNavigateState({ expandFromMiniPlayer: true }),
+        },
+      );
     }
   };
 
@@ -123,7 +146,10 @@ export default function MiniPlayer() {
             <button
               type="button"
               className="mini-player__ctrl mini-player__ctrl--sm mini-player__ctrl--seek"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                bumpPodcastProgressSeconds(-15);
+              }}
               aria-label="Back 15 seconds"
             >
               <SeekReplay15Icon />
@@ -142,7 +168,10 @@ export default function MiniPlayer() {
             <button
               type="button"
               className="mini-player__ctrl mini-player__ctrl--sm mini-player__ctrl--seek"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                bumpPodcastProgressSeconds(30);
+              }}
               aria-label="Forward 30 seconds"
             >
               <SeekFwd30Icon />

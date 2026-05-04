@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import EpisodeCard from "../components/EpisodeCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { getPodcastById } from "../data/podcasts";
 import "./MusicChannelInfo.css";
@@ -38,7 +39,10 @@ export default function PodcastInfo() {
   const firstEpisode = podcast.episodes[0] ?? null;
   const playFirstEpisode = () => {
     if (firstEpisode) {
-      navigate(`/podcast/${podcast.id}/play/${firstEpisode.id}`);
+      navigate(
+        `/podcast/${podcast.id}/play/${firstEpisode.id}`,
+        { state: playOverDetailNavigateState() },
+      );
     }
   };
 
@@ -160,7 +164,10 @@ export default function PodcastInfo() {
                     isDownloaded={isDownloaded(ep.id)}
                     progressFraction={getEpisodeProgress(ep.id)}
                     onNavigate={() =>
-                      navigate(`/podcast/${podcast.id}/play/${ep.id}`)
+                      navigate(
+                        `/podcast/${podcast.id}/play/${ep.id}`,
+                        { state: playOverDetailNavigateState() },
+                      )
                     }
                     onToggleBookmark={() => toggleBookmark(ep.id)}
                     onToggleDownload={() => toggleDownload(ep.id)}

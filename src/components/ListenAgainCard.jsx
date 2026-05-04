@@ -1,5 +1,7 @@
 import { getMusicChannelById } from "../data/musicChannels";
+import { getPodcastById } from "../data/podcasts";
 import MusicChannelCard from "./MusicChannelCard";
+import PodcastCard from "./PodcastCard";
 
 /**
  * @param {{ kind: string, id: string }} item
@@ -19,11 +21,22 @@ export function renderListenAgainTile(item, navigate, compact = false) {
       />
     );
   }
+  if (item.kind === "podcast") {
+    const podcast = getPodcastById(item.id);
+    if (!podcast) return null;
+    return (
+      <PodcastCard
+        podcast={podcast}
+        compact={compact}
+        onSelect={() => navigate(`/podcast/${podcast.id}`)}
+      />
+    );
+  }
   return null;
 }
 
 /**
- * Single “Listen again” entry → appropriate domain card (music today; podcast/radio later).
+ * Single “Listen again” entry → music channel or podcast show card.
  *
  * @param {{
  *   item: { kind: string, id: string },

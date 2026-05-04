@@ -13,6 +13,7 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
+import { PLAY_OVER_DETAIL } from "../constants/fullPlayerNavigation";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
 import "./MusicPlayer.css";
@@ -106,7 +107,15 @@ export default function MusicPlayer() {
     return <Navigate to="/" replace />;
   }
 
-  const dismiss = () => navigate(-1);
+  const leaveFullPlayerForChannel = () => {
+    if (location.state?.[PLAY_OVER_DETAIL]) {
+      navigate(-1);
+      return;
+    }
+    navigate(`/music/${channel.id}`, { replace: true });
+  };
+
+  const dismiss = leaveFullPlayerForChannel;
 
   return (
     <main className="app-shell music-player-screen">
@@ -158,7 +167,7 @@ export default function MusicPlayer() {
               type="button"
               className="music-player__icon-btn"
               aria-label="Channel info"
-              onClick={() => navigate(`/music/${channel.id}`)}
+              onClick={leaveFullPlayerForChannel}
             >
               <PlayerMetaActionIcon variant="info" />
             </button>

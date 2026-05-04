@@ -36,8 +36,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up (after mini player baseline):* swimlane-level ads; finer **freeStingray** / **freeProvider** vs **`guest`** / **`provided`** if product requires it.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
-- [x] **Podcast stack — Phases 1–3** — **Routes + shells** (**`PodcastInfo`**, **`PodcastPlayer`**); **`getPodcastEpisodeById`** / **`findPodcastAndEpisode`**; nav + mini hide on podcast **`/play`**. **Phase 2:** **`PodcastUserStateContext`** (subscribe, bookmark, download, **`episodeProgressById`**, derived lists). **Phase 3:** **`EpisodeCard.jsx`** (**Figma `19586:136643`**) — thumb, bookmark / offline actions, title, status dot + date/duration, in-progress bar, optional **stub resume** link; **`PodcastInfo`** full **Episodes** stack (catalog order). Next: Phase **4–5** (**`PlaybackContext`** podcast session, preroll, **`MiniPlayer`**, Listen again).
-- [x] **Listen again (user history)** — **`ListenHistoryProvider`** (`src/context/ListenHistoryContext.jsx`); **Home** rail (compact tiles + ghost fillers to 12 slots); **`/more/listen-again`** → **`ListenAgainMore.jsx`** (**Clear** in **`ScreenHeader`**); history recorded from **`MusicPlayer`** when playback is allowed (after preroll). Constants **`src/constants/listenHistory.js`**; **`ListenAgainCard`**. Spec: **`docs/plan.md`** (§ **Listen again**).
+- [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). Radio browse still stubby where noted. Next: Phase **7** (Search browse podcasts) when scoped.
+- [x] **Listen again (user history)** — **`ListenHistoryProvider`**; **music** (**`MusicPlayer`**, after preroll) **+ podcast** (**`PodcastPlayer`**, after preroll, when engaged); **`ListenAgainCard`** → **`music`** | **`podcast`**; Home rail + **`/more/listen-again`**; **`src/constants/listenHistory.js`**.
 
 ---
 
@@ -74,7 +74,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 **History model**
 
 - **Starts empty** on load; **in-memory** is enough (optional `localStorage` later).
-- **Updates from real listens** in the prototype (not a static mock list): e.g. when the user starts **music** playback (`PlaybackContext` / **`MusicPlayer`** / tune-from-browse — same moment “listening” is real for the demo). Extend with **podcast** / **radio** when those stacks fire the same kind of event.
+- **Updates from real listens** in the prototype (not a static mock list): **music** when playback is allowed after preroll; **podcasts** after preroll when the user presses play / scrubs past **~5%** (see **`PodcastPlayer`**); extend **radio** when that stack fires the same kind of event.
 - **Dedupe + recency:** prepend or bump-on-repeat; cap stored entries for UI (rail shows up to **12** slots visually — see below).
 
 **Home — layout order (prepare for Favorites)**
@@ -96,7 +96,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 **Implementation (shipped)**
 
-- **`src/constants/listenHistory.js`**, **`ListenHistoryProvider`**, **`ListenAgainCard.jsx`**, **`ListenAgainMore.jsx`**, **`MusicPlayer.jsx`** (record when preroll gate passes), **`Home.jsx`**, **`App.jsx`** (provider + route order), **`ContentTileCard`**, **`ScreenHeader__text-btn`**.
+- **`src/constants/listenHistory.js`**, **`ListenHistoryProvider`** (`recordMusicChannelListen`, **`recordPodcastShowListen`**), **`ListenAgainCard.jsx`**, **`ListenAgainMore.jsx`**, **`MusicPlayer.jsx`**, **`PodcastPlayer.jsx`**, **`Home.jsx`**, **`App.jsx`**, **`ContentTileCard`**, **`ScreenHeader__text-btn`**.
 
 ---
 
@@ -131,13 +131,11 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Podcast & radio stacks** — Phases **1–3** shipped (see **What we have done**); next **4–5** (**full player + `PlaybackContext` / mini + preroll + Listen again**) per **`docs/Tutorials/Podcasts-implementation-plan.md`**. Radio: mirror routes when ready.
+1. [ ] **Podcast Phase 7 + radio** — Search & Browse podcasts segment (**`Podcasts-implementation-plan.md`**); **radio** full stack when ready.
 
 2. [ ] **Search & Browse** — replace **`Search`** stub with browse / grid flows (Figma **150+** / **1000+** channel variants); ties to territory story later.
 
 3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
-
----
 
 ## Backlog / later
 
@@ -155,4 +153,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `docs/Stories/Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-05-01* — **Listen again (user history)** shipped; **next:** podcast/radio (history hooks), Search & Browse.
+*Last updated: 2026-05-01* — **Podcast Phase 6** (Home + **`SwimlaneMore`** podcast wiring) confirmed in code; **next:** Phase 7 / Search browse, radio, visual pass.
