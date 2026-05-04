@@ -9,6 +9,19 @@ import { getPodcastById } from "../data/podcasts";
 import "./MusicChannelInfo.css";
 import "./PodcastInfo.css";
 
+/** Same mask pattern as `MusicChannelInfo` — `public/*.svg` via `currentColor`. */
+function ActionIconMask({ variant }) {
+  return (
+    <span
+      className={[
+        "music-info__action-icon-mask",
+        `music-info__action-icon-mask--${variant}`,
+      ].join(" ")}
+      aria-hidden={true}
+    />
+  );
+}
+
 /** Podcast show detail — Figma `podcastInfo` `19585:135699`; episode list uses `EpisodeCard` (Figma `19586:136643`). */
 export default function PodcastInfo() {
   const { podcastId } = useParams();
@@ -39,10 +52,10 @@ export default function PodcastInfo() {
   const firstEpisode = podcast.episodes[0] ?? null;
   const playFirstEpisode = () => {
     if (firstEpisode) {
-      navigate(
-        `/podcast/${podcast.id}/play/${firstEpisode.id}`,
-        { state: playOverDetailNavigateState() },
-      );
+      navigate(`/podcast/${podcast.id}/play/${firstEpisode.id}`, {
+        replace: true,
+        state: playOverDetailNavigateState(),
+      });
     }
   };
 
@@ -101,18 +114,32 @@ export default function PodcastInfo() {
                   variant="cta"
                   fullWidth
                   disabled={!firstEpisode}
+                  startIcon={<ActionIconMask variant="play" />}
                   onClick={playFirstEpisode}
                 >
                   {firstEpisode ? "Play latest" : "No episodes"}
                 </ButtonSmall>
                 <ButtonSmall
-                  variant={subscribedHere ? "cta" : "secondary"}
+                  variant="secondary"
                   fullWidth
+                  startIcon={
+                    <ActionIconMask
+                      variant={
+                        subscribedHere
+                          ? "unsubscribe-podcast"
+                          : "subscribe-podcast"
+                      }
+                    />
+                  }
                   onClick={() => toggleSubscribe(podcast.id)}
                 >
-                  {subscribedHere ? "Subscribed" : "Subscribe"}
+                  {subscribedHere ? "Unsubscribe" : "Subscribe"}
                 </ButtonSmall>
-                <ButtonSmall variant="secondary" fullWidth>
+                <ButtonSmall
+                  variant="secondary"
+                  fullWidth
+                  startIcon={<ActionIconMask variant="share" />}
+                >
                   Share
                 </ButtonSmall>
               </div>
@@ -164,10 +191,10 @@ export default function PodcastInfo() {
                     isDownloaded={isDownloaded(ep.id)}
                     progressFraction={getEpisodeProgress(ep.id)}
                     onNavigate={() =>
-                      navigate(
-                        `/podcast/${podcast.id}/play/${ep.id}`,
-                        { state: playOverDetailNavigateState() },
-                      )
+                      navigate(`/podcast/${podcast.id}/play/${ep.id}`, {
+                        replace: true,
+                        state: playOverDetailNavigateState(),
+                      })
                     }
                     onToggleBookmark={() => toggleBookmark(ep.id)}
                     onToggleDownload={() => toggleDownload(ep.id)}

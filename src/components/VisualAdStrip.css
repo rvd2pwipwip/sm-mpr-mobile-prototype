@@ -20,9 +20,17 @@
   width: 100%;
 }
 
+/* Fixed bottom anchor in full-screen player — same centered shell band as `BottomNav`. */
 .visual-ad-strip--player {
-  width: calc(100% + 2 * var(--space-content-inline));
-  margin-left: calc(-1 * var(--space-content-inline));
-  margin-right: calc(-1 * var(--space-content-inline));
-  margin-bottom: env(safe-area-inset-bottom, 0px);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-visual-ad-player);
+  width: 100%;
+  max-width: var(--app-max-width);
+  margin: 0;
+  box-sizing: border-box;
+  /* Home indicator clears inside the strip; body uses `--visual-ad-player-reserve-height` for layout. */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }

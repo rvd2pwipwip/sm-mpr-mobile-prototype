@@ -5,89 +5,16 @@
 
 import "./EpisodeCard.css";
 
-function BookmarkSvg({ filled }) {
+/** `public/bookmarkEpisode.svg`, `unbookmarkEpisode.svg`, `downloadEpisode.svg`, `clearDownloadedEpisode.svg` — mask + `currentColor`. */
+export function EpisodeActionIconMask({ variant }) {
   return (
-    <svg
-      className="episode-card__glyph"
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
+    <span
+      className={[
+        "episode-card__action-icon-mask",
+        `episode-card__action-icon-mask--${variant}`,
+      ].join(" ")}
       aria-hidden={true}
-    >
-      <path
-        d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v16l-4-3.2L8 21V5Z"
-        fill={filled ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-/** Download (+ arrow): “not downloaded” indicator. */
-function DownloadSvg() {
-  return (
-    <svg
-      className="episode-card__glyph"
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      aria-hidden={true}
-    >
-      <circle
-        cx="12"
-        cy="12"
-        r="9.25"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M12 7v7.5m0 0-2.75-2.75M12 14.5l2.75-2.75"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.5 16.25h7"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-/** “Remove offline” mirror of Figma `clear`. */
-function RemoveOfflineSvg() {
-  return (
-    <svg
-      className="episode-card__glyph"
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      aria-hidden={true}
-    >
-      <circle
-        cx="12"
-        cy="12"
-        r="9.25"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M9 9l6 6M15 9l-6 6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
+    />
   );
 }
 
@@ -189,12 +116,16 @@ export default function EpisodeCard({
               onToggleBookmark();
             }}
           >
-            <BookmarkSvg filled={isBookmarked} />
+            <EpisodeActionIconMask
+              variant={isBookmarked ? "unbookmark-episode" : "bookmark-episode"}
+            />
           </button>
           <button
             type="button"
             data-episode-card-action="true"
-            className="episode-card__icon-btn episode-card__icon-btn--offline"
+            className={`episode-card__icon-btn episode-card__icon-btn--offline ${
+              isDownloaded ? "episode-card__icon-btn--download-active" : ""
+            }`}
             aria-label={downloadLabel}
             aria-pressed={isDownloaded}
             onClick={(e) => {
@@ -202,7 +133,11 @@ export default function EpisodeCard({
               onToggleDownload();
             }}
           >
-            {isDownloaded ? <RemoveOfflineSvg /> : <DownloadSvg />}
+            <EpisodeActionIconMask
+              variant={
+                isDownloaded ? "clear-downloaded-episode" : "download-episode"
+              }
+            />
           </button>
         </div>
       </div>

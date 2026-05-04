@@ -14,7 +14,8 @@ import {
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import UpgradeButton from "../components/UpgradeButton";
 import VisualAdStrip from "../components/VisualAdStrip";
-import { PLAY_OVER_DETAIL } from "../constants/fullPlayerNavigation";
+import { EpisodeActionIconMask } from "../components/EpisodeCard";
+import "./MusicChannelInfo.css";
 import { PODCAST_SPEED_STEPS } from "../constants/podcastPlayback";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
@@ -46,7 +47,7 @@ function PlayerHeaderIcon({ variant }) {
   );
 }
 
-/** `public/info.svg`, `share.svg` — masks (same as `MusicPlayer`). */
+/** `public/info.svg` — mask (same as `MusicPlayer`). */
 function PlayerMetaActionIcon({ variant }) {
   return (
     <span
@@ -59,24 +60,18 @@ function PlayerMetaActionIcon({ variant }) {
   );
 }
 
-/** Same glyph as `EpisodeCard` bookmark. */
-function PlayerBookmarkGlyph({ filled }) {
+/** Subscribe / unsub — `music-info__action-icon-mask*` + PodcastInfo assets. */
+function PlayerSubscribeMask({ subscribed }) {
   return (
-    <svg
-      className="podcast-player__bookmark-glyph"
-      width={40}
-      height={40}
-      viewBox="0 0 24 24"
+    <span
+      className={[
+        "music-info__action-icon-mask",
+        subscribed
+          ? "music-info__action-icon-mask--unsubscribe-podcast"
+          : "music-info__action-icon-mask--subscribe-podcast",
+      ].join(" ")}
       aria-hidden={true}
-    >
-      <path
-        d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v16l-4-3.2L8 21V5Z"
-        fill={filled ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </svg>
+    />
   );
 }
 
@@ -128,7 +123,9 @@ export default function PodcastPlayer() {
   );
 
   const {
+    toggleSubscribe,
     toggleBookmark,
+    isSubscribed,
     isBookmarked,
     episodeProgressById,
     setEpisodeProgress,
@@ -263,17 +260,16 @@ export default function PodcastPlayer() {
 
   const elapsedSec = position01 * durationSec;
   const speed = PODCAST_SPEED_STEPS[speedIdx] ?? 1;
+  const subscribedHere = isSubscribed(podcast.id);
   const bookmarkedHere = isBookmarked(episode.id);
 
-  /**
-   * Pop play when it was pushed on top of Podcast Info (see `playOverDetailNavigateState`);
-   * otherwise replace so deep links still land on show with mini.
-   */
+  /** Overlay minimize — replaces `/play`; does not participate in History `back()`. */
   const leaveFullPlayerForShow = () => {
-    if (location.state?.[PLAY_OVER_DETAIL]) {
-      navigate(-1);
-      return;
-    }
+    navigate(`/podcast/${podcast.id}`, { replace: true });
+  };
+
+  /** Podcast info replaces the player entry (still not a stacked “back → play”). */
+  const goToPodcastInfoPage = () => {
     navigate(`/podcast/${podcast.id}`, { replace: true });
   };
 
@@ -338,140 +334,163 @@ export default function PodcastPlayer() {
 
       <div
         className={[
-          "music-player__body",
-          !showAds ? "music-player__body--no-player-ad" : "",
+          "podcast-player__body",
+          showAds ? "podcast-player__body--with-ad" : "",
+          !showAds ? "podcast-player__body--no-ad" : "",
         ]
           .filter(Boolean)
           .join(" ")}
       >
-        <div className="music-player__top">
-          <h1 className="music-player__channel-name">{podcast.title}</h1>
-          <div className="music-player__meta-actions">
-            <button
-              type="button"
-              className="music-player__icon-btn"
-              aria-label="Show info"
-              onClick={leaveFullPlayerForShow}
-            >
-              <PlayerMetaActionIcon variant="info" />
-            </button>
-            <button
-              type="button"
-              className={[
-                "music-player__icon-btn",
-                bookmarkedHere ? "music-player__icon-btn--bookmark-on" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              aria-label={bookmarkedHere ? "Remove bookmark" : "Bookmark"}
-              aria-pressed={bookmarkedHere}
-              onClick={() => toggleBookmark(episode.id)}
-            >
-              <PlayerBookmarkGlyph filled={bookmarkedHere} />
-            </button>
-            <button
-              type="button"
-              className="music-player__icon-btn"
-              aria-label="Share"
-            >
-              <PlayerMetaActionIcon variant="share" />
-            </button>
-          </div>
-
-          <div className="music-player__cover-block">
-            <div className="music-player__cover">
-              <img
-                src={episode.thumbnail}
-                alt=""
-                width={320}
-                height={320}
-                loading="eager"
-                decoding="async"
-              />
+        <div className="podcast-player__scroll">
+          <div className="music-player__top podcast-player__hero-top">
+            <h1 className="music-player__channel-name">{podcast.title}</h1>
+            <div className="music-player__meta-actions">
+              <button
+                type="button"
+                className="music-player__icon-btn"
+                aria-label="Podcast info"
+                onClick={goToPodcastInfoPage}
+              >
+                <PlayerMetaActionIcon variant="info" />
+              </button>
+              <button
+                type="button"
+                className={[
+                  "music-player__icon-btn podcast-player__meta-subscribe-btn",
+                  subscribedHere
+                    ? "podcast-player__meta-subscribe-btn--on"
+                    : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-label={
+                  subscribedHere ? "Unsubscribe from podcast" : "Subscribe"
+                }
+                aria-pressed={subscribedHere}
+                onClick={() => toggleSubscribe(podcast.id)}
+              >
+                <PlayerSubscribeMask subscribed={subscribedHere} />
+              </button>
             </div>
-            <div className="music-player__track-text">
-              <p className="music-player__song">{episode.title}</p>
-              <p className="music-player__artist">
-                {episode.releaseDate}
-                {" · "}
-                {episode.duration}
-              </p>
+
+            <div className="music-player__cover-block podcast-player__hero-cover">
+              <div className="music-player__cover">
+                <img
+                  src={episode.thumbnail}
+                  alt=""
+                  width={320}
+                  height={320}
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+              <div className="music-player__track-text">
+                <p className="music-player__song">{episode.title}</p>
+                <p className="music-player__artist">
+                  {episode.releaseDate}
+                  {" · "}
+                  {episode.duration}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="music-player__controls podcast-player__controls">
-          <div className="podcast-player__time-row">
-            <span className="podcast-player__time" aria-hidden={true}>
-              {formatPlaybackClock(elapsedSec)}
-            </span>
-            <span className="podcast-player__time" aria-hidden={true}>
-              −{formatPlaybackClock(Math.max(0, durationSec - elapsedSec))}
-            </span>
-          </div>
-          <div className="music-player__progress podcast-player__progress">
-            <div className="music-player__progress-track podcast-player__progress-track">
-              <div
-                className="music-player__progress-fill"
-                style={{ width: `${position01 * 100}%` }}
-              />
+        <div className="podcast-player__footer-stack">
+          <div className="music-player__controls podcast-player__controls">
+            <div className="podcast-player__scrub-cluster">
+              <div className="podcast-player__time-row">
+                <span className="podcast-player__time">
+                  {formatPlaybackClock(elapsedSec)}
+                </span>
+                <span className="podcast-player__time">
+                  −{formatPlaybackClock(Math.max(0, durationSec - elapsedSec))}
+                </span>
+              </div>
+              <div className="music-player__progress podcast-player__progress podcast-player__progress--stack">
+                <div className="music-player__progress-track podcast-player__progress-track">
+                  <div
+                    className="music-player__progress-fill"
+                    style={{ width: `${position01 * 100}%` }}
+                  />
+                </div>
+                <input
+                  id="podcast-scrub"
+                  className="podcast-player__range"
+                  type="range"
+                  min={0}
+                  max={1000}
+                  step={1}
+                  value={Math.round(position01 * 1000)}
+                  onChange={onScrubInput}
+                  aria-label="Playback position"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(position01 * 100)}
+                />
+              </div>
             </div>
-            <input
-              id="podcast-scrub"
-              className="podcast-player__range"
-              type="range"
-              min={0}
-              max={1000}
-              step={1}
-              value={Math.round(position01 * 1000)}
-              onChange={onScrubInput}
-              aria-label="Playback position"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={Math.round(position01 * 100)}
-            />
+
+            <div className="podcast-player__transport-bar">
+              <button
+                type="button"
+                className="podcast-player__speed-icon-btn"
+                onClick={cycleSpeed}
+                aria-label={`Playback speed ${speed}x. Tap to change.`}
+              >
+                <span aria-hidden={true}>{speed}×</span>
+              </button>
+              <div className="podcast-player__transport-middle">
+                <button
+                  type="button"
+                  className="music-player__skip podcast-player__seek"
+                  onClick={() => adjustSeconds(-15)}
+                  aria-label="Back 15 seconds"
+                >
+                  <PodcastSeekIcon variant="back" />
+                </button>
+                <button
+                  type="button"
+                  className="music-player__play-toggle"
+                  onClick={() => setPlaying((p) => !p)}
+                  aria-label={playing ? "Pause" : "Play"}
+                >
+                  <PlayerPlayPauseIcon playing={playing} />
+                </button>
+                <button
+                  type="button"
+                  className="music-player__skip podcast-player__seek"
+                  onClick={() => adjustSeconds(30)}
+                  aria-label="Forward 30 seconds"
+                >
+                  <PodcastSeekIcon variant="fwd" />
+                </button>
+              </div>
+              <button
+                type="button"
+                className={[
+                  "episode-card__icon-btn episode-card__icon-btn--bookmark podcast-player__footer-bookmark",
+                  bookmarkedHere ? "episode-card__icon-btn--bookmark-active" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-label={
+                  bookmarkedHere ? "Remove bookmark" : "Bookmark episode"
+                }
+                aria-pressed={bookmarkedHere}
+                onClick={() => toggleBookmark(episode.id)}
+              >
+                <EpisodeActionIconMask
+                  variant={
+                    bookmarkedHere ? "unbookmark-episode" : "bookmark-episode"
+                  }
+                />
+              </button>
+            </div>
           </div>
 
-          <div className="music-player__transport podcast-player__transport">
-            <button
-              type="button"
-              className="music-player__skip podcast-player__seek"
-              onClick={() => adjustSeconds(-15)}
-              aria-label="Back 15 seconds"
-            >
-              <PodcastSeekIcon variant="back" />
-            </button>
-            <button
-              type="button"
-              className="music-player__play-toggle"
-              onClick={() => setPlaying((p) => !p)}
-              aria-label={playing ? "Pause" : "Play"}
-            >
-              <PlayerPlayPauseIcon playing={playing} />
-            </button>
-            <button
-              type="button"
-              className="music-player__skip podcast-player__seek"
-              onClick={() => adjustSeconds(30)}
-              aria-label="Forward 30 seconds"
-            >
-              <PodcastSeekIcon variant="fwd" />
-            </button>
-          </div>
-
-          <div className="podcast-player__speed-row">
-            <button
-              type="button"
-              className="podcast-player__speed"
-              onClick={cycleSpeed}
-              aria-label={`Playback speed ${speed}x. Tap to change.`}
-            >
-              {speed}x
-            </button>
-          </div>
+          {showAds ? <VisualAdStrip variant="player" /> : null}
         </div>
-
-        {showAds ? <VisualAdStrip variant="player" /> : null}
       </div>
     </main>
   );

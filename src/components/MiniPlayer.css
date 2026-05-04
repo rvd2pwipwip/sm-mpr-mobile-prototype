@@ -151,8 +151,8 @@
 }
 
 .mini-player__ctrl--sm {
-  width: 40px;
-  height: 40px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
 }
 
 .mini-player__ctrl--seek {
@@ -188,16 +188,16 @@
 }
 
 .mini-player__mask-icon--skip {
-  width: 40px;
-  height: 40px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   mask-image: url("/skip.svg");
   -webkit-mask-image: url("/skip.svg");
 }
 
 .mini-player__mask-icon--replay15,
 .mini-player__mask-icon--fwd30 {
-  width: 40px;
-  height: 40px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
 }
 
 .mini-player__mask-icon--replay15 {

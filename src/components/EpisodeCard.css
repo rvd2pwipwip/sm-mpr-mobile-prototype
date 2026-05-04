@@ -54,15 +54,15 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: var(--space-2);
+  gap: var(--space-5);
 }
 
 .episode-card__icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   margin: 0;
   padding: 0;
   border: none;
@@ -86,8 +86,43 @@
   color: var(--color-accent);
 }
 
-.episode-card__glyph {
+.episode-card__icon-btn--download-active {
+  color: var(--color-accent);
+}
+
+/* Toggle icons — `public/*Episode.svg`; mask inherits `currentColor` from `.episode-card__icon-btn`. */
+.episode-card__action-icon-mask {
   display: block;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.episode-card__action-icon-mask--bookmark-episode {
+  mask-image: url("/bookmarkEpisode.svg");
+  -webkit-mask-image: url("/bookmarkEpisode.svg");
+}
+
+.episode-card__action-icon-mask--unbookmark-episode {
+  mask-image: url("/unbookmarkEpisode.svg");
+  -webkit-mask-image: url("/unbookmarkEpisode.svg");
+}
+
+.episode-card__action-icon-mask--download-episode {
+  mask-image: url("/downloadEpisode.svg");
+  -webkit-mask-image: url("/downloadEpisode.svg");
+}
+
+.episode-card__action-icon-mask--clear-downloaded-episode {
+  mask-image: url("/clearDownloadedEpisode.svg");
+  -webkit-mask-image: url("/clearDownloadedEpisode.svg");
 }
 
 .episode-card__title {

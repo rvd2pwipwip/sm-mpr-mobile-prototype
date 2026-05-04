@@ -34,6 +34,7 @@ export default function MusicChannelInfo() {
   const goBack = () => navigate(-1);
   const goPlay = () =>
     navigate(`/music/${channel.id}/play`, {
+      replace: true,
       state: playOverDetailNavigateState(),
     });
 

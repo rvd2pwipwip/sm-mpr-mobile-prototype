@@ -1,7 +1,66 @@
-/* Podcast episode player — extends `MusicPlayer.css` chrome (Phase 4). */
+/* Podcast episode player — extends `MusicPlayer.css` chrome; layout matches Figma `19601:28077`. */
 
+.podcast-player__meta-subscribe-btn--on {
+  color: var(--color-accent);
+}
+
+/* —— Body: hero strip (hugs content) + footer (controls + optional ad) — */
+.podcast-player__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--space-content-inline);
+  overflow: hidden;
+}
+
+/* No inner vertical scroll — height follows hero; free space sits above the footer stack. */
+.podcast-player__scroll {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.podcast-player__footer-stack {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  /* margin-top: auto; */
+}
+
+.podcast-player__body--no-ad .music-player__controls.podcast-player__controls {
+  flex: 0 0 auto;
+  justify-content: center;
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-4);
+}
+
+.podcast-player__hero-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Episode title under artwork — cap height so the hero doesn’t stretch the layout. */
+.podcast-player__hero-cover .music-player__song {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Footer: scrub + transport only (episode title stays under artwork in hero). */
 .podcast-player__controls {
-  gap: var(--space-3);
+  gap: var(--space-4);
+  padding: var(--space-3) 0 var(--space-3);
+}
+
+.podcast-player__scrub-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
 }
 
 .podcast-player__time-row {
@@ -18,23 +77,33 @@
   color: color-mix(in srgb, var(--color-text) 65%, transparent);
 }
 
-.podcast-player__progress {
+/* Progress track + range: one 18px-tall row; bar and thumb share the same vertical center. */
+.podcast-player__progress--stack {
   position: relative;
-  display: grid;
-  place-items: center stretch;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 18px;
+}
+
+.podcast-player__progress--stack .music-player__progress-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.podcast-player__progress--stack .podcast-player__range {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
 }
 
 .podcast-player__progress-track {
-  grid-area: 1 / 1;
   align-self: center;
-}
-
-.music-player__icon-btn--bookmark-on {
-  color: var(--color-accent);
-}
-
-.podcast-player__bookmark-glyph {
-  display: block;
 }
 
 .podcast-player__seek {
@@ -43,8 +112,8 @@
 
 .podcast-player__seek .podcast-player__seek-mask {
   display: block;
-  width: 50px;
-  height: 50px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   background-color: currentColor;
   mask-size: contain;
   mask-repeat: no-repeat;
@@ -64,19 +133,18 @@
   -webkit-mask-image: url("/fwd30.svg");
 }
 
-.podcast-player__transport .music-player__skip {
+.podcast-player__transport-middle .music-player__skip {
   width: auto;
-  min-width: 50px;
+  min-width: var(--size-action-icon-btn);
   height: auto;
-  min-height: 50px;
+  min-height: var(--size-action-icon-btn);
 }
 
 .podcast-player__range {
-  grid-area: 1 / 1;
-  align-self: center;
-  z-index: 1;
+  --pb-scrub-track-h: 4px;
+  --pb-scrub-thumb: 18px;
   width: 100%;
-  height: 28px;
+  height: var(--pb-scrub-thumb);
   margin: 0;
   padding: 0;
   background: transparent;
@@ -85,55 +153,83 @@
   appearance: none;
 }
 
+/* WebKit: vertical center of thumb on the 4px track (track sits mid-input). */
+.podcast-player__range::-webkit-slider-runnable-track {
+  height: var(--pb-scrub-track-h);
+  background: transparent;
+}
+
 .podcast-player__range::-webkit-slider-thumb {
   appearance: none;
-  width: 18px;
-  height: 18px;
-  margin-top: calc(2px + 50% - 9px - 9px / 4);
+  width: var(--pb-scrub-thumb);
+  height: var(--pb-scrub-thumb);
+  margin-top: calc(
+    (var(--pb-scrub-track-h) - var(--pb-scrub-thumb)) / 2
+  );
   border-radius: 50%;
   background: var(--color-accent);
 }
 
 .podcast-player__range::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  margin-top: calc(50% - 9px / 4);
+  width: var(--pb-scrub-thumb);
+  height: var(--pb-scrub-thumb);
   border: none;
   border-radius: 50%;
   background: var(--color-accent);
 }
 
 .podcast-player__range::-moz-range-track {
+  height: var(--pb-scrub-track-h);
   background: transparent;
 }
 
-.podcast-player__range::-webkit-slider-runnable-track {
-  height: 4px;
-  background: transparent;
-}
-
-.podcast-player__speed-row {
+/* Speed (left) + transport (center) + bookmark (right) */
+.podcast-player__transport-bar {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  padding-top: var(--space-2);
+  gap: var(--space-2);
 }
 
-.podcast-player__speed {
-  min-width: 64px;
-  padding: var(--space-2) var(--space-5);
-  border: 1px solid color-mix(in srgb, var(--color-text) 18%, transparent);
-  border-radius: 999px;
-  font-size: 1rem;
+.podcast-player__transport-middle {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+.podcast-player__speed-icon-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
   color: var(--color-text);
-  background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  background: transparent;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.podcast-player__speed:focus-visible {
+.podcast-player__speed-icon-btn:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+.podcast-player__footer-bookmark {
+  flex-shrink: 0;
 }

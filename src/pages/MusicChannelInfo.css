@@ -73,7 +73,8 @@
   min-width: 0;
 }
 
-/* Action row: `public/play.svg`, `like.svg`, `share.svg` — mask + currentColor (see BottomNav icons). */
+/* Action row: `public/play.svg`, `like.svg`, `share.svg` — mask + currentColor (see BottomNav icons).
+   Podcast info uses `subscribePodcast.svg` / `unsubscribePodcast.svg` (see `--subscribe-podcast` / `--unsubscribe-podcast`). */
 .music-info__action-icon-mask {
   display: block;
   width: 100%;
@@ -101,6 +102,16 @@
 .music-info__action-icon-mask--share {
   mask-image: url("/share.svg");
   -webkit-mask-image: url("/share.svg");
+}
+
+.music-info__action-icon-mask--subscribe-podcast {
+  mask-image: url("/subscribePodcast.svg");
+  -webkit-mask-image: url("/subscribePodcast.svg");
+}
+
+.music-info__action-icon-mask--unsubscribe-podcast {
+  mask-image: url("/unsubscribePodcast.svg");
+  -webkit-mask-image: url("/unsubscribePodcast.svg");
 }
 
 .music-info__desc-block {

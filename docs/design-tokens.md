@@ -42,6 +42,7 @@ If MCP is not connected, export or type the key numbers; still record them in `i
 | **Cards (swimlane row)** | `--card-tile-width`, `--radius-media-thumb`, `--card-tile-gap` | Tweak when Home / browse card components are built |
 | **Type** | `--font-size-card-title`, … | Aligned to card text styles when finalized |
 | **Bottom nav** | `--bottom-nav-stack-height`, … | Drives `.app-shell` bottom padding so scroll content clears the bar |
+| **Icon actions** | `--size-action-icon-btn` | 40px hit + glyph size for circular icon-only controls (headers, episode row, player meta / skip / seek, mini secondary); `--bottom-nav-icon-size` references it |
 
 **New screens** (player, modals) should add a **dedicated group** of variables in the same file with a section comment, not scattered literals.
 
@@ -58,4 +59,4 @@ If MCP is not connected, export or type the key numbers; still record them in `i
 
 - When you add a **new category** of tokens (e.g. ad strip height) or change the **workflow** above, update this file in the same change as `index.css` when possible.
 
-*Last updated: 2026-04-17*
+*Last updated: 2026-05-01*

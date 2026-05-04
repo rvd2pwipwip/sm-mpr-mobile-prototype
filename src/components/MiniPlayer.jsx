@@ -56,13 +56,10 @@ export default function MiniPlayer() {
 
   const openFullPlayer = () => {
     if (fullPlayerPath) {
-      /** Skip guest full-screen preroll — only show that on tune-from-browse (play), not expand. */
-      navigate(
-        fullPlayerPath,
-        {
-          state: playOverDetailNavigateState({ expandFromMiniPlayer: true }),
-        },
-      );
+      /** Push (not replace): mini + full-screen are apart from browse `replace` open. */
+      navigate(fullPlayerPath, {
+        state: playOverDetailNavigateState({ expandFromMiniPlayer: true }),
+      });
     }
   };
 

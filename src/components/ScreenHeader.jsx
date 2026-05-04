@@ -35,7 +35,7 @@ export default function ScreenHeader({ title, startSlot, endSlot, className = ""
   );
 }
 
-/** Back control — `public/back.svg` via mask; pair with `screen-header__icon-btn` (50×50 tap target). */
+/** Back control — `public/back.svg` via mask; pair with `screen-header__icon-btn` (tap target = `--size-action-icon-btn`). */
 export function ScreenHeaderChevronBack() {
   return <span className="screen-header__back-icon" aria-hidden={true} />;
 }

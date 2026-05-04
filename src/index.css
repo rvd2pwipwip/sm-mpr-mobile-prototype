@@ -94,15 +94,22 @@
   --button-sm-font-weight: 500;
   --button-sm-icon-size: 20px;
 
+  /* Icon-only taps: stack headers, episode row toggles, player meta / skip / podcast seek, mini secondary controls (not full-width 100px player play). */
+  --size-action-icon-btn: 40px;
+
   /* —— Bottom nav (stack height for .app-shell padding; tune to Figma main menu) — */
   --bottom-nav-padding-top: 14px;
-  --bottom-nav-icon-size: 40px;
+  --bottom-nav-icon-size: var(--size-action-icon-btn);
   --bottom-nav-gap-icon-label: 6px;
   --bottom-nav-gap-to-indicator: 10px;
   --bottom-nav-indicator-height: 4px;
   --bottom-nav-label-size: 16px;
   /* Visual ad strip under tabs when `html[data-visual-ads]` (guest / provided). */
   --visual-ad-strip-min-height: 86px;
+  /* Fixed `VisualAdStrip--player` footprint (strip min-height + home indicator inset). */
+  --visual-ad-player-reserve-height: calc(
+    var(--visual-ad-strip-min-height) + env(safe-area-inset-bottom, 0px)
+  );
   --bottom-nav-ad-height: 0px;
   --bottom-nav-stack-height: calc(
     var(--bottom-nav-padding-top) + var(--bottom-nav-icon-size) +
@@ -128,6 +135,8 @@
   --z-chrome: 100;
   --z-mini-player: 110;
   --z-bottom-nav: 100;
+  /* Fixed bottom strip on music / podcast full-screen player (guest + provided ads). */
+  --z-visual-ad-player: 105;
   /* Above player chrome — guest pre-roll overlay */
   --z-player-preroll: 250;
   /* Guest hourly skip-cap dialog — above footer chrome when used outside full player */

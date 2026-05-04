@@ -16,6 +16,16 @@
   background-attachment: fixed;
 }
 
+/* Fixed `--player` ad owns bottom safe inset; reserve space in scrolling column only. */
+.music-player-screen.app-shell:has(.visual-ad-strip--player) {
+  padding-bottom: 0;
+}
+
+.music-player-screen.app-shell:has(.visual-ad-strip--player) .music-player__body,
+.music-player-screen.app-shell:has(.visual-ad-strip--player) .podcast-player__body {
+  padding-bottom: var(--visual-ad-player-reserve-height);
+}
+
 .music-player__header {
   flex-shrink: 0;
   display: flex;
@@ -37,8 +47,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   margin: 0;
   padding: 0;
   border: none;
@@ -64,8 +74,8 @@
 
 .music-player__header-spacer {
   display: block;
-  width: 50px;
-  height: 50px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
 }
 
 .music-player__header-icon-mask {
@@ -81,15 +91,15 @@
 }
 
 .music-player__header-icon-mask--down {
-  width: 40px;
-  height: 40px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   mask-image: url("/down.svg");
   -webkit-mask-image: url("/down.svg");
 }
 
 .music-player__header-icon-mask--cast {
-  width: 40px;
-  height: 40px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   mask-image: url("/cast.svg");
   -webkit-mask-image: url("/cast.svg");
 }
@@ -157,8 +167,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   margin: 0;
   padding: 0;
   border: none;
@@ -175,8 +185,8 @@
 
 .music-player__meta-action-icon {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   flex-shrink: 0;
   background-color: currentColor;
   mask-size: contain;
@@ -297,8 +307,8 @@
 }
 
 .music-player__transport-spacer {
-  width: 50px;
-  height: 50px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   flex-shrink: 0;
 }
 
@@ -354,8 +364,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   margin: 0;
   padding: 0;
   border: none;
@@ -372,8 +382,8 @@
 
 .music-player__skip-icon {
   display: block;
-  width: 50px;
-  height: 50px;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
   flex-shrink: 0;
   background-color: currentColor;
   mask-image: url("/skip.svg");

@@ -13,7 +13,6 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
-import { PLAY_OVER_DETAIL } from "../constants/fullPlayerNavigation";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
 import "./MusicPlayer.css";
@@ -107,11 +106,8 @@ export default function MusicPlayer() {
     return <Navigate to="/" replace />;
   }
 
+  /** Overlay dismiss — replaces `/play`; does not participate in History `back()`. */
   const leaveFullPlayerForChannel = () => {
-    if (location.state?.[PLAY_OVER_DETAIL]) {
-      navigate(-1);
-      return;
-    }
     navigate(`/music/${channel.id}`, { replace: true });
   };
 
