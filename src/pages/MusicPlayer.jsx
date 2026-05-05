@@ -209,19 +209,24 @@ export default function MusicPlayer() {
             </div>
           </div>
           <div className="music-player__transport">
-            <span
-              className="music-player__transport-spacer"
-              aria-hidden={true}
-            />
-            <button
-              type="button"
-              className="music-player__play-toggle"
-              onClick={() => setPlaying((p) => !p)}
-              aria-label={playing ? "Pause" : "Play"}
-            >
-              <PlayerPlayPauseIcon playing={playing} />
-            </button>
-            <MusicSkipButton size="full" />
+            <div className="music-player__transport-start">
+              <div className="music-player__transport-start-cluster" />
+            </div>
+            <div className="music-player__transport-middle">
+              <button
+                type="button"
+                className="music-player__play-toggle"
+                onClick={() => setPlaying((p) => !p)}
+                aria-label={playing ? "Pause" : "Play"}
+              >
+                <PlayerPlayPauseIcon playing={playing} />
+              </button>
+            </div>
+            <div className="music-player__transport-end">
+              <div className="music-player__transport-end-cluster">
+                <MusicSkipButton size="full" />
+              </div>
+            </div>
           </div>
         </div>
 

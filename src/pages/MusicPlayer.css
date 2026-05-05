@@ -297,19 +297,51 @@
   background-color: var(--color-accent);
 }
 
+/* Equal side tracks (`1fr`) + intrinsic middle keeps play centered with asymmetric controls. */
 .music-player__transport {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
   gap: var(--space-8);
   width: 100%;
 }
 
-.music-player__transport-spacer {
-  width: var(--size-action-icon-btn);
-  height: var(--size-action-icon-btn);
-  flex-shrink: 0;
+.music-player__transport-start {
+  justify-self: stretch;
+  align-self: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.music-player__transport-start-cluster {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.music-player__transport-end {
+  justify-self: stretch;
+  align-self: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.music-player__transport-end-cluster {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.music-player__transport-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .music-player__play-toggle {

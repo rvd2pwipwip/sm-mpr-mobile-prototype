@@ -90,6 +90,11 @@ function PlayerPlayPauseIcon({ playing }) {
   );
 }
 
+/** Speed trigger + picker rows (`0.6x` … `2x`); plain inline text shares one baseline. */
+function formatPlaybackSpeedLabel(value) {
+  return `${value}x`;
+}
+
 function PodcastSeekIcon({ variant }) {
   return (
     <span
@@ -121,6 +126,11 @@ export default function PodcastPlayer() {
   const [speedIdx, setSpeedIdx] = useState(() =>
     Math.max(0, PODCAST_SPEED_STEPS.indexOf(1)),
   );
+  const [speedMenuOpen, setSpeedMenuOpen] = useState(false);
+  const [speedMenuPos, setSpeedMenuPos] = useState(
+    /** @type {{ left: number; bottom: number } | null} */ (null),
+  );
+  const speedAnchorRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   const {
     toggleSubscribe,
@@ -229,6 +239,7 @@ export default function PodcastPlayer() {
   /** One write per episode mount; after preroll gate, when user engages (play or >5% progress). */
   useEffect(() => {
     listenHistoryRecordedForEpisodeRef.current = null;
+    setSpeedMenuOpen(false);
   }, [episode?.id]);
 
   useEffect(() => {
@@ -247,6 +258,41 @@ export default function PodcastPlayer() {
     position01,
     recordPodcastShowListen,
   ]);
+
+  const updateSpeedMenuPosition = () => {
+    const el = speedAnchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const gap = 10;
+    setSpeedMenuPos({
+      left: r.left,
+      bottom: window.innerHeight - r.top + gap,
+    });
+  };
+
+  useLayoutEffect(() => {
+    if (!speedMenuOpen) {
+      setSpeedMenuPos(null);
+      return;
+    }
+    updateSpeedMenuPosition();
+  }, [speedMenuOpen]);
+
+  useEffect(() => {
+    if (!speedMenuOpen) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setSpeedMenuOpen(false);
+    };
+    const onResize = () => {
+      updateSpeedMenuPosition();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [speedMenuOpen]);
 
   if (!podcastId) {
     return <Navigate to="/" replace />;
@@ -280,10 +326,6 @@ export default function PodcastPlayer() {
     const posSec = frac * durationSec + delta;
     const next01 = Math.min(1, Math.max(0, posSec / durationSec));
     setEpisodeProgress(episode.id, next01);
-  };
-
-  const cycleSpeed = () => {
-    setSpeedIdx((i) => (i + 1) % PODCAST_SPEED_STEPS.length);
   };
 
   const onScrubInput = (e) => {
@@ -432,23 +474,97 @@ export default function PodcastPlayer() {
             </div>
 
             <div className="podcast-player__transport-bar">
-              <button
-                type="button"
-                className="podcast-player__speed-icon-btn"
-                onClick={cycleSpeed}
-                aria-label={`Playback speed ${speed}x. Tap to change.`}
-              >
-                <span aria-hidden={true}>{speed}×</span>
-              </button>
+              <div className="podcast-player__transport-start">
+                <div className="podcast-player__transport-start-cluster">
+                  <div
+                    className="podcast-player__speed-anchor"
+                    ref={speedAnchorRef}
+                  >
+                    <button
+                      type="button"
+                      id="podcast-speed-trigger"
+                      className="podcast-player__speed-icon-btn"
+                      aria-haspopup="listbox"
+                      aria-expanded={speedMenuOpen}
+                      aria-controls="podcast-speed-menu"
+                      onClick={() => setSpeedMenuOpen((o) => !o)}
+                      aria-label={`Playback speed ${formatPlaybackSpeedLabel(speed)}. Open speed menu`}
+                    >
+                      <span aria-hidden={true}>
+                        {formatPlaybackSpeedLabel(speed)}
+                      </span>
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    className="music-player__skip podcast-player__seek"
+                    onClick={() => adjustSeconds(-15)}
+                    aria-label="Back 15 seconds"
+                  >
+                    <PodcastSeekIcon variant="back" />
+                  </button>
+                </div>
+                {speedMenuOpen && speedMenuPos ? (
+                  <>
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      className="podcast-player__speed-scrim"
+                      aria-label="Dismiss speed menu"
+                      onClick={() => setSpeedMenuOpen(false)}
+                    />
+                    <ul
+                      id="podcast-speed-menu"
+                      className="podcast-player__speed-menu"
+                      role="listbox"
+                      aria-label="Playback speed"
+                      aria-activedescendant={`podcast-speed-opt-${speedIdx}`}
+                      style={{
+                        left: `${speedMenuPos.left}px`,
+                        bottom: `${speedMenuPos.bottom}px`,
+                      }}
+                    >
+                      {PODCAST_SPEED_STEPS.map((step, i) => (
+                        <li
+                          key={step}
+                          className="podcast-player__speed-menu-item"
+                          role="presentation"
+                        >
+                          <button
+                            type="button"
+                            id={`podcast-speed-opt-${i}`}
+                            role="option"
+                            className={[
+                              "podcast-player__speed-option",
+                              i === speedIdx
+                                ? "podcast-player__speed-option--selected"
+                                : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                            aria-selected={i === speedIdx}
+                            onClick={() => {
+                              setSpeedIdx(i);
+                              setSpeedMenuOpen(false);
+                            }}
+                          >
+                            <span className="podcast-player__speed-option-label">
+                              {formatPlaybackSpeedLabel(step)}
+                            </span>
+                            <span
+                              className="podcast-player__speed-option-check"
+                              aria-hidden={true}
+                            >
+                              {i === speedIdx ? "✓" : "\u00a0"}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : null}
+              </div>
               <div className="podcast-player__transport-middle">
-                <button
-                  type="button"
-                  className="music-player__skip podcast-player__seek"
-                  onClick={() => adjustSeconds(-15)}
-                  aria-label="Back 15 seconds"
-                >
-                  <PodcastSeekIcon variant="back" />
-                </button>
                 <button
                   type="button"
                   className="music-player__play-toggle"
@@ -457,35 +573,41 @@ export default function PodcastPlayer() {
                 >
                   <PlayerPlayPauseIcon playing={playing} />
                 </button>
-                <button
-                  type="button"
-                  className="music-player__skip podcast-player__seek"
-                  onClick={() => adjustSeconds(30)}
-                  aria-label="Forward 30 seconds"
-                >
-                  <PodcastSeekIcon variant="fwd" />
-                </button>
               </div>
-              <button
-                type="button"
-                className={[
-                  "episode-card__icon-btn episode-card__icon-btn--bookmark podcast-player__footer-bookmark",
-                  bookmarkedHere ? "episode-card__icon-btn--bookmark-active" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-label={
-                  bookmarkedHere ? "Remove bookmark" : "Bookmark episode"
-                }
-                aria-pressed={bookmarkedHere}
-                onClick={() => toggleBookmark(episode.id)}
-              >
-                <EpisodeActionIconMask
-                  variant={
-                    bookmarkedHere ? "unbookmark-episode" : "bookmark-episode"
-                  }
-                />
-              </button>
+              <div className="podcast-player__transport-end">
+                <div className="podcast-player__transport-end-cluster">
+                  <button
+                    type="button"
+                    className="music-player__skip podcast-player__seek"
+                    onClick={() => adjustSeconds(30)}
+                    aria-label="Forward 30 seconds"
+                  >
+                    <PodcastSeekIcon variant="fwd" />
+                  </button>
+                  <button
+                    type="button"
+                    className={[
+                      "episode-card__icon-btn episode-card__icon-btn--bookmark podcast-player__footer-bookmark",
+                      bookmarkedHere
+                        ? "episode-card__icon-btn--bookmark-active"
+                        : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-label={
+                      bookmarkedHere ? "Remove bookmark" : "Bookmark episode"
+                    }
+                    aria-pressed={bookmarkedHere}
+                    onClick={() => toggleBookmark(episode.id)}
+                  >
+                    <EpisodeActionIconMask
+                      variant={
+                        bookmarkedHere ? "unbookmark-episode" : "bookmark-episode"
+                      }
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
