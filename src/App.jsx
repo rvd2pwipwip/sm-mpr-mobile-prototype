@@ -8,6 +8,7 @@ import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
+import { TerritoryProvider } from "./context/TerritoryContext.jsx";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
 import ListenAgainMore from "./pages/ListenAgainMore";
@@ -74,17 +75,19 @@ function AppRoutes() {
 function App() {
   return (
     <UserTypeProvider>
-      <GuestMusicSkipProvider>
-        <GuestPrerollGraceProvider>
-          <ListenHistoryProvider>
-            <PodcastUserStateProvider>
-              <PlaybackProvider>
-                <AppRoutes />
-              </PlaybackProvider>
-            </PodcastUserStateProvider>
-          </ListenHistoryProvider>
-        </GuestPrerollGraceProvider>
-      </GuestMusicSkipProvider>
+      <TerritoryProvider>
+        <GuestMusicSkipProvider>
+          <GuestPrerollGraceProvider>
+            <ListenHistoryProvider>
+              <PodcastUserStateProvider>
+                <PlaybackProvider>
+                  <AppRoutes />
+                </PlaybackProvider>
+              </PodcastUserStateProvider>
+            </ListenHistoryProvider>
+          </GuestPrerollGraceProvider>
+        </GuestMusicSkipProvider>
+      </TerritoryProvider>
     </UserTypeProvider>
   );
 }

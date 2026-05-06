@@ -57,6 +57,6 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 
 Prototype catalog: `src/data/radioStations.js`.
 
-**Near-term:** International is modeled like the other browse rows—**20 flat stations** under the `international` category so screens can ship without geo drilling.
+**Product target for Search & Browse (radio):** full hierarchy and format tiles per **`docs/Stories/Search-story.md`** (Near You, International with continent → country → subdivisions → …, plus News / Talk / Sports / Public / Religion). **Implementation** may still stage mock data (e.g. flat lists) before the catalog matches the story; **`Search-story` + Integration notes** override any older “ship flat International only” shortcut as the UX goal.
 
-**Later:** International should gain an extra content level: **continents** (Africa, Asia, Australasia, Central America, Europe, North America, South America), then **countries**, **regions**, and **cities** under those. When that UX exists, refactor mock data (and any routes) to nest stations under `continent → … → city` instead of a single flat list. The repo exports `INTERNATIONAL_CONTINENTS_PLANNED` as a reminder of the continent set; it is not wired into `RADIO_STATIONS` yet.
+**Reference:** International eventually nests under **continents** (Africa, Asia, Australasia, Central America, Europe, North America, South America), then **countries**, **regions**, and **cities**. Refactor mock data (and routes) to `continent → … → city` instead of a single flat list when building that UX. The repo exports `INTERNATIONAL_CONTINENTS_PLANNED` as a reminder; it is not wired into `RADIO_STATIONS` yet.
