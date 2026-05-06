@@ -1,29 +1,102 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import MusicChannelCard from "../components/MusicChannelCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
-import { getBroadTagLabelFromSlug } from "../data/musicBrowseTaxonomy.js";
+import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
+import {
+  getBroadSubsMeta,
+  getBroadTagLabelFromSlug,
+  getBroadVibeById,
+} from "../data/musicBrowseTaxonomy.js";
 import { getMusicChannelsWithTag } from "../data/musicChannels";
+import "./Search.css";
 import "./SwimlaneMore.css";
 
-/** Broad lineup: channel grid for one **tag** under Activity / Mood / Era / Theme. */
+/** Broad lineup: sub-tag picker under a tag with children, or channel grid for one leaf tag/sub-tag. */
 export default function SearchMusicBroadTagChannels() {
-  const { vibeId, tagSlug } = useParams();
+  const { vibeId, tagSlug, subSlug } = useParams();
   const navigate = useNavigate();
 
-  const tagLabel =
-    vibeId && tagSlug ? getBroadTagLabelFromSlug(vibeId, tagSlug) : null;
-  const channels = tagLabel ? getMusicChannelsWithTag(tagLabel) : [];
+  const vibe = vibeId ? getBroadVibeById(vibeId) : null;
+  const meta = vibeId && tagSlug ? getBroadSubsMeta(vibeId, tagSlug) : null;
 
-  if (!vibeId || !tagSlug || !tagLabel) {
+  if (!vibeId || !tagSlug || !vibe || !meta) {
     return <Navigate to="/search" replace />;
   }
 
   const goBack = () => navigate(-1);
 
+  /** Sub-tag grid (IA has subcategories). */
+  if (meta.hasSubs && !subSlug) {
+    const headingId = "search-broad-tag-subs-title";
+    return (
+      <main className="app-shell app-shell--footer-fixed swimlane-more">
+        <ScreenHeader
+          title={meta.label}
+          startSlot={
+            <button
+              type="button"
+              className="screen-header__icon-btn"
+              onClick={goBack}
+              aria-label="Back"
+            >
+              <ScreenHeaderChevronBack />
+            </button>
+          }
+        />
+
+        <div className="swimlane-more__scroll">
+          <div className="content-inset search-page__body">
+            <p id={headingId} className="text-muted" style={{ margin: "0 0 var(--space-4)" }}>
+              Choose a sub-tag
+            </p>
+            <SearchBrowseTileGrid labelId={headingId}>
+              {meta.subs.map((s) => (
+                <SearchBrowseTile
+                  key={s.slug}
+                  onClick={() =>
+                    navigate(`/search/browse/music/vibe/${vibeId}/tag/${tagSlug}/sub/${s.slug}`)
+                  }
+                >
+                  {s.label}
+                </SearchBrowseTile>
+              ))}
+            </SearchBrowseTileGrid>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (meta.hasSubs && subSlug && !meta.subs.some((s) => s.slug === subSlug)) {
+    return (
+      <Navigate
+        to={`/search/browse/music/vibe/${vibeId}/tag/${tagSlug}`}
+        replace
+      />
+    );
+  }
+
+  if (!meta.hasSubs && subSlug) {
+    return (
+      <Navigate
+        to={`/search/browse/music/vibe/${vibeId}/tag/${tagSlug}`}
+        replace
+      />
+    );
+  }
+
+  const channelTagLabel = getBroadTagLabelFromSlug(vibeId, tagSlug, subSlug);
+
+  if (!channelTagLabel) {
+    return <Navigate to="/search" replace />;
+  }
+
+  const channels = getMusicChannelsWithTag(channelTagLabel);
+
   return (
     <main className="app-shell app-shell--footer-fixed swimlane-more">
       <ScreenHeader
-        title={tagLabel}
+        title={channelTagLabel}
         startSlot={
           <button
             type="button"
@@ -39,7 +112,7 @@ export default function SearchMusicBroadTagChannels() {
       <div className="swimlane-more__scroll">
         {channels.length === 0 ? (
           <p className="text-muted" style={{ padding: "0 var(--swimlane-more-inline, 40px)" }}>
-            No channels with tag “{tagLabel}”.
+            No channels with tag “{channelTagLabel}”.
           </p>
         ) : (
           <ul className="swimlane-more__grid" role="list">

@@ -1,0 +1,491 @@
+{
+  "description": "Music vibes IA for broad (1000+ channel) territories, extracted from public Google Sheets (one spreadsheet per top-level vibe).",
+  "lineup": "broad",
+  "channelThreshold": "1000+",
+  "extractedAt": "2026-05-06T17:51:09.445Z",
+  "sources": [
+    {
+      "vibeId": "genre",
+      "spreadsheetId": "1NLXRHZqB20_59IzJSNG6pdQnl63QJN9c7lTx16SFEz8",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1NLXRHZqB20_59IzJSNG6pdQnl63QJN9c7lTx16SFEz8/edit"
+    },
+    {
+      "vibeId": "activity",
+      "spreadsheetId": "1togeO1V3x2xgQ0THs-dE7TW8lGxxawnD94CUdgEMqqk",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1togeO1V3x2xgQ0THs-dE7TW8lGxxawnD94CUdgEMqqk/edit"
+    },
+    {
+      "vibeId": "mood",
+      "spreadsheetId": "1ZB-6tNdsMO4jacNyeyRu7lP6AFRJQMngEXCmyybpU84",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1ZB-6tNdsMO4jacNyeyRu7lP6AFRJQMngEXCmyybpU84/edit"
+    },
+    {
+      "vibeId": "era",
+      "spreadsheetId": "1aVv3nkgkSi82nL4C3RjBdcy0wK-1jIxjYHnURAT-09o",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1aVv3nkgkSi82nL4C3RjBdcy0wK-1jIxjYHnURAT-09o/edit"
+    },
+    {
+      "vibeId": "theme",
+      "spreadsheetId": "1Kr-_3lUS54MbdTDyV-WB-YDh02SaLW1-KKl1Wklzp7E",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1Kr-_3lUS54MbdTDyV-WB-YDh02SaLW1-KKl1Wklzp7E/edit"
+    }
+  ],
+  "taxonomy": [
+    {
+      "vibeId": "genre",
+      "spreadsheetId": "1NLXRHZqB20_59IzJSNG6pdQnl63QJN9c7lTx16SFEz8",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1NLXRHZqB20_59IzJSNG6pdQnl63QJN9c7lTx16SFEz8/edit",
+      "worksheets": [
+        "vibes",
+        "Genre",
+        "Classical",
+        "Country and Roots",
+        "Electronic",
+        "Indie",
+        "Jazz & Blues",
+        "Latin",
+        "Miscellaneous",
+        "Pop",
+        "R&BSoul",
+        "Rock",
+        "World"
+      ],
+      "overviewTab": "vibes",
+      "tagsTab": "Genre",
+      "overviewLabels": [
+        "Genre",
+        "Activity",
+        "Mood",
+        "Era",
+        "Theme"
+      ],
+      "tags": [
+        {
+          "label": "Classical",
+          "subcategories": [
+            "Baroque",
+            "Chamber",
+            "Opera",
+            "Small Ensembles"
+          ]
+        },
+        {
+          "label": "Country and Roots",
+          "subcategories": [
+            "Americana / Alternative Country",
+            "Bluegrass",
+            "Classic Country",
+            "Contemporary Country",
+            "Folk",
+            "Franco-Country"
+          ]
+        },
+        {
+          "label": "Electronic",
+          "subcategories": [
+            "Dance",
+            "Electro Pop",
+            "House",
+            "Lounge",
+            "Trance"
+          ]
+        },
+        {
+          "label": "Hip-Hop"
+        },
+        {
+          "label": "Indie",
+          "subcategories": [
+            "Indie: Electronic",
+            "Indie: Hip-Hop",
+            "Indie: Pop",
+            "Indie: Rock"
+          ]
+        },
+        {
+          "label": "Jazz & Blues",
+          "subcategories": [
+            "Blues",
+            "Jazz",
+            "Smooth Jazz"
+          ]
+        },
+        {
+          "label": "Kids and Teens"
+        },
+        {
+          "label": "Latin",
+          "subcategories": [
+            "Bachata",
+            "Brazilian",
+            "Latin Pop",
+            "Reggaeton",
+            "Salsa",
+            "Tropical"
+          ]
+        },
+        {
+          "label": "Miscellaneous",
+          "subcategories": [
+            "Nature Sounds",
+            "New Age"
+          ]
+        },
+        {
+          "label": "Pop",
+          "subcategories": [
+            "Adult Pop",
+            "Easy Listening",
+            "Teen Pop",
+            "Top 40"
+          ]
+        },
+        {
+          "label": "Praise and Worship"
+        },
+        {
+          "label": "R&B/Soul",
+          "subcategories": [
+            "Classic R&B",
+            "Contemporary R&B",
+            "Disco",
+            "Funk",
+            "Gospel",
+            "Soul"
+          ]
+        },
+        {
+          "label": "Rock",
+          "subcategories": [
+            "Alternative Rock",
+            "Classic Rock",
+            "Hard Rock",
+            "Metal",
+            "Punk",
+            "Rock n' Roll"
+          ]
+        },
+        {
+          "label": "Singer-Songwriter"
+        },
+        {
+          "label": "World",
+          "subcategories": [
+            "Asian Pop",
+            "Celtic",
+            "Reggae"
+          ]
+        }
+      ]
+    },
+    {
+      "vibeId": "activity",
+      "spreadsheetId": "1togeO1V3x2xgQ0THs-dE7TW8lGxxawnD94CUdgEMqqk",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1togeO1V3x2xgQ0THs-dE7TW8lGxxawnD94CUdgEMqqk/edit",
+      "worksheets": [
+        "vibes",
+        "Activity",
+        "Around the House",
+        "Entertaining",
+        "Exercise",
+        "Family Time",
+        "Relaxation",
+        "Romance"
+      ],
+      "overviewTab": "vibes",
+      "tagsTab": "Activity",
+      "overviewLabels": [
+        "Genre",
+        "Activity",
+        "Mood",
+        "Era",
+        "Theme"
+      ],
+      "tags": [
+        {
+          "label": "Around the House",
+          "subcategories": [
+            "Cooking",
+            "Housework",
+            "In the Garage",
+            "Starting the Day"
+          ]
+        },
+        {
+          "label": "Driving/Commuting"
+        },
+        {
+          "label": "Entertaining",
+          "subcategories": [
+            "Brunch",
+            "Entertaining Guests",
+            "Summertime Grilling"
+          ]
+        },
+        {
+          "label": "Exercise",
+          "subcategories": [
+            "Cardio Workout",
+            "Running",
+            "Snowboarding/Skiing",
+            "Weight Lifting",
+            "Yoga/Meditation"
+          ]
+        },
+        {
+          "label": "Family Time",
+          "subcategories": [
+            "Kids: Fun Time",
+            "Kids: Quiet Time"
+          ]
+        },
+        {
+          "label": "Relaxation",
+          "subcategories": [
+            "Chilling on the Back Porch",
+            "Lazy Day",
+            "Relaxing",
+            "Sleeping",
+            "Soaking Up the Sun"
+          ]
+        },
+        {
+          "label": "Romance",
+          "subcategories": [
+            "Heartbreak",
+            "Romantic Moments"
+          ]
+        }
+      ]
+    },
+    {
+      "vibeId": "mood",
+      "spreadsheetId": "1ZB-6tNdsMO4jacNyeyRu7lP6AFRJQMngEXCmyybpU84",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1ZB-6tNdsMO4jacNyeyRu7lP6AFRJQMngEXCmyybpU84/edit",
+      "worksheets": [
+        "vibes",
+        "Mood"
+      ],
+      "overviewTab": "vibes",
+      "tagsTab": "Mood",
+      "overviewLabels": [
+        "Genre",
+        "Activity",
+        "Mood",
+        "Era",
+        "Theme"
+      ],
+      "tags": [
+        {
+          "label": "Adventurous"
+        },
+        {
+          "label": "Bold"
+        },
+        {
+          "label": "Cerebral"
+        },
+        {
+          "label": "Chill"
+        },
+        {
+          "label": "Cute"
+        },
+        {
+          "label": "Defiant"
+        },
+        {
+          "label": "Dramatic"
+        },
+        {
+          "label": "Earthy"
+        },
+        {
+          "label": "Elegant"
+        },
+        {
+          "label": "Energetic"
+        },
+        {
+          "label": "Festive"
+        },
+        {
+          "label": "Focus"
+        },
+        {
+          "label": "Fun"
+        },
+        {
+          "label": "Furious"
+        },
+        {
+          "label": "Happy"
+        },
+        {
+          "label": "Melancholy"
+        },
+        {
+          "label": "Nostalgic"
+        },
+        {
+          "label": "Party!"
+        },
+        {
+          "label": "Powerful"
+        },
+        {
+          "label": "Quirky"
+        },
+        {
+          "label": "Romantic"
+        },
+        {
+          "label": "Sexy"
+        },
+        {
+          "label": "Silly"
+        },
+        {
+          "label": "Trendy"
+        },
+        {
+          "label": "Uplifted"
+        },
+        {
+          "label": "Zen"
+        }
+      ]
+    },
+    {
+      "vibeId": "era",
+      "spreadsheetId": "1aVv3nkgkSi82nL4C3RjBdcy0wK-1jIxjYHnURAT-09o",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1aVv3nkgkSi82nL4C3RjBdcy0wK-1jIxjYHnURAT-09o/edit",
+      "worksheets": [
+        "vibes",
+        "Era"
+      ],
+      "overviewTab": "vibes",
+      "tagsTab": "Era",
+      "overviewLabels": [
+        "Genre",
+        "Activity",
+        "Mood",
+        "Era",
+        "Theme"
+      ],
+      "tags": [
+        {
+          "label": "Today"
+        },
+        {
+          "label": "2020s"
+        },
+        {
+          "label": "2010s"
+        },
+        {
+          "label": "2000s"
+        },
+        {
+          "label": "1990s"
+        },
+        {
+          "label": "1980s"
+        },
+        {
+          "label": "1970s"
+        },
+        {
+          "label": "1960s"
+        },
+        {
+          "label": "1950s"
+        },
+        {
+          "label": "1940s"
+        }
+      ]
+    },
+    {
+      "vibeId": "theme",
+      "spreadsheetId": "1Kr-_3lUS54MbdTDyV-WB-YDh02SaLW1-KKl1Wklzp7E",
+      "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1Kr-_3lUS54MbdTDyV-WB-YDh02SaLW1-KKl1Wklzp7E/edit",
+      "worksheets": [
+        "vibes",
+        "Theme",
+        "Europe",
+        "Latin America",
+        "North America"
+      ],
+      "overviewTab": "vibes",
+      "tagsTab": "Theme",
+      "overviewLabels": [
+        "Genre",
+        "Activity",
+        "Mood",
+        "Era",
+        "Theme"
+      ],
+      "tags": [
+        {
+          "label": "Africa"
+        },
+        {
+          "label": "Artist Channel"
+        },
+        {
+          "label": "Asia"
+        },
+        {
+          "label": "Best of Lists"
+        },
+        {
+          "label": "Caribbean"
+        },
+        {
+          "label": "Europe",
+          "subcategories": [
+            "Britain",
+            "France"
+          ]
+        },
+        {
+          "label": "Francophonie"
+        },
+        {
+          "label": "Instrumental"
+        },
+        {
+          "label": "Latin America",
+          "subcategories": [
+            "Brazil",
+            "Mexico"
+          ]
+        },
+        {
+          "label": "Middle East"
+        },
+        {
+          "label": "North America",
+          "subcategories": [
+            "Canada",
+            "Quebec",
+            "United States"
+          ]
+        },
+        {
+          "label": "Special Curator"
+        },
+        {
+          "label": "Special Occasions"
+        },
+        {
+          "label": "The Holidays/Christmas"
+        },
+        {
+          "label": "Vocal"
+        }
+      ]
+    }
+  ]
+}

@@ -46,13 +46,14 @@ export default function SearchMusicVibe() {
           <SearchBrowseTileGrid labelId={headingId}>
             {children.map((row) => {
               if (row.kind === "genre") {
+                const to =
+                  row.hasSubs
+                    ? `/search/browse/music/vibe/${vibeId}/tag/${row.slug}`
+                    : row.id
+                      ? `/search/browse/music/category/${row.id}`
+                      : `/search/browse/music/vibe/${vibeId}/tag/${row.slug}`;
                 return (
-                  <SearchBrowseTile
-                    key={row.id}
-                    onClick={() =>
-                      navigate(`/search/browse/music/category/${row.id}`)
-                    }
-                  >
+                  <SearchBrowseTile key={row.slug} onClick={() => navigate(to)}>
                     {row.label}
                   </SearchBrowseTile>
                 );

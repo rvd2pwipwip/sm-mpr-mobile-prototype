@@ -62,6 +62,7 @@ function AppRoutes() {
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
         <Route path="/podcast/:podcastId/play/:episodeId" element={<PodcastPlayerRoute />} />
         <Route path="/podcast/:podcastId" element={<PodcastInfo />} />
+        <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug/sub/:subSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
