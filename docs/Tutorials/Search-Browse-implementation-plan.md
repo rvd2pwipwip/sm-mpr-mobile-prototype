@@ -65,7 +65,7 @@ Implement these verbatim:
 | **ScreenHeader** | `ScreenHeader.jsx` | **Search More** deep screens (back, title =lane name) |
 | **Shell + scroll** | `app-shell`, `app-shell--footer-fixed`, `app-shell-footer-scroll`, `--footer-stack-scroll-padding` | Same as **Search.jsx** stub, **ListenAgainMore**, **SwimlaneMore** |
 | **Podcast library stubs** | `PodcastUserStateContext` | Browse: **Your Podcasts**, bookmarks, downloads, **continue listening** derivation |
-| **Routes** | `App.jsx` | **`/search`**, **`/search/more/tags?q=`** (**Tags** grid; Channel Info **.music-info__tag**); add other **`/search/more/...`** in Phase 5–6 |
+| **Routes** | `App.jsx` | **`/search`**, **`/search/browse/music/category/:id`**, **`/search/browse/music/vibe/:vibeId`**, **`/search/browse/music/vibe/.../tag/:tagSlug`**, **`/search/more/tags`**; … |
 
 ---
 
@@ -100,25 +100,26 @@ Implement these verbatim:
 
 ---
 
-## Phase 2 — Music Browse (150+ and 1000+)
+## Phase 2 — Music Browse (150+ and 1000+) ✅ (prototype)
 
 **Limited lineup (150+ path)**
 
-- Top grid: **one tile per genre** (`MUSIC_GENRES`) → navigate to **subfilter** screen or inline expansion matching **Subfilter grid** frame.
-- Deepest level: **channel list** (grid or scroll list) → **`navigate(`/music/${id}`)**.
+- Top grid: **one tile per genre** (`MUSIC_GENRES`) → **`/search/browse/music/category/:categoryId`** → 2-col **`MusicChannelCard`** grid → **`/music/:id`**.
+- **Code:** **`Search.jsx`** (limited tiles) + **`SearchMusicCategory.jsx`**.
 
 **Broad lineup (1000+ path)**
 
-- Top grid: **Genre, Activity, Mood, Era, Theme** (five **vibes**)—labels from **Search-story** / Figma **`19553:131521`**. Under each vibe, Browse drills into **tags** (subcategories).
-- **Data:** add a module (e.g. `src/data/musicBrowseTaxonomy.js`) or extend **`musicChannels.js`** with `vibeId`, `tagId` (or equivalent) so channels filter correctly. Start small: 2–3 **tags** per **vibe** with channels reused from **`RAW_LINEUP`** if needed.
+- Top grid: five **vibes** (**`BROAD_VIBES`** in **`musicBrowseTaxonomy.js`**) → **`/search/browse/music/vibe/:vibeId`** → **tags** (**`getChildTagsForBroadVibe`**).
+  - **Genre** vibe: same genre rows as limited → **`/search/browse/music/category/:id`**.
+  - **Activity / Mood / Era / Theme:** prototype **tag** rows (labels matched via **`getMusicChannelsWithTag`**) → **`/search/browse/music/vibe/:vibeId/tag/:tagSlug`** → **`SearchMusicBroadTagChannels.jsx`**.
+- **Code:** **`Search.jsx`** (broad tiles) + **`SearchMusicVibe.jsx`** + **`SearchMusicBroadTagChannels.jsx`** + **`SearchBrowseTile`**.
 
-**Routes (suggested)**
+**Shared**
 
-- `/search/music` optional, or stay on `/search` with **stack state** only—**Integration notes** allow either; **prefer explicit routes** for back button clarity, e.g. `/search/browse/music/genre/:genreId`, `/search/browse/music/vibe/:vibeId/tag/:tagId...`.
+- **`musicBrowseTaxonomy.js`** — vibes, non-genre tag tables (aligned with real **`channel.tags`** where possible).
+- **Figma:** **`270:45400`**, **`19553:131521`**, **`49:332563`** (reference; tiles are stub layout).
 
-**Figma:** **`270:45400`**, **`19553:131521`**, **`49:332563`**.
-
-**Deliverable:** Full happy path from Search tab → music tiles → channel list → **Channel Info**.
+**Deliverable:** Search tab → music tiles → channel list → **Channel Info** ✓
 
 ---
 
@@ -224,4 +225,4 @@ Implement these verbatim:
 
 ---
 
-*Last updated: 2026-05-06 — **Vibes/tags** vocabulary, **Tags** swimlane + **`SearchTagsMore`**, Channel Info tag navigation.*
+*Last updated: 2026-05-06* — **Phase 2** music browse (limited + broad); **vibes/tags**, **Tags** swimlane, **`SearchTagsMore`**, Channel Info tag navigation.

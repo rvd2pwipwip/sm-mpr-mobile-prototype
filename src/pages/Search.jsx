@@ -1,16 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBrowseHeader, {
   BROWSE_TABS,
 } from "../components/SearchBrowseHeader.jsx";
-import { musicLineupLabel } from "../constants/musicLineup.js";
+import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
+import { MUSIC_LINEUP, musicLineupLabel } from "../constants/musicLineup.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
+import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
+import { MUSIC_GENRES } from "../data/musicChannels.js";
 import "./Search.css";
 
 /**
- * Search & Browse tab. Phase 1: fixed measured header, browse vs search mode, tab scaffold.
+ * Search & Browse tab. Phase 1: header + modes. Phase 2: music browse (limited / broad).
  * Re-tap Music (already selected) toggles lineup — prototype easter egg (`TerritoryContext`).
  */
 export default function Search() {
+  const navigate = useNavigate();
   const { musicLineupMode, toggleMusicLineupMode } = useTerritory();
   const [browseTab, setBrowseTab] = useState("music");
   const [query, setQuery] = useState("");
@@ -36,6 +41,8 @@ export default function Search() {
   const activeTabLabel =
     BROWSE_TABS.find((t) => t.id === browseTab)?.label ?? browseTab;
 
+  const musicBrowseTitleId = "search-music-browse-heading";
+
   return (
     <main className="app-shell app-shell--footer-fixed search-page">
       <SearchBrowseHeader
@@ -57,14 +64,9 @@ export default function Search() {
           </div>
         ) : (
           <div className="content-inset search-page__body">
-            <p className="text-muted" style={{ margin: 0 }}>
-              Browse body for <strong>{activeTabLabel}</strong> ships in later phases
-              (music grid, podcasts, radio).
-            </p>
-
             {browseTab === "music" ? (
               <>
-                <p className="search-page__demo-note">
+                <p className="search-page__demo-note" style={{ marginTop: 0 }}>
                   <strong>Prototype only (not for production):</strong> with{" "}
                   <strong>Music</strong> selected, tap <strong>Music</strong> in the header
                   again to switch music lineup mode for demos.
@@ -72,8 +74,41 @@ export default function Search() {
                 <p className="search-page__lineup-badge" aria-live="polite">
                   Music lineup: {musicLineupLabel(musicLineupMode)}
                 </p>
+                <h2 id={musicBrowseTitleId} className="search-page__browse-heading">
+                  {musicLineupMode === MUSIC_LINEUP.limited
+                    ? "Browse by genre"
+                    : "Browse by vibe"}
+                </h2>
+                <SearchBrowseTileGrid labelId={musicBrowseTitleId}>
+                  {musicLineupMode === MUSIC_LINEUP.limited
+                    ? MUSIC_GENRES.map((g) => (
+                        <SearchBrowseTile
+                          key={g.id}
+                          onClick={() =>
+                            navigate(`/search/browse/music/category/${g.id}`)
+                          }
+                        >
+                          {g.label}
+                        </SearchBrowseTile>
+                      ))
+                    : BROAD_VIBES.map((v) => (
+                        <SearchBrowseTile
+                          key={v.id}
+                          onClick={() =>
+                            navigate(`/search/browse/music/vibe/${v.id}`)
+                          }
+                        >
+                          {v.label}
+                        </SearchBrowseTile>
+                      ))}
+                </SearchBrowseTileGrid>
               </>
-            ) : null}
+            ) : (
+              <p className="text-muted" style={{ margin: 0 }}>
+                Browse body for <strong>{activeTabLabel}</strong> ships in later phases
+                (podcasts, radio).
+              </p>
+            )}
           </div>
         )}
       </div>

@@ -17,6 +17,9 @@ import MusicPlayer from "./pages/MusicPlayer";
 import PodcastInfo from "./pages/PodcastInfo";
 import PodcastPlayer from "./pages/PodcastPlayer";
 import Search from "./pages/Search";
+import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels";
+import SearchMusicCategory from "./pages/SearchMusicCategory";
+import SearchMusicVibe from "./pages/SearchMusicVibe";
 import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -59,6 +62,9 @@ function AppRoutes() {
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
         <Route path="/podcast/:podcastId/play/:episodeId" element={<PodcastPlayerRoute />} />
         <Route path="/podcast/:podcastId" element={<PodcastInfo />} />
+        <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
+        <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
+        <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
