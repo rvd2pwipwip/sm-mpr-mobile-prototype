@@ -45,6 +45,9 @@ export default function BottomNav({ className = "" }) {
               location.pathname.startsWith("/more") ||
               location.pathname.startsWith("/music"));
 
+          const searchStackActive =
+            id === "search" && location.pathname.startsWith("/search");
+
           return (
             <NavLink
               key={id}
@@ -53,7 +56,9 @@ export default function BottomNav({ className = "" }) {
               className={({ isActive }) =>
                 [
                   "bottom-nav__item",
-                  isActive || homeStackActive ? "bottom-nav__item--active" : "",
+                  isActive || homeStackActive || searchStackActive
+                    ? "bottom-nav__item--active"
+                    : "",
                 ]
                   .filter(Boolean)
                   .join(" ")

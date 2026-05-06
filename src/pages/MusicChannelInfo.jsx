@@ -125,6 +125,11 @@ export default function MusicChannelInfo() {
                       key={tag}
                       variant="secondary"
                       className="music-info__tag"
+                      onClick={() =>
+                        navigate(
+                          `/search/more/tags?q=${encodeURIComponent(tag)}`,
+                        )
+                      }
                     >
                       {tag}
                     </ButtonSmall>

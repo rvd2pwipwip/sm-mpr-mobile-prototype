@@ -39,6 +39,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). Radio browse still stubby where noted. Next: Phase **7** (Search browse podcasts) when scoped.
 - [x] **Listen again (user history)** — **`ListenHistoryProvider`**; **music** (**`MusicPlayer`**, after preroll) **+ podcast** (**`PodcastPlayer`**, after preroll, when engaged); **`ListenAgainCard`** → **`music`** | **`podcast`**; Home rail + **`/more/listen-again`**; **`src/constants/listenHistory.js`**.
 - [x] **Search & Browse — Phase 0 (territory / lineup stub)** — **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`): **`musicLineupMode`** **`limited`** | **`broad`**. **`src/constants/musicLineup.js`**. **`Search`** tab: browse tab stub; **second tap on Music** toggles lineup (**prototype-only easter egg** for demos, not shipping). See **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 0.
+- [x] **Search & Browse — Phase 1 (shell)** — fixed **`SearchBrowseHeader`**; **`--search-header-offset`** + **`search-page-scroll`** in **`index.css`**; browse vs search (tabs hide when trimmed query non-empty); clear empty field resets **`browseTab`** to **Music**; lineup easter egg on header **Music** tab. **`/search/more/tags`** + **`SearchTagsMore`** + Channel Info **tag** → grid; **vibes/tags** vocabulary in **`Search-story`**. **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 1 / 6.
 
 ---
 
@@ -154,4 +155,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `docs/Stories/Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-05-06* — **`Search-Browse-implementation-plan.md`** added; **Search-story** integration notes in repo; **next:** implement Search & Browse per tutorial phases, Podcast Phase 7, radio, visual pass.
+*Last updated: 2026-05-06* — **Search & Browse Phase 1** (header + scroll offset) shipped; Phase 0 previously; **next:** Phase 2 music browse, Phase 7 podcast browse on Search, radio, visual pass.

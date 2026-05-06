@@ -3,7 +3,7 @@
  *
  * - Lineup / grid names come from Figma `SmLineupMusicGrids` variants (browse grids).
  * - Detail shape follows the Channel Info screen (`musicInfo`): name, square thumbnail,
- *   long description, pill tags, and up to 6 related medium cards.
+ *   long description, vibe **tags** (`.music-info__tag`), and up to 6 related medium cards.
  *
  * Channel info reference:
  * https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067
@@ -18,7 +18,7 @@
  * @property {string} name Display title (matches Figma card labels where noted).
  * @property {string} thumbnail Square art URL (prototype placeholder).
  * @property {string} description Blurb for the info screen (truncate + “More…” in UI).
- * @property {string[]} tags Short labels for the horizontal tag row.
+ * @property {string[]} tags Vibe **tag** labels (Channel Info `.music-info__tag`, Search **Tags** swimlane / `getMusicChannelsWithTag`).
  * @property {RelatedMusicChannel[]} relatedChannels Up to 6 suggestions (medium cards).
  */
 
@@ -302,4 +302,14 @@ export function getMusicChannelById(id) {
 
 export function getMusicChannelsByCategory(categoryId) {
   return MUSIC_CHANNELS.filter((c) => c.categoryId === categoryId);
+}
+
+/** Channels whose vibe-tag list (`tags`) includes this label (case-insensitive exact chip match). */
+export function getMusicChannelsWithTag(tagLabel) {
+  if (!tagLabel || typeof tagLabel !== "string") return [];
+  const needle = tagLabel.trim().toLowerCase();
+  if (!needle) return [];
+  return MUSIC_CHANNELS.filter((c) =>
+    (c.tags ?? []).some((t) => String(t).trim().toLowerCase() === needle),
+  );
 }

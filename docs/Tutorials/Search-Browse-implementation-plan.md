@@ -25,7 +25,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 | **`docs/Stories/Search-story.md`** | Narrative + **locked** browse vs search behavior, reset rules, header modes, keyboard/footer, full radio IA |
 | **Figma MCP** (`get_design_context` / screenshot) | Typography, spacing, tab/search field specs—use when building each phase; MCP output is **reference**, map to **`index.css`** tokens |
 
-**Gap to expect:** Music **1000+** browse adds taxonomy layers (**Genre, Activity, Mood, Era, Theme**) that are **not** fully modeled in `musicChannels.js` today—plan assumes you **extend mock data** (Phase 2).
+**Gap to expect:** Music **1000+** browse adds **vibe** / **tag** taxonomy (UI: **Genre, Activity, Mood, Era, Theme** plus their **tag** subcategories — see **Search-story** Integration notes) that is **not** fully modeled in `musicChannels.js` today beyond per-channel **`tags[]`**; plan assumes you **extend mock data** for browse trees (Phase 2).
 
 ---
 
@@ -35,7 +35,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 |------|------------|--------|
 | Search & Browse (limited lineup ~150) | `270:45400` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=270-45400) | Music: genre grid at top level |
 | Search & Browse (broad lineup ~1000+) | `19553:131521` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19553-131521) | Music: five top categories + subfilters |
-| Search results (swimlanes) | `61:26534` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534) | **Channels, Artists, Podcasts, Episodes, Radio** — only show populated lanes |
+| Search results (swimlanes) | `61:26534` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534) | **Channels, Artists, Podcasts, Episodes, Radio** in file; product adds **Tags** (vibe tag matches — spec in **`Search-story`**, not in this frame) |
 | Subfilter / deep browse grid | `49:332563` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=49-332563) | Reuse for music drill-down tiles |
 | View More grid (vertical 2-col) | `23:17518` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-17518) | Align **Search result “More”** with **SwimlaneMore** patterns |
 | Browse / Podcasts body | `19805:39266` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19805-39266) | Conditional rows + category grid (~175px cards, **30px** gap, **`--space-content-inline`**) |
@@ -47,7 +47,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 
 Implement these verbatim:
 
-1. **First character typed** → replace **entire** Browse UI **and** **Music / Podcasts / Radio** tabs; show **only** search field (hugging height) + result swimlanes. Result categories **≠** content-type tabs; **do not** filter results by the browse tab the user was on.
+1. **First character typed** → replace **entire** Browse UI **and** **Music / Podcasts / Radio** tabs; show **only** search field (hugging height) + result swimlanes (**Channels**, **Artists**, **Tags**, **Podcasts**, **Episodes**, **Radio** — only populated lanes). Result categories **≠** content-type tabs; **do not** filter results by the browse tab the user was on.
 2. **Reset to Browse** (empty query, **Music** selected, territory tiles): **Clear** control; **re-tap Search** in **BottomNav** while already on `/search`; **navigate away** to another main tab **then back** to `/search`.
 3. **Header** height is **adaptive**; **remeasure** and update **scroll padding** when switching browse ↔ search mode (same philosophy as **`HomeHeader`** + **`--home-header-offset`** on Home—consider a **`--search-header-offset`** or generic `--top-fixed-chrome-offset` set from `ResizeObserver` / `useLayoutEffect`).
 4. **Keyboard** **overlaps** bottom chrome (miniplayer, visual ads, tabs)—no requirement to pin footer above keyboard in v1.
@@ -65,7 +65,7 @@ Implement these verbatim:
 | **ScreenHeader** | `ScreenHeader.jsx` | **Search More** deep screens (back, title =lane name) |
 | **Shell + scroll** | `app-shell`, `app-shell--footer-fixed`, `app-shell-footer-scroll`, `--footer-stack-scroll-padding` | Same as **Search.jsx** stub, **ListenAgainMore**, **SwimlaneMore** |
 | **Podcast library stubs** | `PodcastUserStateContext` | Browse: **Your Podcasts**, bookmarks, downloads, **continue listening** derivation |
-| **Routes** | `App.jsx` | Today: **`/search`** only; add **`/search/more/:resultCategory`** (or query-driven) when implementing More |
+| **Routes** | `App.jsx` | **`/search`**, **`/search/more/tags?q=`** (**Tags** grid; Channel Info **.music-info__tag**); add other **`/search/more/...`** in Phase 5–6 |
 
 ---
 
@@ -80,22 +80,23 @@ Implement these verbatim:
 - **`App.jsx`** wraps the app with **`TerritoryProvider`** (inside **`UserTypeProvider`**) so any screen can read lineup mode.
 - **Demo / easter egg (prototype only — not for end product):** On **`Search`**, the **Music** content-type tab uses **`onClick`**: if **Music is already selected**, the click **toggles** **`musicLineupMode`**; otherwise it selects Music. Lets designers demo both Figma variants (**`270:45400`** vs **`19553:131521`**) without a settings screen.
 
-**Deliverable:** Later phases call **`useTerritory()`** to branch music browse; **limited** → top level = **`MUSIC_GENRES`** tiles; **broad** → top level = five pillars + nested routes.
+**Deliverable:** Later phases call **`useTerritory()`** to branch music browse; **limited** → top level = **`MUSIC_GENRES`** tiles; **broad** → top level = five **vibes** (Genre, Activity, Mood, Era, Theme) + nested **tag** routes.
 
 ---
 
-## Phase 1 — Search shell: fixed adaptive header + browse body scaffold
+## Phase 1 — Search shell: fixed adaptive header + browse body scaffold ✅ (prototype)
 
-**Goal:** Replace **`Search.jsx`** stub with real layout: **minimal** top stack (**search field** always; **content-type tabs** only in browse mode), scrollable body below.
+**Goal:** **Minimal** top stack (**search field** always; **content-type tabs** only in browse mode), scrollable body below.
 
-**Teaching steps**
+**Shipped**
 
-1. **`main.app-shell.app-shell--footer-fixed.search-page`** + inner **`app-shell-footer-scroll`** with **`padding-bottom: var(--footer-stack-scroll-padding)`** (same as other stacked pages).
-2. **Header** is **not** `HomeHeader`—build **`SearchBrowseHeader`** (or split **SearchField** + **BrowseContentTabs**). Use tokens; avoid one-off pixels.
-3. **Measure header** when **browse** (taller) vs **search** (field only): set CSS variable on `main` or a wrapper so the scroll region’s **`padding-top`** (or `scroll-padding-top`) clears fixed chrome.
-4. **Local state:** `browseTab: 'music' | 'podcasts' | 'radio'` (reset to **`music`** on full reset). **`query`** string; **`isSearchActive`** = `query.trim().length > 0` (or “any character” per story—**first character** counts).
+1. **`main.app-shell.app-shell--footer-fixed.search-page`** + **`search-page-scroll`** with **`padding-bottom: var(--footer-stack-scroll-padding)`** and **`padding-top: calc(var(--search-header-offset) + var(--search-header-scroll-gap))`** (**`index.css`**).
+2. **`SearchBrowseHeader`** (`src/components/SearchBrowseHeader.jsx` + `.css`) — **not** `HomeHeader`: frosted fixed bar, **`/search.svg`** in field, clear control when non-empty, tabs when **`showBrowseTabs`**.
+3. **`useSearchBrowseHeaderOffset`** (in same file) — **`ResizeObserver`** publishes **`--search-header-offset`** on **`<html>`**; **removeProperty** on unmount (mirrors **`HomeHeader`**).
+4. **Search.jsx** — **`query`**, **`browseTab`**; **`showBrowseTabs`** = **`query.trim().length === 0`**; **search mode** = non-empty trim → tabs hidden, placeholder body for Phase 5. **Clear** (and empty trimmed query) → **`browseTab`** resets to **`music`** per Integration notes.
+5. **`BROWSE_TABS`** exported from **`SearchBrowseHeader`** for a single tab list.
 
-**Deliverable:** Empty browse bodies per tab can be placeholders; header toggles height when you fake `query`.
+**Deliverable:** Browse body placeholders per tab; header height remeasures when switching browse ↔ search.
 
 ---
 
@@ -108,12 +109,12 @@ Implement these verbatim:
 
 **Broad lineup (1000+ path)**
 
-- Top grid: **Genre, Activity, Mood, Era, Theme** (five tiles)—labels from **Search-story** / Figma **`19553:131521`**.
-- **Data:** add a module (e.g. `src/data/musicBrowseTaxonomy.js`) or extend **`musicChannels.js`** with `pillarId`, `subcategoryId` so channels filter correctly. Start small: 2–3 subcategories per pillar with channels reused from **`RAW_LINEUP`** if needed.
+- Top grid: **Genre, Activity, Mood, Era, Theme** (five **vibes**)—labels from **Search-story** / Figma **`19553:131521`**. Under each vibe, Browse drills into **tags** (subcategories).
+- **Data:** add a module (e.g. `src/data/musicBrowseTaxonomy.js`) or extend **`musicChannels.js`** with `vibeId`, `tagId` (or equivalent) so channels filter correctly. Start small: 2–3 **tags** per **vibe** with channels reused from **`RAW_LINEUP`** if needed.
 
 **Routes (suggested)**
 
-- `/search/music` optional, or stay on `/search` with **stack state** only—**Integration notes** allow either; **prefer explicit routes** for back button clarity, e.g. `/search/browse/music/genre/:genreId`, `/search/browse/music/pillar/:pillarId/...`.
+- `/search/music` optional, or stay on `/search` with **stack state** only—**Integration notes** allow either; **prefer explicit routes** for back button clarity, e.g. `/search/browse/music/genre/:genreId`, `/search/browse/music/vibe/:vibeId/tag/:tagId...`.
 
 **Figma:** **`270:45400`**, **`19553:131521`**, **`49:332563`**.
 
@@ -149,7 +150,7 @@ Implement these verbatim:
 
 ## Phase 5 — Search (query + swimlanes)
 
-**Goal:** **`61:26534`** behavior.
+**Goal:** **`61:26534`** behavior + **Tags** swimlane (**Search-story**; not in legacy Figma).
 
 **Query UX**
 
@@ -160,9 +161,13 @@ Implement these verbatim:
 
 - **No** artist browse in app; add **`src/data/musicArtists.js`** (or `artistNames` on channels) with `{ id, name, thumbnail?, representativeChannelIds[] }` for **client-side** matching. Tapping an artist can navigate to **`/music/:channelId`** (first rep) or a tiny **artist** stub screen—decide in Phase 5; **simplest:** land on first channel.
 
+**Tags lane**
+
+- Match query against **vibe tag** strings on channels (**`channel.tags`** — same labels as **Channel Info** `.music-info__tag`). **More** → **`/search/more/tags?q=`** (see **Phase 6** partial ship).
+
 **Swimlanes**
 
-- Reuse **`ContentSwimlane`** per populated category: **Channels, Artists, Podcasts, Episodes, Radio**.
+- Reuse **`ContentSwimlane`** per populated category: **Channels, Artists, Tags, Podcasts, Episodes, Radio**.
 - **Episode** swimlane: use **`EpisodeCard`** or list row; cap visible count + **More** when over limit (story).
 
 **Deliverable:** Typing filters catalog; clearing returns to Browse (Phase 1 rules).
@@ -173,7 +178,11 @@ Implement these verbatim:
 
 **Goal:** **More** on each result lane → vertical grid like **`SwimlaneMore`** / **`23:17518`**; **episodes** **single-column** where story says.
 
-**Routes (suggested)**
+**Shipped (prototype slice)**
+
+- **`SearchTagsMore.jsx`** at **`/search/more/tags?q=`** — 2-col **`MusicChannelCard`** grid for all channels sharing a **vibe tag** ( **`getMusicChannelsWithTag`** in **`musicChannels.js`**). **Channel Info** `.music-info__tag` navigates here (equivalent to Search → **Tags** **More**).
+
+**Routes (remaining)**
 
 - `/search/more/channels`?query=… **or** pass **`location.state`** from Search (simpler prototype: **state** only; **URL** optional).
 
@@ -201,7 +210,7 @@ Implement these verbatim:
   - [ ] Limited vs broad music top level matches territory stub.
   - [ ] Podcast conditional rows hide when empty.
   - [ ] Radio hierarchy navigable through at least one full path to stations.
-  - [ ] Search replaces browse chrome; swimlanes match categories; Artists shows when query hits stub artists.
+  - [ ] Search replaces browse chrome; swimlanes include **Tags**; Artists shows when query hits stub artists.
   - [ ] More grids + back behavior correct.
   - [ ] Reset: clear, re-tap Search, leave tab and return.
   - [ ] Footer stack + keyboard overlap acceptable; miniplayer still usable after dismiss keyboard.
@@ -215,4 +224,4 @@ Implement these verbatim:
 
 ---
 
-*Last updated: 2026-05-06 — Initial plan from Search-story, Integration notes, figma-nodes, and current `src/` patterns.*
+*Last updated: 2026-05-06 — **Vibes/tags** vocabulary, **Tags** swimlane + **`SearchTagsMore`**, Channel Info tag navigation.*

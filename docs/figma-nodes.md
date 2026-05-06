@@ -51,7 +51,7 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [Log in](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5638-214108&t=NvKDs20ElRoIwSUC-0)
 - [View More grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-17518&t=NvKDs20ElRoIwSUC-0)
 - [Subfilter grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=49-332563&t=NvKDs20ElRoIwSUC-0)
-- [Search results](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534&t=NvKDs20ElRoIwSUC-0)
+- [Search results](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534&t=NvKDs20ElRoIwSUC-0) — **Note:** frame shows **Channels, Artists, Podcasts, Episodes, Radio** swimlanes only. Product adds a **Tags** swimlane (vibe tag matches); see **`docs/Stories/Search-story.md`** Integration notes and **`SearchTagsMore`** route.
 
 ## Radio mock data — International (TODO)
 

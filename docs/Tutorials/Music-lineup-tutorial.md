@@ -11,7 +11,7 @@ Step-by-step guide to how **music lineup mode** works in the prototype: a stand-
 | Mode | Value | Rough meaning | Future Browse shape |
 |------|--------|---------------|---------------------|
 | **Limited** | `limited` | ~150-channel markets | Top level = **genre** tiles (`MUSIC_GENRES`) |
-| **Broad** | `broad` | ~1000+ (e.g. US/CA) | Top level = **Genre, Activity, Mood, Era, Theme** pillars |
+| **Broad** | `broad` | ~1000+ (e.g. US/CA) | Top level = five **vibes** (Genre, Activity, Mood, Era, Theme); subcategories = **tags** |
 
 State lives in React **context** so any page or component can call **`useTerritory()`** when you wire music Search & Browse (Phase 2).
 
@@ -33,12 +33,14 @@ flowchart TB
 
   subgraph composition
     AP["src/App.jsx<br/>UserTypeProvider → TerritoryProvider → … → AppRoutes"]
-    SR["src/pages/Search.jsx<br/>demo UI + Music tab onClick"]
+    SBH["src/components/SearchBrowseHeader.jsx<br/>fixed field + browse tabs"]
+    SR["src/pages/Search.jsx<br/>query + browseTab state"]
   end
 
   ML -->|"import MUSIC_LINEUP"| TC
   TC -->|"provider wraps tree"| AP
   AP -->|"Route /search"| SR
+  SR -->|"renders"| SBH
   SR -->|"useTerritory()"| TC
 ```
 
@@ -47,9 +49,8 @@ flowchart TB
 - **`musicLineup.js`** is pure data and labels: no React. It keeps string values stable so you do not typo `'limitted'`.
 - **`TerritoryContext.jsx`** holds **`musicLineupMode`** state and exposes **`toggleMusicLineupMode`** / **`setMusicLineupMode`**.
 - **`App.jsx`** mounts **`TerritoryProvider`** **inside** **`UserTypeProvider`** so everything under **`Routes`** can use **`useTerritory()`** (if you ever need both user type and lineup in the same component, user type is still the outer provider).
-- **`Search.jsx`** is currently the **only** consumer; later, music browse components will also call **`useTerritory()`**.
-
-Styling for the Search tab demo lives in **`src/pages/Search.css`** (tabs + badge); it does not define lineup logic.
+- **`SearchBrowseHeader.jsx`** holds the **fixed** search field and **Music / Podcasts / Radio** tabs (tabs hide in search mode when the trimmed query is non-empty). **`useSearchBrowseHeaderOffset`** publishes **`--search-header-offset`** like **`HomeHeader`** does for Home.
+- **`Search.jsx`** is the page: **`useTerritory()`** for the lineup badge + easter egg handler passed into **`SearchBrowseHeader`**.
 
 ---
 
@@ -57,7 +58,7 @@ Styling for the Search tab demo lives in **`src/pages/Search.css`** (tabs + badg
 
 1. Start the dev server (`npm run dev`) and open the prototype.
 2. Tap **Search** in the bottom navigation.
-3. Confirm **Music** is the selected browse tab (pill style).
+3. Confirm **Music** is the selected browse tab in the **header** (pill under the search field).
 4. Tap **Music** again while it is already selected.
 5. Watch the **“Music lineup: …”** badge switch between **Limited (~150 channels)** and **Broad (~1000+ channels)**.
 6. Optional: switch to **Podcasts** or **Radio**, then tap **Music** once — that sets Music active **without** toggling lineup; tap **Music** a second time to toggle lineup.

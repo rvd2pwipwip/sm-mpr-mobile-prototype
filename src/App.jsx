@@ -17,6 +17,7 @@ import MusicPlayer from "./pages/MusicPlayer";
 import PodcastInfo from "./pages/PodcastInfo";
 import PodcastPlayer from "./pages/PodcastPlayer";
 import Search from "./pages/Search";
+import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
 import SwimlaneMore from "./pages/SwimlaneMore";
@@ -58,6 +59,7 @@ function AppRoutes() {
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
         <Route path="/podcast/:podcastId/play/:episodeId" element={<PodcastPlayerRoute />} />
         <Route path="/podcast/:podcastId" element={<PodcastInfo />} />
+        <Route path="/search/more/tags" element={<SearchTagsMore />} />
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
       </Routes>

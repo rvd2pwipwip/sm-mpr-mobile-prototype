@@ -131,6 +131,11 @@
   );
   /* Gap between fixed header and first scroll content (not part of `offsetHeight`; avoid baking into --home-header-offset — JS overwrites that var on `<html>`). */
   --home-header-scroll-gap: var(--space-3);
+  /* Search & Browse: fixed `SearchBrowseHeader` — overwritten on `/search` mount (measured height). */
+  --search-header-offset: calc(
+    var(--safe-area-inset-top) + 104px
+  );
+  --search-header-scroll-gap: var(--space-3);
   /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
   --z-chrome: 100;
   --z-mini-player: 110;
@@ -325,6 +330,20 @@ body {
   -webkit-overflow-scrolling: touch;
   /* Pushes first content below the fixed header; scrolls away so lanes slide under the bar. */
   padding-top: calc(var(--home-header-offset) + var(--home-header-scroll-gap));
+  padding-bottom: var(--footer-stack-scroll-padding);
+}
+
+/* Search tab: scroll column under fixed `SearchBrowseHeader` (same footer clearance as other stacked pages). */
+.search-page-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: calc(
+    var(--search-header-offset) + var(--search-header-scroll-gap)
+  );
   padding-bottom: var(--footer-stack-scroll-padding);
 }
 

@@ -2,7 +2,7 @@
  * Music catalog scale for Search & Browse (territory proxy in the prototype).
  *
  * - `limited` ≈ ~150-channel territories (genre grid at top).
- * - `broad` ≈ 1000+ territories (Genre / Activity / Mood / Era / Theme pillars).
+ * - `broad` ≈ 1000+ territories (top-level **vibes**: Genre / Activity / Mood / Era / Theme in UI; subcategories are **tags** — see `docs/Stories/Search-story.md` Integration notes).
  *
  * Real product would derive this from geo; here it is driven by demo state only.
  */

@@ -8,7 +8,7 @@ Consequently, we are less dedicated to casual users, which are usually taken car
 
 In that sense, Browse also needs to adapt his music presentation to the users’ current territory since some have a limited music lineup of around 150 channels whereas others (mainly US and Canada), have a much broader lineup of 1000+ music channels.
 
-To account for this in limited music lineup territories, Browse’s top presentation level is genres, with each tile corresponding to one of its lineup genres. On the other hand, he adds a music presentation layer to broader music lineup territories with one tile corresponding to each of the top hierarchy categories: Genre, Activity, Mood, Era, and Theme. Each of these top-level categories have their own subcategories, and some of these have yet deeper levels until users are presented with a corresponding list of music channels.
+To account for this in limited music lineup territories, Browse’s top presentation level is genres, with each tile corresponding to one of its lineup genres. On the other hand, he adds a music presentation layer to broader music lineup territories with one tile corresponding to each of the top hierarchy categories: Genre, Activity, Mood, Era, and Theme. Each of these top-level categories has its own tags, and some flows have yet deeper levels until users are presented with a corresponding list of music channels.
 
 As far as podcasts are concerned, Browse is actually the main front door access for most users when they want to see what our app has to offer since there are so many topics and categories in that type of content. Home voluntarily restrains its display to a very limited sample only intended as a reminder that we have podcasts.
 
@@ -18,7 +18,7 @@ The last content type, featured to the right of Browse’s header/tab pattern, i
 
 The format categories mainly display radio stations by popularity and location to make them as relevant as possible to users based on their territory, emulating the geo-localized aspect of real-word radio tuning but users can also discover and tune in to radio stations from all over the world by browsing the International category.
 
-In a nutshell, my brother Browse is there for users who feel like browsing the whole breadth of our music, podcasts and radio catalog in the easiest structured way possible and I think he does a good job at that. I am very thankful for my brother doing such a great job because it lets me concentrate on my part.
+In a nutshell, my brother Browse is there for users who feel like browsing the whole breadth of our music, podcasts, and radio catalog in the easiest structured way possible and I think he does a good job at that. I am very thankful for my brother doing such a great job because it lets me concentrate on my part.
 
 Now let’s talk about what exactly is my part and how I manage to complement my brother’s end of the business.
 
@@ -30,9 +30,11 @@ They can still change their mind and tap me again to dismiss the keyboard, but u
 
 That is when my great metamorphosis takes shape, and my brother Browse tips his hat as he lets me take the whole stage, displaying my search results in all their glory and dedicated swimlane categories.
 
-I display each search result corresponding to the current user input query string as a media card in its corresponding swimlane, either Channels, Artists, Podcasts, Episodes, or Radio. Each swimlane is only displayed if it is populated by search results in its category and has a More button (same as the swimlanes on Home) for categories that have more search results than can be displayed here.
+I display each search result corresponding to the current user input query string as a media card in its corresponding swimlane, either Channels, Artists, Tags, Podcasts, Episodes, or Radio. Each swimlane is only displayed if it is populated by search results in its category and has a More button (same as the swimlanes on Home) for categories that have more search results than can be displayed here. *(The **Tags** swimlane was not drawn on the legacy Figma search-results frame; it is part of the intended product behavior—see Integration notes.)*
 
 Users clicking one of my results swimlane’s More buttons will view a vertically scrolling 2-column (or single column in the case of episode cards) grid layout, similar to Home’s More layout, filled with other search results in the corresponding category.
+
+When users are on a music **Channel Info** screen, the vibe tags shown in the horizontal chip row are the same kind of tag labels I use: tapping a chip is equivalent to typing that tag in my field and opening the **More** view for my **Tags** swimlane—the full 2-column grid of all channels that carry that tag.
 
 Any time users want to go back to my brother, they can clear my input field, re-tap our Search tab while they are already on it, or leave our screen for another main tab and come back. Any of those paths will reset our shared screen to its original state with my empty text entry field and my brother’s header/tab set to Music with its category tiles based on the current territory lineup.
 
@@ -48,7 +50,11 @@ To conclude, I will say that even if our friend Home has the privilege to be our
 
 These bullets complement the story above for **design, product, and engineering**. They record decisions for how Search & Browse **integrates** with the rest of the app.
 
-- **Browse vs search mode** — As soon as the user enters **any** character in the search field, **search results replace the entire Browse UI**, including the **Music / Podcasts / Radio content-type tabs**. Result swimlanes (**Channels, Artists, Podcasts, Episodes, Radio**) are **not** the same taxonomy as those tabs. **Do not** filter search results by whichever Browse tab was active before typing.
+- **Vibes & tags (internal vocabulary, not necessarily user-facing copy)** — For **broad-lineup** music Browse, the five top-level groupings (**Genre, Activity, Mood, Era, Theme**) are referred to internally as **vibes**. Their subcategories in the browse tree are **tags**. Implementation and CMS-style docs should use **vibe** / **tag**; UI may continue to show the existing customer-facing labels on tiles and chips.
+- **Channel Info chips** — The `.music-info__tag` controls on **Channel Info** show **vibe tags** associated with that channel (same tag strings Search matches against for the **Tags** swimlane).
+- **Browse vs search mode** — As soon as the user enters **any** character in the search field, **search results replace the entire Browse UI**, including the **Music / Podcasts / Radio content-type tabs**. Result swimlanes (**Channels, Artists, Tags, Podcasts, Episodes, Radio**) are **not** the same taxonomy as those tabs. **Do not** filter search results by whichever Browse tab was active before typing.
+- **Tags swimlane (spec gap)** — Legacy Figma **Search results** (`61:26534`) does **not** show a **Tags** lane; product intent **does**. Populate a **Tags** swimlane when the query matches vibe **tag** labels tied to music channels; **More** leads to a 2-column channel grid (same pattern as Home **More** / **`SwimlaneMore`**). Prototype route: **`/search/more/tags?q=`** (encoded tag label).
+- **Tag tap from Channel Info** — Tapping a `.music-info__tag` must behave like: user typed that tag string into Search, then tapped **More** on the **Tags** swimlane — i.e. navigate to **`/search/more/tags?q=…`** (see `SearchTagsMore.jsx`).
 - **Artists lane** — Include an **Artists** swimlane in search results so users can search by **artist name** for music discovery, even though the app does **not** feature artist categories in Browse elsewhere.
 - **Reset to Browse** — All of the following return to the default state: **empty** search field, **Browse** visible, **Music** selected with territory-appropriate tiles. Triggers: **clear** the field; **re-tap the Search tab** while Search is already active; **navigate away** from Search (another bottom tab) **and come back** to Search.
 - **Adaptive header height** — Top chrome **always shrinks** to **vertically hug** its content (tabs + field in browse mode; **field only** in search mode). **Scroll padding** must be **recalculated** when the mode or measured header height changes, consistent with the Home / More pattern (fixed header, scrolling body).
