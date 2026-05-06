@@ -2,12 +2,20 @@
  * Mock music channels (streams) for the SM MPR mobile prototype.
  *
  * - Lineup / grid names come from Figma `SmLineupMusicGrids` variants (browse grids).
+ * - Channel **tags**: mock API mix — **one** IA genre pillar, **≤one** IA subgenre when that row
+ *   has subs (for sub-browse parity), **one** era chip, plus **three or four** Activity / Mood /
+ *   Theme tags (slots trimmed when a subgenre chip is placed) — see `tagsFor`.
  * - Detail shape follows the Channel Info screen (`musicInfo`): name, square thumbnail,
  *   long description, vibe **tags** (`.music-info__tag`), and up to 6 related medium cards.
  *
  * Channel info reference:
  * https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067
  */
+
+import {
+  flattenVibeTagLabels,
+  getPrototypeCategoryTagGroups,
+} from "./musicBrowseTaxonomy.js";
 
 /** @typedef {{ id: string, name: string, thumbnail: string }} RelatedMusicChannel */
 
@@ -59,32 +67,88 @@ function channelId(categoryId, name) {
   return `${categoryId}__${slugify(name)}`;
 }
 
-const TAG_POOL = {
-  pop: ["Pop", "Charts", "Hits", "Sing-along", "Feel-good", "Trending", "Party"],
-  rock: ["Rock", "Guitar", "Anthems", "Live energy", "Classic cuts", "Turn it up"],
-  "country-roots": ["Country", "Story songs", "Acoustic", "Americana", "Road trip", "Heartland"],
-  "hip-hop": ["Hip-hop", "Beats", "Bars", "808s", "Urban", "Flow"],
-  "dance-electronic": ["Dance", "Electronic", "Club", "House", "BPM", "Night out"],
-  latin: ["Latin", "Tropical", "Rhythm", "Spanish hits", "Fiesta", "Radio hits"],
-  "rb-soul": ["R&B", "Soul", "Groove", "Vocals", "Late night", "Smooth"],
-  classical: ["Classical", "Orchestral", "Composers", "Focus", "Timeless", "Concert hall"],
-  "jazz-blues": ["Jazz", "Blues", "Improv", "Swing", "Brass", "Late set"],
-  mood: ["Chill", "Wellness", "Ambient", "Calm", "Low key", "Restore"],
-  "around-the-world": ["Global", "World", "Travel", "Culture", "Groove", "Discovery"],
-  kids: ["Kids", "Family", "Singalong", "Safe", "Playtime", "Bedtime"],
-  variety: ["Variety", "Mix", "Soundtrack", "Feel-good", "Eclectic", "Crowd-pleaser"],
-};
-
-function tagsFor(categoryId, name, count = 6) {
-  const pool = TAG_POOL[categoryId] ?? TAG_POOL.variety;
-  const slug = slugify(name);
-  const out = [];
-  let i = 0;
-  while (out.length < count && i < pool.length + 4) {
-    const t = pool[(slug.length + i) % pool.length];
-    if (!out.includes(t)) out.push(t);
-    i += 1;
+function nameDeterministicSeed(name) {
+  const s = slugify(name);
+  let h = 0;
+  for (let i = 0; i < s.length; i += 1) {
+    h = (h << 5) - h + s.charCodeAt(i);
+    h |= 0;
   }
+  return Math.abs(h);
+}
+
+/**
+ * Mock tags: **1** genre pillar, **≤1** IA subgenre when that row has subs, **1** era,
+ * then **3–4** Activity / Mood / Theme tags (one fewer when the subgenre chip is used).
+ */
+function tagsFor(categoryId, name) {
+  const seed = nameDeterministicSeed(name);
+
+  let genreOne;
+  /** @type {string[]} */
+  let groupSubs = [];
+  const groups = getPrototypeCategoryTagGroups(categoryId);
+  if (groups.length === 0) {
+    genreOne = genreLabel(categoryId);
+  } else {
+    const pick = groups[seed % groups.length];
+    genreOne = pick.primary;
+    groupSubs = pick.subcategories;
+  }
+
+  const blocked = new Set([genreOne]);
+  /** @type {string[]} */
+  const out = [genreOne];
+
+  if (groupSubs.length > 0) {
+    const sub = groupSubs[(seed >>> 10) % groupSubs.length];
+    if (!blocked.has(sub)) {
+      out.push(sub);
+      blocked.add(sub);
+    }
+  }
+
+  const eraLabels = flattenVibeTagLabels("era");
+  const eraOne =
+    eraLabels.length > 0
+      ? eraLabels[seed % eraLabels.length]
+      : "Today";
+  blocked.add(eraOne);
+  out.push(eraOne);
+
+  const slotsAfterEra = out.length;
+  const otherTarget =
+    3 + (seed % 2) - Math.max(0, slotsAfterEra - 2);
+
+  const merged = [
+    ...flattenVibeTagLabels("activity"),
+    ...flattenVibeTagLabels("mood"),
+    ...flattenVibeTagLabels("theme"),
+  ];
+  /** @type {string[]} */
+  const otherPool = [];
+  const seenOther = new Set();
+  for (const t of merged) {
+    if (seenOther.has(t)) continue;
+    if (blocked.has(t)) continue;
+    seenOther.add(t);
+    otherPool.push(t);
+  }
+
+  if (otherPool.length === 0) {
+    return out;
+  }
+
+  let idx = seed % Math.max(otherPool.length, 1);
+  let guard = 0;
+  const guardMax = Math.max(otherPool.length * 8, 40);
+  while (out.length < slotsAfterEra + otherTarget && guard < guardMax) {
+    guard += 1;
+    const t = otherPool[idx % otherPool.length];
+    idx += 1 + ((seed >> 3) % Math.min(5, otherPool.length || 1));
+    if (!out.includes(t)) out.push(t);
+  }
+
   return out;
 }
 

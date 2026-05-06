@@ -63,6 +63,86 @@ function tagsForVibeFromJson(vibeId) {
 }
 
 /**
+ * @typedef {{ primary: string, subcategories: string[] }} PrototypeTagGroup
+ */
+
+/**
+ * Per–lineup-lane IA **genre** pillars (primary label + subcategories for browse data).
+ * Mock channels may also carry **one** IA subgenre from that row so sub-browse filters still match.
+ *
+ * @param {string} categoryId prototype lineup key (`pop`, `mood`, `variety`, …)
+ * @returns {PrototypeTagGroup[]}
+ */
+export function getPrototypeCategoryTagGroups(categoryId) {
+  /** @type {PrototypeTagGroup[]} */
+  const groups = [];
+
+  const genreRows = tagsForVibeFromJson("genre");
+  for (const tag of genreRows) {
+    const cid = GENRE_IA_LABEL_TO_CATEGORY_ID[tag.label];
+    if (cid !== categoryId) continue;
+    groups.push({
+      primary: tag.label,
+      subcategories: [...(tag.subcategories ?? [])],
+    });
+  }
+
+  if (categoryId === "mood") {
+    const moodSubs = tagsForVibeFromJson("mood").map((t) => t.label);
+    if (moodSubs.length > 0) {
+      const moodPrimary =
+        BROAD_VIBES.find((v) => v.id === "mood")?.label ?? "Mood";
+      groups.push({
+        primary: moodPrimary,
+        subcategories: moodSubs,
+      });
+    }
+  }
+
+  return groups;
+}
+
+/**
+ * Parents then IA sub-tags in sheet order (de-duplicated) for a vibe.
+ * Used when building mixed mock tags (activity / mood / era / theme pools).
+ *
+ * @param {"activity"|"mood"|"era"|"theme"|"genre"} vibeId
+ * @returns {string[]}
+ */
+export function flattenVibeTagLabels(vibeId) {
+  const ordered = [];
+  const seen = new Set();
+  for (const tag of tagsForVibeFromJson(vibeId)) {
+    if (!seen.has(tag.label)) {
+      seen.add(tag.label);
+      ordered.push(tag.label);
+    }
+    for (const s of tag.subcategories ?? []) {
+      if (!seen.has(s)) {
+        seen.add(s);
+        ordered.push(s);
+      }
+    }
+  }
+  return ordered;
+}
+
+/**
+ * Flat union (parent + subs) per lane — useful when you only need allowable strings.
+ * @param {string} categoryId
+ * @returns {string[]}
+ */
+export function getPrototypeCategoryTagPool(categoryId) {
+  /** @type {Set<string>} */
+  const labels = new Set();
+  for (const g of getPrototypeCategoryTagGroups(categoryId)) {
+    labels.add(g.primary);
+    for (const s of g.subcategories) labels.add(s);
+  }
+  return Array.from(labels);
+}
+
+/**
  * Genre IA row → `{ categoryId, subs }`; `categoryId` may be absent (navigate via tag lane).
  * @param {JsonTagRow} tag
  */
