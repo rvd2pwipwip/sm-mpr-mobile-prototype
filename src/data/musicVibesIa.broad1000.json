@@ -2,7 +2,7 @@
   "description": "Music vibes IA for broad (1000+ channel) territories, extracted from public Google Sheets (one spreadsheet per top-level vibe).",
   "lineup": "broad",
   "channelThreshold": "1000+",
-  "extractedAt": "2026-05-06T17:51:09.445Z",
+  "extractedAt": "2026-05-06T18:27:10.004Z",
   "sources": [
     {
       "vibeId": "genre",
@@ -61,97 +61,12 @@
       ],
       "tags": [
         {
-          "label": "Classical",
-          "subcategories": [
-            "Baroque",
-            "Chamber",
-            "Opera",
-            "Small Ensembles"
-          ]
-        },
-        {
-          "label": "Country and Roots",
-          "subcategories": [
-            "Americana / Alternative Country",
-            "Bluegrass",
-            "Classic Country",
-            "Contemporary Country",
-            "Folk",
-            "Franco-Country"
-          ]
-        },
-        {
-          "label": "Electronic",
-          "subcategories": [
-            "Dance",
-            "Electro Pop",
-            "House",
-            "Lounge",
-            "Trance"
-          ]
-        },
-        {
-          "label": "Hip-Hop"
-        },
-        {
-          "label": "Indie",
-          "subcategories": [
-            "Indie: Electronic",
-            "Indie: Hip-Hop",
-            "Indie: Pop",
-            "Indie: Rock"
-          ]
-        },
-        {
-          "label": "Jazz & Blues",
-          "subcategories": [
-            "Blues",
-            "Jazz",
-            "Smooth Jazz"
-          ]
-        },
-        {
-          "label": "Kids and Teens"
-        },
-        {
-          "label": "Latin",
-          "subcategories": [
-            "Bachata",
-            "Brazilian",
-            "Latin Pop",
-            "Reggaeton",
-            "Salsa",
-            "Tropical"
-          ]
-        },
-        {
-          "label": "Miscellaneous",
-          "subcategories": [
-            "Nature Sounds",
-            "New Age"
-          ]
-        },
-        {
           "label": "Pop",
           "subcategories": [
             "Adult Pop",
             "Easy Listening",
             "Teen Pop",
             "Top 40"
-          ]
-        },
-        {
-          "label": "Praise and Worship"
-        },
-        {
-          "label": "R&B/Soul",
-          "subcategories": [
-            "Classic R&B",
-            "Contemporary R&B",
-            "Disco",
-            "Funk",
-            "Gospel",
-            "Soul"
           ]
         },
         {
@@ -166,7 +81,83 @@
           ]
         },
         {
-          "label": "Singer-Songwriter"
+          "label": "Country and Roots",
+          "subcategories": [
+            "Americana / Alternative Country",
+            "Bluegrass",
+            "Classic Country",
+            "Contemporary Country",
+            "Folk",
+            "Franco-Country"
+          ]
+        },
+        {
+          "label": "Hip-Hop"
+        },
+        {
+          "label": "Electronic",
+          "subcategories": [
+            "Dance",
+            "Electro Pop",
+            "House",
+            "Lounge",
+            "Trance"
+          ]
+        },
+        {
+          "label": "Indie",
+          "subcategories": [
+            "Indie: Electronic",
+            "Indie: Hip-Hop",
+            "Indie: Pop",
+            "Indie: Rock"
+          ]
+        },
+        {
+          "label": "Latin",
+          "subcategories": [
+            "Bachata",
+            "Brazilian",
+            "Latin Pop",
+            "Reggaeton",
+            "Salsa",
+            "Tropical"
+          ]
+        },
+        {
+          "label": "R&B/Soul",
+          "subcategories": [
+            "Classic R&B",
+            "Contemporary R&B",
+            "Disco",
+            "Funk",
+            "Gospel",
+            "Soul"
+          ]
+        },
+        {
+          "label": "Classical",
+          "subcategories": [
+            "Baroque",
+            "Chamber",
+            "Opera",
+            "Small Ensembles"
+          ]
+        },
+        {
+          "label": "Jazz & Blues",
+          "subcategories": [
+            "Blues",
+            "Jazz",
+            "Smooth Jazz"
+          ]
+        },
+        {
+          "label": "Miscellaneous",
+          "subcategories": [
+            "Nature Sounds",
+            "New Age"
+          ]
         },
         {
           "label": "World",
@@ -175,6 +166,15 @@
             "Celtic",
             "Reggae"
           ]
+        },
+        {
+          "label": "Kids and Teens"
+        },
+        {
+          "label": "Praise and Worship"
+        },
+        {
+          "label": "Singer-Songwriter"
         }
       ]
     },

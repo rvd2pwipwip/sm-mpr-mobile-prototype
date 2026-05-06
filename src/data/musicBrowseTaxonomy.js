@@ -140,6 +140,20 @@ export function getBroadTagLabelFromSlug(vibeId, tagSlug, subSlug) {
 }
 
 /**
+ * Synthetic first sub-tag so users can open all channels for the parent tag
+ * without picking a specific IA subcategory. Filter uses `tagLabel` (parent row).
+ * @param {string} parentLabel
+ */
+function allSubTagRow(parentLabel) {
+  const label = `All ${parentLabel}`;
+  return {
+    slug: slugifyBroadLabel(label),
+    label,
+    tagLabel: parentLabel,
+  };
+}
+
+/**
  * Lookup tag row + structured sub-tags for picker / routing.
  * @param {string} vibeId
  * @param {string} tagSlug
@@ -150,13 +164,14 @@ export function getBroadSubsMeta(vibeId, tagSlug) {
   const row = rows.find((t) => slugifyBroadLabel(t.label) === tagSlug);
   if (!row) return null;
 
-  const subs = (row.subcategories ?? []).map((label) => ({
+  const fromIa = (row.subcategories ?? []).map((label) => ({
     slug: slugifyBroadLabel(label),
     label,
     tagLabel: label,
   }));
 
-  const hasSubs = subs.length > 0;
+  const hasSubs = fromIa.length > 0;
+  const subs = hasSubs ? [allSubTagRow(row.label), ...fromIa] : [];
 
   return {
     slug: tagSlug,
