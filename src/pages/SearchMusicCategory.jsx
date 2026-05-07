@@ -1,6 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import MusicChannelCard from "../components/MusicChannelCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
 import { MUSIC_GENRES, getMusicChannelsByCategory } from "../data/musicChannels";
 import "./SwimlaneMore.css";
 
@@ -13,7 +14,7 @@ export default function SearchMusicCategory() {
   const channels = genre ? getMusicChannelsByCategory(categoryId) : [];
 
   if (!categoryId || !genre) {
-    return <Navigate to="/search" replace />;
+    return <Navigate to={SEARCH_BROWSE.music} replace />;
   }
 
   const goBack = () => navigate(-1);

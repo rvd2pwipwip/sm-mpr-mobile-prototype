@@ -1,6 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import MusicChannelCard from "../components/MusicChannelCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
 import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
 import {
   getBroadSubsMeta,
@@ -20,7 +21,7 @@ export default function SearchMusicBroadTagChannels() {
   const meta = vibeId && tagSlug ? getBroadSubsMeta(vibeId, tagSlug) : null;
 
   if (!vibeId || !tagSlug || !vibe || !meta) {
-    return <Navigate to="/search" replace />;
+    return <Navigate to={SEARCH_BROWSE.music} replace />;
   }
 
   const goBack = () => navigate(-1);
@@ -88,7 +89,7 @@ export default function SearchMusicBroadTagChannels() {
   const channelTagLabel = getBroadTagLabelFromSlug(vibeId, tagSlug, subSlug);
 
   if (!channelTagLabel) {
-    return <Navigate to="/search" replace />;
+    return <Navigate to={SEARCH_BROWSE.music} replace />;
   }
 
   const channels = getMusicChannelsWithTag(channelTagLabel);

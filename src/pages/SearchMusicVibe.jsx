@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
 import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
 import {
   getBroadVibeById,
@@ -16,7 +17,7 @@ export default function SearchMusicVibe() {
   const children = vibeId ? getChildTagsForBroadVibe(vibeId) : [];
 
   if (!vibeId || !vibe) {
-    return <Navigate to="/search" replace />;
+    return <Navigate to={SEARCH_BROWSE.music} replace />;
   }
 
   const goBack = () => navigate(-1);

@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SearchBrowseHeader, {
   BROWSE_TABS,
 } from "../components/SearchBrowseHeader.jsx";
 import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
 import { MUSIC_LINEUP, musicLineupLabel } from "../constants/musicLineup.js";
+import {
+  SEARCH_BROWSE,
+  getSearchBrowseTabFromPathname,
+} from "../constants/searchBrowsePaths.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
 import { MUSIC_GENRES } from "../data/musicChannels.js";
@@ -12,13 +16,15 @@ import SearchPodcastsBrowse from "./SearchPodcastsBrowse.jsx";
 import "./Search.css";
 
 /**
- * Search & Browse tab. Phase 1: header + modes. Phase 2: music browse (limited / broad).
- * Phase 3: podcasts browse (library rails + categories). Re-tap Music (selected) toggles lineup.
+ * Search & Browse tab. Browse content-type strip uses `/search/music`, `/search/podcasts`,
+ * `/search/radio` so back navigation preserves the tab. Re-tap Music on `/search/music`
+ * toggles lineup (prototype easter egg).
  */
 export default function Search() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { musicLineupMode, toggleMusicLineupMode } = useTerritory();
-  const [browseTab, setBrowseTab] = useState("music");
+  const browseTab = getSearchBrowseTabFromPathname(location.pathname);
   const [query, setQuery] = useState("");
 
   const showBrowseTabs = query.trim().length === 0;
@@ -27,16 +33,8 @@ export default function Search() {
   function handleQueryChange(next) {
     setQuery(next);
     if (next.trim() === "") {
-      setBrowseTab("music");
+      navigate(SEARCH_BROWSE.music, { replace: true });
     }
-  }
-
-  function onMusicTabClick() {
-    if (browseTab === "music") {
-      toggleMusicLineupMode();
-      return;
-    }
-    setBrowseTab("music");
   }
 
   const activeTabLabel =
@@ -49,9 +47,7 @@ export default function Search() {
       <SearchBrowseHeader
         query={query}
         onQueryChange={handleQueryChange}
-        browseTab={browseTab}
-        onBrowseTabChange={setBrowseTab}
-        onMusicTabClick={onMusicTabClick}
+        onMusicLineupToggle={toggleMusicLineupMode}
         showBrowseTabs={showBrowseTabs}
       />
 

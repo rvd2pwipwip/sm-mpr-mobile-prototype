@@ -14,7 +14,7 @@ const NAV_ITEMS = [
   },
   {
     id: "search",
-    to: "/search",
+    to: "/search/music",
     label: "Search",
     maskClass: "bottom-nav__icon-mask--search",
   },

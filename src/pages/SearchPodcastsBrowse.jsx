@@ -1,18 +1,29 @@
 import { useNavigate } from "react-router-dom";
-import ContentSwimlane from "../components/ContentSwimlane";
-import EpisodeCard from "../components/EpisodeCard";
-import PodcastCard from "../components/PodcastCard";
 import {
   SearchBrowseTile,
   SearchBrowseTileGrid,
 } from "../components/SearchBrowseTile.jsx";
-import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
+import {
+  PODCAST_LIBRARY_SLUG,
+  podcastLibraryBrowsePath,
+} from "../constants/podcastSearchLibrary.js";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { PODCAST_CATEGORIES } from "../data/podcasts";
 
+/** Single text flow for library tile labels + count (wraps like one phrase; see `.search-browse-tile__label-text`). */
+function PodcastLibraryTileLabel({ label, count }) {
+  return (
+    <span className="search-browse-tile__label-text">
+      {label}
+      {"\u00a0"}
+      <span className="search-browse-tile__inline-count">{count}</span>
+    </span>
+  );
+}
+
 /**
- * Search tab → Browse → Podcasts: conditional library rails + category tiles (see
- * `docs/Stories/Podcasts-story.md`, Figma `19805:39266`).
+ * Search tab → Browse → Podcasts: library + catalog category tiles (same grid level;
+ * see `docs/Stories/Podcasts-story.md`).
  */
 export default function SearchPodcastsBrowse() {
   const navigate = useNavigate();
@@ -22,112 +33,87 @@ export default function SearchPodcastsBrowse() {
     bookmarkedEpisodes,
     downloadedEpisodes,
     newEpisodeRows,
-    toggleBookmark,
-    toggleDownload,
-    getEpisodeProgress,
-    isBookmarked,
-    isDownloaded,
   } = usePodcastUserState();
 
-  const categoryHeadingId = "search-podcasts-categories-heading";
-
-  const episodeHandlers = (podcast, episode) => ({
-    isBookmarked: isBookmarked(episode.id),
-    isDownloaded: isDownloaded(episode.id),
-    progressFraction: getEpisodeProgress(episode.id),
-    onNavigate: () =>
-      navigate(`/podcast/${podcast.id}/play/${episode.id}`, {
-        replace: true,
-        state: playOverDetailNavigateState(),
-      }),
-    onToggleBookmark: () => toggleBookmark(episode.id),
-    onToggleDownload: () => toggleDownload(episode.id),
-  });
+  const headingId = "search-podcasts-browse-heading";
 
   return (
-    <>
-      {continueListening.length > 0 ? (
-        <ContentSwimlane title="Continue listening" showMore={false}>
-          {continueListening.map(({ podcast, episode, position01 }) => (
-            <div key={episode.id} className="search-page__episode-rail-cell">
-              <EpisodeCard
-                episode={episode}
-                {...episodeHandlers(podcast, episode)}
-                progressFraction={position01}
-              />
-            </div>
-          ))}
-        </ContentSwimlane>
-      ) : null}
-
-      {subscribedPodcasts.length > 0 ? (
-        <ContentSwimlane title="Your Podcasts" showMore={false}>
-          {subscribedPodcasts.map((podcast) => (
-            <PodcastCard
-              key={podcast.id}
-              podcast={podcast}
-              onSelect={() => navigate(`/podcast/${podcast.id}`)}
+    <div className="content-inset search-page__body search-page__podcasts-categories">
+      <h2 id={headingId} className="search-page__browse-heading">
+        Browse podcasts
+      </h2>
+      <SearchBrowseTileGrid labelId={headingId}>
+        {continueListening.length > 0 ? (
+          <SearchBrowseTile
+            onClick={() =>
+              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.continueListening))
+            }
+          >
+            <PodcastLibraryTileLabel
+              label="Continue listening"
+              count={continueListening.length}
             />
-          ))}
-        </ContentSwimlane>
-      ) : null}
-
-      {bookmarkedEpisodes.length > 0 ? (
-        <ContentSwimlane title="Your Episodes" showMore={false}>
-          {bookmarkedEpisodes.map((row) => (
-            <div key={row.episode.id} className="search-page__episode-rail-cell">
-              <EpisodeCard
-                episode={row.episode}
-                {...episodeHandlers(row.podcast, row.episode)}
-              />
-            </div>
-          ))}
-        </ContentSwimlane>
-      ) : null}
-
-      {newEpisodeRows.length > 0 ? (
-        <ContentSwimlane title="New Episodes" showMore={false}>
-          {newEpisodeRows.map(({ podcast, episode }) => (
-            <div key={episode.id} className="search-page__episode-rail-cell">
-              <EpisodeCard
-                episode={episode}
-                {...episodeHandlers(podcast, episode)}
-              />
-            </div>
-          ))}
-        </ContentSwimlane>
-      ) : null}
-
-      {downloadedEpisodes.length > 0 ? (
-        <ContentSwimlane title="Downloaded Episodes" showMore={false}>
-          {downloadedEpisodes.map((row) => (
-            <div key={row.episode.id} className="search-page__episode-rail-cell">
-              <EpisodeCard
-                episode={row.episode}
-                {...episodeHandlers(row.podcast, row.episode)}
-              />
-            </div>
-          ))}
-        </ContentSwimlane>
-      ) : null}
-
-      <div className="content-inset search-page__body search-page__podcasts-categories">
-        <h2 id={categoryHeadingId} className="search-page__browse-heading">
-          Browse by category
-        </h2>
-        <SearchBrowseTileGrid labelId={categoryHeadingId}>
-          {PODCAST_CATEGORIES.map((c) => (
-            <SearchBrowseTile
-              key={c.id}
-              onClick={() =>
-                navigate(`/search/browse/podcasts/category/${c.id}`)
-              }
-            >
-              {c.label}
-            </SearchBrowseTile>
-          ))}
-        </SearchBrowseTileGrid>
-      </div>
-    </>
+          </SearchBrowseTile>
+        ) : null}
+        {subscribedPodcasts.length > 0 ? (
+          <SearchBrowseTile
+            onClick={() =>
+              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.yourPodcasts))
+            }
+          >
+            <PodcastLibraryTileLabel
+              label="Your Podcasts"
+              count={subscribedPodcasts.length}
+            />
+          </SearchBrowseTile>
+        ) : null}
+        {bookmarkedEpisodes.length > 0 ? (
+          <SearchBrowseTile
+            onClick={() =>
+              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.yourEpisodes))
+            }
+          >
+            <PodcastLibraryTileLabel
+              label="Your Episodes"
+              count={bookmarkedEpisodes.length}
+            />
+          </SearchBrowseTile>
+        ) : null}
+        {newEpisodeRows.length > 0 ? (
+          <SearchBrowseTile
+            onClick={() =>
+              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.newEpisodes))
+            }
+          >
+            <PodcastLibraryTileLabel
+              label="New Episodes"
+              count={newEpisodeRows.length}
+            />
+          </SearchBrowseTile>
+        ) : null}
+        {downloadedEpisodes.length > 0 ? (
+          <SearchBrowseTile
+            onClick={() =>
+              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.downloadedEpisodes))
+            }
+          >
+            <PodcastLibraryTileLabel
+              label="Downloaded Episodes"
+              count={downloadedEpisodes.length}
+            />
+          </SearchBrowseTile>
+        ) : null}
+        {PODCAST_CATEGORIES.map((c) => (
+          <SearchBrowseTile
+            key={c.id}
+            onClick={() =>
+              navigate(`/search/browse/podcasts/category/${c.id}`)
+            }
+          >
+            {c.label}
+          </SearchBrowseTile>
+        ))}
+      </SearchBrowseTileGrid>
+    </div>
   );
 }

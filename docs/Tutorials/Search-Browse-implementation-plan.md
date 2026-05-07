@@ -129,9 +129,11 @@ Implement these verbatim:
 
 **Shipped**
 
-- **`SearchPodcastsBrowse.jsx`** — when **Search** browse tab is **Podcasts**: **`ContentSwimlane`** rows (**no “More”** in v1) only if non-empty — **Continue listening**, **Your Podcasts**, **Your Episodes**, **New Episodes**, **Downloaded Episodes** — wired to **`usePodcastUserState()`**; episode rows use **`EpisodeCard`** in fixed-width rail cells; show row uses **`PodcastCard`**. **Browse by category** — **`SearchBrowseTileGrid`** over **`PODCAST_CATEGORIES`** → **`/search/browse/podcasts/category/:categoryId`**.
-- **`SearchPodcastsCategory.jsx`** — 2-col **`PodcastCard`** grid (**`SwimlaneMore.css`** / **`--card-tile-width`** + 30px gaps) → **`/podcast/:id`**.
-- **`App.jsx`** — register **`/search/browse/podcasts/category/:categoryId`** **before** **`/search`**.
+- **`SearchPodcastsBrowse.jsx`** — when **Search** browse tab is **Podcasts**: one **`SearchBrowseTileGrid`** — populated **library** tiles (**Continue listening**, **Your Podcasts**, **Your Episodes**, **New Episodes**, **Downloaded Episodes**), each with **label + light `search-browse-tile__inline-count` digit**, sit **before** catalog **`PODCAST_CATEGORIES`** tiles at the **same** grid level; library tiles → **`/search/browse/podcasts/library/:librarySection`**.
+- **`SearchPodcastsLibrary.jsx`** — library drill-down: **episode** shelves use a vertical **`EpisodeCard`** stack; **Your Podcasts** uses the same 2-col **`PodcastCard`** grid as category browse.
+- **`SearchPodcastsCategory.jsx`** — 2-col **`PodcastCard`** grid (**`SwimlaneMore.css`**) → **`/podcast/:id`**.
+- **`App.jsx`** — **`/search/browse/podcasts/library/:librarySection`** (register **before** **`/search/browse/podcasts/category/:categoryId`**).
+- **`podcastSearchLibrary.js`** — slug constants + **`podcastLibraryBrowsePath()`**.
 
 **Figma:** **`19805:39266`**.
 
@@ -227,4 +229,4 @@ Implement these verbatim:
 
 ---
 
-*Last updated: 2026-05-06* — **Phase 3** podcasts browse on **Search**; **Phase 2** music browse (limited + broad); **Tags** lane + **`SearchTagsMore`**, Channel Info tag navigation.
+*Last updated: 2026-05-06* — **Phase 3** podcasts browse: library + catalog **tiles** + **`SearchPodcastsLibrary`**; **Search** paths **`/search/music`** | **`/podcasts`** | **`/radio`**; **Phase 2** music browse; **Tags** + **`SearchTagsMore`**.

@@ -2,7 +2,8 @@
  * Full-screen `/music/.../play` and `/podcast/.../play/...` are overlays:
  * — From browse/detail, open with `navigate(..., { replace: true, state })` so the `/play`
  *   entry swaps the current history slot (never stacks “detail → play”).
- * — Dismiss with `replace` back to `/music/:id` or `/podcast/:id` — never `history.back()`.
+ * — Dismiss: `replace` back to `/music/:id` or `/podcast/:id` when the play route replaced detail.
+ *   When opened from MiniPlayer (`expandFromMiniPlayer`, `push`), dismiss with `navigate(-1)` to restore Search/Home/etc.
  * — From MiniPlayer, open with a normal `push` so shell routes below stay intact.
  * — `expandFromMiniPlayer` in state skips guest full-screen preroll (`MiniPlayer`).
  */

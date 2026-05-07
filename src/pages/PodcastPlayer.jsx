@@ -309,8 +309,12 @@ export default function PodcastPlayer() {
   const subscribedHere = isSubscribed(podcast.id);
   const bookmarkedHere = isBookmarked(episode.id);
 
-  /** Overlay minimize — replaces `/play`; does not participate in History `back()`. */
+  /** Minimize: from mini’s `push`, pop back to the shell under the player; else replace to show (detail stack). */
   const leaveFullPlayerForShow = () => {
+    if (expandFromMini) {
+      navigate(-1);
+      return;
+    }
     navigate(`/podcast/${podcast.id}`, { replace: true });
   };
 

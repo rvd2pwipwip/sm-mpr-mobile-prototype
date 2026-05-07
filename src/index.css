@@ -120,10 +120,12 @@
   /* Reserve space above the tab strip when MiniPlayer is visible (`PlaybackContext`). */
   --mini-player-height: 80px;
   --mini-player-offset: 0px;
-  /* Bottom inset for vertical scrollers under fixed footer (MiniPlayer + BottomNav [+ ads] + home indicator). */
+  /* Extra space below last scroll content so it is not flush with the top of fixed footer chrome. */
+  --footer-stack-scroll-gap: var(--space-8);
+  /* Bottom inset for vertical scrollers under fixed footer (MiniPlayer + BottomNav [+ ads] + home indicator + gap). */
   --footer-stack-scroll-padding: calc(
     var(--mini-player-offset) + var(--bottom-nav-stack-height) +
-      env(safe-area-inset-bottom, 0px)
+      env(safe-area-inset-bottom, 0px) + var(--footer-stack-scroll-gap)
   );
   /* Home only: set at runtime in `HomeHeader` from measured `offsetHeight` (hugs logo + CTA). */
   --home-header-offset: calc(
@@ -132,9 +134,7 @@
   /* Gap between fixed header and first scroll content (not part of `offsetHeight`; avoid baking into --home-header-offset — JS overwrites that var on `<html>`). */
   --home-header-scroll-gap: var(--space-3);
   /* Search & Browse: fixed `SearchBrowseHeader` — overwritten on `/search` mount (measured height). */
-  --search-header-offset: calc(
-    var(--safe-area-inset-top) + 104px
-  );
+  --search-header-offset: calc(var(--safe-area-inset-top) + 104px);
   --search-header-scroll-gap: var(--space-3);
   /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
   --z-chrome: 100;
@@ -280,7 +280,7 @@ body {
   margin: 0 auto;
   max-width: var(--app-max-width);
   min-height: 100dvh;
-  /* Top: see `--safe-area-inset-top`; bottom: real home indicator when available. */
+  /* Top: see `--safe-area-inset-top`; bottom: footer stack + safe area + `--footer-stack-scroll-gap`. */
   padding: var(--safe-area-inset-top) 0 var(--footer-stack-scroll-padding);
 }
 
@@ -305,7 +305,7 @@ body {
  * Screens with fixed footer chrome (MiniPlayer + BottomNav + optional ad strip):
  * `main` is full viewport with no vertical padding — content scrolls in an inner
  * column (`home-body-scroll`, `*-__scroll`, or `.app-shell-footer-scroll`) behind
- * the footer. Footer clearance = `var(--footer-stack-scroll-padding)`.
+ * the footer. Footer clearance = `var(--footer-stack-scroll-padding)` (includes `--footer-stack-scroll-gap`).
  */
 .app-shell--home,
 .app-shell--footer-fixed {

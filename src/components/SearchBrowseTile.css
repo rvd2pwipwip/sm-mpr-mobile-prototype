@@ -40,7 +40,11 @@
 }
 
 .search-browse-tile:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 35%, var(--color-border-subtle));
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 35%,
+    var(--color-border-subtle)
+  );
 }
 
 .search-browse-tile:focus-visible {
@@ -54,4 +58,18 @@
   font-size: 0.8125rem;
   font-weight: 400;
   color: var(--color-text-muted);
+}
+
+/* Wrap label + inline count so flex does not split text and digit into two columns. */
+.search-browse-tile__label-text {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Count digit flows as the last “character(s)” of the label when text wraps. */
+.search-browse-tile__inline-count {
+  font-weight: 300;
+  white-space: nowrap;
 }

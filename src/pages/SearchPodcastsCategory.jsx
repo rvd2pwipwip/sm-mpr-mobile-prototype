@@ -1,6 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import PodcastCard from "../components/PodcastCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
 import {
   getPodcastCategoryById,
   getPodcastsByCategory,
@@ -16,7 +17,7 @@ export default function SearchPodcastsCategory() {
   const podcasts = categoryId ? getPodcastsByCategory(categoryId) : [];
 
   if (!categoryId || !category) {
-    return <Navigate to="/search" replace />;
+    return <Navigate to={SEARCH_BROWSE.podcasts} replace />;
   }
 
   const goBack = () => navigate(-1);

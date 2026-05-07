@@ -29,18 +29,29 @@
   font-weight: 600;
 }
 
-/* Horizontal episode rails on Search → Browse → Podcasts (`ContentSwimlane` flex row). */
-.search-page__episode-rail-cell {
-  flex: 0 0 auto;
-  width: min(288px, 78vw);
-  max-width: 100%;
+.search-page__podcasts-categories .search-page__browse-heading {
+  margin-top: 0;
 }
 
-.search-page__episode-rail-cell .episode-card {
+/* SearchPodcastsLibrary: vertical episode list (full-width cards). */
+.search-podcasts-library__episode-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
   width: 100%;
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding: 0 var(--swimlane-more-inline, 40px) var(--footer-stack-scroll-padding);
   box-sizing: border-box;
 }
 
-.search-page__podcasts-categories .search-page__browse-heading {
-  margin-top: 0;
+.search-podcasts-library__episode-stack .episode-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.search-podcasts-library__empty {
+  margin: 0;
+  padding: 0 var(--swimlane-more-inline, 40px);
 }

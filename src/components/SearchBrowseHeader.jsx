@@ -1,4 +1,9 @@
 import { useLayoutEffect, useRef } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import {
+  SEARCH_BROWSE,
+  getSearchBrowseTabFromPathname,
+} from "../constants/searchBrowsePaths.js";
 import "./SearchBrowseHeader.css";
 
 export const BROWSE_TABS = [
@@ -39,17 +44,19 @@ function useSearchBrowseHeaderOffset() {
 }
 
 /**
- * Minimal Search & Browse top chrome: search field + optional Music / Podcasts / Radio tabs.
- * Tabs hide when `showBrowseTabs` is false (search mode — non-empty trimmed query per Search story).
+ * Minimal Search & Browse top chrome: search field + optional Music / Podcasts / Radio tabs
+ * (`NavLink` to `/search/music` | `/search/podcasts` | `/search/radio`). Re-tap **Music** while
+ * already on `/search/music` runs `onMusicLineupToggle` (lineup easter egg). Tabs hide when
+ * `showBrowseTabs` is false (search mode — non-empty trimmed query per Search story).
  */
 export default function SearchBrowseHeader({
   query,
   onQueryChange,
-  browseTab,
-  onBrowseTabChange,
-  onMusicTabClick,
+  onMusicLineupToggle,
   showBrowseTabs,
 }) {
+  const location = useLocation();
+  const browseTab = getSearchBrowseTabFromPathname(location.pathname);
   const headerRef = useSearchBrowseHeaderOffset();
   const hasQuery = query.length > 0;
   const showClear = hasQuery;
@@ -89,38 +96,49 @@ export default function SearchBrowseHeader({
         <ul className="search-browse-header__tabs" role="tablist" aria-label="Browse content type">
           {BROWSE_TABS.map((tab) => {
             const active = browseTab === tab.id;
+            const to = SEARCH_BROWSE[tab.id];
             if (tab.id === "music") {
               return (
                 <li key={tab.id} className="search-browse-header__tab-item">
-                  <button
-                    type="button"
+                  <NavLink
+                    to={to}
+                    end
                     role="tab"
                     aria-selected={active}
-                    className={[
-                      "search-browse-header__tab",
-                      active ? "search-browse-header__tab--active" : "",
-                    ].join(" ")}
-                    onClick={onMusicTabClick}
+                    className={({ isActive }) =>
+                      [
+                        "search-browse-header__tab",
+                        isActive ? "search-browse-header__tab--active" : "",
+                      ].join(" ")
+                    }
+                    onClick={(e) => {
+                      if (location.pathname === SEARCH_BROWSE.music) {
+                        e.preventDefault();
+                        onMusicLineupToggle();
+                      }
+                    }}
                   >
                     {tab.label}
-                  </button>
+                  </NavLink>
                 </li>
               );
             }
             return (
               <li key={tab.id} className="search-browse-header__tab-item">
-                <button
-                  type="button"
+                <NavLink
+                  to={to}
+                  end
                   role="tab"
                   aria-selected={active}
-                  className={[
-                    "search-browse-header__tab",
-                    active ? "search-browse-header__tab--active" : "",
-                  ].join(" ")}
-                  onClick={() => onBrowseTabChange(tab.id)}
+                  className={({ isActive }) =>
+                    [
+                      "search-browse-header__tab",
+                      isActive ? "search-browse-header__tab--active" : "",
+                    ].join(" ")
+                  }
                 >
                   {tab.label}
-                </button>
+                </NavLink>
               </li>
             );
           })}

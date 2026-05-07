@@ -106,8 +106,12 @@ export default function MusicPlayer() {
     return <Navigate to="/" replace />;
   }
 
-  /** Overlay dismiss — replaces `/play`; does not participate in History `back()`. */
+  /** Overlay dismiss — replaces `/play` when opened from Channel Info; from mini player, pop instead. */
   const leaveFullPlayerForChannel = () => {
+    if (expandFromMini) {
+      navigate(-1);
+      return;
+    }
     navigate(`/music/${channel.id}`, { replace: true });
   };
 

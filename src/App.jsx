@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
 import MiniPlayer from "./components/MiniPlayer";
@@ -21,6 +21,7 @@ import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels";
 import SearchMusicCategory from "./pages/SearchMusicCategory";
 import SearchMusicVibe from "./pages/SearchMusicVibe";
 import SearchPodcastsCategory from "./pages/SearchPodcastsCategory";
+import SearchPodcastsLibrary from "./pages/SearchPodcastsLibrary";
 import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -67,9 +68,13 @@ function AppRoutes() {
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
+        <Route path="/search/browse/podcasts/library/:librarySection" element={<SearchPodcastsLibrary />} />
         <Route path="/search/browse/podcasts/category/:categoryId" element={<SearchPodcastsCategory />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
-        <Route path="/search" element={<Search />} />
+        <Route path="/search/music" element={<Search />} />
+        <Route path="/search/podcasts" element={<Search />} />
+        <Route path="/search/radio" element={<Search />} />
+        <Route path="/search" element={<Navigate to="/search/music" replace />} />
         <Route path="/info" element={<Info />} />
       </Routes>
       {hideBottomNav ? null : (
