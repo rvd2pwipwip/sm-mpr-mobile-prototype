@@ -36,11 +36,12 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up (after mini player baseline):* swimlane-level ads; finer **freeStingray** / **freeProvider** vs **`guest`** / **`provided`** if product requires it.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
-- [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). Radio browse still stubby where noted. Next: Phase **7** (Search browse podcasts) when scoped.
+- [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). **Search** tab **Browse / Podcasts** body: see **Search & Browse — Phase 3** above. Radio browse still stubby where noted.
 - [x] **Listen again (user history)** — **`ListenHistoryProvider`**; **music** (**`MusicPlayer`**, after preroll) **+ podcast** (**`PodcastPlayer`**, after preroll, when engaged); **`ListenAgainCard`** → **`music`** | **`podcast`**; Home rail + **`/more/listen-again`**; **`src/constants/listenHistory.js`**.
 - [x] **Search & Browse — Phase 0 (territory / lineup stub)** — **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`): **`musicLineupMode`** **`limited`** | **`broad`**. **`src/constants/musicLineup.js`**. **`Search`** tab: browse tab stub; **second tap on Music** toggles lineup (**prototype-only easter egg** for demos, not shipping). See **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 0.
 - [x] **Search & Browse — Phase 1 (shell)** — fixed **`SearchBrowseHeader`**; **`--search-header-offset`** + **`search-page-scroll`** in **`index.css`**; browse vs search (tabs hide when trimmed query non-empty); clear empty field resets **`browseTab`** to **Music**; lineup easter egg on header **Music** tab. **`/search/more/tags`** + **`SearchTagsMore`** + Channel Info **tag** → grid; **vibes/tags** vocabulary in **`Search-story`**. **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 1 / 6.
 - [x] **Search & Browse — Phase 2 (music browse)** — **`musicBrowseTaxonomy.js`**; limited genre grid → **`SearchMusicCategory`**; broad vibes → **`SearchMusicVibe`** → tags → **`SearchMusicBroadTagChannels`**; **`SearchBrowseTile`**. See implementation plan § Phase 2.
+- [x] **Search & Browse — Phase 3 (podcasts browse)** — **`SearchPodcastsBrowse`**: conditional **`ContentSwimlane`** rails from **`PodcastUserStateContext`** (**Continue listening** through **Downloaded Episodes**); category tiles → **`SearchPodcastsCategory`** (**`getPodcastsByCategory`**, 2-col **`PodcastCard`**) → **`/podcast/:id`**. Story: **`docs/Stories/Podcasts-story.md`**; Figma **`19805:39266`**. See **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 3.
 
 ---
 
@@ -134,9 +135,9 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Podcast Phase 7 + radio** — Search & Browse podcasts segment (**`Podcasts-implementation-plan.md`**); **radio** full stack when ready.
+1. [ ] **Radio (Search Browse + stack)** — Search **Browse / Radio** hierarchy (**`Search-Browse-implementation-plan.md`** § Phase 4); full radio stack when ready.
 
-2. [ ] **Search & Browse** — follow **`docs/Tutorials/Search-Browse-implementation-plan.md`** (phases 0–8). **Product + integration spec:** `docs/Stories/Search-story.md`. **Figma:** **150+** / **1000+** browse, Search results, Subfilter, View More; minimal header; keyboard overlaps footer; full radio IA; reset + **Artists** lane as documented.
+2. [ ] **Search & Browse (remaining)** — **`docs/Tutorials/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
 
 3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
@@ -156,4 +157,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `docs/Stories/Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-05-06* — **Search & Browse Phases 0–2** (territory, shell, music browse). **Next:** Phase 3 podcasts on Search, Phase 5 search swimlanes, radio, visual pass.
+*Last updated: 2026-05-06* — **Search & Browse Phases 0–3** (territory, shell, music + **podcasts** browse on Search). **Next:** Search phases **5–8**, radio browse (Phase 4), visual pass.

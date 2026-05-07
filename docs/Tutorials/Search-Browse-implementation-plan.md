@@ -123,17 +123,19 @@ Implement these verbatim:
 
 ---
 
-## Phase 3 — Podcasts Browse
+## Phase 3 — Podcasts Browse ✅ (prototype)
 
 **Goal:** Match **Browse / Podcasts** story + **Podcasts-implementation-plan** Phase 7.
 
-- **Conditional** rows only when populated: Continue listening, Your Podcasts, Your Episodes, New Episodes, Downloaded Episodes (**derive** from **`PodcastUserStateContext`** + progress).
-- **Category grid** (`PODCAST_CATEGORIES` from **`podcasts.js`**) → filtered show list → **`/podcast/:id`**.
-- **Card sizing:** ~**175px** tiles, **30px** gap, **`--space-content-inline`** gutters.
+**Shipped**
+
+- **`SearchPodcastsBrowse.jsx`** — when **Search** browse tab is **Podcasts**: **`ContentSwimlane`** rows (**no “More”** in v1) only if non-empty — **Continue listening**, **Your Podcasts**, **Your Episodes**, **New Episodes**, **Downloaded Episodes** — wired to **`usePodcastUserState()`**; episode rows use **`EpisodeCard`** in fixed-width rail cells; show row uses **`PodcastCard`**. **Browse by category** — **`SearchBrowseTileGrid`** over **`PODCAST_CATEGORIES`** → **`/search/browse/podcasts/category/:categoryId`**.
+- **`SearchPodcastsCategory.jsx`** — 2-col **`PodcastCard`** grid (**`SwimlaneMore.css`** / **`--card-tile-width`** + 30px gaps) → **`/podcast/:id`**.
+- **`App.jsx`** — register **`/search/browse/podcasts/category/:categoryId`** **before** **`/search`**.
 
 **Figma:** **`19805:39266`**.
 
-**Deliverable:** Podcasts tab matches product story; tiles navigate to real show screens.
+**Deliverable:** Podcasts tab matches product story; tiles navigate to real show screens ✓
 
 ---
 
@@ -225,4 +227,4 @@ Implement these verbatim:
 
 ---
 
-*Last updated: 2026-05-06* — **Phase 2** music browse (limited + broad); **vibes/tags**, **Tags** swimlane, **`SearchTagsMore`**, Channel Info tag navigation.
+*Last updated: 2026-05-06* — **Phase 3** podcasts browse on **Search**; **Phase 2** music browse (limited + broad); **Tags** lane + **`SearchTagsMore`**, Channel Info tag navigation.

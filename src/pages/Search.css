@@ -28,3 +28,19 @@
   font-size: 0.8125rem;
   font-weight: 600;
 }
+
+/* Horizontal episode rails on Search → Browse → Podcasts (`ContentSwimlane` flex row). */
+.search-page__episode-rail-cell {
+  flex: 0 0 auto;
+  width: min(288px, 78vw);
+  max-width: 100%;
+}
+
+.search-page__episode-rail-cell .episode-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-page__podcasts-categories .search-page__browse-heading {
+  margin-top: 0;
+}

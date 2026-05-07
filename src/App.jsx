@@ -20,6 +20,7 @@ import Search from "./pages/Search";
 import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels";
 import SearchMusicCategory from "./pages/SearchMusicCategory";
 import SearchMusicVibe from "./pages/SearchMusicVibe";
+import SearchPodcastsCategory from "./pages/SearchPodcastsCategory";
 import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -66,6 +67,7 @@ function AppRoutes() {
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
+        <Route path="/search/browse/podcasts/category/:categoryId" element={<SearchPodcastsCategory />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
         <Route path="/search" element={<Search />} />
         <Route path="/info" element={<Info />} />
