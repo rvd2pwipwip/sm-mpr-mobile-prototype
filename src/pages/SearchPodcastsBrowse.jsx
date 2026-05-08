@@ -39,14 +39,18 @@ export default function SearchPodcastsBrowse() {
 
   return (
     <div className="content-inset search-page__body search-page__podcasts-categories">
-      <h2 id={headingId} className="search-page__browse-heading">
+      {/* <h2 id={headingId} className="search-page__browse-heading">
         Browse podcasts
-      </h2>
+      </h2> */}
       <SearchBrowseTileGrid labelId={headingId}>
         {continueListening.length > 0 ? (
           <SearchBrowseTile
             onClick={() =>
-              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.continueListening))
+              navigate(
+                podcastLibraryBrowsePath(
+                  PODCAST_LIBRARY_SLUG.continueListening,
+                ),
+              )
             }
           >
             <PodcastLibraryTileLabel
@@ -58,7 +62,9 @@ export default function SearchPodcastsBrowse() {
         {subscribedPodcasts.length > 0 ? (
           <SearchBrowseTile
             onClick={() =>
-              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.yourPodcasts))
+              navigate(
+                podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.yourPodcasts),
+              )
             }
           >
             <PodcastLibraryTileLabel
@@ -70,7 +76,9 @@ export default function SearchPodcastsBrowse() {
         {bookmarkedEpisodes.length > 0 ? (
           <SearchBrowseTile
             onClick={() =>
-              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.yourEpisodes))
+              navigate(
+                podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.yourEpisodes),
+              )
             }
           >
             <PodcastLibraryTileLabel
@@ -82,7 +90,9 @@ export default function SearchPodcastsBrowse() {
         {newEpisodeRows.length > 0 ? (
           <SearchBrowseTile
             onClick={() =>
-              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.newEpisodes))
+              navigate(
+                podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.newEpisodes),
+              )
             }
           >
             <PodcastLibraryTileLabel
@@ -94,7 +104,11 @@ export default function SearchPodcastsBrowse() {
         {downloadedEpisodes.length > 0 ? (
           <SearchBrowseTile
             onClick={() =>
-              navigate(podcastLibraryBrowsePath(PODCAST_LIBRARY_SLUG.downloadedEpisodes))
+              navigate(
+                podcastLibraryBrowsePath(
+                  PODCAST_LIBRARY_SLUG.downloadedEpisodes,
+                ),
+              )
             }
           >
             <PodcastLibraryTileLabel
@@ -106,9 +120,7 @@ export default function SearchPodcastsBrowse() {
         {PODCAST_CATEGORIES.map((c) => (
           <SearchBrowseTile
             key={c.id}
-            onClick={() =>
-              navigate(`/search/browse/podcasts/category/${c.id}`)
-            }
+            onClick={() => navigate(`/search/browse/podcasts/category/${c.id}`)}
           >
             {c.label}
           </SearchBrowseTile>

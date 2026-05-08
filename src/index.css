@@ -136,6 +136,8 @@
   /* Search & Browse: fixed `SearchBrowseHeader` — overwritten on `/search` mount (measured height). */
   --search-header-offset: calc(var(--safe-area-inset-top) + 104px);
   --search-header-scroll-gap: var(--space-3);
+  /* Music / Podcasts / Radio pill switcher (`SearchBrowseContentSwitcher`) — Figma `button_md` ~60px. */
+  --search-browse-tab-switcher-height: var(--button-height-md);
   /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
   --z-chrome: 100;
   --z-mini-player: 110;

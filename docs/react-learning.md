@@ -116,6 +116,14 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Search browse content switcher — layout before paint + tab-only motion
+
+- **Problem:** A sliding thumb needs real **pixels** from the DOM (`left` / `width`). **Global** motion after mount (`useEffect([])`) plus **`ResizeObserver`** makes the thumb **animate again** when returning to Search (remount / layout nudge).
+- **Pattern:** **`useLayoutEffect`** measures and sets state **before** paint. **`useState`** holds `{ left, width }`. Turn **`thumbMotion` on only when `activeIndex` changes** after the first layout pass of that mount (`isFirstLayoutRef` + `prevActiveIndexRef`). Reset motion with **`transitionend`** + a **timeout fallback** so resize-only updates **snap**. Default CSS keeps **`transition: none`** on the thumb.
+- **Tutorial:** [`SearchBrowseContentSwitcher-thumb-layout-tutorial.md`](Tutorials/SearchBrowseContentSwitcher-thumb-layout-tutorial.md) — step-by-step. **Code:** `src/components/SearchBrowseContentSwitcher.jsx`.
+
+---
+
 ## How to use this file
 
 - When you learn something new with the AI or in docs, ask to **append a short section** here (or add it yourself).

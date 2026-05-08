@@ -12,7 +12,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-7);
   padding-top: var(--safe-area-inset-top);
   padding-bottom: var(--space-4);
   padding-left: var(--space-content-inline);
@@ -28,11 +28,10 @@
   flex-direction: row;
   align-items: center;
   gap: var(--space-3);
-  min-height: 48px;
+  min-height: var(--search-browse-tab-switcher-height);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-subtle);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-text) 10%, transparent);
   box-sizing: border-box;
 }
 
@@ -56,20 +55,31 @@
   background: transparent;
   color: var(--color-text);
   font: inherit;
-  font-size: 1rem;
-  line-height: 1.35;
+  font-size: 1.25rem;
+  line-height: 1.5;
 }
 
 .search-browse-header__input::placeholder {
-  color: var(--color-text-muted);
+  color: color-mix(in srgb, var(--color-text) 30%, transparent);
 }
 
 .search-browse-header__input:focus {
   outline: none;
 }
 
+/* WebKit / Blink: native search field shows its own clear control; we use `.search-browse-header__clear`. */
+.search-browse-header__input::-webkit-search-cancel-button,
+.search-browse-header__input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .search-browse-header__field-row:focus-within {
-  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border-subtle));
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 45%,
+    var(--color-border-subtle)
+  );
 }
 
 .search-browse-header__clear {
@@ -126,7 +136,11 @@
 }
 
 .search-browse-header__tab:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 35%, var(--color-border-subtle));
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 35%,
+    var(--color-border-subtle)
+  );
 }
 
 .search-browse-header__tab--active {

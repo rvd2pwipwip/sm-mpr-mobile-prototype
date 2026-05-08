@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SearchBrowseHeader from "../components/SearchBrowseHeader.jsx";
-import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
+import {
+  SearchBrowseTile,
+  SearchBrowseTileGrid,
+} from "../components/SearchBrowseTile.jsx";
 import { MUSIC_LINEUP, musicLineupLabel } from "../constants/musicLineup.js";
 import { getSearchBrowseTabFromPathname } from "../constants/searchBrowsePaths.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
@@ -46,10 +49,11 @@ export default function Search() {
 
   // After browser Back/Forward (new history entry under /search/*), reload field + results from `?q=`.
   useEffect(() => {
-    if (!location.pathname.startsWith("/search/music") &&
+    if (
+      !location.pathname.startsWith("/search/music") &&
       !location.pathname.startsWith("/search/podcasts") &&
-      !location.pathname.startsWith("/search/radio"))
-    {
+      !location.pathname.startsWith("/search/radio")
+    ) {
       return;
     }
     if (stackKeySeenRef.current === null) {
@@ -118,19 +122,22 @@ export default function Search() {
         ) : browseTab === "music" ? (
           <div className="content-inset search-page__body">
             <>
-              <p className="search-page__demo-note" style={{ marginTop: 0 }}>
+              {/* <p className="search-page__demo-note" style={{ marginTop: 0 }}>
                 <strong>Prototype only (not for production):</strong> with{" "}
                 <strong>Music</strong> selected, tap <strong>Music</strong> in the header
                 again to switch music lineup mode for demos.
-              </p>
-              <p className="search-page__lineup-badge" aria-live="polite">
+              </p> */}
+              {/* <p className="search-page__lineup-badge" aria-live="polite">
                 Music lineup: {musicLineupLabel(musicLineupMode)}
-              </p>
-              <h2 id={musicBrowseTitleId} className="search-page__browse-heading">
+              </p> */}
+              {/* <h2
+                id={musicBrowseTitleId}
+                className="search-page__browse-heading"
+              >
                 {musicLineupMode === MUSIC_LINEUP.limited
                   ? "Browse by genre"
                   : "Browse by vibe"}
-              </h2>
+              </h2> */}
               <SearchBrowseTileGrid labelId={musicBrowseTitleId}>
                 {musicLineupMode === MUSIC_LINEUP.limited
                   ? MUSIC_GENRES.map((g) => (

@@ -1,0 +1,117 @@
+/* Figma node `272:45769` — track + sliding accent thumb (width follows each segment). */
+
+.search-browse-content-switcher {
+  --search-browse-switcher-inset: 3px;
+  --search-browse-switcher-track: color-mix(
+    in srgb,
+    var(--color-text) 10%,
+    transparent
+  );
+  --search-browse-switcher-track-border: color-mix(
+    in srgb,
+    var(--color-text) 10%,
+    transparent
+  );
+  --search-browse-switcher-inactive-label: color-mix(
+    in srgb,
+    var(--color-text) 30%,
+    transparent
+  );
+
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  /* border: 3px solid var(--search-browse-switcher-track-border); */
+  border-radius: 999px;
+  background-color: var(--search-browse-switcher-track);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.search-browse-content-switcher__rail {
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--search-browse-switcher-inset);
+  min-width: 0;
+}
+
+.search-browse-content-switcher__thumb {
+  position: absolute;
+  top: var(--search-browse-switcher-inset);
+  bottom: var(--search-browse-switcher-inset);
+  left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: var(--color-accent);
+  /* No transition until first paint — see `docs/Tutorials/SearchBrowseContentSwitcher-thumb-layout-tutorial.md`. */
+  transition: none;
+  pointer-events: none;
+}
+
+.search-browse-content-switcher--thumb-motion .search-browse-content-switcher__thumb {
+  transition:
+    left 0.22s ease,
+    width 0.22s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-browse-content-switcher--thumb-motion .search-browse-content-switcher__thumb {
+    transition: none;
+  }
+}
+
+.search-browse-content-switcher__segments {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: var(--search-browse-tab-switcher-height);
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.search-browse-content-switcher__segment {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  /* Figma `button_md` horizontal padding ~26px */
+  padding: 15px 26px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  font-size: var(--font-size-button);
+  letter-spacing: var(--letter-spacing-button);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.search-browse-content-switcher__label {
+  color: var(--search-browse-switcher-inactive-label);
+  white-space: nowrap;
+}
+
+.search-browse-content-switcher__segment--active
+  .search-browse-content-switcher__label,
+.search-browse-content-switcher__label--active {
+  color: var(--color-on-accent);
+}
+
+.search-browse-content-switcher__segment:focus {
+  outline: none;
+}
+
+.search-browse-content-switcher__segment:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 12px;
+}

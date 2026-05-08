@@ -1,16 +1,79 @@
 import { useLayoutEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import SearchBrowseContentSwitcher from "./SearchBrowseContentSwitcher.jsx";
 import {
+  BROWSE_TABS,
   SEARCH_BROWSE,
   getSearchBrowseTabFromPathname,
 } from "../constants/searchBrowsePaths.js";
 import "./SearchBrowseHeader.css";
 
-export const BROWSE_TABS = [
-  { id: "music", label: "Music" },
-  { id: "podcasts", label: "Podcasts" },
-  { id: "radio", label: "Radio" },
-];
+/** Set true to restore the three separate pill `NavLink` tabs (pre-ContentSwitcher). */
+export const USE_LEGACY_BROWSE_TAB_PILLS = false;
+
+export { BROWSE_TABS };
+
+function SearchBrowseLegacyTabPills({ onMusicLineupToggle }) {
+  const location = useLocation();
+  const browseTab = getSearchBrowseTabFromPathname(location.pathname);
+
+  return (
+    <ul
+      className="search-browse-header__tabs"
+      role="tablist"
+      aria-label="Browse content type"
+    >
+      {BROWSE_TABS.map((tab) => {
+        const active = browseTab === tab.id;
+        const to = SEARCH_BROWSE[tab.id];
+        if (tab.id === "music") {
+          return (
+            <li key={tab.id} className="search-browse-header__tab-item">
+              <NavLink
+                to={to}
+                end
+                role="tab"
+                aria-selected={active}
+                className={({ isActive }) =>
+                  [
+                    "search-browse-header__tab",
+                    isActive ? "search-browse-header__tab--active" : "",
+                  ].join(" ")
+                }
+                onClick={(e) => {
+                  if (location.pathname === SEARCH_BROWSE.music) {
+                    e.preventDefault();
+                    onMusicLineupToggle();
+                  }
+                }}
+              >
+                {tab.label}
+              </NavLink>
+            </li>
+          );
+        }
+        return (
+          <li key={tab.id} className="search-browse-header__tab-item">
+            <NavLink
+              to={to}
+              end
+              role="tab"
+              aria-selected={active}
+              className={({ isActive }) =>
+                [
+                  "search-browse-header__tab",
+                  isActive ? "search-browse-header__tab--active" : "",
+                ].join(" ")
+              }
+            >
+              {tab.label}
+            </NavLink>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 /**
  * Publishes measured header height to `--search-header-offset` on `<html>` (see `index.css`).
@@ -55,8 +118,6 @@ export default function SearchBrowseHeader({
   onMusicLineupToggle,
   showBrowseTabs,
 }) {
-  const location = useLocation();
-  const browseTab = getSearchBrowseTabFromPathname(location.pathname);
   const headerRef = useSearchBrowseHeaderOffset();
   const hasQuery = query.length > 0;
   const showClear = hasQuery;
@@ -64,9 +125,6 @@ export default function SearchBrowseHeader({
   return (
     <header ref={headerRef} className="search-browse-header">
       <div className="search-browse-header__field-row">
-        <span className="search-browse-header__field-icon" aria-hidden={true}>
-          <img src="/search.svg" alt="" width={22} height={22} />
-        </span>
         <input
           id="search-browse-query"
           type="search"
@@ -75,11 +133,16 @@ export default function SearchBrowseHeader({
           enterKeyHint="search"
           autoComplete="off"
           className="search-browse-header__input"
-          placeholder="Search…"
+          placeholder="Search music, podcasts or radio"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           aria-label="Search catalog"
         />
+        {!showClear && (
+          <span className="search-browse-header__field-icon" aria-hidden={true}>
+            <img src="/search.svg" alt="" width={30} height={30} />
+          </span>
+        )}
         {showClear ? (
           <button
             type="button"
@@ -93,56 +156,15 @@ export default function SearchBrowseHeader({
       </div>
 
       {showBrowseTabs ? (
-        <ul className="search-browse-header__tabs" role="tablist" aria-label="Browse content type">
-          {BROWSE_TABS.map((tab) => {
-            const active = browseTab === tab.id;
-            const to = SEARCH_BROWSE[tab.id];
-            if (tab.id === "music") {
-              return (
-                <li key={tab.id} className="search-browse-header__tab-item">
-                  <NavLink
-                    to={to}
-                    end
-                    role="tab"
-                    aria-selected={active}
-                    className={({ isActive }) =>
-                      [
-                        "search-browse-header__tab",
-                        isActive ? "search-browse-header__tab--active" : "",
-                      ].join(" ")
-                    }
-                    onClick={(e) => {
-                      if (location.pathname === SEARCH_BROWSE.music) {
-                        e.preventDefault();
-                        onMusicLineupToggle();
-                      }
-                    }}
-                  >
-                    {tab.label}
-                  </NavLink>
-                </li>
-              );
-            }
-            return (
-              <li key={tab.id} className="search-browse-header__tab-item">
-                <NavLink
-                  to={to}
-                  end
-                  role="tab"
-                  aria-selected={active}
-                  className={({ isActive }) =>
-                    [
-                      "search-browse-header__tab",
-                      isActive ? "search-browse-header__tab--active" : "",
-                    ].join(" ")
-                  }
-                >
-                  {tab.label}
-                </NavLink>
-              </li>
-            );
-          })}
-        </ul>
+        USE_LEGACY_BROWSE_TAB_PILLS ? (
+          <SearchBrowseLegacyTabPills
+            onMusicLineupToggle={onMusicLineupToggle}
+          />
+        ) : (
+          <SearchBrowseContentSwitcher
+            onMusicLineupToggle={onMusicLineupToggle}
+          />
+        )
       ) : null}
     </header>
   );

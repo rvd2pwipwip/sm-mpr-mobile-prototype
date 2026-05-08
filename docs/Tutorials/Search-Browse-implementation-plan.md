@@ -49,10 +49,10 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 
 ## Locked product rules (from Integration notes)
 
-Implement these verbatim:
+Implement these (see **Search-story** Integration notes for nuance on **Reset**):
 
 1. **First character typed** → replace **entire** Browse UI **and** **Music / Podcasts / Radio** tabs; show **only** search field (hugging height) + result swimlanes (**Channels**, **Artists**, **Tags**, **Podcasts**, **Episodes**, **Radio** — only populated lanes). Result categories **≠** content-type tabs; **do not** filter results by the browse tab the user was on.
-2. **Reset to Browse** (empty query, **Music** selected, territory tiles): **Clear** control; **re-tap Search** in **BottomNav** while already on `/search`; **navigate away** to another main tab **then back** to `/search`.
+2. **Reset to Browse** depends on **how** the user leaves search mode (see **Phase 7**): **Clear** keeps the current **Music / Podcasts / Radio** tab and strips **`?q=`** only; **BottomNav Search** (**`to="/search/music"`**) and **leave tab + tap Search again** always land on **Music** with an empty field (**`/search`** redirects to **`/search/music`**).
 3. **Header** height is **adaptive**; **remeasure** and update **scroll padding** when switching browse ↔ search mode (same philosophy as **`HomeHeader`** + **`--home-header-offset`** on Home—consider a **`--search-header-offset`** or generic `--top-fixed-chrome-offset` set from `ResizeObserver` / `useLayoutEffect`).
 4. **Keyboard** **overlaps** bottom chrome (miniplayer, visual ads, tabs)—no requirement to pin footer above keyboard in v1.
 5. **Radio** Browse targets **full** geo + format story (Near You, International hierarchy, News/Talk/Sports/Public/Religion)—align **`radioStations.js`** over time; staged data is OK if UX structure is right (**`figma-nodes.md`** radio section + **Search-story**).
@@ -69,7 +69,7 @@ Implement these verbatim:
 | **ScreenHeader** | `ScreenHeader.jsx` | **Search More** deep screens (back, title =lane name) |
 | **Shell + scroll** | `app-shell`, `app-shell--footer-fixed`, `app-shell-footer-scroll`, `--footer-stack-scroll-padding` | Same as **Search.jsx** stub, **ListenAgainMore**, **SwimlaneMore** |
 | **Podcast library stubs** | `PodcastUserStateContext` | Browse: **Your Podcasts**, bookmarks, downloads, **continue listening** derivation |
-| **Routes** | `App.jsx` | **`/search`**, **`/search/browse/music/category/:id`**, **`/search/browse/music/vibe/:vibeId`**, **`/search/browse/music/vibe/.../tag/:tagSlug`**, **`/search/more/tags`**; … |
+| **Routes** | `App.jsx` | **`/search` → `/search/music`**, **`/search/music` \| `podcasts` \| `radio`**, browse trees under **`/search/browse/...`**, **`/search/more/catalog`**, **`/search/more/tags`**, … |
 
 ---
 
@@ -97,7 +97,7 @@ Implement these verbatim:
 1. **`main.app-shell.app-shell--footer-fixed.search-page`** + **`search-page-scroll`** with **`padding-bottom: var(--footer-stack-scroll-padding)`** and **`padding-top: calc(var(--search-header-offset) + var(--search-header-scroll-gap))`** (**`index.css`**).
 2. **`SearchBrowseHeader`** (`src/components/SearchBrowseHeader.jsx` + `.css`) — **not** `HomeHeader`: frosted fixed bar, **`/search.svg`** in field, clear control when non-empty, tabs when **`showBrowseTabs`**.
 3. **`useSearchBrowseHeaderOffset`** (in same file) — **`ResizeObserver`** publishes **`--search-header-offset`** on **`<html>`**; **removeProperty** on unmount (mirrors **`HomeHeader`**).
-4. **Search.jsx** — **`query`**, **`browseTab`**; **`showBrowseTabs`** = **`query.trim().length === 0`**; **search mode** = non-empty trim → tabs hidden, placeholder body for Phase 5. **Clear** (and empty trimmed query) → **`browseTab`** resets to **`music`** per Integration notes.
+4. **Search.jsx** — **`query`**, **`browseTab`** from pathname; **`showBrowseTabs`** = **`query.trim().length === 0`**; **search mode** = non-empty trim → tabs hidden. **Clear** → empty field, browse again, **same** content-type route (**`/search/music`**, **`/search/podcasts`**, **`/search/radio`**); strips **`?q=`** only (does **not** force Music). Debounced query is mirrored to **`?q=`** so **Back** from More / detail restores results.
 5. **`BROWSE_TABS`** exported from **`SearchBrowseHeader`** for a single tab list.
 
 **Deliverable:** Browse body placeholders per tab; header height remeasures when switching browse ↔ search.
@@ -189,35 +189,32 @@ Implement these verbatim:
 - Reuse **`ContentSwimlane`** per populated category: **Channels, Artists, Tags, Podcasts, Episodes, Radio**.
 - **Episode** swimlane: use **`EpisodeCard`** or list row; cap visible count + **More** when over limit (story).
 
-**Deliverable:** Typing filters catalog; clearing returns to Browse (Phase 1 rules).
+**Deliverable:** Typing filters catalog; clearing returns to Browse on the **preserved** content-type tab (strip **`?q=`** only).
 
 ---
 
-## Phase 6 — Search More + navigation
+## Phase 6 — Search More + navigation ✅ (prototype)
 
 **Goal:** **More** on each result lane → vertical grid like **`SwimlaneMore`** / **`23:17518`**; **episodes** **single-column** where story says.
 
 **Shipped (prototype slice)**
 
 - **`SearchTagsMore.jsx`** at **`/search/more/tags?q=`** — 2-col **`MusicChannelCard`** grid for all channels sharing a **vibe tag** ( **`getMusicChannelsWithTag`** in **`musicChannels.js`**). **Channel Info** `.music-info__tag` navigates here (equivalent to Search → **Tags** **More**).
+- **`SearchCatalogMore.jsx`** at **`/search/more/catalog?lane=&q=`** — one route for **Channels, Artists, Tags, Podcasts, Episodes, Radio** **More** grids; **`lane`** picks the list. **`q`** is the same search string as on **`/search/{music|podcasts|radio}?q=`** so the stack stays consistent.
 
-**Routes (remaining)**
-
-- `/search/more/channels`?query=… **or** pass **`location.state`** from Search (simpler prototype: **state** only; **URL** optional).
-
-**Deliverable:** More screens show full filtered lists; **back** returns to Search results (browse or search mode preserved appropriately).
+**Deliverable:** More screens show full filtered lists; **Back** (**`navigate(-1)`**) pops to the prior history entry — typically **`/search/...?q=...`**, so the search field + swimlanes return without relying on ephemeral **`location.state`**.
 
 ---
 
-## Phase 7 — Reset + BottomNav integration
+## Phase 7 — Reset + BottomNav integration ✅ (prototype)
 
-**Goal:** Meet **Integration notes** reset triggers.
+**Goal:** Document **implemented** reset behavior (**`Search.jsx`** + **`BottomNav.jsx`**); matches **`docs/Stories/Search-story.md`** Integration notes.
 
-1. **Clear** button in field → `query ''`, browse mode, **`music`** tab.
-2. **`useLocation`** / **`useEffect`**: when pathname goes **`/search`** from a **non-search** main tab, reset (optional: preserve is OK—story says **coming back** resets; **implement reset on entry** from Home/Info).
-3. **Re-tap Search while active:** **`NavLink`** alone will **not** fire navigation if already on `/search`. Add **`onClick`** on Search **`NavLink`**: if `location.pathname === '/search'`, call **`resetSearchBrowse()`**.
+1. **Clear** (header control or empty field) → **`query` ''**, **`?q=`** removed, browse mode (**tabs visible**); pathname stays **`/search/music`** | **`/search/podcasts`** | **`/search/radio`** — **preserve** whichever tab the user had.
+2. **BottomNav Search:** **`NavLink`** **`to="/search/music"`** (no **`?q=`**). From **Home**, **Info**, or any non-Search route, tap **Search** → **Music**, empty field (**`/search`** index route **redirects** to **`/search/music`** — there is **no** long-lived **`/search`** screen). Returning from another main tab does **not** need a **`useEffect`** reset: mounting **`/search/music`** plus missing **`q`** yields browse.
+3. **Re-tap Search while Search is active:** **`to`** is always **`/search/music`** (path-only — no search string). Examples: **`/search/podcasts?q=foo` → `/search/music`** clears query **and** switches to Music (navigation happens because path or search differs from target). **`/search/music?q=foo` → `/search/music`** drops **`q`** (**`replace`** is not required on BottomNav — default **push** is fine for the prototype). If the user is already on **`/search/music`** with no **`q`** and taps **Search**, **React Router** treats it as **same destination** → **no** navigation; UI is already reset. **No** **`onClick`**, **`pathname === '/search'`**, or **`resetSearchBrowse()``** helper — not applicable with **`/search` → `/search/music`** routing.
 
-**Deliverable:** All three reset paths work; no stale search state stuck after tab churn.
+**Deliverable:** Clear vs **BottomNav Search** behaviors are distinct and predictable; **URL** carries **`?q=`** while searching so **Back** from deeper screens still works together with **Phase 6**.
 
 ---
 
@@ -231,7 +228,7 @@ Implement these verbatim:
   - [ ] Radio hierarchy navigable through at least one full path to stations.
   - [ ] Search replaces browse chrome; swimlanes include **Tags**; Artists shows when query hits stub artists.
   - [ ] More grids + back behavior correct.
-  - [ ] Reset: clear, re-tap Search, leave tab and return.
+  - [ ] Reset: **Clear** restores browse with **same** content-type tab; **BottomNav Search** / leave tab + tap Search restores **Music** + empty query.
   - [ ] Footer stack + keyboard overlap acceptable; miniplayer still usable after dismiss keyboard.
 
 ---
@@ -243,4 +240,4 @@ Implement these verbatim:
 
 ---
 
-*Last updated: 2026-05-07* — **Phase 4** expanded: radio **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** layout (popular swimlane + geo pills), mock path **North America → Canada → Alberta → cities**; companion [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.
+*Last updated: 2026-05-08* — **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. Earlier **Phase 4** expansion: radio **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** layout + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.

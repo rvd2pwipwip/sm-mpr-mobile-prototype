@@ -5,6 +5,13 @@ export const SEARCH_BROWSE = {
   radio: "/search/radio",
 };
 
+/** Labels for the Music / Podcasts / Radio strip (maps to {@link SEARCH_BROWSE}). */
+export const BROWSE_TABS = [
+  { id: "music", label: "Music" },
+  { id: "podcasts", label: "Podcasts" },
+  { id: "radio", label: "Radio" },
+];
+
 /** Derive tab id from the pathname (only `/search` tree; defaults to music). */
 export function getSearchBrowseTabFromPathname(pathname) {
   if (pathname.startsWith("/search/podcasts")) return "podcasts";

@@ -15,9 +15,9 @@ export default function SearchRadioBrowse() {
 
   return (
     <div className="content-inset search-page__body">
-      <h2 id={headingId} className="search-page__browse-heading">
+      {/* <h2 id={headingId} className="search-page__browse-heading">
         Browse radio
-      </h2>
+      </h2> */}
       <SearchBrowseTileGrid labelId={headingId}>
         {RADIO_STATION_CATEGORIES.map((cat) => {
           const navigateTo =
