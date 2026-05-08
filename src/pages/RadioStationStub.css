@@ -1,0 +1,40 @@
+.radio-station-stub__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(var(--screen-header-height) + var(--space-4)) var(--space-content-inline)
+    var(--footer-stack-scroll-padding);
+  box-sizing: border-box;
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+}
+
+.radio-station-stub__thumb-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.radio-station-stub__thumb {
+  width: min(100%, 280px);
+  aspect-ratio: 1;
+  border-radius: var(--space-3);
+  object-fit: cover;
+}
+
+.radio-station-stub__meta {
+  margin: 0 0 var(--space-3);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.radio-station-stub__desc {
+  margin: 0 0 var(--space-6);
+  line-height: 1.45;
+  color: var(--color-text);
+}
+
+.radio-station-stub__play {
+  width: 100%;
+}

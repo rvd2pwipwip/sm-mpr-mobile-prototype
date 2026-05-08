@@ -124,6 +124,21 @@ export function PlaybackProvider({ children }) {
     });
   }, []);
 
+  const startRadioStationPreview = useCallback(({ title, subtitle, thumbnail }) => {
+    setSession({
+      active: true,
+      variant: "radio",
+      channelId: null,
+      podcastId: null,
+      podcastEpisodeId: null,
+      thumbnail: thumbnail ?? "",
+      title: title ?? "Radio",
+      subtitle: subtitle ?? "",
+      isPaused: false,
+      fullPlayerPath: null,
+    });
+  }, []);
+
   const startRadioDemo = useCallback(() => {
     setSession({
       active: true,
@@ -152,6 +167,7 @@ export function PlaybackProvider({ children }) {
       upsertMusicSession,
       upsertPodcastSession,
       startPodcastDemo,
+      startRadioStationPreview,
       startRadioDemo,
       clearSession,
     }),
@@ -163,6 +179,7 @@ export function PlaybackProvider({ children }) {
       upsertMusicSession,
       upsertPodcastSession,
       startPodcastDemo,
+      startRadioStationPreview,
       startRadioDemo,
       clearSession,
     ],

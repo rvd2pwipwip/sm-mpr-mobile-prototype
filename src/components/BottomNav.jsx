@@ -46,7 +46,9 @@ export default function BottomNav({ className = "" }) {
               location.pathname.startsWith("/music"));
 
           const searchStackActive =
-            id === "search" && location.pathname.startsWith("/search");
+            id === "search" &&
+            (location.pathname.startsWith("/search") ||
+              location.pathname.startsWith("/radio"));
 
           return (
             <NavLink

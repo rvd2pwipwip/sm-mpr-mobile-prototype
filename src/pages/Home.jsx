@@ -9,14 +9,13 @@ import HomeHeader from "../components/HomeHeader";
 import ListenAgainCard from "../components/ListenAgainCard";
 import SwimlaneBannerAd from "../components/SwimlaneBannerAd";
 import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
+import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { useUserType } from "../context/UserTypeContext";
 import { showVisualAds } from "../utils/showVisualAds";
 import MusicChannelCard from "../components/MusicChannelCard";
 import PodcastCard from "../components/PodcastCard";
 import RadioStationCard from "../components/RadioStationCard";
-
-const LANE_SIZE = 8;
 
 /** Home: fixed `HomeHeader` (top chrome); `home-body-scroll` is the main column so lanes scroll under the header. */
 export default function Home() {
@@ -44,6 +43,7 @@ export default function Home() {
           {listenAgainItems.length > 0 ? (
             <ContentSwimlane
               title="Listen again"
+              alwaysShowMore
               onMore={() => navigate("/more/listen-again")}
             >
               {listenAgainItems.map((item) => (
@@ -68,9 +68,10 @@ export default function Home() {
 
           <ContentSwimlane
             title="Music"
+            sourceCount={MUSIC_CHANNELS.length}
             onMore={() => navigate("/more/music")}
           >
-            {MUSIC_CHANNELS.slice(0, LANE_SIZE).map((channel) => (
+            {MUSIC_CHANNELS.slice(0, SWIMLANE_CARD_MAX).map((channel) => (
               <MusicChannelCard
                 key={channel.id}
                 channel={channel}
@@ -81,9 +82,10 @@ export default function Home() {
 
           <ContentSwimlane
             title="Podcasts"
+            sourceCount={PODCASTS.length}
             onMore={() => navigate("/more/podcasts")}
           >
-            {PODCASTS.slice(0, LANE_SIZE).map((podcast) => (
+            {PODCASTS.slice(0, SWIMLANE_CARD_MAX).map((podcast) => (
               <PodcastCard
                 key={podcast.id}
                 podcast={podcast}
@@ -96,10 +98,15 @@ export default function Home() {
           </div>
           <ContentSwimlane
             title="Radio"
+            sourceCount={RADIO_STATIONS.length}
             onMore={() => navigate("/more/radio")}
           >
-            {RADIO_STATIONS.slice(0, LANE_SIZE).map((station) => (
-              <RadioStationCard key={station.id} station={station} />
+            {RADIO_STATIONS.slice(0, SWIMLANE_CARD_MAX).map((station) => (
+              <RadioStationCard
+                key={station.id}
+                station={station}
+                onSelect={() => navigate(`/radio/${station.id}`)}
+              />
             ))}
           </ContentSwimlane>
         </div>

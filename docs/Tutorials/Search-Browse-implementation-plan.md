@@ -6,6 +6,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 
 - Story + **Integration notes:** [`docs/Stories/Search-story.md`](../Stories/Search-story.md)
 - Podcasts browse detail (conditional rows, card sizing): [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md), [`docs/Tutorials/Podcasts-implementation-plan.md`](Podcasts-implementation-plan.md) (Phase 7)
+- **Radio Browse (detailed):** [`docs/Tutorials/Radio-Browse-implementation-plan.md`](Radio-Browse-implementation-plan.md)
 - Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
 - Living repo plan: [`docs/plan.md`](../plan.md) — update when this slice ships
 - Layout patterns: [`docs/react-learning.md`](../react-learning.md) (swimlanes, BottomNav), project rules in `.cursor/rules/stingray-music-prototype.mdc`
@@ -21,7 +22,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 
 | Source | What it gives you |
 |--------|-------------------|
-| **`docs/figma-nodes.md`** | Canonical **screen** URLs for Search & Browse **150+** / **1000+**, **Search results**, **Subfilter grid**, **View More grid**; frame size **460×990** |
+| **`docs/figma-nodes.md`** | Canonical **screen** URLs for Search & Browse **150+** / **1000+**, **radio** browse + **International** drill-down, **Search results**, **Subfilter grid**, **View More grid**; frame size **460×990** |
 | **`docs/Stories/Search-story.md`** | Narrative + **locked** browse vs search behavior, reset rules, header modes, keyboard/footer, full radio IA |
 | **Figma MCP** (`get_design_context` / screenshot) | Typography, spacing, tab/search field specs—use when building each phase; MCP output is **reference**, map to **`index.css`** tokens |
 
@@ -39,6 +40,9 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 | Subfilter / deep browse grid | `49:332563` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=49-332563) | Reuse for music drill-down tiles |
 | View More grid (vertical 2-col) | `23:17518` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-17518) | Align **Search result “More”** with **SwimlaneMore** patterns |
 | Browse / Podcasts body | `19805:39266` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19805-39266) | Conditional rows + category grid (~175px cards, **30px** gap, **`--space-content-inline`**) |
+| Search & Browse, **radio** | `19868:32686` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19868-32686) | Top-level radio tiles (Near You, International, formats) |
+| **Browse Radio International** | `19676:35051` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19676-35051) | Continent chooser; continent artwork may mirror [InCar continent graphics](https://www.figma.com/design/sMhTukUlNNedadBSyRnOq5/SM-HTML-InCar-MPR?node-id=13515-37235) (`13515:37235`) |
+| **Browse International Subregion** | `19871:33556` — [link](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33556) | **Combo layout:** horizontal **Popular in this region** swimlane + **pill** buttons for the next geo level(s) |
 | Shared components | `19777:32024` Miniplayer, `19586:136643` Episode Card | Episode **single-column** grid in More where story requires |
 
 ---
@@ -143,13 +147,23 @@ Implement these verbatim:
 
 ## Phase 4 — Radio Browse (full IA)
 
-**Goal:** **Search-story** radio hierarchy, not a single flat “International” list as the final UX.
+**Goal:** **Search-story** radio hierarchy (geo + format), with **International** screens that match **Browse International Subregion** — not a flat “International” list as the final UX.
 
-- **Top level:** tiles for **Near You**, **International**, **News**, **Talk**, **Sports**, **Public**, **Religion** (order per Figma if different).
-- **International:** drill **continent → country → subdivision → city** (as deep as mock data supports). Reuse **`INTERNATIONAL_CONTINENTS_PLANNED`**; extend **`radioStations.js`** with nested structure or separate `radioBrowseTree.js` that resolves to **`RADIO_STATIONS`** or future leaf lists.
-- **Near You / format rows:** station grids sorted with deterministic “popularity” mock order.
+**Figma (mobile):** **`19868:32686`** (radio top level), **`19676:35051`** (International / continents), **`19871:33556`** (subregion: popular swimlane + geo pills). **Line-by-line plan:** [`Radio-Browse-implementation-plan.md`](Radio-Browse-implementation-plan.md).
 
-**Deliverable:** Radio tab browses through the hierarchy; station tiles open **radio** detail / tune flow when those routes exist (stub **Info** or mirror music **Channel Info** pattern).
+**Layouts**
+
+- **Top level (`/search/radio`):** tiles **Near You**, **International**, **News**, **Talk**, **Sports**, **Public**, **Religion** — order per **`19868:32686`**.
+- **International — continent list:** tile/grid of continents (art/icons: optional export from InCar **`13515:37235`** — see Radio tutorial).
+- **International — every geo level after a continent:** **combined screen** — (1) **`ContentSwimlane`** (or equivalent) with a **sample of the most popular** stations **in the current region**; (2) **pill-shaped** controls for **child geo** (countries, provinces, cities, …) when children exist. No children at the deepest leaf → swimlane can still show popular stations; full catalog can be a **More** grid or vertical list as a follow-up.
+- **Near You & format categories:** station surfacing sorted with deterministic **popularity** mock order (same spirit as subregion swimlane).
+
+**Mock data (prototype v1)**
+
+- Full **International** tree is **not** required on day one. Implement **one** reference path only: **North America → Canada → Alberta → cities** (plus stations tagged to that path for the swimlane). Other continents/countries may render as **disabled**, **“coming soon”**, or omitted until data exists — decide in implementation; document the choice in the Radio tutorial.
+- **`radioStations.js`** / **`RADIO_STATIONS`** may stay the flat catalog for Home & Phase 5 search; prefer a **`radioBrowseTree.js`** (or similar) for geo hierarchy + **`intlPopularityRank`** (or equivalent) for “popular in region.”
+
+**Deliverable:** User can open **Radio** on Search, reach **International**, drill **North America → Canada → Alberta → city**, see **popular swimlane + pills** at each step data supports; station taps go to **radio** detail / tune **stub** when that route exists.
 
 ---
 
@@ -229,4 +243,4 @@ Implement these verbatim:
 
 ---
 
-*Last updated: 2026-05-06* — **Phase 3** podcasts browse: library + catalog **tiles** + **`SearchPodcastsLibrary`**; **Search** paths **`/search/music`** | **`/podcasts`** | **`/radio`**; **Phase 2** music browse; **Tags** + **`SearchTagsMore`**.
+*Last updated: 2026-05-07* — **Phase 4** expanded: radio **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** layout (popular swimlane + geo pills), mock path **North America → Canada → Alberta → cities**; companion [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.

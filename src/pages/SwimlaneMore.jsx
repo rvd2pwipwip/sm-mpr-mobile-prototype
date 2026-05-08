@@ -36,10 +36,13 @@ const CATEGORIES = {
   },
   radio: {
     title: "Radio",
-    render: () =>
+    render: (navigate) =>
       RADIO_STATIONS.map((station) => (
         <li key={station.id} className="swimlane-more__cell">
-          <RadioStationCard station={station} />
+          <RadioStationCard
+            station={station}
+            onSelect={() => navigate(`/radio/${station.id}`)}
+          />
         </li>
       )),
   },

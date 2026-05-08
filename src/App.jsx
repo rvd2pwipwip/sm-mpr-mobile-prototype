@@ -16,12 +16,16 @@ import MusicChannelInfo from "./pages/MusicChannelInfo";
 import MusicPlayer from "./pages/MusicPlayer";
 import PodcastInfo from "./pages/PodcastInfo";
 import PodcastPlayer from "./pages/PodcastPlayer";
+import RadioStationStub from "./pages/RadioStationStub";
 import Search from "./pages/Search";
 import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels";
 import SearchMusicCategory from "./pages/SearchMusicCategory";
 import SearchMusicVibe from "./pages/SearchMusicVibe";
 import SearchPodcastsCategory from "./pages/SearchPodcastsCategory";
 import SearchPodcastsLibrary from "./pages/SearchPodcastsLibrary";
+import SearchRadioGeoMore from "./pages/SearchRadioGeoMore";
+import SearchRadioInternationalStack from "./pages/SearchRadioInternationalStack";
+import SearchRadioStationGrid from "./pages/SearchRadioStationGrid";
 import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -68,8 +72,13 @@ function AppRoutes() {
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
+        <Route path="/radio/:stationId" element={<RadioStationStub />} />
+        <Route path="/search/browse/radio/international/*" element={<SearchRadioInternationalStack />} />
+        <Route path="/search/browse/radio/near-you" element={<SearchRadioStationGrid />} />
+        <Route path="/search/browse/radio/format/:formatId" element={<SearchRadioStationGrid />} />
         <Route path="/search/browse/podcasts/library/:librarySection" element={<SearchPodcastsLibrary />} />
         <Route path="/search/browse/podcasts/category/:categoryId" element={<SearchPodcastsCategory />} />
+        <Route path="/search/more/radio-geo/*" element={<SearchRadioGeoMore />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
         <Route path="/search/music" element={<Search />} />
         <Route path="/search/podcasts" element={<Search />} />

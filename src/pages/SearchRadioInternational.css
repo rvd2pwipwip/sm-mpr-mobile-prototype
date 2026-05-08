@@ -1,0 +1,17 @@
+.search-radio-intl__subheading {
+  margin-top: 0;
+}
+
+.search-radio-intl__scroll .content-swimlane {
+  margin-bottom: 0;
+}
+
+/* Leaf geo (e.g. city): 2-col grid only — same pattern as Search → Radio geo More. */
+.search-radio-intl__leaf-grid {
+  padding-top: var(--space-2);
+}
+
+.search-radio-intl__empty {
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
+}

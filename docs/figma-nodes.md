@@ -42,6 +42,10 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [Listen again — More (Clear in header)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19801-39250&t=NvKDs20ElRoIwSUC-0)
 - [Search & Browse, 150+ channels](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=270-45400&t=NvKDs20ElRoIwSUC-0)
 - [Search & Browse, 1000+ channels](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19553-131521&t=NvKDs20ElRoIwSUC-0)
+- [Search & Browse, radio](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19868-32686&t=RTnR7veKdkyVrhHy-4)
+- [Browse Radio International](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19676-35051&t=RTnR7veKdkyVrhHy-4)
+- [Browse International Subregion](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33556&t=RTnR7veKdkyVrhHy-4) — **Popular in region** swimlane + **pill** nav for the next geo level(s)
+- [Browse International — Alberta / cities drill (reference)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33453&t=RTnR7veKdkyVrhHy-4)
 - [App Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7-3024&t=NvKDs20ElRoIwSUC-0)
 - [Music Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013&t=NvKDs20ElRoIwSUC-0)
 - [Channel Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067&t=NvKDs20ElRoIwSUC-0)
@@ -53,10 +57,14 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [Subfilter grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=49-332563&t=NvKDs20ElRoIwSUC-0)
 - [Search results](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534&t=NvKDs20ElRoIwSUC-0) — **Note:** frame shows **Channels, Artists, Podcasts, Episodes, Radio** swimlanes only. Product adds a **Tags** swimlane (vibe tag matches); see **`docs/Stories/Search-story.md`** Integration notes and **`SearchTagsMore`** route.
 
-## Radio mock data — International (TODO)
+**Continent artwork (in-car file — export reference):** [SM HTML InCar MPR — continent graphics](https://www.figma.com/design/sMhTukUlNNedadBSyRnOq5/SM-HTML-InCar-MPR?node-id=13515-37235&t=bqIo4nvDeI0FC2UX-4) (`13515:37235`). Use for SVG/PNG exports on **Browse Radio International** tiles if matching in-car; placeholders are OK for the prototype.
 
-Prototype catalog: `src/data/radioStations.js`.
+## Radio mock data — International
 
-**Product target for Search & Browse (radio):** full hierarchy and format tiles per **`docs/Stories/Search-story.md`** (Near You, International with continent → country → subdivisions → …, plus News / Talk / Sports / Public / Religion). **Implementation** may still stage mock data (e.g. flat lists) before the catalog matches the story; **`Search-story` + Integration notes** override any older “ship flat International only” shortcut as the UX goal.
+**Implementation plan:** [`docs/Tutorials/Radio-Browse-implementation-plan.md`](Tutorials/Radio-Browse-implementation-plan.md).
 
-**Reference:** International eventually nests under **continents** (Africa, Asia, Australasia, Central America, Europe, North America, South America), then **countries**, **regions**, and **cities**. Refactor mock data (and routes) to `continent → … → city` instead of a single flat list when building that UX. The repo exports `INTERNATIONAL_CONTINENTS_PLANNED` as a reminder; it is not wired into `RADIO_STATIONS` yet.
+Prototype catalog: `src/data/radioStations.js` (flat rows for Home / search today). **Browse** should add a small **geo tree** module — **v1 mock path only:** **International → North America → Canada → Alberta → cities** (see **Browse International Subregion** `19871:33556` and deep-drill reference frame `19871:33453`).
+
+**UX:** At each **International** geo level (after picking a continent), the screen shows **both** (1) a **horizontal swimlane** of **popular** stations in the **current** region and (2) **pill** buttons for **child** regions when they exist — not “pills only” or “grid only.”
+
+**Reference:** Other continents eventually mirror the same pattern (`INTERNATIONAL_CONTINENTS_PLANNED`). Until expanded, stub UI or omit; **Search-story** + the Radio tutorial define acceptance for the **Canada / Alberta** path.

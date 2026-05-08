@@ -1,0 +1,4 @@
+/* Leaf radio category: 2-col grid spacing under ScreenHeader (international city leaf parity). */
+.search-radio-station-grid__grid {
+  padding-top: var(--space-2);
+}

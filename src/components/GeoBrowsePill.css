@@ -1,0 +1,30 @@
+.geo-browse-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-inline: var(--space-content-inline);
+  padding-block: var(--space-5) var(--space-6);
+  box-sizing: border-box;
+}
+
+.geo-browse-pill {
+  appearance: none;
+  margin: 0;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-text) 22%, transparent);
+  background: var(--color-bg2);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: center;
+}
+
+.geo-browse-pill:focus-visible {
+  outline: 2px solid var(--color-accent2);
+  outline-offset: 2px;
+}

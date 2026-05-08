@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SearchBrowseHeader, {
-  BROWSE_TABS,
-} from "../components/SearchBrowseHeader.jsx";
+import SearchBrowseHeader from "../components/SearchBrowseHeader.jsx";
 import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
 import { MUSIC_LINEUP, musicLineupLabel } from "../constants/musicLineup.js";
 import {
@@ -13,6 +11,7 @@ import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
 import { MUSIC_GENRES } from "../data/musicChannels.js";
 import SearchPodcastsBrowse from "./SearchPodcastsBrowse.jsx";
+import SearchRadioBrowse from "./SearchRadioBrowse.jsx";
 import "./Search.css";
 
 /**
@@ -36,9 +35,6 @@ export default function Search() {
       navigate(SEARCH_BROWSE.music, { replace: true });
     }
   }
-
-  const activeTabLabel =
-    BROWSE_TABS.find((t) => t.id === browseTab)?.label ?? browseTab;
 
   const musicBrowseTitleId = "search-music-browse-heading";
 
@@ -105,11 +101,8 @@ export default function Search() {
             <SearchPodcastsBrowse />
           </div>
         ) : (
-          <div className="content-inset search-page__body">
-            <p className="text-muted" style={{ margin: 0 }}>
-              Browse body for <strong>{activeTabLabel}</strong> ships in a later phase
-              (radio).
-            </p>
+          <div className="home-screen">
+            <SearchRadioBrowse />
           </div>
         )}
       </div>
