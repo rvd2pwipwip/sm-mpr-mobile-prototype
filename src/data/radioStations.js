@@ -18,6 +18,8 @@
  * @property {string} description Blurb for station info screens.
  * @property {string[]} tags Short labels (format, locale, mood) for chips or lists.
  * @property {string} [frequencyLabel] Optional dial position, e.g. `FM 94.5` (prototype fiction).
+ * @property {string} [locationCity] Mock city for Radio Info Location row.
+ * @property {string} [locationCountry] Mock country for Radio Info Location row.
  */
 
 export const RADIO_STATION_CATEGORIES = [
@@ -45,6 +47,16 @@ export const INTERNATIONAL_CONTINENTS_PLANNED = [
 ];
 
 const STATIONS_PER_CATEGORY = 20;
+
+/** Rotating mock city / country pairs for home catalog stations (Radio Info). */
+const MOCK_RADIO_LOCATIONS = [
+  { locationCity: "Calgary", locationCountry: "Canada" },
+  { locationCity: "Montreal", locationCountry: "Canada" },
+  { locationCity: "Austin", locationCountry: "United States" },
+  { locationCity: "Portland", locationCountry: "United States" },
+  { locationCity: "London", locationCountry: "United Kingdom" },
+  { locationCity: "Berlin", locationCountry: "Germany" },
+];
 
 export function radioStationThumbnailUrl(stationId) {
   return `https://picsum.photos/seed/${encodeURIComponent(`radio-${stationId}`)}/512/512`;
@@ -250,6 +262,7 @@ function buildStation(category, index) {
   const name = names[index];
   const id = `${category.id}__${String(index).padStart(2, "0")}`;
   const frequencyLabel = frequencyFor(category.id, index);
+  const loc = MOCK_RADIO_LOCATIONS[(index + category.id.length) % MOCK_RADIO_LOCATIONS.length];
   return {
     id,
     categoryId: category.id,
@@ -258,6 +271,8 @@ function buildStation(category, index) {
     thumbnail: radioStationThumbnailUrl(id),
     description: descriptionFor(category.label, name),
     tags: tagsFor(category.id, index),
+    locationCity: loc.locationCity,
+    locationCountry: loc.locationCountry,
     ...(frequencyLabel ? { frequencyLabel } : {}),
   };
 }

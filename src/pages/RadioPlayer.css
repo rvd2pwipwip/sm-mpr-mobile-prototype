@@ -1,0 +1,50 @@
+/* Full-screen radio player — reuse `MusicPlayer` chrome; Figma mini reference `19777:32040`. */
+
+.radio-player-screen .music-player__transport.radio-player__transport {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.radio-player__progress {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.radio-player__progress-track {
+  position: relative;
+  overflow: hidden;
+}
+
+.radio-player__progress-fill {
+  width: 100%;
+  animation: radio-player-live-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes radio-player-live-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(0.96);
+    transform-origin: left center;
+  }
+}
+
+.radio-player__live-label {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  text-align: center;
+}

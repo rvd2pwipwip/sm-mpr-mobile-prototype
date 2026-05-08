@@ -16,7 +16,8 @@ import MusicChannelInfo from "./pages/MusicChannelInfo";
 import MusicPlayer from "./pages/MusicPlayer";
 import PodcastInfo from "./pages/PodcastInfo";
 import PodcastPlayer from "./pages/PodcastPlayer";
-import RadioStationStub from "./pages/RadioStationStub";
+import RadioPlayer from "./pages/RadioPlayer";
+import RadioStationInfo from "./pages/RadioStationInfo";
 import Search from "./pages/Search";
 import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels";
 import SearchMusicCategory from "./pages/SearchMusicCategory";
@@ -45,10 +46,17 @@ function PodcastPlayerRoute() {
   return <PodcastPlayer key={`${podcastId}-${episodeId}-${userType}`} />;
 }
 
+function RadioPlayerRoute() {
+  const { stationId } = useParams();
+  const { userType } = useUserType();
+  return <RadioPlayer key={`${stationId}-${userType}`} />;
+}
+
 function hideBottomNavForPath(pathname) {
   return (
     /^\/music\/[^/]+\/play\/?$/.test(pathname) ||
-    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(pathname)
+    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(pathname) ||
+    /^\/radio\/[^/]+\/play\/?$/.test(pathname)
   );
 }
 
@@ -73,7 +81,8 @@ function AppRoutes() {
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
-        <Route path="/radio/:stationId" element={<RadioStationStub />} />
+        <Route path="/radio/:stationId/play" element={<RadioPlayerRoute />} />
+        <Route path="/radio/:stationId" element={<RadioStationInfo />} />
         <Route path="/search/browse/radio/international/*" element={<SearchRadioInternationalStack />} />
         <Route path="/search/browse/radio/near-you" element={<SearchRadioStationGrid />} />
         <Route path="/search/browse/radio/format/:formatId" element={<SearchRadioStationGrid />} />
@@ -98,7 +107,7 @@ function AppRoutes() {
   );
 }
 
-/** Route table; `BottomNav` is a sibling of `Routes` (hidden on full-screen music / podcast play). */
+/** Route table; `BottomNav` is a sibling of `Routes` (hidden on full-screen music / podcast / radio play). */
 function App() {
   return (
     <UserTypeProvider>

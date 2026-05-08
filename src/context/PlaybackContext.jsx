@@ -10,7 +10,8 @@ import { useLocation } from "react-router-dom";
 
 /**
  * Lightweight “now playing” state for MiniPlayer + sync with full players when mounted.
- * Music uses **`channelId`**; podcasts use **`podcastId`** + **`podcastEpisodeId`** (compound episode id).
+ * Music uses **`channelId`**; podcasts use **`podcastId`** + **`podcastEpisodeId`** (compound episode id);
+ * radio uses **`radioStationId`** and **`/radio/:stationId/play`**.
  */
 
 const PlaybackContext = createContext(null);
@@ -28,6 +29,8 @@ const initialSession = {
   podcastId: null,
   /** `PodcastEpisode.id` compound string when variant === podcasts */
   podcastEpisodeId: null,
+  /** Radio station id when variant === radio (mock catalog + geo rows) */
+  radioStationId: null,
   fullPlayerPath: null,
 };
 
@@ -37,7 +40,8 @@ export function PlaybackProvider({ children }) {
 
   const hideMiniOnFullPlayer =
     /^\/music\/[^/]+\/play\/?$/.test(location.pathname) ||
-    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(location.pathname);
+    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(location.pathname) ||
+    /^\/radio\/[^/]+\/play\/?$/.test(location.pathname);
   const miniPlayerVisible = session.active && !hideMiniOnFullPlayer;
 
   useEffect(() => {
@@ -74,6 +78,7 @@ export function PlaybackProvider({ children }) {
         channelId: null,
         podcastId: pid,
         podcastEpisodeId: episodeId,
+        radioStationId: null,
         thumbnail: thumb,
         title: epTitle,
         subtitle: showTitle,
@@ -99,6 +104,7 @@ export function PlaybackProvider({ children }) {
         channelId,
         podcastId: null,
         podcastEpisodeId: null,
+        radioStationId: null,
         thumbnail,
         title,
         subtitle,
@@ -116,6 +122,7 @@ export function PlaybackProvider({ children }) {
       channelId: null,
       podcastId: null,
       podcastEpisodeId: null,
+      radioStationId: null,
       thumbnail: "",
       title: "Podcast episode titles tend to be long so they’re allowed 2 lines",
       subtitle: "Podcast Name",
@@ -124,20 +131,26 @@ export function PlaybackProvider({ children }) {
     });
   }, []);
 
-  const startRadioStationPreview = useCallback(({ title, subtitle, thumbnail }) => {
-    setSession({
-      active: true,
-      variant: "radio",
-      channelId: null,
-      podcastId: null,
-      podcastEpisodeId: null,
-      thumbnail: thumbnail ?? "",
-      title: title ?? "Radio",
-      subtitle: subtitle ?? "",
-      isPaused: false,
-      fullPlayerPath: null,
-    });
-  }, []);
+  const upsertRadioSession = useCallback(
+    ({ stationId, thumbnail, title, subtitle, isPaused }) => {
+      const sid = stationId ?? null;
+      const fullPlayerPath = sid ? `/radio/${sid}/play` : null;
+      setSession({
+        active: true,
+        variant: "radio",
+        channelId: null,
+        podcastId: null,
+        podcastEpisodeId: null,
+        radioStationId: sid,
+        thumbnail: thumbnail ?? "",
+        title: title ?? "Radio",
+        subtitle: subtitle ?? "",
+        isPaused: Boolean(isPaused),
+        fullPlayerPath,
+      });
+    },
+    [],
+  );
 
   const startRadioDemo = useCallback(() => {
     setSession({
@@ -146,6 +159,7 @@ export function PlaybackProvider({ children }) {
       channelId: null,
       podcastId: null,
       podcastEpisodeId: null,
+      radioStationId: null,
       thumbnail: "",
       title: "CKKC 99.9",
       subtitle: "Now playing metadata",
@@ -167,7 +181,7 @@ export function PlaybackProvider({ children }) {
       upsertMusicSession,
       upsertPodcastSession,
       startPodcastDemo,
-      startRadioStationPreview,
+      upsertRadioSession,
       startRadioDemo,
       clearSession,
     }),
@@ -179,7 +193,7 @@ export function PlaybackProvider({ children }) {
       upsertMusicSession,
       upsertPodcastSession,
       startPodcastDemo,
-      startRadioStationPreview,
+      upsertRadioSession,
       startRadioDemo,
       clearSession,
     ],

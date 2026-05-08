@@ -37,46 +37,11 @@ function slugFromNodeId(nodeId) {
   return nodeId.replace(/[^a-z0-9]+/gi, "-");
 }
 
-/**
- * @param {string} nodeId
- * @param {string} nodeLabel
- * @returns {RadioStation[]}
- */
-function makeStationBlock(nodeId, nodeLabel) {
-  const slug = slugFromNodeId(nodeId);
-  const list = [];
-  for (let i = 0; i < STATIONS_PER_GEO_NODE; i += 1) {
-    const id = `geo-${slug}-${String(i).padStart(2, "0")}`;
-    const hint = GEO_NAME_HINTS[i % GEO_NAME_HINTS.length];
-    const name = `${nodeLabel} ${hint} ${i + 1}`;
-    const fm = 88 + ((i * 3 + slug.length * 7) % 21);
-    const point = i % 10;
-    list.push({
-      id,
-      name,
-      categoryId: "international",
-      categoryLabel: "International",
-      frequencyLabel: `FM ${fm}.${point}`,
-      description: geoDescription(nodeLabel, name),
-      tags: [nodeLabel.slice(0, 40)],
-      thumbnail: radioStationThumbnailUrl(id),
-    });
-  }
-  return list;
-}
-
 /** @type {Map<string, RadioStation[]>} */
 const stationsByGeoNodeId = new Map();
 
 /** @type {Map<string, RadioStation>} */
 const geoStationById = new Map();
-
-function ensureStationsForNode(nodeId, nodeLabel) {
-  if (stationsByGeoNodeId.has(nodeId)) return;
-  const block = makeStationBlock(nodeId, nodeLabel);
-  stationsByGeoNodeId.set(nodeId, block);
-  for (const s of block) geoStationById.set(s.id, s);
-}
 
 /** Leaf / stub geo row: no children, same 20 generated stations as other nodes. */
 function leafGeo(id, label, parentId, type = "country") {
@@ -185,6 +150,94 @@ export const GEO_BROWSE_NODES = {
   "red-deer": leafGeo("red-deer", "Red Deer", "alberta", "city"),
 };
 
+/**
+ * Mock city / country for Radio Info Location row; uses geo hierarchy when available.
+ * @param {string} nodeId
+ * @returns {{ locationCity: string, locationCountry: string }}
+ */
+function geoMockLocationForNode(nodeId) {
+  const node = GEO_BROWSE_NODES[nodeId];
+  if (!node) {
+    return { locationCity: "Montreal", locationCountry: "Canada" };
+  }
+
+  let countryLabel = "Canada";
+  let cur = node;
+  while (cur) {
+    if (cur.type === "country") {
+      countryLabel = cur.label;
+      break;
+    }
+    cur = cur.parentId ? GEO_BROWSE_NODES[cur.parentId] : null;
+  }
+
+  if (node.type === "city") {
+    return { locationCity: node.label, locationCountry: countryLabel };
+  }
+
+  if (node.type === "subdivision") {
+    const firstCityId = node.childIds?.find((id) => GEO_BROWSE_NODES[id]?.type === "city");
+    const cityLabel = firstCityId
+      ? GEO_BROWSE_NODES[firstCityId].label
+      : node.label;
+    return { locationCity: cityLabel, locationCountry: countryLabel };
+  }
+
+  if (node.type === "country") {
+    const mockCapitals = {
+      canada: "Ottawa",
+      mexico: "Mexico City",
+      "united-states": "Chicago",
+      bermuda: "Hamilton",
+      greenland: "Nuuk",
+      "st-pierre-miquelon": "Saint-Pierre",
+      "caribbean-islands": "Nassau",
+    };
+    const city = mockCapitals[node.id] ?? "Regional center";
+    return { locationCity: city, locationCountry: node.label };
+  }
+
+  return { locationCity: "Toronto", locationCountry: "Canada" };
+}
+
+/**
+ * @param {string} nodeId
+ * @param {string} nodeLabel
+ * @returns {RadioStation[]}
+ */
+function makeStationBlock(nodeId, nodeLabel) {
+  const { locationCity, locationCountry } = geoMockLocationForNode(nodeId);
+  const slug = slugFromNodeId(nodeId);
+  const list = [];
+  for (let i = 0; i < STATIONS_PER_GEO_NODE; i += 1) {
+    const id = `geo-${slug}-${String(i).padStart(2, "0")}`;
+    const hint = GEO_NAME_HINTS[i % GEO_NAME_HINTS.length];
+    const name = `${nodeLabel} ${hint} ${i + 1}`;
+    const fm = 88 + ((i * 3 + slug.length * 7) % 21);
+    const point = i % 10;
+    list.push({
+      id,
+      name,
+      categoryId: "international",
+      categoryLabel: "International",
+      frequencyLabel: `FM ${fm}.${point}`,
+      description: geoDescription(nodeLabel, name),
+      tags: [nodeLabel.slice(0, 40)],
+      thumbnail: radioStationThumbnailUrl(id),
+      locationCity,
+      locationCountry,
+    });
+  }
+  return list;
+}
+
+function ensureStationsForNode(nodeId, nodeLabel) {
+  if (stationsByGeoNodeId.has(nodeId)) return;
+  const block = makeStationBlock(nodeId, nodeLabel);
+  stationsByGeoNodeId.set(nodeId, block);
+  for (const s of block) geoStationById.set(s.id, s);
+}
+
 for (const node of Object.values(GEO_BROWSE_NODES)) {
   ensureStationsForNode(node.id, node.label);
 }
@@ -202,7 +255,7 @@ export function getGeoMockStationById(id) {
   return geoStationById.get(id) ?? null;
 }
 
-/** Home catalog + geo mock rows (for `/radio/:id` stub). */
+/** Home catalog + geo mock rows (for `/radio/:id` detail). */
 export function resolveRadioStationForStub(id) {
   return getGeoMockStationById(id) ?? getRadioStationById(id);
 }
