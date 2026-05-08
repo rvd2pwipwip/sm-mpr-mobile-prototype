@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import ContentTileCard from "../components/ContentTileCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { getMusicChannelById } from "../data/musicChannels";
+import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
 import "./MusicChannelInfo.css";
 
 /** Icons from `public/*.svg` via CSS mask so they follow `ButtonSmall` `currentColor`. */
@@ -26,6 +27,15 @@ export default function MusicChannelInfo() {
   const [descExpanded, setDescExpanded] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
+
+  useEffect(() => {
+    setDescExpanded(false);
+  }, [channelId]);
+
+  const { ref: descRef, overflows: descOverflows } = useDescriptionClampOverflow(
+    channel?.description ?? "",
+    !descExpanded,
+  );
 
   if (!channel) {
     return <Navigate to="/" replace />;
@@ -98,6 +108,7 @@ export default function MusicChannelInfo() {
 
             <div className="music-info__desc-block">
               <p
+                ref={descRef}
                 className={
                   descExpanded
                     ? "music-info__description"
@@ -106,13 +117,15 @@ export default function MusicChannelInfo() {
               >
                 {channel.description}
               </p>
-              <button
-                type="button"
-                className="music-info__more"
-                onClick={() => setDescExpanded((e) => !e)}
-              >
-                {descExpanded ? "Less" : "More..."}
-              </button>
+              {descOverflows ? (
+                <button
+                  type="button"
+                  className="music-info__more"
+                  onClick={() => setDescExpanded((e) => !e)}
+                >
+                  {descExpanded ? "Less" : "More..."}
+                </button>
+              ) : null}
             </div>
           </div>
 

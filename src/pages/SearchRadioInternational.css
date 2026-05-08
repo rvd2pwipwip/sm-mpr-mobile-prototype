@@ -2,8 +2,12 @@
   margin-top: 0;
 }
 
-.search-radio-intl__scroll .content-swimlane {
-  margin-bottom: 0;
+/* Stack swimlane (or grid / empty) + pill row; vertical rhythm via gap (not section margins). */
+.search-radio-intl__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-screen-gap);
+  min-width: 0;
 }
 
 /* Leaf geo (e.g. city): 2-col grid only — same pattern as Search → Radio geo More. */

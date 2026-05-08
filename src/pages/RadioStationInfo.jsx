@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
+import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
 import "./MusicChannelInfo.css";
 import "./RadioStationInfo.css";
 
@@ -51,6 +52,15 @@ export default function RadioStationInfo() {
       },
     ];
   }, [station]);
+
+  useEffect(() => {
+    setDescExpanded(false);
+  }, [stationId]);
+
+  const { ref: descRef, overflows: descOverflows } = useDescriptionClampOverflow(
+    station?.description ?? "",
+    !descExpanded,
+  );
 
   if (!station) {
     return <Navigate to="/search/radio" replace />;
@@ -123,6 +133,7 @@ export default function RadioStationInfo() {
 
             <div className="music-info__desc-block">
               <p
+                ref={descRef}
                 className={
                   descExpanded
                     ? "music-info__description"
@@ -131,13 +142,15 @@ export default function RadioStationInfo() {
               >
                 {station.description}
               </p>
-              <button
-                type="button"
-                className="music-info__more"
-                onClick={() => setDescExpanded((e) => !e)}
-              >
-                {descExpanded ? "Less" : "More..."}
-              </button>
+              {descOverflows ? (
+                <button
+                  type="button"
+                  className="music-info__more"
+                  onClick={() => setDescExpanded((e) => !e)}
+                >
+                  {descExpanded ? "Less" : "More..."}
+                </button>
+              ) : null}
             </div>
           </div>
 

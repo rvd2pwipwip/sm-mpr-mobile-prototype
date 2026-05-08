@@ -1,9 +1,23 @@
 .geo-browse-pill-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-4);
   padding-inline: var(--space-content-inline);
-  padding-block: var(--space-5) var(--space-6);
+  padding-top: 0;
+  padding-bottom: var(--space-6);
+  box-sizing: border-box;
+}
+
+/* Match `ContentSwimlane` title typography via `content-swimlane__title`; own full-width row. */
+.geo-browse-pill-row__heading {
+  flex: 1 1 100%;
+  width: 100%;
+}
+
+.geo-browse-pill-row__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
   box-sizing: border-box;
 }
 
@@ -13,8 +27,8 @@
   min-height: 44px;
   padding: var(--space-2) var(--space-4);
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--color-text) 22%, transparent);
-  background: var(--color-bg2);
+  border: none;
+  background: color-mix(in srgb, var(--color-text) 20%, transparent);
   color: var(--color-text);
   font: inherit;
   font-size: 0.9375rem;

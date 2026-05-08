@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import EpisodeCard from "../components/EpisodeCard";
@@ -6,6 +6,7 @@ import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeade
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { getPodcastById } from "../data/podcasts";
+import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
 import "./MusicChannelInfo.css";
 import "./PodcastInfo.css";
 
@@ -43,6 +44,15 @@ export default function PodcastInfo() {
   } = usePodcastUserState();
 
   const podcast = podcastId ? getPodcastById(podcastId) : null;
+
+  useEffect(() => {
+    setDescExpanded(false);
+  }, [podcastId]);
+
+  const { ref: descRef, overflows: descOverflows } = useDescriptionClampOverflow(
+    podcast?.description ?? "",
+    !descExpanded,
+  );
 
   if (!podcast) {
     return <Navigate to="/" replace />;
@@ -147,6 +157,7 @@ export default function PodcastInfo() {
 
             <div className="music-info__desc-block">
               <p
+                ref={descRef}
                 className={
                   descExpanded
                     ? "music-info__description"
@@ -155,13 +166,15 @@ export default function PodcastInfo() {
               >
                 {podcast.description}
               </p>
-              <button
-                type="button"
-                className="music-info__more"
-                onClick={() => setDescExpanded((e) => !e)}
-              >
-                {descExpanded ? "Less" : "More..."}
-              </button>
+              {descOverflows ? (
+                <button
+                  type="button"
+                  className="music-info__more"
+                  onClick={() => setDescExpanded((e) => !e)}
+                >
+                  {descExpanded ? "Less" : "More..."}
+                </button>
+              ) : null}
             </div>
 
             {previewBits.length > 0 ? (

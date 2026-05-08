@@ -2,9 +2,14 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import ContentSwimlane from "../components/ContentSwimlane.jsx";
 import GeoBrowsePill from "../components/GeoBrowsePill.jsx";
 import RadioStationCard from "../components/RadioStationCard.jsx";
-import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader.jsx";
+import ScreenHeader, {
+  ScreenHeaderChevronBack,
+} from "../components/ScreenHeader.jsx";
 import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
-import { radioGeoMorePath, radioInternationalPath } from "../constants/radioBrowsePaths.js";
+import {
+  radioGeoMorePath,
+  radioInternationalPath,
+} from "../constants/radioBrowsePaths.js";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane.js";
 import {
   getChildGeoNodes,
@@ -12,7 +17,10 @@ import {
   resolveGeoNodeFromSegments,
 } from "../data/radioInternationalBrowse.js";
 import { INTERNATIONAL_CONTINENTS_PLANNED } from "../data/radioStations.js";
-import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
+import {
+  SearchBrowseTile,
+  SearchBrowseTileGrid,
+} from "../components/SearchBrowseTile.jsx";
 import "./SearchRadioInternational.css";
 import "./SwimlaneMore.css";
 
@@ -45,7 +53,10 @@ export default function SearchRadioInternationalStack() {
           }
         />
         <div className="swimlane-more__scroll">
-          <div className="content-inset search-page__body" style={{ paddingTop: 0 }}>
+          <div
+            className="content-inset search-page__body"
+            style={{ paddingTop: 0 }}
+          >
             <h2
               id="search-radio-intl-regions-heading"
               className="search-page__browse-heading search-radio-intl__subheading"
@@ -141,14 +152,19 @@ export default function SearchRadioInternationalStack() {
 
         {children.length > 0 ? (
           <div className="geo-browse-pill-row">
-            {children.map((c) => (
-              <GeoBrowsePill
-                key={c.id}
-                onClick={() => navigate(pathPrefixForChild(c.id))}
-              >
-                {c.label}
-              </GeoBrowsePill>
-            ))}
+            <h2 className="content-swimlane__title geo-browse-pill-row__heading">
+              Explore {title}
+            </h2>
+            <div className="geo-browse-pill-row__items">
+              {children.map((c) => (
+                <GeoBrowsePill
+                  key={c.id}
+                  onClick={() => navigate(pathPrefixForChild(c.id))}
+                >
+                  {c.label}
+                </GeoBrowsePill>
+              ))}
+            </div>
           </div>
         ) : null}
       </div>
