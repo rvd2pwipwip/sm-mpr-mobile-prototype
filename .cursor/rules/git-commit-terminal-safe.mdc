@@ -1,0 +1,13 @@
+---
+description: Commit messages must be plain ASCII for safe terminal copy-paste
+alwaysApply: true
+---
+
+# Terminal-safe commit messages
+
+When you propose text for `git commit` (subject, body, or conventional-commit blocks the user will paste into a terminal):
+
+- Use **plain ASCII** only: the user should be able to copy-paste into `git commit -m "..."`, multiple `-m` arguments, or an editor, without quoting or encoding problems.
+- **Do not use:** emoji; Unicode bullets; en dash or em dash; curly or smart quotation marks (Unicode U+2018 U+2019 U+201C U+201D); non-breaking space; zero-width or other invisible Unicode; decorative symbols.
+- **Prefer:** hyphen `-` (ASCII 0x2D) for hyphens and simple list markers; straight apostrophe `'` (0x27) and straight double quote `"` (0x22) only when quoting in instructions; use a simple `-` or `*` at the start of body lines if bullets are needed.
+- Examples are allowed in fenced code blocks; keep the **proposed commit text itself** inside those blocks ASCII-clean.

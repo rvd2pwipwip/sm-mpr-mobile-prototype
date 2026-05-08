@@ -55,3 +55,32 @@
   margin: 0;
   padding: 0 var(--swimlane-more-inline, 40px);
 }
+
+/* Search Phase 5: horizontal episode lane — row card width so titles/metadata stay readable. */
+.search-results-panel__episode-tile {
+  width: min(300px, calc(100vw - 2 * var(--space-content-inline)));
+  flex-shrink: 0;
+}
+
+.search-results-panel__episode-tile .episode-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* SearchCatalogMore: full-width episode stack (same spirit as SearchPodcastsLibrary). */
+.search-catalog-more__episode-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding: 0 var(--swimlane-more-inline, 40px) var(--space-4);
+  box-sizing: border-box;
+}
+
+.search-catalog-more__episode-stack .episode-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}

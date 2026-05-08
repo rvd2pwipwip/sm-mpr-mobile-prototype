@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SearchBrowseHeader from "../components/SearchBrowseHeader.jsx";
 import { SearchBrowseTile, SearchBrowseTileGrid } from "../components/SearchBrowseTile.jsx";
@@ -12,7 +12,10 @@ import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
 import { MUSIC_GENRES } from "../data/musicChannels.js";
 import SearchPodcastsBrowse from "./SearchPodcastsBrowse.jsx";
 import SearchRadioBrowse from "./SearchRadioBrowse.jsx";
+import SearchResultsPanel from "./SearchResultsPanel.jsx";
 import "./Search.css";
+
+const SEARCH_DEBOUNCE_MS = 250;
 
 /**
  * Search & Browse tab. Browse content-type strip uses `/search/music`, `/search/podcasts`,
@@ -25,9 +28,21 @@ export default function Search() {
   const { musicLineupMode, toggleMusicLineupMode } = useTerritory();
   const browseTab = getSearchBrowseTabFromPathname(location.pathname);
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   const showBrowseTabs = query.trim().length === 0;
   const isSearchActive = query.trim().length > 0;
+
+  useEffect(() => {
+    if (query.trim() === "") {
+      setDebouncedQuery("");
+      return;
+    }
+    const id = window.setTimeout(() => {
+      setDebouncedQuery(query);
+    }, SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(id);
+  }, [query]);
 
   function handleQueryChange(next) {
     setQuery(next);
@@ -49,12 +64,7 @@ export default function Search() {
 
       <div className="search-page-scroll">
         {isSearchActive ? (
-          <div className="content-inset search-page__body">
-            <p className="text-muted" style={{ margin: 0 }}>
-              Search results (swimlanes) ship in Phase 5. Typed query is kept in the header
-              field.
-            </p>
-          </div>
+          <SearchResultsPanel debouncedQuery={debouncedQuery} />
         ) : browseTab === "music" ? (
           <div className="content-inset search-page__body">
             <>

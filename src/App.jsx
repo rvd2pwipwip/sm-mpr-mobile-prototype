@@ -26,6 +26,7 @@ import SearchPodcastsLibrary from "./pages/SearchPodcastsLibrary";
 import SearchRadioGeoMore from "./pages/SearchRadioGeoMore";
 import SearchRadioInternationalStack from "./pages/SearchRadioInternationalStack";
 import SearchRadioStationGrid from "./pages/SearchRadioStationGrid";
+import SearchCatalogMore from "./pages/SearchCatalogMore";
 import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
 import Subscription from "./pages/Subscription";
@@ -79,6 +80,7 @@ function AppRoutes() {
         <Route path="/search/browse/podcasts/library/:librarySection" element={<SearchPodcastsLibrary />} />
         <Route path="/search/browse/podcasts/category/:categoryId" element={<SearchPodcastsCategory />} />
         <Route path="/search/more/radio-geo/*" element={<SearchRadioGeoMore />} />
+        <Route path="/search/more/catalog" element={<SearchCatalogMore />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
         <Route path="/search/music" element={<Search />} />
         <Route path="/search/podcasts" element={<Search />} />
