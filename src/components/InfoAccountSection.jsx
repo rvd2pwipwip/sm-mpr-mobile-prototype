@@ -1,12 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import {
+  PROVIDER_LOGO_DARK_URL,
+  PROVIDER_LOGO_LIGHT_URL,
   PROVIDER_SSO_URL,
   STINGRAY_ACCOUNT_LOGIN_URL,
   STINGRAY_SIGNUP_EMAIL_URL,
 } from "../constants/externalLinks";
 import { INFO_ACCOUNT_COPY } from "../constants/infoAccount";
 import { useUserType } from "../context/UserTypeContext";
+import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import "./InfoAccountSection.css";
 
 function IconOpenInNew({ size = 20 }) {
@@ -23,10 +25,11 @@ function IconOpenInNew({ size = 20 }) {
   );
 }
 
-function ExternalOutlineButton({ href, children, endIcon = true }) {
+function ExternalOutlineButton({ href, children, endIcon = true, onClick }) {
   return (
     <a
       href={href}
+      onClick={onClick}
       className="btn btn--secondary info-account__action-full"
       target="_blank"
       rel="noopener noreferrer"
@@ -45,9 +48,8 @@ function ExternalOutlineButton({ href, children, endIcon = true }) {
  * Account block for Info tab — Figma `5518:74009` (four user types).
  */
 export default function InfoAccountSection() {
-  const navigate = useNavigate();
   const { userType, setUserType } = useUserType();
-  const goUpgrade = () => navigate("/upgrade");
+  const goUpgrade = useGoUpgrade();
   const logOut = () => setUserType("guest");
 
   const copy = INFO_ACCOUNT_COPY[userType] ?? INFO_ACCOUNT_COPY.guest;
@@ -61,13 +63,22 @@ export default function InfoAccountSection() {
       ) : null}
 
       {userType === "freeProvided" ? (
-        <div className="info-account__provider-block">
-          <div className="info-account__provider-logo" aria-hidden={true} />
-          <div className="info-account__provider-labels">
-            <span className="info-account__provider-title">PROVIDER</span>
-            <span className="info-account__provider-sub">Logo</span>
-          </div>
-        </div>
+        <span className="info-account__provider-logos">
+          <img
+            src={PROVIDER_LOGO_LIGHT_URL}
+            alt=""
+            className="info-account__provider-logo info-account__provider-logo--light"
+            width={201}
+            height={63}
+          />
+          <img
+            src={PROVIDER_LOGO_DARK_URL}
+            alt=""
+            className="info-account__provider-logo info-account__provider-logo--dark"
+            width={201}
+            height={63}
+          />
+        </span>
       ) : null}
 
       {userType === "guest" ? (
@@ -91,7 +102,10 @@ export default function InfoAccountSection() {
             </Button>
           </div>
           <div className="info-account__action-group">
-            <ExternalOutlineButton href={STINGRAY_SIGNUP_EMAIL_URL}>
+            <ExternalOutlineButton
+              href={STINGRAY_SIGNUP_EMAIL_URL}
+              onClick={() => setUserType("freeStingray")}
+            >
               Create account
             </ExternalOutlineButton>
             <a
@@ -99,6 +113,7 @@ export default function InfoAccountSection() {
               className="btn btn--secondary info-account__action-full"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setUserType("freeStingray")}
             >
               <span className="btn__label">Log in</span>
             </a>
@@ -142,24 +157,28 @@ export default function InfoAccountSection() {
       ) : null}
 
       {userType === "freeStingray" ? (
-        <div className="info-account__actions">
-          <Button
-            variant="subscribe-primary"
-            className="info-account__action-full"
-            onClick={goUpgrade}
-          >
-            Upgrade
-          </Button>
-          <Button
-            variant="secondary"
-            className="info-account__action-full"
-            onClick={logOut}
-          >
-            Log out
-          </Button>
-          <ExternalOutlineButton href={PROVIDER_SSO_URL}>
-            Provider access
-          </ExternalOutlineButton>
+        <div className="info-account__actions info-account__actions--grouped">
+          <div className="info-account__action-group">
+            <Button
+              variant="subscribe-primary"
+              className="info-account__action-full"
+              onClick={goUpgrade}
+            >
+              Upgrade
+            </Button>
+            <Button
+              variant="secondary"
+              className="info-account__action-full"
+              onClick={logOut}
+            >
+              Log out
+            </Button>
+          </div>
+          <div className="info-account__action-group">
+            <ExternalOutlineButton href={PROVIDER_SSO_URL}>
+              Provider access
+            </ExternalOutlineButton>
+          </div>
         </div>
       ) : null}
     </div>

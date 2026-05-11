@@ -1,5 +1,40 @@
 /* MiniPlayer — Figma `19777:32024`; fixed above `BottomNav`, inverse footer chrome. */
 
+/*
+ * Inverse of app theme: dark strip on light app, light strip on dark app (overlay contrast).
+ * Scoped on `.mini-player` (not :root) plus color-scheme so UA form widgets match the strip.
+ */
+.mini-player {
+  --miniplayer-bg: rgba(25, 25, 25, 0.9);
+  --miniplayer-text: #fafafa;
+  --miniplayer-muted: rgba(250, 250, 250, 0.78);
+  --music-skip-count-on-mini: var(--miniplayer-bg);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .mini-player {
+    --miniplayer-bg: rgba(248, 248, 250, 0.92);
+    --miniplayer-text: #18181b;
+    --miniplayer-muted: rgba(24, 24, 27, 0.68);
+    color-scheme: light;
+  }
+}
+
+html[data-theme="light"] .mini-player {
+  --miniplayer-bg: rgba(25, 25, 25, 0.9);
+  --miniplayer-text: #fafafa;
+  --miniplayer-muted: rgba(250, 250, 250, 0.78);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .mini-player {
+  --miniplayer-bg: rgba(248, 248, 250, 0.92);
+  --miniplayer-text: #18181b;
+  --miniplayer-muted: rgba(24, 24, 27, 0.68);
+  color-scheme: light;
+}
+
 .mini-player {
   position: fixed;
   bottom: calc(

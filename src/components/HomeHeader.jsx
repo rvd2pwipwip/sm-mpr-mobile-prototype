@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { useUserType } from "../context/UserTypeContext";
+import { PROVIDER_LOGO_DARK_URL, PROVIDER_LOGO_LIGHT_URL } from "../constants/externalLinks";
 import { showUpgradeCallToAction } from "../utils/showVisualAds";
 import UpgradeButton from "./UpgradeButton";
 import "./HomeHeader.css";
@@ -61,8 +62,33 @@ function WordmarkPair() {
   );
 }
 
+function ProviderLogoPair() {
+  return (
+    <>
+      <img
+        className="home-header__provider-logo home-header__provider-logo--light"
+        src={PROVIDER_LOGO_LIGHT_URL}
+        alt=""
+        width={201}
+        height={63}
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        className="home-header__provider-logo home-header__provider-logo--dark"
+        src={PROVIDER_LOGO_DARK_URL}
+        alt=""
+        width={201}
+        height={63}
+        loading="eager"
+        decoding="async"
+      />
+    </>
+  );
+}
+
 /**
- * Home top bar: wordmark; guest + freeStingray see Upgrade, otherwise freeProvider pill, subscribed solo wordmark.
+ * Home top bar: wordmark; guest + freeStingray see Upgrade, otherwise provider logo (freeProvided), subscribed solo wordmark.
  */
 export default function HomeHeader({ onUpgrade }) {
   const headerRef = useHomeHeaderOffset();
@@ -87,9 +113,7 @@ export default function HomeHeader({ onUpgrade }) {
         {showUpgradeCallToAction(userType) ? (
           <UpgradeButton onClick={onUpgrade} />
         ) : (
-          <span className="home-header__provider-pill" title="Provider access (prototype)">
-            Provider
-          </span>
+          <ProviderLogoPair />
         )}
       </div>
     </header>

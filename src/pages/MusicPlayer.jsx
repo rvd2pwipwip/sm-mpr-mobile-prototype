@@ -13,6 +13,7 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import {
   showPlayerPreroll,
   showUpgradeCallToAction,
@@ -67,6 +68,7 @@ export default function MusicPlayer() {
   const { channelId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const goUpgrade = useGoUpgrade();
   const { session, upsertMusicSession } = usePlayback();
   const { recordMusicChannelListen } = useListenHistory();
   const { graceActive } = useGuestPrerollGrace();
@@ -142,7 +144,7 @@ export default function MusicPlayer() {
         </button>
         <div className="music-player__header-center">
           {showUpgradeCallToAction(userType) ? (
-            <UpgradeButton onClick={() => navigate("/upgrade")} />
+            <UpgradeButton onClick={goUpgrade} />
           ) : (
             <span className="music-player__header-spacer" aria-hidden={true} />
           )}

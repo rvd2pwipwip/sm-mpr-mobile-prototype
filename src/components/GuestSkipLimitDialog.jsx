@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { useGuestMusicSkips } from "../context/GuestMusicSkipContext";
+import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import "./GuestSkipLimitDialog.css";
 
 /**
@@ -8,7 +8,7 @@ import "./GuestSkipLimitDialog.css";
  * Figma: node 5568:166350 (UX-SM-MPR-Mobile-2604).
  */
 export default function GuestSkipLimitDialog() {
-  const navigate = useNavigate();
+  const goUpgradeNav = useGoUpgrade();
   const { skipLimitDialogOpen, skipLimitDialogMinutes, dismissSkipLimitDialog } =
     useGuestMusicSkips();
 
@@ -18,7 +18,7 @@ export default function GuestSkipLimitDialog() {
 
   const goUpgrade = () => {
     dismissSkipLimitDialog();
-    navigate("/upgrade");
+    goUpgradeNav();
   };
 
   return (

@@ -11,6 +11,7 @@ import VisualAdStrip from "../components/VisualAdStrip";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
 import {
   showPlayerPreroll,
@@ -65,6 +66,7 @@ export default function RadioPlayer() {
   const { stationId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const goUpgrade = useGoUpgrade();
   const { session, upsertRadioSession } = usePlayback();
   const { graceActive } = useGuestPrerollGrace();
   const { userType } = useUserType();
@@ -133,7 +135,7 @@ export default function RadioPlayer() {
         </button>
         <div className="music-player__header-center">
           {showUpgradeCallToAction(userType) ? (
-            <UpgradeButton onClick={() => navigate("/upgrade")} />
+            <UpgradeButton onClick={goUpgrade} />
           ) : (
             <span className="music-player__header-spacer" aria-hidden={true} />
           )}

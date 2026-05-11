@@ -1,3 +1,9 @@
+.info-account {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
 .info-account__headline {
   margin: 0;
   font-size: clamp(1.25rem, 4.2vw, 1.5rem);
@@ -7,61 +13,74 @@
 }
 
 .info-account__subline {
-  margin: var(--space-3) 0 0;
+  margin: 0;
   font-size: 1.125rem;
   line-height: 1.35;
 }
 
-.info-account__provider-block {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
+.info-account__provider-logos {
+  margin-inline: auto;
+  width: fit-content;
+  max-width: 100%;
+  line-height: 0;
 }
 
 .info-account__provider-logo {
-  width: 4rem;
+  display: block;
   height: 4rem;
-  border-radius: 50%;
-  background-color: var(--color-text);
-  flex-shrink: 0;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
 
-.info-account__provider-labels {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  font-size: 1.125rem;
-  line-height: 1.2;
-  color: var(--color-text);
+.info-account__provider-logo--light {
+  display: block;
+}
+.info-account__provider-logo--dark {
+  display: none;
 }
 
-.info-account__provider-title {
-  font-weight: 900;
-  letter-spacing: 0.02em;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .info-account__provider-logo--light {
+    display: none;
+  }
+  :root:not([data-theme]) .info-account__provider-logo--dark {
+    display: block;
+  }
 }
 
-.info-account__provider-sub {
-  font-weight: 400;
+html[data-theme="light"] .info-account__provider-logo--light {
+  display: block;
+}
+html[data-theme="light"] .info-account__provider-logo--dark {
+  display: none;
+}
+html[data-theme="dark"] .info-account__provider-logo--light {
+  display: none;
+}
+html[data-theme="dark"] .info-account__provider-logo--dark {
+  display: block;
 }
 
 .info-account__actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-5);
+  gap: var(--space-4);
+  margin: 0;
   width: 100%;
+  max-width: 300px;
+  margin-inline: auto;
 }
 
 /* Guest layout: Figma `5518:74009` — tight stacks, ~40px between groups */
 .info-account__actions--grouped {
-  gap: 2.5rem;
+  gap: 3rem;
 }
 
 .info-account__action-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .info-account__action-full {

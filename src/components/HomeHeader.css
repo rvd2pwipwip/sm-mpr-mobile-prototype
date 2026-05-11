@@ -96,21 +96,46 @@ html[data-theme="dark"] .home-header__wordmark--dark {
   object-position: center center;
 }
 
-.home-header__provider-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--button-height-md);
-  padding: 0 var(--button-padding-inline);
-  border-radius: var(--button-pill-radius);
-  border: 2px solid var(--color-button-secondary-border);
-  font-size: 1.125rem;
-  font-weight: 500;
-  letter-spacing: var(--letter-spacing-button);
-  color: var(--color-text);
-  background-color: transparent;
-  cursor: default;
-  user-select: none;
+/* Provider mark — same max height as `.home-header__wordmark`; wide SVG scales by width. */
+.home-header__provider-logo {
+  display: block;
+  height: auto;
+  max-height: 40px;
+  width: auto;
+  max-width: min(220px, 100%);
+  object-fit: contain;
+  object-position: right center;
+  flex-shrink: 0;
+}
+
+/* Light / dark assets — same rules as `.home-header__wordmark`. */
+.home-header__provider-logo--light {
+  display: block;
+}
+.home-header__provider-logo--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .home-header__provider-logo--light {
+    display: none;
+  }
+  :root:not([data-theme]) .home-header__provider-logo--dark {
+    display: block;
+  }
+}
+
+html[data-theme="light"] .home-header__provider-logo--light {
+  display: block;
+}
+html[data-theme="light"] .home-header__provider-logo--dark {
+  display: none;
+}
+html[data-theme="dark"] .home-header__provider-logo--light {
+  display: none;
+}
+html[data-theme="dark"] .home-header__provider-logo--dark {
+  display: block;
 }
 
 /* Header chrome: use compact button if 60px is too tall — override tokens in scope. */

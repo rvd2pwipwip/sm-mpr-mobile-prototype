@@ -12,6 +12,7 @@ import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { showVisualAds } from "../utils/showVisualAds";
 import MusicChannelCard from "../components/MusicChannelCard";
 import PodcastCard from "../components/PodcastCard";
@@ -20,6 +21,7 @@ import RadioStationCard from "../components/RadioStationCard";
 /** Home: fixed `HomeHeader` (top chrome); `home-body-scroll` is the main column so lanes scroll under the header. */
 export default function Home() {
   const navigate = useNavigate();
+  const goUpgrade = useGoUpgrade();
   const { userType } = useUserType();
   const { items: listenAgainItems } = useListenHistory();
   const showBannerAd = showVisualAds(userType);
@@ -31,7 +33,7 @@ export default function Home() {
 
   return (
     <main className="app-shell app-shell--home">
-      <HomeHeader onUpgrade={() => navigate("/upgrade")} />
+      <HomeHeader onUpgrade={goUpgrade} />
       <div className="home-body-scroll">
         <div className="home-screen">
           <div className="content-inset">

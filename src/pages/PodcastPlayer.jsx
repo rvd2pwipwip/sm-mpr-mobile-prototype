@@ -22,6 +22,7 @@ import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import {
   getPodcastById,
   getPodcastEpisodeById,
@@ -114,6 +115,7 @@ export default function PodcastPlayer() {
   const { podcastId, episodeId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const goUpgrade = useGoUpgrade();
   const { session, upsertPodcastSession } = usePlayback();
   const { graceActive } = useGuestPrerollGrace();
   const { recordPodcastShowListen } = useListenHistory();
@@ -364,7 +366,7 @@ export default function PodcastPlayer() {
         </button>
         <div className="music-player__header-center">
           {showUpgradeCallToAction(userType) ? (
-            <UpgradeButton onClick={() => navigate("/upgrade")} />
+            <UpgradeButton onClick={goUpgrade} />
           ) : (
             <span className="music-player__header-spacer" aria-hidden={true} />
           )}
