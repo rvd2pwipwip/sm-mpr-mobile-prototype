@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import OpenInNewIcon from "../components/OpenInNewIcon";
 import ScreenHeader, {
   ScreenHeaderChevronBack,
 } from "../components/ScreenHeader";
-import { PROVIDER_SSO_URL } from "../constants/externalLinks";
+import { PROVIDER_SSO_URL, STINGRAY_SIGNUP_EMAIL_URL } from "../constants/externalLinks";
+import { LEGAL_LINKS } from "../constants/legalLinks";
 import { useUserType } from "../context/UserTypeContext";
 import "./Subscription.css";
-
-const TERMS_URL = "https://legal.stingray.com/en/terms-and-conditions";
-const PRIVACY_URL = "https://www.stingray.com/en/privacy-policy";
 
 const BENEFITS = [
   "No ads",
@@ -24,22 +23,7 @@ const USER_TYPE_OPTIONS = [
   { value: "subscribed", label: "Subscribed" },
 ];
 
-function IconOpenInNew({ className = "", size = 16 }) {
-  return (
-    <svg
-      className={className}
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden={true}
-    >
-      <path d="M19 19H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-    </svg>
-  );
-}
-
-/** Subscription (Upgrade) — Figma `220:40551`; CTAs set prototype user type and return Home. */
+/** Subscription (Upgrade) — Figma `220:40551`; "Upgrade now" opens Stingray signup then `/upgrade/store` mock (`9548:86399`). */
 export default function Subscription() {
   const navigate = useNavigate();
   const { userType, setUserType } = useUserType();
@@ -47,8 +31,8 @@ export default function Subscription() {
   const goBack = () => navigate(-1);
 
   const handleSubscribe = () => {
-    setUserType("subscribed");
-    navigate("/");
+    window.open(STINGRAY_SIGNUP_EMAIL_URL, "_blank", "noopener,noreferrer");
+    navigate("/upgrade/store");
   };
 
   const handleProvider = () => {
@@ -104,7 +88,7 @@ export default function Subscription() {
                 variant="secondary"
                 className="subscription-screen__btn-secondary"
                 onClick={handleProvider}
-                endIcon={<IconOpenInNew size={30} />}
+                endIcon={<OpenInNewIcon />}
               >
                 Select provider
               </Button>
@@ -130,24 +114,18 @@ export default function Subscription() {
             </p>
 
             <div className="subscription-screen__legal-links">
-              <a
-                className="subscription-screen__legal-link"
-                href={TERMS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Terms and Conditions
-                <IconOpenInNew size={12} />
-              </a>
-              <a
-                className="subscription-screen__legal-link"
-                href={PRIVACY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Privacy Policy
-                <IconOpenInNew size={12} />
-              </a>
+              {LEGAL_LINKS.map(({ id, label, href }) => (
+                <a
+                  key={id}
+                  className="subscription-screen__legal-link"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {label}
+                  <OpenInNewIcon size={12} />
+                </a>
+              ))}
             </div>
           </div>
 

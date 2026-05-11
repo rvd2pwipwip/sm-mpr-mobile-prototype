@@ -33,6 +33,7 @@ import Info from "./pages/Info";
 import InfoAbout from "./pages/InfoAbout";
 import InfoContact from "./pages/InfoContact";
 import Subscription from "./pages/Subscription";
+import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
 
 /** Remount when channel or user type changes so pre-roll + playback state reset. */
@@ -58,7 +59,8 @@ function hideBottomNavForPath(pathname) {
   return (
     /^\/music\/[^/]+\/play\/?$/.test(pathname) ||
     /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(pathname) ||
-    /^\/radio\/[^/]+\/play\/?$/.test(pathname)
+    /^\/radio\/[^/]+\/play\/?$/.test(pathname) ||
+    /^\/upgrade\/store\/?$/.test(pathname)
   );
 }
 
@@ -72,6 +74,7 @@ function AppRoutes() {
       <GuestSkipLimitDialog />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/upgrade/store" element={<UpgradeStoreMock />} />
         <Route path="/upgrade" element={<Subscription />} />
         <Route path="/more/listen-again" element={<ListenAgainMore />} />
         <Route path="/more/:categoryId" element={<SwimlaneMore />} />

@@ -1,0 +1,16 @@
+/* Single asset: `public/openInNew.svg` — same pattern as BottomNav / Settings chevrons. */
+.open-in-new-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  background-color: currentColor;
+  mask-image: url("/openInNew.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("/openInNew.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}

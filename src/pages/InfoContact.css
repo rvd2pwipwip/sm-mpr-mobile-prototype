@@ -1,0 +1,69 @@
+/* Contact Us body — Figma `5683:78191`. */
+
+.info-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.25rem;
+  padding-top: var(--space-2);
+}
+
+.info-contact__block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.info-contact__text {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-text);
+}
+
+.info-contact__text--strong {
+  font-weight: 700;
+}
+
+.info-contact__text--strong .info-contact__link {
+  font-weight: 700;
+}
+
+.info-contact__addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.info-contact__address-line {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-text);
+}
+
+.info-contact__privacy {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-text);
+}
+
+.info-contact__link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.125rem;
+}
+
+.info-contact__link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

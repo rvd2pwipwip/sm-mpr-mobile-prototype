@@ -47,15 +47,20 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [Browse International Subregion](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33556&t=RTnR7veKdkyVrhHy-4) — **Popular in region** swimlane + **pill** nav for the next geo level(s)
 - [Browse International — Alberta / cities drill (reference)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33453&t=RTnR7veKdkyVrhHy-4)
 - [App Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7-3024&t=NvKDs20ElRoIwSUC-0)
+- [Info — Help rows (FAQ, Contact us, About)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7-3024) — collapsible **Info** / **`InfoHelpSection`** (same frame as App Info)
 - [Info — Account variants](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5518-74009) — **`InfoAccountSection`**
 - [Info — Audio quality row](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80694) — Settings / **`InfoSettingsSection`**
 - [Info — Audio quality segmented control](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80479) — reuse **`SearchBrowseContentSwitcher`**
 - [Info — Settings accordion (Autoplay copy, row order)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5518-74323) — **`InfoSettingsSection`**
+- [Info — Contact Us screen](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78189) — **`InfoContact.jsx`**
+- [Info — About screen](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78416) — **`InfoAbout.jsx`**
+- [Info — About / contact copy block](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191) — **`infoContactCopy.js`** + privacy footer on Contact
 - [Music Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013&t=NvKDs20ElRoIwSUC-0)
 - [Channel Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067&t=NvKDs20ElRoIwSUC-0)
 - [Podcast Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19601-28077&t=8NQn3KeizdhIWSrR-4)
 - [Podcast Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19585-135699&t=8NQn3KeizdhIWSrR-4)
 - [Subscription (Upgrade)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=220-40551&t=NvKDs20ElRoIwSUC-0)
+- [Upgrade — OS store subscription mock](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=9548-86399) — **`/upgrade/store`**, **`UpgradeStoreMock.jsx`**
 - [Log in](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5638-214108&t=NvKDs20ElRoIwSUC-0)
 - [View More grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-17518&t=NvKDs20ElRoIwSUC-0)
 - [Subfilter grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=49-332563&t=NvKDs20ElRoIwSUC-0)

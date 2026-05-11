@@ -42,6 +42,7 @@ export default function BottomNav({ className = "" }) {
           const homeStackActive =
             id === "home" &&
             (location.pathname === "/upgrade" ||
+              location.pathname.startsWith("/upgrade/") ||
               location.pathname.startsWith("/more") ||
               location.pathname.startsWith("/music"));
 

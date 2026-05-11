@@ -38,6 +38,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Info tab — Phase 1 routes + stack shells** — **`/info/contact`** (**`InfoContact.jsx`**), **`/info/about`** (**`InfoAbout.jsx`**), **`InfoSubPage.css`** scroll under **`ScreenHeader`**; **`BottomNav`** **Info** active for **`/info/*`**; **`Info`** root scaffold. Details: **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 1.
 - [x] **Info tab — Phase 2 collapsible sections** — **`InfoCollapsibleSection`**; Account (default open) / Settings / Info placeholders. **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 2.
 - [x] **Info tab — Phase 3 Account section** — **`InfoAccountSection`** (**`5518:74009`**); **`externalLinks.js`** (**`PROVIDER_SSO_URL`**, **`STINGRAY_ACCOUNT_LOGIN_URL`**). **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 3.
+- [x] **Info tab — Phases 4–6 (Settings, help rows, About + Contact)** — **`InfoSettingsSection`** (Phase 4); **`InfoHelpSection`** + **`infoHelpLinks.js`** (Phase 5); **`InfoAbout.jsx`** / **`InfoAbout.css`** (**`5683:78416`**), **`InfoContact.jsx`** / **`InfoContact.css`** + **`infoContactCopy.js`** (**`5683:78191`**), shared **`legalLinks.js`** (`TERMS_URL`, `PRIVACY_URL`, **`LEGAL_LINKS`**) used by **`Subscription.jsx`** (Phase 6). Details: **`docs/Plans/Info-screen-implementation-plan.md`** § Phases 4–6.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
 - [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). **Search** tab **Browse / Podcasts** body: see **Search & Browse — Phase 3** above. **Search** tab **Browse / Radio**: see **Phase 4** above.
@@ -138,7 +139,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Info tab (main + Contact + About)** — **`docs/Plans/Info-screen-implementation-plan.md`** phases **4+** (Phases **0–3** shipped): Settings (autoplay, audio quality, comms), Info rows + full Contact/About copy. **Figma:** nodes listed in that plan.
+1. [ ] **Info tab — Phase 7 (cleanup + docs polish)** — Confirm no orphaned **`Info`** CSS; optional **`docs/Stories/Info-story.md`**. **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 7.
 
 2. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
 
@@ -162,4 +163,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-11* — **Info plan Phase 3** (Account block per **`userType`**, **`externalLinks`**). **Next:** Info phases **4+**, then Search **5–8**.
+*Last updated: 2026-05-11* — **Info plan Phases 4–6** (Settings, **`InfoHelpSection`**, About + Contact + **`legalLinks.js`**). **Next:** Info **Phase 7**, then Search **5–8**.

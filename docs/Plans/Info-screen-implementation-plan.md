@@ -86,6 +86,8 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 
 ## Phase 5 — Info section (rows on main screen)
 
+**Status: done (2026-05-11).** **`InfoHelpSection`**: **FAQ** (`INFO_FAQ_HREF` in **`src/constants/infoHelpLinks.js`**, placeholder until Figma URL); **Contact us** **`Link`** **`/info/contact`**; **About** **`Link`** **`/info/about`**. Row chrome matches Settings external / drill-in list.
+
 - **FAQ** — external link (URL from Figma or placeholder).
 - **Contact Us** — **`Link`** / **`navigate`** to **`/info/contact`**.
 - **About** — navigate to **`/info/about`**.
@@ -93,6 +95,8 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 ---
 
 ## Phase 6 — About screen content
+
+**Status: done (2026-05-11).** **`InfoAbout.jsx`** matches [**`5683:78416`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78416) (wordmark pair, version, copyright, trademark copy, outline legal buttons). **`legalLinks.js`** holds **`TERMS_URL`** / **`PRIVACY_URL`** and **`LEGAL_LINKS`**; **`Subscription.jsx`** maps the same list. **Contact Us body** from [**`5683:78191`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191) is in **`InfoContact.jsx`** + **`infoContactCopy.js`** (listed here because the plan originally grouped that copy with About legal links).
 
 - Blocks from [**`5683:78191`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191&t=RTnR7veKdkyVrhHy-4): **contact info** (static prototype copy).
 - **Terms and Conditions** — same **`TERMS_URL`** as **`Subscription.jsx`**.

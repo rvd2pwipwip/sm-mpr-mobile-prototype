@@ -76,6 +76,12 @@
   object-fit: contain;
 }
 
+/* `OpenInNewIcon` — mask span defaults to 20px; in buttons use full Figma `button/md` icon slot. */
+.btn__icon .open-in-new-icon {
+  width: var(--button-icon-size) !important;
+  height: var(--button-icon-size) !important;
+}
+
 /* Optional: when only icons differ in asset color, `currentColor` on paths inherits `.btn` color. */
 .btn__icon :is(svg) {
   flex-shrink: 0;

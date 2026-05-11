@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import InfoAccountSection from "../components/InfoAccountSection";
 import InfoCollapsibleSection from "../components/InfoCollapsibleSection";
+import InfoHelpSection from "../components/InfoHelpSection";
 import InfoSettingsSection from "../components/InfoSettingsSection";
 import "./Info.css";
 
@@ -45,9 +46,7 @@ export default function Info() {
               expanded={open.info}
               onToggle={() => toggle("info")}
             >
-              <p className="text-muted info-page__section-placeholder">
-                FAQ, Contact us, and About links will appear in the next phase.
-              </p>
+              <InfoHelpSection />
             </InfoCollapsibleSection>
           </div>
         </div>

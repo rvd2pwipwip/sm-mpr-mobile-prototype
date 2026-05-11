@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import AppStackedDialog from "./AppStackedDialog";
+import OpenInNewIcon from "./OpenInNewIcon";
 import SearchBrowseContentSwitcher from "./SearchBrowseContentSwitcher";
 import {
   AUDIO_QUALITY_SEGMENTS,
@@ -11,20 +12,6 @@ import { STINGRAY_ACCOUNT_LOGIN_URL } from "../constants/externalLinks";
 import { useUserType } from "../context/UserTypeContext";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import "./InfoSettingsSection.css";
-
-function IconOpenInNew({ size = 20 }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden={true}
-    >
-      <path d="M19 19H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-    </svg>
-  );
-}
 
 function hasTieredAudioQualityAccess(userType) {
   return userType === "subscribed" || userType === "freeProvided";
@@ -137,7 +124,7 @@ export default function InfoSettingsSection() {
           Communication preferences
         </span>
         <span className="info-settings__comm-icon" aria-hidden={true}>
-          <IconOpenInNew />
+          <OpenInNewIcon />
         </span>
       </a>
 

@@ -1,0 +1,111 @@
+/* About stack — Figma `5683:78416`; tokens only (no Tailwind). */
+
+.info-about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.875rem;
+  padding-top: var(--space-2);
+  text-align: center;
+}
+
+.info-about__brand {
+  position: relative;
+  width: 100%;
+  max-width: 13.125rem;
+  min-height: 2.5rem;
+}
+
+.info-about__wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.info-about__wordmark--light {
+  display: block;
+}
+
+.info-about__wordmark--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .info-about__wordmark--light {
+    display: none;
+  }
+  :root:not([data-theme]) .info-about__wordmark--dark {
+    display: block;
+  }
+}
+
+html[data-theme="light"] .info-about__wordmark--light {
+  display: block;
+}
+
+html[data-theme="light"] .info-about__wordmark--dark {
+  display: none;
+}
+
+html[data-theme="dark"] .info-about__wordmark--light {
+  display: none;
+}
+
+html[data-theme="dark"] .info-about__wordmark--dark {
+  display: block;
+}
+
+.info-about__version {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-text);
+}
+
+.info-about__copyright {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.info-about__copyright-line {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-text);
+}
+
+.info-about__trademark {
+  margin: 0;
+  max-width: 32rem;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+.info-about__legal-btns {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-5);
+  width: 100%;
+  max-width: 20rem;
+  margin-top: var(--space-2);
+}
+
+/* Full width inside centered column — same `btn btn--secondary` as Info Account */
+.info-about__legal-link {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+a.info-about__legal-link {
+  text-decoration: none;
+}
