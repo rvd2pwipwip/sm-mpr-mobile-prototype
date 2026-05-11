@@ -1,58 +1,62 @@
-import Button from "./Button";
+import AppStackedDialog from "./AppStackedDialog";
+import {
+  STINGRAY_ACCOUNT_LOGIN_URL,
+  STINGRAY_SIGNUP_EMAIL_URL,
+} from "../constants/externalLinks";
 import { useGuestMusicSkips } from "../context/GuestMusicSkipContext";
-import { useGoUpgrade } from "../hooks/useGoUpgrade";
-import "./GuestSkipLimitDialog.css";
+import { useUserType } from "../context/UserTypeContext";
 
 /**
  * Modal when guest has used all hourly music skips.
- * Figma: node 5568:166350 (UX-SM-MPR-Mobile-2604).
+ * Figma: node 5568:166350 — shell matches `AppStackedDialog` (`9585:70503`).
+ * Create account / Log in: same as Info Account guest (`InfoAccountSection`).
  */
 export default function GuestSkipLimitDialog() {
-  const goUpgradeNav = useGoUpgrade();
+  const { setUserType } = useUserType();
   const { skipLimitDialogOpen, skipLimitDialogMinutes, dismissSkipLimitDialog } =
     useGuestMusicSkips();
 
-  if (!skipLimitDialogOpen) {
-    return null;
-  }
-
-  const goUpgrade = () => {
+  const createFreeAccount = () => {
     dismissSkipLimitDialog();
-    goUpgradeNav();
+    setUserType("freeStingray");
+    window.open(STINGRAY_SIGNUP_EMAIL_URL, "_blank", "noopener,noreferrer");
+  };
+
+  const goLogin = () => {
+    dismissSkipLimitDialog();
+    setUserType("freeStingray");
+    window.open(STINGRAY_ACCOUNT_LOGIN_URL, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <div
-      className="guest-skip-limit"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="guest-skip-limit-title"
-      aria-describedby="guest-skip-limit-body"
+    <AppStackedDialog
+      open={skipLimitDialogOpen}
+      onClose={dismissSkipLimitDialog}
+      title="Skip limit reached"
+      titleId="guest-skip-limit-title"
+      descriptionId="guest-skip-limit-body"
+      primaryButton={{
+        label: "Create free account",
+        onClick: createFreeAccount,
+        variant: "subscribe-primary",
+      }}
+      secondaryButton={{
+        label: "Log in",
+        onClick: goLogin,
+        appearance: "outline",
+      }}
+      tertiaryButton={{
+        label: "Not now",
+        onClick: dismissSkipLimitDialog,
+      }}
     >
-      <button
-        type="button"
-        className="guest-skip-limit__scrim"
-        aria-label="Close dialog"
-        onClick={dismissSkipLimitDialog}
-      />
-      <div className="guest-skip-limit__panel">
-        <h2 id="guest-skip-limit-title" className="guest-skip-limit__title">
-          Skip limit reached
-        </h2>
-        <p id="guest-skip-limit-body" className="guest-skip-limit__body">
-          You’ve used all your skips for now. Another skip unlocks in about{" "}
-          <strong>{skipLimitDialogMinutes} minutes</strong>. Create an account or log in for
-          unlimited skips.
-        </p>
-        <div className="guest-skip-limit__actions">
-          <Button variant="subscribe-primary" className="guest-skip-limit__primary" onClick={goUpgrade}>
-            Create account / Log in
-          </Button>
-        </div>
-        <button type="button" className="guest-skip-limit__secondary" onClick={dismissSkipLimitDialog}>
-          Not now
-        </button>
-      </div>
-    </div>
+      <p className="app-stacked-dialog__lede">
+        You&apos;ve used all your skips for now. Another skip unlocks in about{" "}
+        <strong>{skipLimitDialogMinutes} minutes</strong>.
+      </p>
+      <p className="app-stacked-dialog__lede app-stacked-dialog__lede--after">
+        Create an account or log in for unlimited skips.
+      </p>
+    </AppStackedDialog>
   );
 }

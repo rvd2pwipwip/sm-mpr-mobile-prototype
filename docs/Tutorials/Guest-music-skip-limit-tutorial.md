@@ -118,12 +118,13 @@ Digit only (**no chip fill**) in the triangle region of **`/skip.svg`**; **`font
 
 ## 6. UI: `GuestSkipLimitDialog.jsx`
 
-File: [`src/components/GuestSkipLimitDialog.jsx`](../../src/components/GuestSkipLimitDialog.jsx) + **`GuestSkipLimitDialog.css`**.
+File: [`src/components/GuestSkipLimitDialog.jsx`](../../src/components/GuestSkipLimitDialog.jsx) (shell: shared **`AppStackedDialog`**, **`AppStackedDialog.css`**).
 
-- **Fixed overlay** + dim **scrim** (button that dismisses for tap-outside parity). **`z-index`** **`--z-guest-skip-dialog`** (see **`index.css`**, above bottom chrome / below pre-roll if both existed).
+- **Fixed overlay** + **scrim** (tap-outside dismiss): **black 25%** (light app) / **white 25%** (dark app) + backdrop blur. **`z-index`** **`--z-stacked-modal`** (**`index.css`**; same token as **`--z-guest-skip-dialog`** alias).
 - **Copy** uses **`skipLimitDialogMinutes`** from context.
-- **Primary** — **`Button`** **`variant="subscribe-primary"`** → **`navigate("/upgrade")`** + dismiss.
-- **“Not now”** — dismiss only.
+- **Primary** — **Create free account** — **`Button`** **`subscribe-primary`** → dismiss, **`setUserType("freeStingray")`**, **`STINGRAY_SIGNUP_EMAIL_URL`** in a new tab (same as **Info** guest **Create account**).
+- **Secondary** — **Log in** — outline **`Button`** → dismiss, **`setUserType("freeStingray")`**, **`STINGRAY_ACCOUNT_LOGIN_URL`** in a new tab (same as **Info** guest **Log in**).
+- **Tertiary** — **Not now** — link-style dismiss only (**`AppStackedDialog`** **`tertiaryButton`**).
 
 Mounted **once** next to **`Routes`** in **`App.jsx`** so it works from **mini** and **full** player.
 
@@ -160,11 +161,12 @@ Order (outer → inner):
 | `src/constants/guestMusicSkips.js` | Caps + durations + prune cadence |
 | `src/context/GuestMusicSkipContext.jsx` | Stamps, consume, dialog state, keyed remount |
 | `src/components/MusicSkipButton.jsx` (+ `.css`) | Shared skip + badge |
-| `src/components/GuestSkipLimitDialog.jsx` (+ `.css`) | Limit reached modal |
+| `src/components/GuestSkipLimitDialog.jsx` | Limit reached modal (uses **`AppStackedDialog`**) |
+| `src/components/AppStackedDialog.jsx` (+ `.css`) | Shared stacked-header modal shell (**Figma `9585:70503`**) |
 | `src/components/MiniPlayer.jsx` | Uses **`MusicSkipButton size="mini"`** |
 | `src/pages/MusicPlayer.jsx` | Uses **`MusicSkipButton size="full"`** |
 | `src/App.jsx` | Provider order + **`GuestSkipLimitDialog`** |
-| `src/index.css` | **`--z-guest-skip-dialog`**; **`--music-skip-count-*`** digit = **`--color-bg`** / **`--miniplayer-bg`** |
+| `src/index.css` | **`--z-stacked-modal`** / **`--z-guest-skip-dialog`**; **`--music-skip-count-*`** digit = **`--color-bg`** / **`--miniplayer-bg`** |
 | `eslint.config.js` | **`react-refresh/only-export-components`: off** for `src/context/**` (Context + hooks pattern) |
 
 ---

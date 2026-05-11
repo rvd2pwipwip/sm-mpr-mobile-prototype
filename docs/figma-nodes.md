@@ -32,7 +32,7 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 
 ## Components
 
-- [Button / md — CTA + secondary (subscribe pattern)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19726-48115) — `src/components/Button.jsx` + `index.css` button tokens
+- [Stacked promo / account dialog shell](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=9585-70503) — `AppStackedDialog` (guest skip limit, audio quality upsell, …)
 - [Miniplayer](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19777-32024&t=4UaBQ5Cdiloes4Qb-4)
 - [Episode Card](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19586-136643&t=8NQn3KeizdhIWSrR-4)
 
@@ -47,6 +47,10 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [Browse International Subregion](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33556&t=RTnR7veKdkyVrhHy-4) — **Popular in region** swimlane + **pill** nav for the next geo level(s)
 - [Browse International — Alberta / cities drill (reference)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19871-33453&t=RTnR7veKdkyVrhHy-4)
 - [App Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7-3024&t=NvKDs20ElRoIwSUC-0)
+- [Info — Account variants](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5518-74009) — **`InfoAccountSection`**
+- [Info — Audio quality row](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80694) — Settings / **`InfoSettingsSection`**
+- [Info — Audio quality segmented control](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80479) — reuse **`SearchBrowseContentSwitcher`**
+- [Info — Settings accordion (Autoplay copy, row order)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5518-74323) — **`InfoSettingsSection`**
 - [Music Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013&t=NvKDs20ElRoIwSUC-0)
 - [Channel Info](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067&t=NvKDs20ElRoIwSUC-0)
 - [Podcast Player](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19601-28077&t=8NQn3KeizdhIWSrR-4)

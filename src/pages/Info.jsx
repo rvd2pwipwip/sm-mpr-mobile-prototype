@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import InfoAccountSection from "../components/InfoAccountSection";
 import InfoCollapsibleSection from "../components/InfoCollapsibleSection";
+import InfoSettingsSection from "../components/InfoSettingsSection";
 import "./Info.css";
 
 /** Info tab — collapsible Account / Settings / Info. */
@@ -35,10 +36,7 @@ export default function Info() {
               expanded={open.settings}
               onToggle={() => toggle("settings")}
             >
-              <p className="text-muted info-page__section-placeholder">
-                Autoplay, audio quality, and preferences will appear in the next
-                phase.
-              </p>
+              <InfoSettingsSection />
             </InfoCollapsibleSection>
 
             <InfoCollapsibleSection

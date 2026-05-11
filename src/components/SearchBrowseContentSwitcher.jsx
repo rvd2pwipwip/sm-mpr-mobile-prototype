@@ -11,11 +11,13 @@ import { BROWSE_TABS, SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
 import "./SearchBrowseContentSwitcher.css";
 
 /**
- * @typedef {{ id: string, label: string, to: string }} ContentSwitcherSegment
+ * @typedef {{ id: string, label: string, to?: string }} ContentSwitcherSegment
  */
 
 function activeIdFromPathname(segments, pathname) {
-  const sorted = [...segments].sort((a, b) => b.to.length - a.to.length);
+  const sorted = [...segments].sort(
+    (a, b) => (b.to?.length ?? 0) - (a.to?.length ?? 0),
+  );
   const hit = sorted.find((s) => pathname.startsWith(s.to));
   return hit?.id ?? segments[0]?.id ?? "";
 }
@@ -29,14 +31,21 @@ function activeIdFromPathname(segments, pathname) {
  * @param {object} props
  * @param {() => void} props.onMusicLineupToggle — Search only: re-tap Music on `/search/music`
  * @param {ContentSwitcherSegment[]} [props.segments]
- * @param {string} [props.activeId] — when set, skips pathname derivation
+ * @param {string} [props.activeId] — required for `mode="local"`; otherwise optional override of pathname
+ * @param {'local' | undefined} [props.mode] — `local`: buttons + `onActiveIdChange`, no `NavLink`
+ * @param {(id: string) => void} [props.onActiveIdChange]
+ * @param {string} [props.ariaLabel] — `role="tablist"` label (default: Browse content type)
  */
 export default function SearchBrowseContentSwitcher({
   onMusicLineupToggle,
   segments: segmentsProp,
   activeId: activeIdProp,
+  mode,
+  onActiveIdChange,
+  ariaLabel = "Browse content type",
 }) {
   const location = useLocation();
+  const isLocal = mode === "local";
   const railRef = useRef(null);
   const segmentRefs = useRef([]);
 
@@ -52,11 +61,12 @@ export default function SearchBrowseContentSwitcher({
 
   const segments = segmentsProp ?? defaultSegments;
 
-  const activeId =
-    activeIdProp ??
-    activeIdFromPathname(segments, location.pathname) ??
-    segments[0]?.id ??
-    "";
+  const activeId = isLocal
+    ? (activeIdProp ?? segments[0]?.id ?? "")
+    : (activeIdProp ??
+      activeIdFromPathname(segments, location.pathname) ??
+      segments[0]?.id ??
+      "");
 
   const activeIndex = Math.max(
     0,
@@ -133,7 +143,7 @@ export default function SearchBrowseContentSwitcher({
         .filter(Boolean)
         .join(" ")}
       role="tablist"
-      aria-label="Browse content type"
+      aria-label={ariaLabel}
     >
       <div ref={railRef} className="search-browse-content-switcher__rail">
         <div
@@ -159,6 +169,27 @@ export default function SearchBrowseContentSwitcher({
               "search-browse-content-switcher__label",
               active ? "search-browse-content-switcher__label--active" : "",
             ].join(" ");
+
+            if (isLocal) {
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  ref={setSegmentRef(i)}
+                  role="tab"
+                  aria-selected={active}
+                  className={[
+                    "search-browse-content-switcher__segment",
+                    active
+                      ? "search-browse-content-switcher__segment--active"
+                      : "",
+                  ].join(" ")}
+                  onClick={() => onActiveIdChange?.(tab.id)}
+                >
+                  <span className={labelClass}>{tab.label}</span>
+                </button>
+              );
+            }
 
             if (tab.id === "music" && onMusicLineupToggle) {
               return (

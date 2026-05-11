@@ -80,12 +80,7 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 
 ## Phase 4 — Settings section
 
-1. **Autoplay** — toggle switch (native **`input type="checkbox"`** styled or existing pattern if any); state in **`useState`** (in-memory). Optional: **`sessionStorage`** later — out of scope unless requested.
-2. **Audio quality** — **visible only** when **`userType`** is **`subscribed`** or **`freeProvided`** (subscribed + provider users per product note).
-   - **Control:** reuse **`SearchBrowseContentSwitcher`** visual and behavior from [**`SearchBrowseContentSwitcher.jsx`**](../../src/components/SearchBrowseContentSwitcher.jsx) + [**`SearchBrowseContentSwitcher.css`**](../../src/components/SearchBrowseContentSwitcher.css).
-   - **Implementation note:** Today the switcher wires **`NavLink`** + **`to`**. Audio quality is **not** route-driven. Prefer **either** (a) a small prop on the switcher: **`mode="local"`** with **`segments`**, **`activeId`**, **`onActiveIdChange`**, rendering **`button`** segments **without** navigation, **or** (b) a thin **`InfoAudioQualitySwitcher`** that duplicates the rail + thumb math but shares CSS classes. Choose (a) if the diff stays small and **`SearchBrowseContentSwitcher`** stays readable.
-   - Segment **ids and labels** from Figma **`5689:80689`** (e.g. Normal / High / Lossless — confirm at implementation time).
-3. **Communication preferences** — row with **external link** icon; **href** from Figma if present, else **`#`** with TODO in comment.
+**Status: done (2026-05-11).** **Autoplay** checkbox-as-switch (`useState`) + description Figma **`5518:74294`**. **Audio Quality** row **always visible**; **subscribed** / **freeProvided** toggle inline **`SearchBrowseContentSwitcher`**; **guest** / **freeStingray** open **`AppStackedDialog`** upsell (**Figma `9585:70503`**). **Communication preferences** — Figma **`5518:74308`**. Shared modal shell: **`AppStackedDialog`** (**`GuestSkipLimitDialog`** refactored).
 
 ---
 
@@ -119,7 +114,7 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 
 - [ ] **`/info`**: Account open only by default; Settings + Info can open together with Account.
 - [ ] All four **Preview as** types on **`/upgrade`** show correct **Account** chunk.
-- [ ] **Audio quality** hidden for **`guest`** and **`freeStingray`**; shown for **`subscribed`** and **`freeProvided`** only.
+- [ ] **Audio Quality** row visible for all user types; **guest** / **freeStingray** open upsell dialog; **subscribed** / **freeProvided** expand the quality switcher.
 - [ ] **Contact** / **About**: back returns to previous history entry; tabs still visible.
 - [ ] **Terms** / **Privacy** open in new tab with **noopener**.
 - [ ] No mini player demo buttons on **Info**.

@@ -31,6 +31,10 @@
   --color-border-subtle: rgba(24, 24, 27, 0.08);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
 
+  /* `AppStackedDialog` title band — light app: inverted strip (Figma); dark app: light band (overridden below) */
+  --app-stacked-dialog-header-bg: #191919;
+  --app-stacked-dialog-header-fg: #fafafa;
+
   /* —— Layout & spacing — */
   --app-max-width: 460px;
   --space-1: 4px;
@@ -146,8 +150,10 @@
   --z-visual-ad-player: 105;
   /* Above player chrome — guest pre-roll overlay */
   --z-player-preroll: 250;
-  /* Guest hourly skip-cap dialog — above footer chrome when used outside full player */
-  --z-guest-skip-dialog: 260;
+  /* Stacked-header modal (guest skip, audio upsell, …) — above footer chrome */
+  --z-stacked-modal: 260;
+  /* @deprecated use --z-stacked-modal */
+  --z-guest-skip-dialog: var(--z-stacked-modal);
   /* Shared frosted glass for `BottomNav` + `HomeHeader`. */
   --chrome-backdrop-blur: 6px;
 
@@ -187,6 +193,8 @@ html[data-visual-ads] {
     --color-surface: #27272a;
     --color-border-subtle: rgba(250, 250, 250, 0.1);
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --app-stacked-dialog-header-bg: #f4f4f5;
+    --app-stacked-dialog-header-fg: #191919;
   }
 }
 
@@ -209,6 +217,8 @@ html[data-theme="light"] {
   --color-surface: #ffffff;
   --color-border-subtle: rgba(24, 24, 27, 0.08);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --app-stacked-dialog-header-bg: #191919;
+  --app-stacked-dialog-header-fg: #fafafa;
 }
 
 html[data-theme="dark"] {
@@ -230,6 +240,8 @@ html[data-theme="dark"] {
   --color-surface: #27272a;
   --color-border-subtle: rgba(250, 250, 250, 0.1);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --app-stacked-dialog-header-bg: #f4f4f5;
+  --app-stacked-dialog-header-fg: #191919;
 }
 
 *,
