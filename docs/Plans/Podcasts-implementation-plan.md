@@ -23,7 +23,7 @@ Teaching-oriented guide for **you** while we build podcasts in the Stingray Musi
 | **Routes** | Show: `/podcast/:podcastId` · Player: `/podcast/:podcastId/play/:episodeId` | Same mental model as music (`/music/:channelId` + `…/play`). One place to copy patterns: stacked screens, hide bottom nav on **play** only, deep links from Home / Browse / Listen again. |
 | **Subscriptions, bookmarks, downloads, progress** | **Pure local stub state** (React state / Context, in-memory) | Lets you demo full journeys without a backend. Reset on reload is OK unless you later add `localStorage`. |
 | **Playback speed** | **Tap to cycle** through a fixed ordered list (**no audio** — label / state only) | Matches your request; values align with the **in-car sister** treatment in your reference UI. |
-| **Player pre-roll & guest grace** | **Same as music** — see § *Player pre-roll & guest grace* below | One monetization vocabulary: **`showPlayerPreroll(userType)`** (`guest` only); **`provided`** / **`subscribed`** skip; **`GuestPrerollGraceContext`** + **`expandFromMiniPlayer`** behave like **`MusicPlayer`**. |
+| **Player pre-roll & guest grace** | **Same as music** — see § *Player pre-roll & guest grace* below | One monetization vocabulary: **`showPlayerPreroll(userType)`** (**`guest`** and **`freeStingray`**, same as **`usesGuestMusicSkipCap`**); **`freeProvided`** / **`subscribed`** skip; **`GuestPrerollGraceContext`** + **`expandFromMiniPlayer`** behave like **`MusicPlayer`**. |
 
 **Playback speed sequence (tap advances, then wraps to the start)**
 
@@ -55,7 +55,7 @@ Podcasts **do not** invent a separate ad model. Wire **Podcast Player** exactly 
 
 | Rule | Implementation source (reuse) |
 |------|-------------------------------|
-| **Who sees full-screen player pre-roll?** | **`showPlayerPreroll(userType)`** in **`src/utils/showVisualAds.js`** — **`true` only for `guest`**. **`provided`** and **`subscribed`** never see **`PlayerPrerollAd`** for this prototype. |
+| **Who sees full-screen player pre-roll?** | **`showPlayerPreroll(userType)`** in **`src/utils/showVisualAds.js`** — **`true` for `guest` and `freeStingray`**. **`freeProvided`** and **`subscribed`** never see **`PlayerPrerollAd`** for this prototype. |
 | **What renders the overlay?** | **`PlayerPrerollAd`** — same countdown / skip UX as music; **`PlayerPrerollAd`** **`useEffect`** calls **`beginPrerollGracePeriod()`** from **`GuestPrerollGraceContext`** when it mounts (**[`Guest-preroll-grace-tutorial`](Guest-preroll-grace-tutorial.md)** walks through why). |
 | **When is pre-roll skipped?** | Mirror **`MusicPlayer`**: **`needsPreroll`** is **`showPlayerPreroll(userType)`**; **`skipPrerollGate`** = **`!needsPreroll`** **||** **`location.state.expandFromMiniPlayer`** **||** **`graceActive`**. Opening full player **from **`MiniPlayer`**** passes **`expandFromMiniPlayer: true`** (already in **`MiniPlayer.jsx`**) — **no** second pre-roll spam when expanding collapsed playback. Inside **guest grace** after a finished/skipped pre-roll, **subsequent tunes** skip the overlay the same way as channel hopping — podcast episode changes should behave the same once **PodcastPlayer** reads **`graceActive`**. |
 | **When does playback / history “start”?** | Keep **Listen again**, **`PlaybackContext`**, “real listen” stubs **gated**: do **not** treat the user as fully in-session until **either** pre-roll completes **or** skip — same pattern as **`MusicPlayer`** **`useEffect`** guards with **`needsPreroll && !prerollComplete`**. |
@@ -172,7 +172,7 @@ Deliverable: player matches **Stories** (“variant of music player”) and the 
 
 1. **Starting an episode (“tune”) opens the full-screen player first.** While the URL is **`/podcast/:podcastId/play/:episodeId`**, **`MiniPlayer` stays hidden**, just like **`/music/:channelId/play`** (playback shell reserves space through **`PlaybackContext`** + `--mini-player-offset` only when mini is visible).
 2. **Tapping collapse / minimize on the full player** navigates to **`/podcast/:podcastId`** (**Podcast Info**). Session stays active; **`MiniPlayer`** appears as the **footer overlay** above the scrolling **info** page (tabs, optional visual ads—same stack as **`MusicChannelInfo`** when music is minimized).
-3. **Tapping `MiniPlayer`** navigates **`fullPlayerPath`** with **`state: { expandFromMiniPlayer: true }`** (already how **`MiniPlayer`** works). That skips **guest** **`PlayerPrerollAd`** on expand—same contract as music once podcast play uses **`showPlayerPreroll`** · **`graceActive`** (§ *Player pre-roll & guest grace*).
+3. **Tapping `MiniPlayer`** navigates **`fullPlayerPath`** with **`state: { expandFromMiniPlayer: true }`** (already how **`MiniPlayer`** works). That skips **`PlayerPrerollAd`** on expand for preroll tiers—same contract as music once podcast play uses **`showPlayerPreroll`** · **`graceActive`** (§ *Player pre-roll & guest grace*).
 
 So: **start stream ⇒ full-screen player ⇒ collapse ⇒ show detail behind mini—not the other way round.** “Tap mini ⇒ expand full player again” completes the loop.
 
@@ -216,7 +216,7 @@ Deliverable: “intent-heavy” browse matches **Stories** positioning relative 
 Reuse **`UserTypeContext`**, **`showVisualAds`**, and **`showPlayerPreroll`** like music (**`src/utils/showVisualAds.js`**):
 
 - **Guest** — **Upgrade** in player chrome; full-screen **`PlayerPrerollAd`** before usable podcast controls; **Listen again** / session writes only **after** the pre-roll gate (same as **`MusicPlayer`**); **guest grace** briefly suppresses repeat pre-rolls (§ *Player pre-roll & guest grace*); **visual** footer ad strip where **`showVisualAds`** applies.
-- **Provided** — **no** guest pre-roll; **visual ads** still on for prototype (`showVisualAds` treats every non‑`subscribed` type — align **`provided`** nuances with **`docs/visual-ads-and-user-types.md`** if product splits them further).
+- **Free provider (`freeProvided`)** — **no** guest pre-roll; **visual ads** still on for prototype (`showVisualAds` treats every non‑`subscribed` type — align nuances with **`docs/visual-ads-and-user-types.md`** if product splits them further).
 - **Subscribed** — **no** **`PlayerPrerollAd`**, **no** upgrade CTA strip, **no** visual footer ads (**`showVisualAds`** is **`false`**).
 
 No new subscription **product** flows — stubs only.
@@ -232,7 +232,7 @@ Use this after each phase:
 3. **Bookmark / download** on episode row reflects in icon state.
 4. **Speed** cycles through **0.6 … 2** and wraps.
 5. Invalid URL → **Home** (or safe fallback).
-6. **`guest`**: episode play from Podcast Info shows **`PlayerPrerollAd`** → after complete/skip, controls work **and** **expand-from-mini** does **not** replay pre-roll; **`provided`/`subscribed`** never see podcast pre-roll; align with **`MusicPlayer`** for the same **`userType`**.
+6. **`guest`** / **`freeStingray`**: episode play from Podcast Info shows **`PlayerPrerollAd`** → after complete/skip, controls work **and** **expand-from-mini** does **not** replay pre-roll; **`freeProvided`/`subscribed`** never see podcast pre-roll; align with **`MusicPlayer`** for the same **`userType`**.
 
 ---
 

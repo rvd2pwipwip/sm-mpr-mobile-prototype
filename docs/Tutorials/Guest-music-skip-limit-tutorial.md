@@ -2,7 +2,7 @@
 
 This document walks through the **guest-only hourly skip cap** for **music** streaming: **constants**, **`GuestMusicSkipContext`** (timing + entitlement checks), **`MusicSkipButton`** (badge overlay), **`GuestSkipLimitDialog`**, and how **`MiniPlayer`** + **`MusicPlayer`** stay in sync without **prop drilling**.
 
-**Prerequisite:** **[`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md)** (where music vs mini/full lives), **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** (**`guest`** vs **`provided`** / **`subscribed`**), **`UserTypeContext`**.
+**Prerequisite:** **[`PlaybackContext-tutorial.md`](PlaybackContext-tutorial.md)** (where music vs mini/full lives), **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** (user tiers + **`usesGuestMusicSkipCap`**), **`UserTypeContext`**.
 
 **Figma:** Badge on skip control — **[`23:20013`](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-20013)**; hourly limit modal — **[`5568:166350`](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5568-166350)**.
 
@@ -14,7 +14,7 @@ This document walks through the **guest-only hourly skip cap** for **music** str
 
 - **`guest`** on **music** only: **`MusicPlayer`** and **`MiniPlayer`** when **`session.variant === "music"`** (podcasts / radio keep different controls).
 - Each **successful skip tap** pushes a future **expiry timestamp** (`now + recovery duration`). Until that expiry passes, it counts toward a **maximum number of simultaneous “slots”.**
-- **`provided`** / **`subscribed`** — **unlimited skips**; context **does not** record stamps (early return).
+- **`freeProvided`** / **`subscribed`** — **unlimited skips**; context **does not** record stamps (early return).
 - **Badge digit** above the triangle of **`/skip.svg`**: **`active stamp count`**; **hidden at 0** (nothing to reclaim yet).
 - **At cap**, a modal explains **approximately how many whole minutes remain** until the **oldest** active stamp expires, and pushes **Upgrade** (**`/upgrade`**) messaging.
 - Successful skip **prototype v1**: **counter + timers only** — no fake “next track.”
@@ -22,7 +22,7 @@ This document walks through the **guest-only hourly skip cap** for **music** str
 ### Out of scope (see **`docs/Plans/plan.md`**)
 
 - **Persistence** (`localStorage`) across reload — in-memory OK for now.
-- **Licensing tweaks** when **`provided`** vs **`guest`** need different caps (**plan** calls this out).
+- **Licensing tweaks** when **`freeProvided`** vs **`guest`** need different caps (**plan** calls this out).
 
 ---
 
@@ -64,7 +64,7 @@ Outer **`GuestMusicSkipProvider`** reads **`useUserType()`** and renders:
 <GuestMusicSkipInnerProvider key={userType}>{children}</GuestMusicSkipInnerProvider>
 ```
 
-**`key={userType}`** forces React to **unmount/remount** the inner provider when **`userType`** switches (guest ↔ provided ↔ subscribed). All **`useState` reset** happens automatically — **no `useEffect` that calls `setExpiries([])`** (avoids “setState in effect” linter noise and cascading renders).
+**`key={userType}`** forces React to **unmount/remount** the inner provider when **`userType`** switches across **guest**, **freeStingray**, **freeProvided**, and **subscribed**. All **`useState` reset** happens automatically — **no `useEffect` that calls `setExpiries([])`** (avoids “setState in effect” linter noise and cascading renders).
 
 **Teaching:** **`key`** on component types is React’s blunt “fresh instance please” hammer — helpful for prototypes that isolate **preview modes** (`/upgrade`) from real session carryover.
 
@@ -78,7 +78,7 @@ Outer **`GuestMusicSkipProvider`** reads **`useUserType()`** and renders:
 
 ### 4c. `consumeGuestMusicSkip`
 
-- **`userType !== "guest"`** → **`return true`** (caller may still “advance” UX later — v1 ignores).
+- **`usesGuestMusicSkipCap(userType)`** is false → **`return true`** (no cap). True for **`guest`** and **`freeStingray`** (hourly skip tally applies).
 - **Guest** → prune → at cap opens dialog + **`return false`**; otherwise append expiry, sort, **`return true`**.
 
 The dialog stores **`minutesUntilOldestExpiry(pruned)`** when blocked.
@@ -149,7 +149,7 @@ Order (outer → inner):
 3. Tap **skip** up to **6** times — badge **1…6**; the next tap opens the **modal** with an estimated minute countdown.
 4. Optional: set **`GUEST_MUSIC_SKIP_RECOVERY_MS`** to **one minute** in **`guestMusicSkips.js`**, wait **60s** — badge should **drop** on the next **15s** prune tick (or tap skip again to force prune via **`consume`** read path).
 
-**`provided`** / **`subscribed`:** no badge; skip taps **never** open the modal.
+**`freeProvided`** / **`subscribed`:** no badge; skip taps **never** open the modal.
 
 ---
 
@@ -173,6 +173,6 @@ Order (outer → inner):
 
 - **Fake track line** after successful skip — likely **`PlaybackContext`** adds **track index** or title string; **`consumeGuestMusicSkip()`** return value can gate “bump track” when you wire it.
 - **Persist tallies** — hydrate stamps from **`localStorage`** on mount; filter past expiries.
-- **Analytics / copy** — align strings with legal for **`provided`** if caps diverge.
+- **Analytics / copy** — align strings with legal for **`freeProvided`** if caps diverge.
 
 Shorter reminder: **`docs/react-learning.md`** → **Guest music skip limit (Context + hourly stamps)**.

@@ -12,7 +12,11 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
-import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
+import {
+  showPlayerPreroll,
+  showUpgradeCallToAction,
+  showVisualAds,
+} from "../utils/showVisualAds";
 import "./MusicPlayer.css";
 import "./RadioPlayer.css";
 
@@ -128,7 +132,7 @@ export default function RadioPlayer() {
           <PlayerHeaderIcon variant="down" />
         </button>
         <div className="music-player__header-center">
-          {userType === "guest" ? (
+          {showUpgradeCallToAction(userType) ? (
             <UpgradeButton onClick={() => navigate("/upgrade")} />
           ) : (
             <span className="music-player__header-spacer" aria-hidden={true} />

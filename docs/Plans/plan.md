@@ -2,7 +2,7 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
-**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -11,7 +11,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Clickable** mobile-first UX: music, podcasts, radio.
 - **Fake data only**; no real APIs.
 - **Figma** as layout reference; match structure and hierarchy, not pixel perfection by default.
-- **User types** (guest, provided, subscribed) reflected in **header, ads, and footer height** (stubs are OK).
+- **User types** (`guest`, `freeStingray`, `freeProvider` in story; **`freeProvided`** in code, `subscribed`) reflected in **header, ads, and footer height** (stubs are OK).
 
 ---
 
@@ -32,8 +32,9 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Card components** — `ContentTileCard` (shared layout) + `MusicChannelCard`, `PodcastCard`, `RadioStationCard` in `src/components/` (tokenized `--card-tile-*` / type styles in `index.css`).
 - [x] **ContentSwimlane** — `src/components/ContentSwimlane` (inset title + More, full-bleed scroll, inner `padding-inline`).
 - [x] **`react-router-dom`** — `BrowserRouter` in `main.jsx`; **`Home`** at `/` in `src/pages/Home.jsx`; `App.jsx` holds `<Routes>`.
-- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Visual ad strip** — under tabs + music player when `showVisualAds(userType)`; **`html[data-visual-ads]`** extends **`--bottom-nav-stack-height`** (see **`docs/visual-ads-and-user-types.md`**). **`MiniPlayer`** + **`PlaybackContext`** — footer strip above **`BottomNav`** (Figma **`19777:32024`**); **`--mini-player-offset`** expands scroll padding when active; **`Info`** demo buttons for podcast/radio stubs. **Footer layering:** **`MiniPlayer`**, **visual ad strip** (guest/provided), and **`BottomNav`** are **fixed overlays** pinned to the bottom of the phone shell (stacked **above** scrolling **`Routes`** / **`main`** so main content slides underneath; shell **`padding-bottom`** + tokens reserve clearance).
-- [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / provided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up (after mini player baseline):* swimlane-level ads; finer **freeStingray** / **freeProvider** vs **`guest`** / **`provided`** if product requires it.
+- [x] **Chrome (step 4)** — **`BottomNav`** (Home, Search, Info) + **`HomeHeader`** + **`HomeBanner`** placeholder; `App.jsx` + `.app-shell` bottom padding for nav + safe area. **Visual ad strip** — under tabs + music player when `showVisualAds(userType)`; **`html[data-visual-ads]`** extends **`--bottom-nav-stack-height`** (see **`docs/visual-ads-and-user-types.md`**). **`MiniPlayer`** + **`PlaybackContext`** — footer strip above **`BottomNav`** (Figma **`19777:32024`**); **`--mini-player-offset`** expands scroll padding when active; **`Info`** demo buttons for podcast/radio stubs. **Footer layering:** **`MiniPlayer`**, **visual ad strip** (non-subscribed ad tiers), and **`BottomNav`** are **fixed overlays** pinned to the bottom of the phone shell (stacked **above** scrolling **`Routes`** / **`main`** so main content slides underneath; shell **`padding-bottom`** + tokens reserve clearance).
+- [x] **Subscription (Upgrade) + user type** — **`UserTypeProvider`** (`src/context/UserTypeContext.jsx`) + **`showVisualAds()`** (`src/utils/showVisualAds.js`); route **`/upgrade`** → **`Subscription.jsx`** (Figma `220:40551`); **`Home`** Upgrade → navigate; **`HomeHeader`** variants (guest / freeStingray / freeProvided / subscribed); **`BottomNav`**: **`/upgrade`** counts as Home tab; **`Button`** variant **`subscribe-primary`**. **`VisualAdStrip`** + **`VisualAdsHtmlSync`** for footer ads. *Follow-up:* swimlane-level ads; finer **freeStingray** vs **freeProvided** rules if product requires it.
+- [x] **`userType` `freeProvided` (Phase 0, Info plan)** — renamed from **`provided`** in **`src/`** + docs; **`Subscription`** **Preview as** uses **Free provider**. Details: **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 0.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
 - [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). **Search** tab **Browse / Podcasts** body: see **Search & Browse — Phase 3** above. **Search** tab **Browse / Radio**: see **Phase 4** above.
@@ -58,7 +59,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
    `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). *Follow-up:* **Favorites**, **Recommendations**, full banner art / SVGs from Figma.
 
 5. **User mode stub** — **done (baseline)**  
-   **`UserTypeContext`**: `guest` | `provided` | `subscribed` — drives **`HomeHeader`** and **Subscription** screen; **ads / footer height** still to wire when those chrome pieces exist (`docs/Stories/Home-screen-story.md`).
+   **`UserTypeContext`**: `guest` | `freeStingray` | `freeProvided` | `subscribed` — drives **`HomeHeader`** and **Subscription**; **`docs/Stories/Home-screen-story.md`** for chrome intent.
 
 6. **Stacked routes (music first)** — **done (music)**  
    Info + player + **no tab bar** on player. Then mirror for podcast / radio.
@@ -110,7 +111,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 **User types**
 
 - **`guest`** — capped skips (each skip starts its own countdown; overlapping “slots” up to a max).
-- **`provided`** and **`subscribed`** — **unlimited** for this prototype (**confirm licensing / partner rules later**).
+- **`freeProvided`** and **`subscribed`** — **unlimited** for this prototype (**confirm licensing / partner rules later**).
 
 **Product behavior**
 
@@ -134,9 +135,11 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
+1. [ ] **Info tab (main + Contact + About)** — **`docs/Plans/Info-screen-implementation-plan.md`** phases **1+** (Phase **0** rename shipped): collapsible Account / Settings / Info, audio quality switcher reuse, external links, remove Info playback demos. **Figma:** nodes listed in that plan.
 
-2. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
+2. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
+
+3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
 ## Backlog / later
 
@@ -156,4 +159,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-08* — **`docs/Plans/`** doc layout; **Search & Browse Phase 4 (radio browse)** + **International subregion** pattern doc’d; **Next:** Search phases **5–8**, visual pass.
+*Last updated: 2026-05-11* — **Info plan Phase 0 done** (`provided` -> **`freeProvided`** in `src` + docs). **Next:** Info plan phases **1+** (main Info UI), then Search **5–8**.

@@ -21,7 +21,7 @@ For US/Canada, the music offer (1000+ channels) is more similar to our current o
 
 The in-car implementation doesn't have any user mode but our mobile prototype needs to implement:
 1- guest (ad supported free streaming)
-2- provided (ads for some providers, provider SSO login)
+2- freeProvided (ads for some providers, provider SSO login)
 3- subscribed (no ads, B2C subscription user login)
 
 Ads are going to be both audio (pre/post roll) and visual (banners). For the needs of this UX/UI prototype, the only ad free users will be the subscribed ones.

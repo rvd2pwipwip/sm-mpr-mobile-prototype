@@ -1,6 +1,6 @@
 # Tutorial: Guest preroll grace period (prototype)
 
-This document explains the **guest-only full-screen preroll grace** feature: how **`GuestPrerollGraceContext`** stores a timed “no more prerolls” window, how **`PlayerPrerollAd`** **starts** that window when the ad UI appears, and how **`MusicPlayer`** **consumes** **`graceActive`** so extra **tunes** within the window skip the overlay.
+This document explains the **full-screen preroll grace** feature (prototype users who get **`PlayerPrerollAd`**: **guest** and **free Stingray**): how **`GuestPrerollGraceContext`** stores a timed “no more prerolls” window, how **`PlayerPrerollAd`** **starts** that window when the ad UI appears, and how **`MusicPlayer`** **consumes** **`graceActive`** so extra **tunes** within the window skip the overlay.
 
 **Companion files (not line-by-line here, but required for the full flow):**
 
@@ -9,7 +9,7 @@ This document explains the **guest-only full-screen preroll grace** feature: how
 - [`src/components/MiniPlayer.jsx`](../../src/components/MiniPlayer.jsx) — **`expandFromMiniPlayer`** navigation state (preroll skip path **without** starting grace)
 - [`src/App.jsx`](../../src/App.jsx) — **`GuestPrerollGraceProvider`** wraps the app tree
 
-**Prerequisites:** **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** (**`showPlayerPreroll`** / **`guest`**), **[`react-learning.md`](../react-learning.md)** → *React Router `navigate` + `location.state` (guest preroll vs mini expand)*.
+**Prerequisites:** **[`visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)** (**`showPlayerPreroll`**, **`guest`** / **free Stingray**), **[`react-learning.md`](../react-learning.md)** → *React Router `navigate` + `location.state` (guest preroll vs mini expand)*.
 
 ---
 
@@ -17,7 +17,7 @@ This document explains the **guest-only full-screen preroll grace** feature: how
 
 | Behavior | Detail |
 |---------|--------|
-| **Trigger to start grace** | A **guest** full-screen preroll **`PlayerPrerollAd`** **mounts** → `beginPrerollGracePeriod()` runs (see §5). |
+| **Trigger to start grace** | A **guest** or **free Stingray** full-screen preroll **`PlayerPrerollAd`** **mounts** → `beginPrerollGracePeriod()` runs (see §5). |
 | **During grace** | **`graceActive`** is **`true`** for **`GUEST_PREROLL_GRACE_MS`** (default **15s**). A **new** tune to **`/music/:channelId/play`** **without** mini-expand sets **`skipPrerollGate`** so **`prerollComplete`** starts **`true`** and **no** second overlay. |
 | **After grace** | Timeout sets **`graceActive`** to **`false`**. The **next** tune that would show preroll **does** show it; **`PlayerPrerollAd`** mounts again → grace **restarts** from that display. |
 | **Persistence** | **None** — state lives in React context in memory. **Full page reload** clears grace (“app launch” for this SPA). |
@@ -133,7 +133,7 @@ These lines **connect** context + component; they are **not** duplicated line-by
 | Lines (approx.) | Role |
 |-----------------|------|
 | **59** | **`const { graceActive } = useGuestPrerollGrace();`** — subscribes to grace; re-renders when **`graceActive`** toggles. |
-| **63** | **`skipPrerollGate = !needsPreroll \|\| expandFromMini \|\| graceActive`** — three ways to skip the overlay: not guest preroll, opened from mini strip, or **inside grace window**. |
+| **63** | **`skipPrerollGate = !needsPreroll \|\| expandFromMini \|\| graceActive`** — three ways to skip the overlay: user type has no preroll, opened from mini strip, or **inside grace window**. |
 | **64–65** | **`useState(() => skipPrerollGate)`** for **`prerollComplete`** and **`playing`** — **initial** skip when landing on **`/play`** during grace **without** mounting **`PlayerPrerollAd`**. |
 | **97–102** | Renders **`PlayerPrerollAd`** only when **`needsPreroll && !prerollComplete`**. |
 
@@ -148,7 +148,7 @@ These lines **connect** context + component; they are **not** duplicated line-by
 | **React Strict Mode (dev)** | Effects may run twice on mount; **`beginPrerollGracePeriod`** clears the previous timeout before scheduling again, so one **logical** grace window survives. |
 | **Provider location** | **`GuestPrerollGraceProvider`** wraps **`PlaybackProvider`** in **`App.jsx`** so **`PlayerPrerollAd`** **inside** routes can call **`useGuestPrerollGrace`**. |
 | **Expand from mini** | **`PlayerPrerollAd`** never mounts → **grace is not** extended by expand alone; grace was (or was not) started by an earlier **tune** that **did** show preroll. |
-| **User type** | **`showPlayerPreroll(userType)`** is false for **provided** / **subscribed** → **`PlayerPrerollAd`** never mounts → grace **never** starts from music preroll for those types. |
+| **User type** | **`showPlayerPreroll(userType)`** is true for **guest** / **freeStingray**; false for **freeProvided** / **subscribed** → grace only applies when preroll can mount for those ad-supported tiers. |
 
 ---
 

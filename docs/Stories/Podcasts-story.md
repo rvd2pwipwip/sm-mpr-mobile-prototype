@@ -46,7 +46,7 @@ Our **full-screen podcast player** is a **variant** of the **music full-screen p
 
 ## Monetization and user types
 
-We follow the **same monetization model as music**: **guest**, **provided**, and **subscribed** behave the same way for our surfaces as they do for the rest of the app (including how ads and upgrade patterns apply at the product level).
+We follow the **same monetization model as music**: **guest**, **freeProvided** (free provider / SSO tier), and **subscribed** behave the same way for our surfaces as they do for the rest of the app (including how ads and upgrade patterns apply at the product level).
 
 ---
 

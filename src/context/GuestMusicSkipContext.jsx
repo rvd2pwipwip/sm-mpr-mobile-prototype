@@ -13,6 +13,7 @@ import {
   GUEST_MUSIC_SKIP_RECOVERY_MS,
 } from "../constants/guestMusicSkips";
 import { useUserType } from "./UserTypeContext";
+import { usesGuestMusicSkipCap } from "../utils/showVisualAds";
 
 const GuestMusicSkipContext = createContext(null);
 
@@ -51,10 +52,10 @@ function GuestMusicSkipInnerProvider({ children }) {
   /**
    * Guest music skip: records a recovery timestamp or opens the limit dialog.
    * `expiriesRef` updates synchronously so rapid taps never read stale state.
-   * @returns {boolean} true if skip allowed (guest under cap, or non-guest).
+   * @returns {boolean} true if skip allowed (capped tiers under cap, or others).
    */
   const consumeGuestMusicSkip = useCallback(() => {
-    if (userType !== "guest") return true;
+    if (!usesGuestMusicSkipCap(userType)) return true;
     const now = Date.now();
     const pruned = pruneExpiries(expiriesRef.current, now);
     if (pruned.length >= GUEST_MUSIC_MAX_ACTIVE_SKIPS) {
@@ -87,7 +88,9 @@ function GuestMusicSkipInnerProvider({ children }) {
     return () => window.clearInterval(id);
   }, []);
 
-  const guestActiveSkipCount = userType === "guest" ? expiries.length : 0;
+  const guestActiveSkipCount = usesGuestMusicSkipCap(userType)
+    ? expiries.length
+    : 0;
 
   const value = useMemo(
     () => ({

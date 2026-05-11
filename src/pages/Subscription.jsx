@@ -21,7 +21,8 @@ const BENEFITS = [
 
 const USER_TYPE_OPTIONS = [
   { value: "guest", label: "Guest" },
-  { value: "provided", label: "Provided" },
+  { value: "freeStingray", label: "Free Stingray" },
+  { value: "freeProvided", label: "Free provider" },
   { value: "subscribed", label: "Subscribed" },
 ];
 
@@ -53,7 +54,7 @@ export default function Subscription() {
   };
 
   const handleProvider = () => {
-    setUserType("provided");
+    setUserType("freeProvided");
     window.open(PROVIDER_SSO_URL, "_blank", "noopener,noreferrer");
     navigate("/");
   };

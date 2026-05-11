@@ -104,7 +104,7 @@
   --bottom-nav-gap-to-indicator: 10px;
   --bottom-nav-indicator-height: 4px;
   --bottom-nav-label-size: 16px;
-  /* Visual ad strip under tabs when `html[data-visual-ads]` (guest / provided). */
+  /* Visual ad strip under tabs when `html[data-visual-ads]` (non-subscribed tiers). */
   --visual-ad-strip-min-height: 86px;
   /* Fixed `VisualAdStrip--player` footprint (strip min-height + home indicator inset). */
   --visual-ad-player-reserve-height: calc(
@@ -142,7 +142,7 @@
   --z-chrome: 100;
   --z-mini-player: 110;
   --z-bottom-nav: 100;
-  /* Fixed bottom strip on music / podcast full-screen player (guest + provided ads). */
+  /* Fixed bottom strip on music / podcast full-screen player when visual ads on. */
   --z-visual-ad-player: 105;
   /* Above player chrome — guest pre-roll overlay */
   --z-player-preroll: 250;

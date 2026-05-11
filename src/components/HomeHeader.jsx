@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { useUserType } from "../context/UserTypeContext";
+import { showUpgradeCallToAction } from "../utils/showVisualAds";
 import UpgradeButton from "./UpgradeButton";
 import "./HomeHeader.css";
 
@@ -61,7 +62,7 @@ function WordmarkPair() {
 }
 
 /**
- * Home top bar: wordmark; guest sees Upgrade — provided / subscribed per `docs/Stories/Home-screen-story.md`.
+ * Home top bar: wordmark; guest + freeStingray see Upgrade, otherwise freeProvider pill, subscribed solo wordmark.
  */
 export default function HomeHeader({ onUpgrade }) {
   const headerRef = useHomeHeaderOffset();
@@ -83,7 +84,7 @@ export default function HomeHeader({ onUpgrade }) {
         <WordmarkPair />
       </div>
       <div className="home-header__actions">
-        {userType === "guest" ? (
+        {showUpgradeCallToAction(userType) ? (
           <UpgradeButton onClick={onUpgrade} />
         ) : (
           <span className="home-header__provider-pill" title="Provider access (prototype)">

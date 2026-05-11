@@ -85,7 +85,7 @@ These UX principles define the experience foundations for **podcasts and episode
 
 ## 8. Match Music’s Monetization and Trust Model
 
-**Guest, provided, and subscribed experiences mirror music.**
+**Guest, free provider (`freeProvided` in code), and subscribed experiences mirror music.**
 
 - Ads, upgrade affordances, and entitled experiences behave consistently with music so users do not learn a second monetization vocabulary.
 

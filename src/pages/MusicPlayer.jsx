@@ -13,7 +13,11 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
-import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
+import {
+  showPlayerPreroll,
+  showUpgradeCallToAction,
+  showVisualAds,
+} from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
 import "./MusicPlayer.css";
 
@@ -137,7 +141,7 @@ export default function MusicPlayer() {
           <PlayerHeaderIcon variant="down" />
         </button>
         <div className="music-player__header-center">
-          {userType === "guest" ? (
+          {showUpgradeCallToAction(userType) ? (
             <UpgradeButton onClick={() => navigate("/upgrade")} />
           ) : (
             <span className="music-player__header-spacer" aria-hidden={true} />

@@ -11,8 +11,8 @@ import { GUEST_PREROLL_GRACE_MS } from "../constants/guestPrerollGrace";
 const GuestPrerollGraceContext = createContext(null);
 
 /**
- * In-memory only: resets when the SPA loads fresh. When the guest preroll UI
- * mounts, call beginPrerollGracePeriod() — for GUEST_PREROLL_GRACE_MS, further
+ * In-memory only: resets when the SPA loads fresh. When the preroll UI
+ * mounts (guest / free Stingray), call beginPrerollGracePeriod() — for GUEST_PREROLL_GRACE_MS, further
  * tune events skip the full-screen preroll.
  */
 export function GuestPrerollGraceProvider({ children }) {

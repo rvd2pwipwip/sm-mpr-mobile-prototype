@@ -26,7 +26,7 @@ import {
   getPodcastById,
   getPodcastEpisodeById,
 } from "../data/podcasts";
-import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
+import { showPlayerPreroll, showUpgradeCallToAction, showVisualAds } from "../utils/showVisualAds";
 import {
   approxDurationSecondsFromLabel,
   formatPlaybackClock,
@@ -363,7 +363,7 @@ export default function PodcastPlayer() {
           <PlayerHeaderIcon variant="down" />
         </button>
         <div className="music-player__header-center">
-          {userType === "guest" ? (
+          {showUpgradeCallToAction(userType) ? (
             <UpgradeButton onClick={() => navigate("/upgrade")} />
           ) : (
             <span className="music-player__header-spacer" aria-hidden={true} />

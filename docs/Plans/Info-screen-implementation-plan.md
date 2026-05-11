@@ -1,0 +1,133 @@
+# Info tab — implementation plan
+
+Plan for the **Info** main screen, nested **Contact Us** and **About** screens, and **`freeProvided`** rename. **Do this doc first**, then implement in the phases below. Product context for user-type chrome: **`docs/Stories/Home-screen-story.md`**, **`docs/visual-ads-and-user-types.md`**.
+
+---
+
+## Decisions (from UX; locked for build)
+
+1. **`freeProvided`** in code (formerly `provided`; aligns with **`freeStingray`**). Behavior unchanged: provider SSO tier, **Provider** header pill, ads on, no music preroll, no guest skip cap.
+2. **`freeStingray`** — already in **`UserTypeContext`**; Account section will vary by all four types: **`guest`**, **`freeStingray`**, **`freeProvided`**, **`subscribed`**.
+3. **Collapsible sections** on **`/info`**: **Account**, **Settings**, **Info**. **Default:** only **Account** expanded on first load. **Several sections may be open** at once (accordion does not close others).
+4. **Contact Us** and **About** are **full-height stack screens** with **`ScreenHeader`** (**back** in **`startSlot`**, title centered). **`BottomNav` stays visible** (same as **`Subscription`**: only **music / podcast / radio `…/play`** routes hide the tab bar in **`App.jsx`**).
+5. **Remove** **`Info`** mini player **Podcast bar / Radio bar / Clear** demo block — real flows exist elsewhere.
+6. **External links:** use **real Stingray URLs when they appear in the referenced Figma nodes** during implementation; otherwise **`#`** or a short comment placeholder **with rel noopener** on real `<a href>`. **Terms** and **Privacy** reuse existing constants from **`Subscription.jsx`** (`TERMS_URL`, `PRIVACY_URL`).
+7. **About / Contact copy:** mirror **strings** from Figma [**About / contact block `5683:78191`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191&t=RTnR7veKdkyVrhHy-4) (and related frames as needed when pulling **`get_design_context`**).
+
+---
+
+## Figma references
+
+| Area | Node(s) | Notes |
+|------|---------|--------|
+| Info — Account variants | [**`5518:74009`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5518-74009&t=RTnR7veKdkyVrhHy-4) | Per user type rows / actions |
+| Contact Us screen | [**`5683:78189`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78189&t=RTnR7veKdkyVrhHy-4) | In-app stack |
+| About screen | [**`5683:78416`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78416&t=RTnR7veKdkyVrhHy-4) | In-app stack |
+| About / contact strings | [**`5683:78191`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191&t=RTnR7veKdkyVrhHy-4) | Copy source of truth |
+| Audio quality — row UI | [**`5689:80694`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80694&t=RTnR7veKdkyVrhHy-4) | Settings section |
+| Audio quality — segmented control | [**`5689:80479`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80479&t=RTnR7veKdkyVrhHy-4) | Match **Search** browse pill switcher |
+| Audio quality — labels / values | [**`5689:80689`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80689&t=RTnR7veKdkyVrhHy-4) | Segment ids + visible strings |
+
+Add these to **`docs/figma-nodes.md`** when implementation starts.
+
+---
+
+## Phase 0 — Rename `provided` to `freeProvided`
+
+**Status: done (2026-05-11).** Code and docs now use **`freeProvided`**; the string **`"provided"`** is no longer a **`userType`** value.
+
+**Goal:** One mechanical rename so **`UserTypeContext`** and helpers stay consistent with **`freeStingray`**.
+
+- Replace string **`"provided"`** with **`"freeProvided"`** everywhere in **`src/`** (Subscription **`setUserType`**, preview toggles, **`HomeHeader`**, **`showVisualAds`**, docs references in code comments if any).
+- Update **`docs/visual-ads-and-user-types.md`**, **`docs/react-learning.md`**, **`docs/Plans/plan.md`**, tutorials/plans that list user types, and **`docs/Stories`** lines that name **`provided`** as the code value (keep product words **free provider** where the story uses them).
+- **`Subscription.jsx`**: **Select provider** CTA sets **`freeProvided`**; label in **Preview as** e.g. **Free provider** or **Provider** (match Figma / existing copy).
+- **Regression:** **`npm run build`**, smoke **Home header**, **Upgrade** preview toggles, **music preroll** (still guest + freeStingray only), **ads** for all non-subscribed types.
+
+---
+
+## Phase 1 — Routing and shells
+
+- **`/info`** — replace stub in **`Info.jsx`**: **`main.app-shell`** + scroll region + **`content-inset`** (match other tab pages).
+- **`/info/contact`** — **`InfoContact.jsx`** (or **`InfoContactUs.jsx`**) with **`ScreenHeader`** + back **`navigate(-1)`**.
+- **`/info/about`** — **`InfoAbout.jsx`** with **`ScreenHeader`** + back.
+- Register routes in **`App.jsx`** **before** or **after** **`/info`** as needed so **`/info/contact`** does not conflict (explicit **`Route path="/info/contact"`** and **`/info/about`**).
+
+No change to **`hideBottomNavForPath`** unless a future overlay requires it (not planned).
+
+---
+
+## Phase 2 — Collapsible main sections
+
+- New small presentational pieces (one file or split): **section header** (title + chevron / tap target), **body** slot, **`aria-expanded`** on the header **`button`**.
+- Local state: three booleans **or** a `Set` / record; **initial:** `{ account: true, settings: false, info: false }`.
+- Tokenized spacing: reuse **`--space-content-inline`**, **`--space-screen-gap`**; no one-off horizontal padding on the outer shell.
+
+---
+
+## Phase 3 — Account section (user-type variants)
+
+- Drive UI from **`useUserType()`**.
+- Map each type to the layouts in Figma **`5518:74009`** (sign-in / upgrade / provider badge / subscription summary — whatever the frame defines).
+- Use existing **`Button`**, **`UpgradeButton`** / **`navigate('/upgrade')`** only where Figma matches current patterns; fake email or “Signed in as …” strings as stub data objects in **`src/data/`** or a tiny **`infoAccountCopy.js`** if it keeps **`Info.jsx`** readable.
+
+---
+
+## Phase 4 — Settings section
+
+1. **Autoplay** — toggle switch (native **`input type="checkbox"`** styled or existing pattern if any); state in **`useState`** (in-memory). Optional: **`sessionStorage`** later — out of scope unless requested.
+2. **Audio quality** — **visible only** when **`userType`** is **`subscribed`** or **`freeProvided`** (subscribed + provider users per product note).
+   - **Control:** reuse **`SearchBrowseContentSwitcher`** visual and behavior from [**`SearchBrowseContentSwitcher.jsx`**](../../src/components/SearchBrowseContentSwitcher.jsx) + [**`SearchBrowseContentSwitcher.css`**](../../src/components/SearchBrowseContentSwitcher.css).
+   - **Implementation note:** Today the switcher wires **`NavLink`** + **`to`**. Audio quality is **not** route-driven. Prefer **either** (a) a small prop on the switcher: **`mode="local"`** with **`segments`**, **`activeId`**, **`onActiveIdChange`**, rendering **`button`** segments **without** navigation, **or** (b) a thin **`InfoAudioQualitySwitcher`** that duplicates the rail + thumb math but shares CSS classes. Choose (a) if the diff stays small and **`SearchBrowseContentSwitcher`** stays readable.
+   - Segment **ids and labels** from Figma **`5689:80689`** (e.g. Normal / High / Lossless — confirm at implementation time).
+3. **Communication preferences** — row with **external link** icon; **href** from Figma if present, else **`#`** with TODO in comment.
+
+---
+
+## Phase 5 — Info section (rows on main screen)
+
+- **FAQ** — external link (URL from Figma or placeholder).
+- **Contact Us** — **`Link`** / **`navigate`** to **`/info/contact`**.
+- **About** — navigate to **`/info/about`**.
+
+---
+
+## Phase 6 — About screen content
+
+- Blocks from [**`5683:78191`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191&t=RTnR7veKdkyVrhHy-4): **contact info** (static prototype copy).
+- **Terms and Conditions** — same **`TERMS_URL`** as **`Subscription.jsx`**.
+- **Privacy Policy** — same **`PRIVACY_URL`** as **`Subscription.jsx`**.
+- Shared **`LEGAL_LINKS`** constant (optional refactor): export from one module (e.g. **`src/constants/legalLinks.js`**) and import in **`Subscription.jsx`**, **`InfoAbout.jsx`** to avoid drift.
+
+---
+
+## Phase 7 — Cleanup and docs
+
+- Remove **`usePlayback`** demo handlers from **`Info.jsx`** and related **`Info.css`** rules for **`info-page__playback-demos`** if nothing else uses them.
+- **`docs/react-learning.md`**: short entry for collapsible **`details`-like** pattern and Info routes (when implemented).
+- **`docs/Plans/plan.md`**: move **Info** from backlog to **done** with checkbox and link here.
+- **Optional** story file **`docs/Stories/Info-story.md`** later — not required for first ship if Figma + this plan are enough.
+
+---
+
+## Verification checklist (manual)
+
+- [ ] **`/info`**: Account open only by default; Settings + Info can open together with Account.
+- [ ] All four **Preview as** types on **`/upgrade`** show correct **Account** chunk.
+- [ ] **Audio quality** hidden for **`guest`** and **`freeStingray`**; shown for **`subscribed`** and **`freeProvided`** only.
+- [ ] **Contact** / **About**: back returns to previous history entry; tabs still visible.
+- [ ] **Terms** / **Privacy** open in new tab with **noopener**.
+- [ ] No mini player demo buttons on **Info**.
+
+---
+
+## Implementation order (recommended)
+
+0. **`freeProvided`** rename (avoid building Info on old string).  
+1. Routes + **About** + **Contact** placeholders (navigation wiring).  
+2. Collapsible shell + **Settings** + **Info** rows (autoplay, links).  
+3. **Account** variants + **Audio quality** (switcher integration).  
+4. Polish from Figma + **`figma-nodes.md`** + **`plan.md`** update.
+
+---
+
+*Created: 2026-05-11 — Info tab scope + Figma links + locked decisions before code.*

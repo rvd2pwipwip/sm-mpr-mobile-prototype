@@ -361,7 +361,7 @@ Local **icon subcomponents** mirror **`MusicPlayer`** mask pattern.
 |**`usePlayback`**|Write session while player visible.|
 |**`useGuestPrerollGrace`**|Guest **grace** window after preroll.|
 |**`useListenHistory`**|**`recordPodcastShowListen`**.|
-|**`useUserType`**|Guest vs provided vs subscribed — ads + preroll gates.|
+|**`useUserType`**|Guest vs freeProvided vs subscribed — ads + preroll gates.|
 |**`needsPreroll` / `expandFromMini` / `skipPrerollGate`**|Skip preroll when expanding from mini or grace active.|
 |**`useState`**|`prerollComplete`, `playing`, `speedIdx`.|
 |**`usePodcastUserState`**|Bookmark + progress map reads/writes.|

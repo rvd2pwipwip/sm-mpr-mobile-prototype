@@ -25,7 +25,7 @@ This repo uses **`padding-bottom`** on scroll containers (**`.app-shell`** or in
 | **`--mini-player-offset`** | **`0px`** on **`:root`**; **`<html>`** inline style overrides when the mini strip is visible (**§4**). |
 | **`--footer-stack-scroll-padding`** | **`calc(...)`** | Single token for **`padding-bottom`** on **`main`** (default **`app-shell`**) **or** on inner **`overflow-y: auto`** scrollers — sum of **`--mini-player-offset`**, **`--bottom-nav-stack-height`**, **`env(safe-area-inset-bottom)`**. |
 | **`--bottom-nav-stack-height`** | **`calc(...)`** | Total **height of the bottom chrome column** from the bottom of the viewport **up through** tab row + optional ad strip (see **§3**). |
-| **`--bottom-nav-ad-height`** | **`0px`** by default | Becomes **`--visual-ad-strip-min-height`** when **`html[data-visual-ads]`** is set (**guest / provided**). |
+| **`--bottom-nav-ad-height`** | **`0px`** by default | Becomes **`--visual-ad-strip-min-height`** when **`html[data-visual-ads]`** is set (non-`subscribed` tiers with ads). |
 | **`--visual-ad-strip-min-height`** | **`86px`** | Placeholder ad block under tabs. |
 | **`--z-chrome`** | **`100`** | Shared layer for **primary** fixed chrome (**`BottomNav`** uses this). |
 | **`--z-mini-player`** | **`110`** | Mini strip renders **above** **`--z-chrome`** while still **below** e.g. **`--z-player-preroll`**. |
