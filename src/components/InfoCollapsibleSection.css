@@ -1,0 +1,65 @@
+/* Chevron: `public/up.svg` via mask so `currentColor` matches light/dark text. */
+/* One stroke under each title row: Figma App Info `7:3024` accordion header. */
+
+.info-collapsible__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  margin: 0;
+  padding: var(--space-4) 0;
+  min-height: var(--size-action-icon-btn);
+  border: none;
+  border-bottom: 1px solid var(--color-button-secondary-border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.info-collapsible__header:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.info-collapsible__title {
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+.info-collapsible__chevron {
+  flex-shrink: 0;
+  width: var(--size-action-icon-btn);
+  height: var(--size-action-icon-btn);
+  background-color: currentColor;
+  mask-image: url("/up.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("/up.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  /* Collapsed: chevron points down (up asset + 180deg CW). */
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.info-collapsible__chevron--expanded {
+  /* Expanded: show asset as-up; transition from 180 uses short arc (CCW) when opening. */
+  transform: rotate(0deg);
+}
+
+.info-collapsible__panel[hidden] {
+  display: none;
+}
+
+.info-collapsible__body {
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-10);
+}

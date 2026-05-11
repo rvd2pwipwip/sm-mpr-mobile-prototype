@@ -10,7 +10,7 @@ Plan for the **Info** main screen, nested **Contact Us** and **About** screens, 
 2. **`freeStingray`** — already in **`UserTypeContext`**; Account section will vary by all four types: **`guest`**, **`freeStingray`**, **`freeProvided`**, **`subscribed`**.
 3. **Collapsible sections** on **`/info`**: **Account**, **Settings**, **Info**. **Default:** only **Account** expanded on first load. **Several sections may be open** at once (accordion does not close others).
 4. **Contact Us** and **About** are **full-height stack screens** with **`ScreenHeader`** (**back** in **`startSlot`**, title centered). **`BottomNav` stays visible** (same as **`Subscription`**: only **music / podcast / radio `…/play`** routes hide the tab bar in **`App.jsx`**).
-5. **Remove** **`Info`** mini player **Podcast bar / Radio bar / Clear** demo block — real flows exist elsewhere.
+5. **Remove** **`Info`** mini player **Podcast bar / Radio bar / Clear** demo block — **done in Phase 1** (real flows live under Home / Search / **`/podcast/*`** / **`/radio/*`**).
 6. **External links:** use **real Stingray URLs when they appear in the referenced Figma nodes** during implementation; otherwise **`#`** or a short comment placeholder **with rel noopener** on real `<a href>`. **Terms** and **Privacy** reuse existing constants from **`Subscription.jsx`** (`TERMS_URL`, `PRIVACY_URL`).
 7. **About / Contact copy:** mirror **strings** from Figma [**About / contact block `5683:78191`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5683-78191&t=RTnR7veKdkyVrhHy-4) (and related frames as needed when pulling **`get_design_context`**).
 
@@ -47,6 +47,8 @@ Add these to **`docs/figma-nodes.md`** when implementation starts.
 
 ## Phase 1 — Routing and shells
 
+**Status: done (2026-05-11).** Routes registered; **`InfoContact`** / **`InfoAbout`** use **`ScreenHeader`** + shared **`InfoSubPage.css`** scroll; **`BottomNav`** keeps **Info** active for **`/info/*`**; **`Info`** root no longer includes mini player demos.
+
 - **`/info`** — replace stub in **`Info.jsx`**: **`main.app-shell`** + scroll region + **`content-inset`** (match other tab pages).
 - **`/info/contact`** — **`InfoContact.jsx`** (or **`InfoContactUs.jsx`**) with **`ScreenHeader`** + back **`navigate(-1)`**.
 - **`/info/about`** — **`InfoAbout.jsx`** with **`ScreenHeader`** + back.
@@ -58,6 +60,8 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 
 ## Phase 2 — Collapsible main sections
 
+**Status: done (2026-05-11).** **`InfoCollapsibleSection`** (`button` header + **`hidden`** panel, **`aria-expanded`**, **`role="region"`**); **`Info.jsx`** state **`{ account: true, settings: false, info: false }`**; independent toggles.
+
 - New small presentational pieces (one file or split): **section header** (title + chevron / tap target), **body** slot, **`aria-expanded`** on the header **`button`**.
 - Local state: three booleans **or** a `Set` / record; **initial:** `{ account: true, settings: false, info: false }`.
 - Tokenized spacing: reuse **`--space-content-inline`**, **`--space-screen-gap`**; no one-off horizontal padding on the outer shell.
@@ -65,6 +69,8 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 ---
 
 ## Phase 3 — Account section (user-type variants)
+
+**Status: done (2026-05-11).** **`InfoAccountSection`** maps **`useUserType()`** to Figma **`5518:74009`** (guest / **freeStingray** / **freeProvided** / **subscribed**); shared URLs in **`src/constants/externalLinks.js`**; copy stub in **`src/constants/infoAccount.js`**. **Log out** resets prototype to **`guest`**.
 
 - Drive UI from **`useUserType()`**.
 - Map each type to the layouts in Figma **`5518:74009`** (sign-in / upgrade / provider badge / subscription summary — whatever the frame defines).
@@ -102,8 +108,8 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 
 ## Phase 7 — Cleanup and docs
 
-- Remove **`usePlayback`** demo handlers from **`Info.jsx`** and related **`Info.css`** rules for **`info-page__playback-demos`** if nothing else uses them.
-- **`docs/react-learning.md`**: short entry for collapsible **`details`-like** pattern and Info routes (when implemented).
+- **`Info.jsx`** playback demos removed in **Phase 1**; confirm **`Info.css`** has no orphaned rules.
+- **`docs/react-learning.md`**: short entry for collapsible **`details`-like** pattern and Info routes (**done** for Phase 2 collapsibles + Phase 1 routes).
 - **`docs/Plans/plan.md`**: move **Info** from backlog to **done** with checkbox and link here.
 - **Optional** story file **`docs/Stories/Info-story.md`** later — not required for first ship if Figma + this plan are enough.
 

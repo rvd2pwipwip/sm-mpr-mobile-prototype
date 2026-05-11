@@ -30,6 +30,8 @@ import SearchRadioStationGrid from "./pages/SearchRadioStationGrid";
 import SearchCatalogMore from "./pages/SearchCatalogMore";
 import SearchTagsMore from "./pages/SearchTagsMore";
 import Info from "./pages/Info";
+import InfoAbout from "./pages/InfoAbout";
+import InfoContact from "./pages/InfoContact";
 import Subscription from "./pages/Subscription";
 import SwimlaneMore from "./pages/SwimlaneMore";
 
@@ -95,6 +97,8 @@ function AppRoutes() {
         <Route path="/search/podcasts" element={<Search />} />
         <Route path="/search/radio" element={<Search />} />
         <Route path="/search" element={<Navigate to="/search/music" replace />} />
+        <Route path="/info/contact" element={<InfoContact />} />
+        <Route path="/info/about" element={<InfoAbout />} />
         <Route path="/info" element={<Info />} />
       </Routes>
       {hideBottomNav ? null : (

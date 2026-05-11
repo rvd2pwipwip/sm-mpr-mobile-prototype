@@ -3,11 +3,9 @@ import Button from "../components/Button";
 import ScreenHeader, {
   ScreenHeaderChevronBack,
 } from "../components/ScreenHeader";
+import { PROVIDER_SSO_URL } from "../constants/externalLinks";
 import { useUserType } from "../context/UserTypeContext";
 import "./Subscription.css";
-
-const PROVIDER_SSO_URL =
-  "https://login.stingray.com/welcome/topproviders?client_id=zBUI4wDBNR1Ikz8L&language=en&redirect_uri=https://webplayer.stingray.com%2Fen%2Fplay%2Faccount-settings%2Faccount%3Fstate%3D&response_type=code";
 
 const TERMS_URL = "https://legal.stingray.com/en/terms-and-conditions";
 const PRIVACY_URL = "https://www.stingray.com/en/privacy-policy";

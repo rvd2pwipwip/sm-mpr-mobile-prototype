@@ -1,0 +1,74 @@
+.info-account__headline {
+  margin: 0;
+  font-size: clamp(1.25rem, 4.2vw, 1.5rem);
+  font-weight: 900;
+  color: var(--color-accent);
+  line-height: 1.2;
+}
+
+.info-account__subline {
+  margin: var(--space-3) 0 0;
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+
+.info-account__provider-block {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.info-account__provider-logo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.info-account__provider-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.info-account__provider-title {
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.info-account__provider-sub {
+  font-weight: 400;
+}
+
+.info-account__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  width: 100%;
+}
+
+/* Guest layout: Figma `5518:74009` — tight stacks, ~40px between groups */
+.info-account__actions--grouped {
+  gap: 2.5rem;
+}
+
+.info-account__action-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.info-account__action-full {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+a.info-account__action-full {
+  text-decoration: none;
+}

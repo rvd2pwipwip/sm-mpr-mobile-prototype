@@ -1,33 +1,56 @@
-import { usePlayback } from "../context/PlaybackContext";
+import { useState, useCallback } from "react";
+import InfoAccountSection from "../components/InfoAccountSection";
+import InfoCollapsibleSection from "../components/InfoCollapsibleSection";
 import "./Info.css";
 
-/** Info tab — stub + mini player variant demos until settings content ships. */
+/** Info tab — collapsible Account / Settings / Info. */
 export default function Info() {
-  const { startPodcastDemo, startRadioDemo, clearSession } = usePlayback();
+  const [open, setOpen] = useState({
+    account: true,
+    settings: false,
+    info: false,
+  });
+
+  const toggle = useCallback((key) => {
+    setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
 
   return (
     <main className="app-shell app-shell--footer-fixed info-page">
       <div className="app-shell-footer-scroll">
         <div className="content-inset">
-          <h1 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 700 }}>Info</h1>
-          <p className="text-muted" style={{ margin: 0 }}>
-            App information and help — placeholder.
-          </p>
-          <div className="info-page__playback-demos">
-            <p className="info-page__demo-label text-muted">
-              Mini player previews (until podcast/radio stacks exist):
-            </p>
-            <div className="info-page__demo-row">
-              <button type="button" className="info-page__demo-btn" onClick={startPodcastDemo}>
-                Podcast bar
-              </button>
-              <button type="button" className="info-page__demo-btn" onClick={startRadioDemo}>
-                Radio bar
-              </button>
-              <button type="button" className="info-page__demo-btn" onClick={clearSession}>
-                Clear
-              </button>
-            </div>
+          <div className="info-page__sections">
+            <InfoCollapsibleSection
+              sectionId="account"
+              title="Account"
+              expanded={open.account}
+              onToggle={() => toggle("account")}
+            >
+              <InfoAccountSection />
+            </InfoCollapsibleSection>
+
+            <InfoCollapsibleSection
+              sectionId="settings"
+              title="Settings"
+              expanded={open.settings}
+              onToggle={() => toggle("settings")}
+            >
+              <p className="text-muted info-page__section-placeholder">
+                Autoplay, audio quality, and preferences will appear in the next
+                phase.
+              </p>
+            </InfoCollapsibleSection>
+
+            <InfoCollapsibleSection
+              sectionId="help"
+              title="Info"
+              expanded={open.info}
+              onToggle={() => toggle("info")}
+            >
+              <p className="text-muted info-page__section-placeholder">
+                FAQ, Contact us, and About links will appear in the next phase.
+              </p>
+            </InfoCollapsibleSection>
           </div>
         </div>
       </div>

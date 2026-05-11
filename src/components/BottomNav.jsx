@@ -50,6 +50,9 @@ export default function BottomNav({ className = "" }) {
             (location.pathname.startsWith("/search") ||
               location.pathname.startsWith("/radio"));
 
+          const infoStackActive =
+            id === "info" && location.pathname.startsWith("/info");
+
           return (
             <NavLink
               key={id}
@@ -58,7 +61,7 @@ export default function BottomNav({ className = "" }) {
               className={({ isActive }) =>
                 [
                   "bottom-nav__item",
-                  isActive || homeStackActive || searchStackActive
+                  isActive || homeStackActive || searchStackActive || infoStackActive
                     ? "bottom-nav__item--active"
                     : "",
                 ]
