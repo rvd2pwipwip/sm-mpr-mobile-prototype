@@ -5,7 +5,8 @@ Teaching-oriented companion to **Search & Browse** [Phase 4](Search-Browse-imple
 **Companion docs**
 
 - Story + Integration notes: [`docs/Stories/Search-story.md`](../Stories/Search-story.md)
-- Parent tutorial: [`Search-Browse-implementation-plan.md`](Search-Browse-implementation-plan.md)
+- Parent plan (Search & Browse): [`Search-Browse-implementation-plan.md`](Search-Browse-implementation-plan.md)
+- **Subregion UI walkthrough (implemented pattern):** [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md)
 - Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
 
 **Prototype scope**
@@ -63,6 +64,7 @@ Use **slug constants** and helpers in `src/constants/radioBrowsePaths.js` (mirro
 - **`SearchRadioBrowse`** — top-level seven tiles; rendered from **`Search.jsx`** when `browseTab === 'radio'` (like **`SearchPodcastsBrowse`**).
 - **`SearchRadioInternationalContinents`** — continent grid/tiles; optional continent art from `public/`.
 - **`SearchRadioInternationalRegion`** — **one reusable screen** for every **subregion** node: resolves “current node” from URL → loads **popular stations** + **child pills** from mock API.
+- *Shipped as* **`SearchRadioInternationalStack.jsx`** (continent list + geo stack in one route tree).
 
 Near You and format browses can be **`SearchRadioStationGrid`** or shared layout: **`ScreenHeader`** back + 2-col grid (**`SwimlaneMore.css`**) if Figma shows a simple full grid; if they use a swimlane + secondary list, reuse the subregion component with an empty pill row.
 
@@ -92,27 +94,27 @@ Near You and format browses can be **`SearchRadioStationGrid`** or shared layout
 - **Swimlane:** **`ContentSwimlane`** — title like “Popular in North America” / “Popular in Canada” (dynamic from node); horizontal **`RadioStationCard`** with **`onSelect`**; **`--space-content-inline`** on header and scroll inner per [`docs/react-learning.md`](../react-learning.md).
 - **Pills:** New small component e.g. **`GeoBrowsePill`** — flex wrap, rounded-full, touch targets ≥ 44px height, token-based border/fill from **`index.css`**; map Figma from **`19871:33556`** / **`19871:33453`**.
 - **Chrome:** Under Search, rely on **`SearchBrowseHeader`** + scroll padding already set on **`search-page-scroll`**; sub-screens may use **`ScreenHeader`** only if you stack a full-screen route **outside** Search (prefer staying under Search for one consistent shell).
-- **Station tap:** Until **`/radio/:id`** exists, use a stub: **`RadioStationInfo`** page or `navigate` to **`Info`** with demo **`startRadioDemo`** — match whatever Phase 4 acceptance chooses in the parent plan.
+- **Station tap:** **`/radio/:stationId`** → **`RadioStationInfo`**; **Play** → **`/radio/:stationId/play`** → **`RadioPlayer`** with **`upsertRadioSession`** in **`PlaybackContext`** (same pattern as other radio entry points).
 
 ---
 
 ## Acceptance (manual)
 
-- [ ] `/search/radio` shows seven top tiles matching **`19868:32686`** order/titles.
-- [ ] **International → North America** shows **popular swimlane** + pills include **Canada** (other countries optional/disabled per your stub rule).
-- [ ] **Canada** shows swimlane + **Alberta** pill (and any other mock provinces you add; **v1** can be Alberta-only under Canada).
-- [ ] **Alberta** shows swimlane + **city** pills; selecting a city shows swimlane + no further geo (or repeats swimlane only).
-- [ ] **Near You** and **format** paths show station lists sorted by deterministic popularity.
-- [ ] Back navigation returns correctly through the geo stack.
+- [x] `/search/radio` shows seven top tiles matching **`19868:32686`** order/titles.
+- [x] **International → North America** shows **popular swimlane** + pills include **Canada** (other countries optional/disabled per your stub rule).
+- [x] **Canada** shows swimlane + **Alberta** pill (and any other mock provinces you add; **v1** can be Alberta-only under Canada).
+- [x] **Alberta** shows swimlane + **city** pills; selecting a city shows swimlane + no further geo (or repeats swimlane only).
+- [x] **Near You** and **format** paths show station lists sorted by deterministic popularity.
+- [x] Back navigation returns correctly through the geo stack.
 
 ---
 
 ## After you ship
 
-- Update [`docs/plan.md`](../plan.md) when Radio Browse is **done**.
-- Update **Search-Browse** tutorial Phase 4 footer date if behavior changes.
-- Optional: add a short [**react-learning**](../react-learning.md) note on the **subregion** pattern (swimlane + pill row) if it becomes a reusable recipe.
+- Update [`plan.md`](plan.md) when scope changes (living repo plan).
+- **Search-Browse** plan footer when Search phases materially change.
+- **Subregion pattern:** [**react-learning**](../react-learning.md) § *Radio International — swimlane + geo pill row* + tutorial [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md).
 
 ---
 
-*Last updated: 2026-05-07*
+*Last updated: 2026-05-08* — acceptance checked; **subregion** tutorial + **react-learning** entry added; **`docs/Plans/`** move reflected in links.

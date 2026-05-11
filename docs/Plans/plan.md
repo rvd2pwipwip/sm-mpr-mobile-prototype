@@ -2,7 +2,7 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
-**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Tutorials/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -21,7 +21,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] Cursor project rules: `.cursor/rules/stingray-music-prototype.mdc` (swimlanes, bottom nav, tokens, fake data).
 - [x] `docs/figma-nodes.md` — design file and screen node links.
 - [x] `docs/Stories/Home-screen-story.md` — Home narrative (header, banner, swimlanes, footer, ads, user types).
-- [x] `docs/plan.md` — this living plan (update as we ship scope).
+- [x] `docs/Plans/plan.md` — this living plan (update as we ship scope).
 - [x] Mock data modules:
   - [x] `src/data/musicChannels.js` — `MusicChannel`, `MUSIC_GENRES`, related channels for info screen.
   - [x] `src/data/podcasts.js` — `Podcast`, episodes, `PODCAST_CATEGORIES`.
@@ -38,11 +38,11 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
 - [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). **Search** tab **Browse / Podcasts** body: see **Search & Browse — Phase 3** above. **Search** tab **Browse / Radio**: see **Phase 4** above.
 - [x] **Listen again (user history)** — **`ListenHistoryProvider`**; **music** (**`MusicPlayer`**, after preroll) **+ podcast** (**`PodcastPlayer`**, after preroll, when engaged); **`ListenAgainCard`** → **`music`** | **`podcast`**; Home rail + **`/more/listen-again`**; **`src/constants/listenHistory.js`**.
-- [x] **Search & Browse — Phase 0 (territory / lineup stub)** — **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`): **`musicLineupMode`** **`limited`** | **`broad`**. **`src/constants/musicLineup.js`**. **`Search`** tab: browse tab stub; **second tap on Music** toggles lineup (**prototype-only easter egg** for demos, not shipping). See **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 0.
-- [x] **Search & Browse — Phase 1 (shell)** — fixed **`SearchBrowseHeader`**; **`--search-header-offset`** + **`search-page-scroll`** in **`index.css`**; browse vs search (tabs hide when trimmed query non-empty); clear empty field resets **`browseTab`** to **Music**; lineup easter egg on header **Music** tab. **`/search/more/tags`** + **`SearchTagsMore`** + Channel Info **tag** → grid; **vibes/tags** vocabulary in **`Search-story`**. **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 1 / 6.
-- [x] **Search & Browse — Phase 2 (music browse)** — **`musicBrowseTaxonomy.js`**; limited genre grid → **`SearchMusicCategory`**; broad vibes → **`SearchMusicVibe`** → tags → **`SearchMusicBroadTagChannels`**; **`SearchBrowseTile`**. See implementation plan § Phase 2.
-- [x] **Search & Browse — Phase 3 (podcasts browse)** — **`SearchPodcastsBrowse`**: library + **`PODCAST_CATEGORIES`** in one **`SearchBrowseTileGrid`** (library tiles only when populated); **`SearchPodcastsLibrary`** drill-down for each shelf; **`SearchPodcastsCategory`** (**`getPodcastsByCategory`**, 2-col **`PodcastCard`**) → **`/podcast/:id`**. Story: **`docs/Stories/Podcasts-story.md`**; Figma **`19805:39266`**. See **`docs/Tutorials/Search-Browse-implementation-plan.md`** § Phase 3.
-- [x] **Search & Browse — Phase 4 (radio browse)** — **`SearchRadioBrowse`** (seven tiles); **`SearchRadioInternationalStack`** (continents + **North America → Canada → Alberta → cities** with **popular swimlane + geo pills**); **`SearchRadioStationGrid`** (Near You + format rows); **`radioInternationalBrowse.js`** + **`radioBrowsePaths.js`**; **`/radio/:stationId`** → **`RadioStationStub`** + **`startRadioStationPreview`** in **`PlaybackContext`**. Tutorial: **`docs/Tutorials/Radio-Browse-implementation-plan.md`**.
+- [x] **Search & Browse — Phase 0 (territory / lineup stub)** — **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`): **`musicLineupMode`** **`limited`** | **`broad`**. **`src/constants/musicLineup.js`**. **`Search`** tab: browse tab stub; **second tap on Music** toggles lineup (**prototype-only easter egg** for demos, not shipping). See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 0.
+- [x] **Search & Browse — Phase 1 (shell)** — fixed **`SearchBrowseHeader`**; **`--search-header-offset`** + **`search-page-scroll`** in **`index.css`**; browse vs search (tabs hide when trimmed query non-empty); clear empty field resets **`browseTab`** to **Music**; lineup easter egg on header **Music** tab. **`/search/more/tags`** + **`SearchTagsMore`** + Channel Info **tag** → grid; **vibes/tags** vocabulary in **`Search-story`**. **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 1 / 6.
+- [x] **Search & Browse — Phase 2 (music browse)** — **`musicBrowseTaxonomy.js`**; limited genre grid → **`SearchMusicCategory`**; broad vibes → **`SearchMusicVibe`** → tags → **`SearchMusicBroadTagChannels`**; **`SearchBrowseTile`**. See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 2.
+- [x] **Search & Browse — Phase 3 (podcasts browse)** — **`SearchPodcastsBrowse`**: library + **`PODCAST_CATEGORIES`** in one **`SearchBrowseTileGrid`** (library tiles only when populated); **`SearchPodcastsLibrary`** drill-down for each shelf; **`SearchPodcastsCategory`** (**`getPodcastsByCategory`**, 2-col **`PodcastCard`**) → **`/podcast/:id`**. Story: **`docs/Stories/Podcasts-story.md`**; Figma **`19805:39266`**. See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 3.
+- [x] **Search & Browse — Phase 4 (radio browse)** — **`SearchRadioBrowse`** (seven tiles); **`SearchRadioInternationalStack`** (continents + **North America → Canada → Alberta → cities** with **popular swimlane + geo pills** — walkthrough **`docs/Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md`**); **`SearchRadioStationGrid`** (Near You + format rows); **`radioInternationalBrowse.js`** + **`radioBrowsePaths.js`**; **`/radio/:stationId`** → **`RadioStationInfo`**; **`/radio/:stationId/play`** → **`RadioPlayer`** with **`upsertRadioSession`**. Plan detail: **`docs/Plans/Radio-Browse-implementation-plan.md`**.
 
 ## Home screen — implementation approach
 
@@ -134,18 +134,16 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Radio (Search Browse + stack)** — Search **Browse / Radio** hierarchy (**`Search-Browse-implementation-plan.md`** § Phase 4); full radio stack when ready.
+1. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
 
-2. [ ] **Search & Browse (remaining)** — **`docs/Tutorials/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
-
-3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
+2. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
 ## Backlog / later
 
 - [ ] **Favorites** — liked content rail (sparse by design); insert **above** **Listen again** on Home when populated (slot reserved in spec above).
 - [ ] **Recommendations** — generic stub, then “informed by” fake history.
-- [ ] **Podcast & radio** — info + full player stacks after the music pattern ships (miniplayer podcast/radio variants can ship first with stub routes if useful).
-- [ ] **International radio** hierarchy — **`docs/Stories/Search-story.md`** (Browse radio: full geo + format IA); align `radioStations.js` + `docs/figma-nodes.md` when implementing Search & Browse.
+- [ ] **Listen again + miniplayer (radio)** — **Radio** browse + **RadioStationInfo** / **RadioPlayer** ship today; extend **`ListenHistoryProvider`** / **Home** rail when product wants **radio** in history (music + podcast patterns exist).
+- [ ] **International radio (expand beyond v1)** — **`docs/Stories/Search-story.md`** (full geo tree + format IA beyond the **North America → Canada → Alberta → cities** mock); align `radioInternationalBrowse.js`, `radioStations.js`, + `docs/figma-nodes.md` when adding regions.
 - [ ] **Territory** variants (150+ vs 1000+ channels) for browse, when building Search & Browse.
 
 ---
@@ -156,4 +154,6 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 - **Do not** log every tiny fix — focus on what future-you needs to remember.
 - This file does **not** replace `docs/Stories/Home-screen-story.md` (product) or `figma-nodes.md` (design index); it **ties implementation to them**.
 
-*Last updated: 2026-05-06* — **Search & Browse Phases 0–3** (territory, shell, music + **podcasts** browse on Search). **Next:** Search phases **5–8**, radio browse (Phase 4), visual pass.
+Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
+
+*Last updated: 2026-05-08* — **`docs/Plans/`** doc layout; **Search & Browse Phase 4 (radio browse)** + **International subregion** pattern doc’d; **Next:** Search phases **5–8**, visual pass.

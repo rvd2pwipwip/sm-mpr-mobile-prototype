@@ -110,7 +110,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 - **Idea:** **Listening history** for the prototype lives in **`ListenHistoryProvider`** (`src/context/ListenHistoryContext.jsx`): **empty on load**, **in-memory**. **Music:** **`recordMusicChannelListen(id)`** when **`MusicPlayer`** is allowed to play (after **guest preroll** completes or when preroll is skipped). **Podcasts:** **`recordPodcastShowListen(podcastShowId)`** from **`PodcastPlayer`** after preroll and when the user engages (**play** or **progress > ~5%**), once per episode visit. **Dedup** = move existing id to **newest**; cap with **`LISTEN_HISTORY_MAX_STORED`** (`src/constants/listenHistory.js`). **Home** shows a **Listen again** **`ContentSwimlane`** only when `items.length > 0`, with **compact** **`MusicChannelCard`** / **`PodcastCard`** + **ghost** **`ContentTileCard`** fillers up to **`LISTEN_AGAIN_RAIL_SLOT_CAP`** (12). **More:** **`/more/listen-again`** → **`ListenAgainMore.jsx`** (grid like **`SwimlaneMore`**), **`ScreenHeader`** **`endSlot`** = text **Clear** (`screen-header__text-btn`). **`renderListenAgainTile`** in **`ListenAgainCard.jsx`** centralizes **`kind: 'music' | 'podcast'`**. **`Home`** keeps a **comment block** above the lane for future **Favorites**.
 - **Figma:** [Listen again — More + Clear](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19801-39250).
-- **Plan:** **`docs/plan.md`** → **Listen again (user history) — specification**.
+- **Plan:** **`docs/Plans/plan.md`** → **Listen again (user history) — specification**.
 - **Walkthrough (wiring):** [`Listen-again-tutorial.md`](Tutorials/Listen-again-tutorial.md).
 - **Podcasts + episodes stack (files, hooks, line-by-line):** [`Podcasts-and-episodes-deep-dive-tutorial.md`](Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md).
 
@@ -121,6 +121,16 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Problem:** A sliding thumb needs real **pixels** from the DOM (`left` / `width`). **Global** motion after mount (`useEffect([])`) plus **`ResizeObserver`** makes the thumb **animate again** when returning to Search (remount / layout nudge).
 - **Pattern:** **`useLayoutEffect`** measures and sets state **before** paint. **`useState`** holds `{ left, width }`. Turn **`thumbMotion` on only when `activeIndex` changes** after the first layout pass of that mount (`isFirstLayoutRef` + `prevActiveIndexRef`). Reset motion with **`transitionend`** + a **timeout fallback** so resize-only updates **snap**. Default CSS keeps **`transition: none`** on the thumb.
 - **Tutorial:** [`SearchBrowseContentSwitcher-thumb-layout-tutorial.md`](Tutorials/SearchBrowseContentSwitcher-thumb-layout-tutorial.md) — step-by-step. **Code:** `src/components/SearchBrowseContentSwitcher.jsx`.
+
+---
+
+## Radio International — swimlane + geo pill row
+
+- **Problem:** **Browse Radio → International** needs a **repeating subregion screen**: show **what is popular** in the current geo node **and** let the user drill into **child** regions (countries, provinces, cities) without inventing a new layout per level.
+- **Pattern:** **`ContentSwimlane`** ( **`RadioStationCard`**, **More** when not a leaf) + a **pill row** (**`GeoBrowsePill`**) under an **Explore _Region_** heading (**`content-swimlane__title`**). **Leaf** nodes: swap the swimlane for a **2-col grid** of the same cards when there are **no child pills**. **Vertical rhythm:** parent **`.search-radio-intl__scroll`** is a column flex container with **`gap: var(--space-screen-gap)`** — prefer that over stacking **`margin-bottom`** on sections.
+- **Data + URL:** **`radioInternationalBrowse.js`** (**`resolveGeoNodeFromSegments`**, **`getPopularStationsForGeoNode`**, **`getChildGeoNodes`**); **`SearchRadioInternationalStack.jsx`** parses **`/search/browse/radio/international/...`** segments. Invalid paths → **`<Navigate>`** back to radio browse.
+- **Tune:** **`/radio/:stationId`** (**`RadioStationInfo`**) / **`/play`** (**`RadioPlayer`**).
+- **Tutorial:** [`Radio-geo-subregion-swimlane-pills-tutorial.md`](Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md); **plan checklist:** [`Radio-Browse-implementation-plan.md`](Plans/Radio-Browse-implementation-plan.md).
 
 ---
 

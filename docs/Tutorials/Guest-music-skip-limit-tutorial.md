@@ -19,7 +19,7 @@ This document walks through the **guest-only hourly skip cap** for **music** str
 - **At cap**, a modal explains **approximately how many whole minutes remain** until the **oldest** active stamp expires, and pushes **Upgrade** (**`/upgrade`**) messaging.
 - Successful skip **prototype v1**: **counter + timers only** — no fake “next track.”
 
-### Out of scope (see **`docs/plan.md`**)
+### Out of scope (see **`docs/Plans/plan.md`**)
 
 - **Persistence** (`localStorage`) across reload — in-memory OK for now.
 - **Licensing tweaks** when **`provided`** vs **`guest`** need different caps (**plan** calls this out).

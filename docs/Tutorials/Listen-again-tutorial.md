@@ -21,7 +21,7 @@ This document explains **Listen again** end to end: where history **lives**, wha
 - `[PlaybackContext-tutorial.md](PlaybackContext-tutorial.md)` — `**session`**, `**upsertMusicSession**`, and how `**MusicPlayer**` keeps the mini bar in sync (**different concern** from Listen history, but the **same screen** touches both).
 - `[MiniPlayer-component-tutorial.md](MiniPlayer-component-tutorial.md)` — optional; useful for **expand-from-mini** preroll skip (`**location.state`**) so you see why history still records once the gate is open.
 
-**Product / spec:** `[Home-screen-story.md](../Stories/Home-screen-story.md)`, `[plan.md](../plan.md)` → § *Listen again*.
+**Product / spec:** `[Home-screen-story.md](../Stories/Home-screen-story.md)`, `[plan.md](../Plans/plan.md)` → § *Listen again*.
 
 **Figma:** Home rail `[1:2](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=1-2)`; More + Clear `[19801:39250](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19801-39250)` — also `[figma-nodes.md](../figma-nodes.md)`.
 
@@ -199,7 +199,7 @@ In `[App.jsx](../../src/App.jsx)`:
 
 ## 11. Persistence and prototype limits
 
-- **In-memory only** — refresh clears history (documented in `[plan.md](../plan.md)`).
+- **In-memory only** — refresh clears history (documented in `[plan.md](../Plans/plan.md)`).
 - **Music only** for writes until podcast/radio stacks call `**record*`** (or a generalized `**recordListen**`).
 
 ---
@@ -234,7 +234,7 @@ In `[App.jsx](../../src/App.jsx)`:
 | `[MiniPlayer-component-tutorial.md](MiniPlayer-component-tutorial.md)`                                                       |
 | `[react-learning.md](../react-learning.md)` → § *Listen again — `ListenHistoryProvider` + compact tiles*                        |
 | `[Guest-preroll-grace-tutorial.md](Guest-preroll-grace-tutorial.md)` — preroll skip paths affecting **when** history records |
-| `[plan.md](../plan.md)` — shipped spec and follow-ups (Favorites slot, podcast/radio)                                           |
+| `[plan.md](../Plans/plan.md)` — shipped spec and follow-ups (Favorites slot, podcast/radio)                                           |
 
 
 ---

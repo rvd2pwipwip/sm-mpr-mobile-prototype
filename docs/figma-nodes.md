@@ -61,7 +61,7 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 
 ## Radio mock data — International
 
-**Implementation plan:** [`docs/Tutorials/Radio-Browse-implementation-plan.md`](Tutorials/Radio-Browse-implementation-plan.md).
+**Implementation plan:** [`docs/Plans/Radio-Browse-implementation-plan.md`](Plans/Radio-Browse-implementation-plan.md).
 
 Prototype catalog: `src/data/radioStations.js` (flat rows for Home / search today). **Browse** should add a small **geo tree** module — **v1 mock path only:** **International → North America → Canada → Alberta → cities** (see **Browse International Subregion** `19871:33556` and deep-drill reference frame `19871:33453`).
 

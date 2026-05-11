@@ -4,7 +4,7 @@
 
 **What this doc covers:** nearly every podcast-related TypeScript-less JavaScript/React file — how it relates to routing, Context, components, and “Listen again.” Lines refer to **`sm-mpr-mobile-prototype`** as of authoring; small shifts are normal.
 
-**Companion:** high-level phased plan — [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md).
+**Companion:** high-level phased plan — [`Podcasts-implementation-plan.md`](../Plans/Podcasts-implementation-plan.md).
 
 ---
 

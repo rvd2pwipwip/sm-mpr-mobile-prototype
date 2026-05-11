@@ -1,6 +1,6 @@
 # Music lineup (territory proxy) — tutorial
 
-Step-by-step guide to how **music lineup mode** works in the prototype: a stand-in for *“does this user get ~150 channels or ~1000+?”* without geo-IP or backend. Product background: **`docs/Stories/Search-story.md`** and **`docs/Tutorials/Search-Browse-implementation-plan.md`** (Phase 0).
+Step-by-step guide to how **music lineup mode** works in the prototype: a stand-in for *“does this user get ~150 channels or ~1000+?”* without geo-IP or backend. Product background: **`docs/Stories/Search-story.md`** and **`docs/Plans/Search-Browse-implementation-plan.md`** (Phase 0).
 
 **Important:** The **double-tap Music** control on the Search tab is a **prototype-only easter egg** for demos. It is **not** intended for a shipping app (real product would derive lineup from territory or account).
 
@@ -105,7 +105,7 @@ Document whichever behavior you choose in **`docs/Stories/Search-story.md`** Int
 
 | Doc | Role |
 |-----|------|
-| [`Search-Browse-implementation-plan.md`](Search-Browse-implementation-plan.md) | Phase 0 delivered; Phase 2 will branch music Browse on **`musicLineupMode`** |
+| [`Search-Browse-implementation-plan.md`](../Plans/Search-Browse-implementation-plan.md) | Phase 0 delivered; Phase 2 will branch music Browse on **`musicLineupMode`** |
 | [`../Stories/Search-story.md`](../Stories/Search-story.md) | Product intent for 150+ vs 1000+ Browse |
 | [`../figma-nodes.md`](../figma-nodes.md) | Figma frames **270:45400** (150+) vs **19553:131521** (1000+) |
 

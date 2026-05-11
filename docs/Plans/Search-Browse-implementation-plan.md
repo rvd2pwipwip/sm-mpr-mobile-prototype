@@ -5,10 +5,10 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 **Companion docs**
 
 - Story + **Integration notes:** [`docs/Stories/Search-story.md`](../Stories/Search-story.md)
-- Podcasts browse detail (conditional rows, card sizing): [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md), [`docs/Tutorials/Podcasts-implementation-plan.md`](Podcasts-implementation-plan.md) (Phase 7)
-- **Radio Browse (detailed):** [`docs/Tutorials/Radio-Browse-implementation-plan.md`](Radio-Browse-implementation-plan.md)
+- Podcasts browse detail (conditional rows, card sizing): [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md), [`Podcasts-implementation-plan.md`](Podcasts-implementation-plan.md) (Phase 7)
+- **Radio Browse (detailed):** [`Radio-Browse-implementation-plan.md`](Radio-Browse-implementation-plan.md)
 - Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
-- Living repo plan: [`docs/plan.md`](../plan.md) — update when this slice ships
+- Living repo plan: [`plan.md`](plan.md) — update when this slice ships
 - Layout patterns: [`docs/react-learning.md`](../react-learning.md) (swimlanes, BottomNav), project rules in `.cursor/rules/stingray-music-prototype.mdc`
 
 **Prototype scope**
@@ -220,7 +220,7 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 ## Phase 8 — Polish + docs
 
-- **`docs/plan.md`**: move **Search & Browse** to **What we have done** when acceptance passes.
+- **`plan.md`**: move **Search & Browse** to **What we have done** when acceptance passes.
 - **`docs/react-learning.md`**: short entry on **adaptive fixed header** + **Search reset** pattern if non-obvious.
 - **Acceptance checklist (manual)**
   - [ ] Limited vs broad music top level matches territory stub.
@@ -235,9 +235,9 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 ## After you ship
 
-- Update **`docs/plan.md`** and **`docs/figma-nodes.md`** only if node map or data notes materially change.
+- Update **`plan.md`** and **`docs/figma-nodes.md`** only if node map or data notes materially change.
 - Keep **podcast** and **radio** player stacks aligned with **`visual-ads-and-user-types.md`** when users tune from Search surfaces.
 
 ---
 
-*Last updated: 2026-05-08* — **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. Earlier **Phase 4** expansion: radio **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** layout + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.
+*Last updated: 2026-05-08* — **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. **Docs:** implementation plans live under **`docs/Plans/`**. **Phase 4** radio: **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** pattern walkthrough [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md) + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.

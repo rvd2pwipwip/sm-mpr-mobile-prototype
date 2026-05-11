@@ -7,7 +7,7 @@ Teaching-oriented guide for **you** while we build podcasts in the Stingray Musi
 - Story: [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md)
 - UX principles: [`docs/UX/Podcasts - UX Principles.md`](../UX/Podcasts%20-%20UX%20Principles.md)
 - Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
-- Living repo plan: [`docs/plan.md`](../plan.md) — update “What we have done” when this slice ships
+- Living repo plan: [`plan.md`](plan.md) — update “What we have done” when this slice ships
 - Ads, user types & pre-roll entry points: [`docs/visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)
 - Guest pre-roll grace (skip rules, **`expandFromMiniPlayer`**): [`docs/Tutorials/Guest-preroll-grace-tutorial.md`](Guest-preroll-grace-tutorial.md)
 - **Line-by-line / deep dive:** [`docs/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md`](Podcasts-and-episodes-deep-dive-tutorial.md)
@@ -239,7 +239,7 @@ Use this after each phase:
 ## After you ship
 
 - Append a short entry to **`docs/react-learning.md`** (Context for library state, nested routes, or speed cycling pattern).
-- Update **`docs/plan.md`** — move **Podcast stack** from “Next” to **Done** and note **Search / Browse** follow-up scope.
+- Update **`plan.md`** — move **Podcast stack** from “Next” to **Done** and note **Search / Browse** follow-up scope.
 
 ---
 

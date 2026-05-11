@@ -116,4 +116,4 @@ Under **`@media (prefers-reduced-motion: reduce)`**, keep **`transition: none`**
 ## See also
 
 - Figma reference for the control: node **`272:45769`** in the SM MPR mobile file (Content switcher).  
-- Search shell: `docs/Tutorials/Search-Browse-implementation-plan.md`.
+- Search shell: `docs/Plans/Search-Browse-implementation-plan.md`.

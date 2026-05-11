@@ -73,9 +73,9 @@ Standard pattern for a **primary app menu** at the bottom of the phone frame: **
 
 ## Project plan document
 
-- **Living plan / history:** `docs/plan.md` — what we plan to do, what we have done, and what is next. It is a **return-from-hiatus** refresher; **update it** when finishing meaningful work (same PR or follow-up) so it stays accurate.
+- **Living plan / history:** `docs/Plans/plan.md` — what we plan to do, what we have done, and what is next. It is a **return-from-hiatus** refresher; **update it** when finishing meaningful work (same PR or follow-up) so it stays accurate.
 - **Do not** let `plan.md` replace `docs/Stories/Home-screen-story.md` (product story) or `docs/figma-nodes.md` (Figma index); it **coordinates** them for implementation.
-- **Agents:** When a task implements or scopes a user-visible or structural slice, **check whether `docs/plan.md` should be updated** (done / next / backlog) before considering the work complete.
+- **Agents:** When a task implements or scopes a user-visible or structural slice, **check whether `docs/Plans/plan.md` should be updated** (done / next / backlog) before considering the work complete.
 
 ## Code changes
 
