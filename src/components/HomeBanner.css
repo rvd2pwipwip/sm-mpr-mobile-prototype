@@ -1,24 +1,15 @@
 .home-banner {
   width: 100%;
-  min-height: 200px;
   margin: 0;
-  padding: var(--space-4);
+  padding: 0;
   border-radius: var(--radius-media-thumb);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-accent) 30%, var(--color-surface)),
-    color-mix(in srgb, var(--color-accent2) 30%, var(--color-surface))
-  );
+  overflow: hidden;
   box-shadow: var(--shadow-card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.home-banner__placeholder {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 100;
-  color: var(--color-text-muted);
-  text-align: center;
+.home-banner__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
 }

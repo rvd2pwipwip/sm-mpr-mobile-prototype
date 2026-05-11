@@ -1,12 +1,19 @@
 import "./HomeBanner.css";
 
 /**
- * Marketing / promo banner — replace `style` / children with real art from Figma or `public/`.
+ * Marketing / promo banner — art from `public/bannerMockImage.png` (swap file or `src` as needed).
  */
 export default function HomeBanner() {
   return (
-    <section className="home-banner">
-      <p className="home-banner__placeholder">Banner placeholder</p>
+    <section className="home-banner" aria-label="Promotional banner">
+      <img
+        className="home-banner__image"
+        src="/bannerMockImage.png"
+        alt=""
+        width={1200}
+        height={400}
+        decoding="async"
+      />
     </section>
   );
 }
