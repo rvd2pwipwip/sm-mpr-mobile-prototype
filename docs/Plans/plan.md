@@ -2,7 +2,7 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
-**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -84,6 +84,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Starts empty** on load; **in-memory** is enough (optional `localStorage` later).
 - **Updates from real listens** in the prototype (not a static mock list): **music** when playback is allowed after preroll; **podcasts** after preroll when the user presses play / scrubs past **~5%** (see **`PodcastPlayer`**); extend **radio** when that stack fires the same kind of event.
 - **Dedupe + recency:** prepend or bump-on-repeat; cap stored entries for UI (rail shows up to **12** slots visually — see below).
+- **Single source of truth:** one ordered **`items`** list in **`ListenHistoryProvider`**. **Home — Listen again** uses the **full list** (mixed recap, **unfiltered by type**). **My Library** adds **typed** rails by **`filter(kind)`** on the same store (music / podcasts / radio) — see **`docs/Plans/My-Library-implementation-plan.md`** § Single source of truth.
 
 **Home — layout order (prepare for Favorites)**
 
@@ -139,17 +140,19 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **Info tab — Phase 7 (cleanup + docs polish)** — Confirm no orphaned **`Info`** CSS; optional **`docs/Stories/Info-story.md`**. **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 7.
+1. [ ] **My Library tab** — Replaces Info hub; **`/my-library`**, App Info swimlane, unified history (**Listen again** = unfiltered Home rail; Library = filtered rails); phases in **`docs/Plans/My-Library-implementation-plan.md`**.
 
-2. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
+2. [ ] **Info tab — Phase 7 (cleanup + docs polish)** — Confirm no orphaned **`Info`** CSS; optional **`docs/Stories/Info-story.md`**. **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 7. (Overlaps My Library refactor; consolidate when the Info root migrates.)
 
-3. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
+3. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
+
+4. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
 ## Backlog / later
 
 - [ ] **Favorites** — liked content rail (sparse by design); insert **above** **Listen again** on Home when populated (slot reserved in spec above).
 - [ ] **Recommendations** — generic stub, then “informed by” fake history.
-- [ ] **Listen again + miniplayer (radio)** — **Radio** browse + **RadioStationInfo** / **RadioPlayer** ship today; extend **`ListenHistoryProvider`** / **Home** rail when product wants **radio** in history (music + podcast patterns exist).
+- [ ] **Listen again + miniplayer (radio)** — **Radio** browse + **RadioStationInfo** / **RadioPlayer** ship today; **`ListenHistoryProvider`** should gain **`radio`** **`kind`** and **`recordRadioStationListen`** per **`docs/Plans/My-Library-implementation-plan.md`** (typed Library rails share the same **`items`** list as Home Listen again).
 - [ ] **International radio (expand beyond v1)** — **`docs/Stories/Search-story.md`** (full geo tree + format IA beyond the **North America → Canada → Alberta → cities** mock); align `radioInternationalBrowse.js`, `radioStations.js`, + `docs/figma-nodes.md` when adding regions.
 - [ ] **Territory** variants (150+ vs 1000+ channels) for browse, when building Search & Browse.
 
@@ -163,4 +166,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-11* — **Info plan Phases 4–6** (Settings, **`InfoHelpSection`**, About + Contact + **`legalLinks.js`**). **Next:** Info **Phase 7**, then Search **5–8**.
+*Last updated: 2026-05-13* — **`My-Library-implementation-plan.md`** added (URLs **`/my-library`**, single history store: Home mixed vs Library filtered); **Next steps** reordered toward My Library implementation.
