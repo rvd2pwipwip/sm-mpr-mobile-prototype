@@ -10,6 +10,7 @@ import UpgradeButton from "../components/UpgradeButton";
 import VisualAdStrip from "../components/VisualAdStrip";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
+import { useListenHistory } from "../context/ListenHistoryContext";
 import { useUserType } from "../context/UserTypeContext";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
@@ -68,6 +69,7 @@ export default function RadioPlayer() {
   const navigate = useNavigate();
   const goUpgrade = useGoUpgrade();
   const { session, upsertRadioSession } = usePlayback();
+  const { recordRadioStationListen } = useListenHistory();
   const { graceActive } = useGuestPrerollGrace();
   const { userType } = useUserType();
   const needsPreroll = showPlayerPreroll(userType);
@@ -96,6 +98,13 @@ export default function RadioPlayer() {
       isPaused: !playing,
     });
   }, [station, needsPreroll, prerollComplete, playing, upsertRadioSession]);
+
+  /** History once playback is allowed (`MusicPlayer` parity) — not on pause toggles. */
+  useEffect(() => {
+    if (!station) return;
+    if (needsPreroll && !prerollComplete) return;
+    recordRadioStationListen(station.id);
+  }, [station?.id, needsPreroll, prerollComplete, recordRadioStationListen]);
 
   if (!station) {
     return <Navigate to="/search/radio" replace />;

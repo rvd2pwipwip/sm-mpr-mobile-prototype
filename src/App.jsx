@@ -33,6 +33,7 @@ import InfoAbout from "./pages/InfoAbout";
 import InfoContact from "./pages/InfoContact";
 import MyLibrary from "./pages/MyLibrary";
 import MyLibraryAccountSettings from "./pages/MyLibraryAccountSettings";
+import MyLibraryHistoryMore from "./pages/MyLibraryHistoryMore";
 import Subscription from "./pages/Subscription";
 import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
@@ -105,6 +106,10 @@ function AppRoutes() {
         <Route path="/info/about" element={<InfoAbout />} />
         <Route path="/info" element={<Navigate to="/my-library" replace />} />
         <Route path="/my-library/account-settings" element={<MyLibraryAccountSettings />} />
+        <Route
+          path="/my-library/history/:historySegment"
+          element={<MyLibraryHistoryMore />}
+        />
         <Route path="/my-library" element={<MyLibrary />} />
       </Routes>
       {hideBottomNav ? null : (

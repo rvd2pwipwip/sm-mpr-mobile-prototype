@@ -38,13 +38,15 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Info tab — Phase 1 routes + stack shells** — **`/info/contact`** (**`InfoContact.jsx`**), **`/info/about`** (**`InfoAbout.jsx`**), **`InfoSubPage.css`** scroll under **`ScreenHeader`**; **`BottomNav`** **Info** active for **`/info/*`**; **`Info`** root scaffold. Details: **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 1.
 - [x] **My Library tab — Phase 1 (hub scaffold + routing)** — **`/my-library`** → **`MyLibrary.jsx`**; **`/info`** → redirect **`/my-library`**; **`BottomNav`** third tab **My Library** (**`/my-library`**, **`/info/*`** still highlights tab); **`docs/Plans/My-Library-implementation-plan.md`** § Phase 1.
 - [x] **My Library tab — Phase 2 (App Info swimlane + account)** — **`AppInfoSwimlane`** on hub; **`/my-library/account-settings`** (**`MyLibraryAccountSettings.jsx`**, Account + Settings both expanded); paths + **`externalFaqAnchorProps`** in **`infoHelpLinks.js`**; **`InfoHelpSection`** uses shared helpers. **`docs/Plans/My-Library-implementation-plan.md`** § Phase 2.
+- [x] **My Library tab — Phase 3 (listen history + radio)** — **`ListenHistoryItem`** **`radio`** **`kind`**; **`recordRadioStationListen`** (**`RadioPlayer`**); **`clearHistoryByKind`** + **`isListenHistoryKind`**; **`ListenAgainCard`** radio tiles. **`docs/Plans/My-Library-implementation-plan.md`** § Phase 3.
+- [x] **My Library tab — Phase 4 (typed history rails + More)** — **`LibraryHistoryRails`** (three **`ContentSwimlane`** rows, ghosts, **`alwaysShowMore`**); **`/my-library/history/:historySegment`** (**`MyLibraryHistoryMore.jsx`**, **`clearHistoryByKind`** + back); **`myLibraryHistory.js`**. **`docs/Plans/My-Library-implementation-plan.md`** § Phase 4.
 - [x] **Info tab — Phase 2 collapsible sections** — **`InfoCollapsibleSection`**; Account (default open) / Settings / Info placeholders. **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 2.
 - [x] **Info tab — Phase 3 Account section** — **`InfoAccountSection`** (**`5518:74009`**); **`externalLinks.js`** (**`PROVIDER_SSO_URL`**, **`STINGRAY_ACCOUNT_LOGIN_URL`**). **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 3.
 - [x] **Info tab — Phases 4–6 (Settings, help rows, About + Contact)** — **`InfoSettingsSection`** (Phase 4); **`InfoHelpSection`** + **`infoHelpLinks.js`** (Phase 5); **`InfoAbout.jsx`** / **`InfoAbout.css`** (**`5683:78416`**), **`InfoContact.jsx`** / **`InfoContact.css`** + **`infoContactCopy.js`** (**`5683:78191`**), shared **`legalLinks.js`** (`TERMS_URL`, `PRIVACY_URL`, **`LEGAL_LINKS`**) used by **`Subscription.jsx`** (Phase 6). Details: **`docs/Plans/Info-screen-implementation-plan.md`** § Phases 4–6.
 - [x] **`ScreenHeader`** — `src/components/ScreenHeader.jsx` + `ScreenHeader.css`; fixed **80px** stack bar (Figma **`19737:48141`**); geometrically centered title; optional **`startSlot`** / **`endSlot`**; tokens **`--screen-header-*`** in `index.css`; first use: **`Subscription`**; also **Channel Info** (back-only header per Figma).
 - [x] **Music stack (info + player)** — **`/music/:channelId`** → **`MusicChannelInfo.jsx`** (Figma **`25:7067`**); **`/music/:channelId/play`** → **`MusicPlayer.jsx`** (Figma **`23:20013`**: chrome with dismiss / guest **Upgrade** / cast; channel title; info → channel info; cover + prototype track lines; progress + play/pause + skip; ad footer strip); **`BottomNav` hidden** on **`…/play`** only; **`Home`** music tiles → **`navigate`**; invalid id → **`Navigate`** home; **`/music/:channelId`** (not play) keeps **Home** tab active.
 - [x] **Podcast stack — Phases 1–6 (prototype)** — **Phases 1–5** (see prior bullet history). **Phase 6:** **`Home.jsx`** **`PodcastCard`** → **`/podcast/:id`**; **`SwimlaneMore`** **`podcasts`** grid same **`navigate`/tile** behavior; **`ListenAgainCard`** podcast branch (Phase 5). **Search** tab **Browse / Podcasts** body: see **Search & Browse — Phase 3** above. **Search** tab **Browse / Radio**: see **Phase 4** above.
-- [x] **Listen again (user history)** — **`ListenHistoryProvider`**; **music** (**`MusicPlayer`**, after preroll) **+ podcast** (**`PodcastPlayer`**, after preroll, when engaged); **`ListenAgainCard`** → **`music`** | **`podcast`**; Home rail + **`/more/listen-again`**; **`src/constants/listenHistory.js`**.
+- [x] **Listen again (user history)** — **`ListenHistoryProvider`**; **music** (**`MusicPlayer`**, after preroll) **+ podcast** (**`PodcastPlayer`**, after preroll, when engaged) **+ radio** (**`RadioPlayer`**, after preroll, **`MusicPlayer`** parity); **`ListenAgainCard`** → **`music`** | **`podcast`** | **`radio`**; **`clearHistoryByKind`** for per-type clears (My Library Phase 4 UI); Home rail + **`/more/listen-again`**; **`src/constants/listenHistory.js`** (**`LISTEN_HISTORY_KINDS`**).
 - [x] **Search & Browse — Phase 0 (territory / lineup stub)** — **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`): **`musicLineupMode`** **`limited`** | **`broad`**. **`src/constants/musicLineup.js`**. **`Search`** tab: browse tab stub; **second tap on Music** toggles lineup (**prototype-only easter egg** for demos, not shipping). See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 0.
 - [x] **Search & Browse — Phase 1 (shell)** — fixed **`SearchBrowseHeader`**; **`--search-header-offset`** + **`search-page-scroll`** in **`index.css`**; browse vs search (tabs hide when trimmed query non-empty); clear empty field resets **`browseTab`** to **Music**; lineup easter egg on header **Music** tab. **`/search/more/tags`** + **`SearchTagsMore`** + Channel Info **tag** → grid; **vibes/tags** vocabulary in **`Search-story`**. **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 1 / 6.
 - [x] **Search & Browse — Phase 2 (music browse)** — **`musicBrowseTaxonomy.js`**; limited genre grid → **`SearchMusicCategory`**; broad vibes → **`SearchMusicVibe`** → tags → **`SearchMusicBroadTagChannels`**; **`SearchBrowseTile`**. See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 2.
@@ -84,7 +86,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 **History model**
 
 - **Starts empty** on load; **in-memory** is enough (optional `localStorage` later).
-- **Updates from real listens** in the prototype (not a static mock list): **music** when playback is allowed after preroll; **podcasts** after preroll when the user presses play / scrubs past **~5%** (see **`PodcastPlayer`**); extend **radio** when that stack fires the same kind of event.
+- **Updates from real listens** in the prototype (not a static mock list): **music** when playback is allowed after preroll; **podcasts** after preroll when the user presses play / scrubs past **~5%** (see **`PodcastPlayer`**); **radio** after preroll when **`RadioPlayer`** playback is allowed ( **`MusicPlayer`** parity).
 - **Dedupe + recency:** prepend or bump-on-repeat; cap stored entries for UI (rail shows up to **12** slots visually — see below).
 - **Single source of truth:** one ordered **`items`** list in **`ListenHistoryProvider`**. **Home — Listen again** uses the **full list** (mixed recap, **unfiltered by type**). **My Library** adds **typed** rails by **`filter(kind)`** on the same store (music / podcasts / radio) — see **`docs/Plans/My-Library-implementation-plan.md`** § Single source of truth.
 
@@ -107,7 +109,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 **Implementation (shipped)**
 
-- **`src/constants/listenHistory.js`**, **`ListenHistoryProvider`** (`recordMusicChannelListen`, **`recordPodcastShowListen`**), **`ListenAgainCard.jsx`**, **`ListenAgainMore.jsx`**, **`MusicPlayer.jsx`**, **`PodcastPlayer.jsx`**, **`Home.jsx`**, **`App.jsx`**, **`ContentTileCard`**, **`ScreenHeader__text-btn`**.
+- **`src/constants/listenHistory.js`** (**`LISTEN_HISTORY_KINDS`**, **`isListenHistoryKind`**), **`ListenHistoryProvider`** (**`recordMusicChannelListen`**, **`recordPodcastShowListen`**, **`recordRadioStationListen`**, **`clearListenHistory`**, **`clearHistoryByKind`**), **`ListenAgainCard.jsx`**, **`ListenAgainMore.jsx`**, **`MusicPlayer.jsx`**, **`PodcastPlayer.jsx`**, **`RadioPlayer.jsx`**, **`Home.jsx`**, **`App.jsx`**, **`ContentTileCard`**, **`ScreenHeader__text-btn`**.
 
 ---
 
@@ -142,7 +144,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
 
-1. [ ] **My Library tab** — Unified listen history (**Phase 3+**); content swimlanes (**Phase 4–5**). **Shipped:** Phase **1–2** (hub, **`AppInfoSwimlane`**, **`/my-library/account-settings`** — **`docs/Plans/My-Library-implementation-plan.md`**).
+1. [ ] **My Library tab — Phase 5** — Conditional shelves (liked music, podcast library rails, radio stations — **`docs/Plans/My-Library-implementation-plan.md`**). **Shipped:** Phases **1–4**.
 
 2. [ ] **Info tab — Phase 7 (cleanup + docs polish)** — Confirm no orphaned **`Info`** CSS; optional **`docs/Stories/Info-story.md`**. **`docs/Plans/Info-screen-implementation-plan.md`** § Phase 7. (Overlaps My Library refactor; consolidate when the Info root migrates.)
 
@@ -154,7 +156,6 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 - [ ] **Favorites** — liked content rail (sparse by design); insert **above** **Listen again** on Home when populated (slot reserved in spec above).
 - [ ] **Recommendations** — generic stub, then “informed by” fake history.
-- [ ] **Listen again + miniplayer (radio)** — **Radio** browse + **RadioStationInfo** / **RadioPlayer** ship today; **`ListenHistoryProvider`** should gain **`radio`** **`kind`** and **`recordRadioStationListen`** per **`docs/Plans/My-Library-implementation-plan.md`** (typed Library rails share the same **`items`** list as Home Listen again).
 - [ ] **International radio (expand beyond v1)** — **`docs/Stories/Search-story.md`** (full geo tree + format IA beyond the **North America → Canada → Alberta → cities** mock); align `radioInternationalBrowse.js`, `radioStations.js`, + `docs/figma-nodes.md` when adding regions.
 - [ ] **Territory** variants (150+ vs 1000+ channels) for browse, when building Search & Browse.
 
@@ -168,4 +169,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-13* — **My Library Phase 2** shipped: **`AppInfoSwimlane`**, **`MyLibraryAccountSettings`**, shared **`infoHelpLinks`** paths. **Next:** Phase 3 (history API + radio **`kind`**).
+*Last updated: 2026-05-13* — **My Library Phase 4**: typed history swimlanes hub + **`MyLibraryHistoryMore`** + **`myLibraryHistory.js`**. **Next:** Phase **5** (conditional user rails).

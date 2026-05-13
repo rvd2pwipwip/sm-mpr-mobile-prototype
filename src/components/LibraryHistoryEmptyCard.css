@@ -1,0 +1,59 @@
+/* Same column width + thumb square as standard `ContentTileCard` in history swimlanes */
+.library-history-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: var(--card-tile-width);
+  flex-shrink: 0;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.library-history-empty-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-media-thumb);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 85%,
+    var(--color-text-muted)
+  );
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.library-history-empty-card__icon {
+  display: block;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-muted) 90%,
+    var(--color-text)
+  );
+  mask-image: url("/history.svg");
+  -webkit-mask-image: url("/history.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.library-history-empty-card__label {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-card-title);
+  line-height: var(--line-height-card-title);
+  color: var(--color-text-muted);
+  /* text-align: center; */
+}

@@ -5,11 +5,11 @@ import {
   useMemo,
   useState,
 } from "react";
-import { LISTEN_HISTORY_MAX_STORED } from "../constants/listenHistory";
+import { LISTEN_HISTORY_MAX_STORED, isListenHistoryKind } from "../constants/listenHistory";
 
 /**
  * Recently listened entries for “Listen again” (prototype). In-memory only; starts empty.
- * @typedef {{ kind: 'music', id: string } | { kind: 'podcast', id: string }} ListenHistoryItem
+ * @typedef {{ kind: 'music', id: string } | { kind: 'podcast', id: string } | { kind: 'radio', id: string }} ListenHistoryItem
  */
 
 const ListenHistoryContext = createContext(null);
@@ -39,8 +39,21 @@ export function ListenHistoryProvider({ children }) {
     );
   }, []);
 
+  /** Radio **station** id (`RadioStation.id`). Same store as music / podcast. */
+  const recordRadioStationListen = useCallback((radioStationId) => {
+    if (!radioStationId) return;
+    setItems((prev) =>
+      bumpItem(prev, { kind: "radio", id: radioStationId }),
+    );
+  }, []);
+
   const clearListenHistory = useCallback(() => {
     setItems([]);
+  }, []);
+
+  const clearHistoryByKind = useCallback((kind) => {
+    if (!isListenHistoryKind(kind)) return;
+    setItems((prev) => prev.filter((x) => x.kind !== kind));
   }, []);
 
   const value = useMemo(
@@ -48,9 +61,18 @@ export function ListenHistoryProvider({ children }) {
       items,
       recordMusicChannelListen,
       recordPodcastShowListen,
+      recordRadioStationListen,
       clearListenHistory,
+      clearHistoryByKind,
     }),
-    [items, recordMusicChannelListen, recordPodcastShowListen, clearListenHistory],
+    [
+      items,
+      recordMusicChannelListen,
+      recordPodcastShowListen,
+      recordRadioStationListen,
+      clearListenHistory,
+      clearHistoryByKind,
+    ],
   );
 
   return (

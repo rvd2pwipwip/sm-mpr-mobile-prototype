@@ -114,17 +114,25 @@ Tune exact labels against Figma **`rowCategory`** instances.
 
 ## Phase 3 — History context + radio
 
-- Extend **`ListenHistoryContext`** with **`radio`** items and **`recordRadioStationListen`** (call site: **`RadioPlayer`** when parity with music/podcast **counted listen** rules is defined).
+**Status: shipped** (2026-05-13).
+
+- Extend **`ListenHistoryContext`** with **`radio`** items and **`recordRadioStationListen`** (call site: **`RadioPlayer`**, same preroll gate as **`MusicPlayer`**).
 - Add **`clearHistoryByKind(kind)`** (and keep **`clearListenHistory`** as full wipe for **Listen again**).
 - Confirm **Home** still uses **`items`** unchanged (mixed recap).
+
+**Shipped:** **`kind: 'radio'`** in **`ListenHistoryItem`**; **`recordRadioStationListen`**; **`clearHistoryByKind`** gated by **`isListenHistoryKind`**; **`LISTEN_HISTORY_KINDS`** in **`listenHistory.js`**; **`RadioPlayer`** records after preroll; **`ListenAgainCard`** / **`renderListenAgainTile`** support **`RadioStationCard`**; Home / **`ListenAgainMore`** unchanged API (**`items`**).
 
 ---
 
 ## Phase 4 — My Library history rails + More grids
 
+**Status: shipped** (2026-05-13).
+
 - Three **`ContentSwimlane`** sections: derive **`filteredItems`** per kind; **ghost** fillers to **`LISTEN_AGAIN_RAIL_SLOT_CAP`** (or aligned cap constant) like Home **Listen again**; **`alwaysShowMore`** + **`onMore`** → corresponding **`/my-library/history/...`** route.
 - **`ScreenHeader`** + **`SwimlaneMore`-style** grids (reuse **`MusicChannelCard`**, **`PodcastCard`**, **`RadioStationCard`**, **`ListenAgainCard`** / **`renderListenAgainTile`** as appropriate).
 - Header **Clear** calls **`clearHistoryByKind`** for that rail only.
+
+**Shipped:** **`src/constants/myLibraryHistory.js`** (segment **`podcasts` → `kind: podcast`**); **`LibraryHistoryRails.jsx`**; **`pages/MyLibraryHistoryMore.jsx`** (**`/my-library/history/:historySegment`**); **`App.jsx`** routes; hub title restored; three rails after **App Info**.
 
 ---
 
@@ -149,8 +157,9 @@ Tune exact labels against Figma **`rowCategory`** instances.
 - [x] **`/my-library`** loads hub; **`/info`** redirects.
 - [x] Bottom tab reads **My Library** and highlights on hub + configured **`/info/*`** stacks.
 - [x] App Info tiles navigate correctly (FAQ external, Contact/About stacks, Account settings drill-in **both expanded**).
-- [ ] Listening updates **Listen again** and **filtered** Library rails from **same** **`items`** array (Phase 4+).
-- [ ] History rails show **ghosts** when empty + **More** always; scoped **Clear** on More screens.
+- [x] Single **`items`** store includes **`radio`**; Home **Listen again** + **`/more/listen-again`** stay mixed (**`renderListenAgainTile`**); **`clearHistoryByKind`** ready for My Library More screens (**Phase 4** UI).
+- [x] **My Library** filtered history swimlanes + per-kind More + scoped Clear (**Phase 4**).
+- [x] History rails show **ghosts** when empty + **More** always; scoped **Clear** on More screens.
 - [ ] Non-history rails hidden when empty; **More** only when over card max.
 
 ---

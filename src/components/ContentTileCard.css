@@ -75,8 +75,8 @@
   box-shadow: none;
 }
 
+/* Ghost: skeleton media only; width matches row (standard vs compact) — do not set width here. */
 .content-tile--ghost {
-  width: var(--card-tile-width-compact);
   cursor: default;
   pointer-events: none;
 }
