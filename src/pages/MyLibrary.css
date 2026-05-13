@@ -9,3 +9,14 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+/* Episode rows in horizontal swimlanes (readable min width; matches Search). */
+.my-library__episode-tile {
+  width: min(300px, calc(100vw - 2 * var(--space-content-inline)));
+  flex-shrink: 0;
+}
+
+.my-library__episode-tile .episode-card {
+  width: 100%;
+  box-sizing: border-box;
+}

@@ -37,6 +37,7 @@ import InfoContact from "./pages/InfoContact";
 import MyLibrary from "./pages/MyLibrary";
 import MyLibraryAccountSettings from "./pages/MyLibraryAccountSettings";
 import MyLibraryHistoryMore from "./pages/MyLibraryHistoryMore";
+import MyLibraryLikesMore from "./pages/MyLibraryLikesMore";
 import Subscription from "./pages/Subscription";
 import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
@@ -114,6 +115,7 @@ function AppRoutes() {
           path="/my-library/history/:historySegment"
           element={<MyLibraryHistoryMore />}
         />
+        <Route path="/my-library/likes/:likeKind" element={<MyLibraryLikesMore />} />
         <Route path="/my-library" element={<MyLibrary />} />
       </Routes>
       {hideBottomNav ? null : (

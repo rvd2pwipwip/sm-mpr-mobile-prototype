@@ -138,9 +138,11 @@ Tune exact labels against Figma **`rowCategory`** instances.
 
 ## Phase 5 — Conditional user rails
 
-- **Music likes:** stub context or reuse future Favorites store; render **Your music channels** when non-empty.
-- **Podcasts:** wire **`PodcastUserStateContext`** (subscribe, bookmark, downloads, progress) into **Continue listening**, **Your episodes**, **New episodes**, **Downloaded episodes** per story; standard More rules.
-- **Radio stations:** stub **liked stations** if not present.
+**Status: shipped** (2026-05-13).
+
+- **Music / radio likes:** **`LikesContext`** + **`LibraryLikedMusicSwimlane`** / **`LibraryLikedRadioSwimlane`** (**Your music channels**, **Your radio stations**). **More** → **`/my-library/likes/music`** \| **`/my-library/likes/radio`** (**`MyLibraryLikesMore.jsx`**). Omit swimlane when empty.
+- **Podcasts:** **`LibraryPodcastUserSwimlanes`** wires **`PodcastUserStateContext`** — **Your Podcasts** (subscribed), **Continue listening**, **Your Episodes**, **New Episodes**, **Downloaded Episodes**; **More** → existing **`podcastLibraryBrowsePath`** grids under Search → Browse → Podcasts. Episode rows reuse **`EpisodeCard`** + account-gated bookmark/offline (same as Search). Omit each rail when empty.
+- **Hub order** matches **`docs/Stories/My-Library-story.md`:** App Info → **Music History** → liked music → **Podcast History** → podcast user rails → **Radio History** → liked radio. **`LibraryHistoryRail`** is one segment per instance (replaces **`LibraryHistoryRails`**).
 
 ---
 
@@ -160,7 +162,7 @@ Tune exact labels against Figma **`rowCategory`** instances.
 - [x] Single **`items`** store includes **`radio`**; Home **Listen again** + **`/more/listen-again`** stay mixed (**`renderListenAgainTile`**); **`clearHistoryByKind`** ready for My Library More screens (**Phase 4** UI).
 - [x] **My Library** filtered history swimlanes + per-kind More + scoped Clear (**Phase 4**).
 - [x] History rails show **ghosts** when empty + **More** always; scoped **Clear** on More screens.
-- [ ] Non-history rails hidden when empty; **More** only when over card max.
+- [x] Non-history rails hidden when empty; **More** only when over card max (Phase 5).
 
 ---
 
