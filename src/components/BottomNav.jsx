@@ -19,10 +19,10 @@ const NAV_ITEMS = [
     maskClass: "bottom-nav__icon-mask--search",
   },
   {
-    id: "info",
-    to: "/info",
-    label: "Info",
-    maskClass: "bottom-nav__icon-mask--info",
+    id: "my-library",
+    to: "/my-library",
+    label: "My Library",
+    maskClass: "bottom-nav__icon-mask--my-library",
   },
 ];
 
@@ -51,8 +51,10 @@ export default function BottomNav({ className = "" }) {
             (location.pathname.startsWith("/search") ||
               location.pathname.startsWith("/radio"));
 
-          const infoStackActive =
-            id === "info" && location.pathname.startsWith("/info");
+          const myLibraryStackActive =
+            id === "my-library" &&
+            (location.pathname.startsWith("/my-library") ||
+              location.pathname.startsWith("/info"));
 
           return (
             <NavLink
@@ -62,7 +64,7 @@ export default function BottomNav({ className = "" }) {
               className={({ isActive }) =>
                 [
                   "bottom-nav__item",
-                  isActive || homeStackActive || searchStackActive || infoStackActive
+                  isActive || homeStackActive || searchStackActive || myLibraryStackActive
                     ? "bottom-nav__item--active"
                     : "",
                 ]

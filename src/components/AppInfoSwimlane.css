@@ -1,0 +1,97 @@
+.app-info-swimlane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  min-width: 0;
+}
+
+.app-info-swimlane__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding-inline: var(--space-content-inline);
+}
+
+.app-info-swimlane__gear {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background-color: var(--color-text);
+  mask-image: url("/infoGear.svg");
+  -webkit-mask-image: url("/infoGear.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.app-info-swimlane__title {
+  margin: 0;
+  flex: 1;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.app-info-swimlane__scroll {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: var(--space-2);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.app-info-swimlane__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.app-info-swimlane__scroll-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: var(--card-tile-gap);
+  width: max-content;
+  padding-inline: var(--space-content-inline);
+}
+
+.app-info-swimlane__tile {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--card-tile-width);
+  min-height: var(--card-tile-width);
+  padding: var(--space-3);
+  text-decoration: none;
+  text-align: center;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: var(--color-surface);
+  border-radius: var(--radius-media-thumb);
+  box-shadow: var(--shadow-card);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-info-swimlane__tile:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.app-info-swimlane__tile-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text);
+}

@@ -29,9 +29,10 @@ import SearchRadioInternationalStack from "./pages/SearchRadioInternationalStack
 import SearchRadioStationGrid from "./pages/SearchRadioStationGrid";
 import SearchCatalogMore from "./pages/SearchCatalogMore";
 import SearchTagsMore from "./pages/SearchTagsMore";
-import Info from "./pages/Info";
 import InfoAbout from "./pages/InfoAbout";
 import InfoContact from "./pages/InfoContact";
+import MyLibrary from "./pages/MyLibrary";
+import MyLibraryAccountSettings from "./pages/MyLibraryAccountSettings";
 import Subscription from "./pages/Subscription";
 import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
@@ -102,7 +103,9 @@ function AppRoutes() {
         <Route path="/search" element={<Navigate to="/search/music" replace />} />
         <Route path="/info/contact" element={<InfoContact />} />
         <Route path="/info/about" element={<InfoAbout />} />
-        <Route path="/info" element={<Info />} />
+        <Route path="/info" element={<Navigate to="/my-library" replace />} />
+        <Route path="/my-library/account-settings" element={<MyLibraryAccountSettings />} />
+        <Route path="/my-library" element={<MyLibrary />} />
       </Routes>
       {hideBottomNav ? null : (
         <>

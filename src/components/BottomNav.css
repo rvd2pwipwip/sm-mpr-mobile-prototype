@@ -93,9 +93,9 @@
   -webkit-mask-image: url("/search.svg");
 }
 
-.bottom-nav__icon-mask--info {
-  mask-image: url("/infoGear.svg");
-  -webkit-mask-image: url("/infoGear.svg");
+.bottom-nav__icon-mask--my-library {
+  mask-image: url("/my-library.svg");
+  -webkit-mask-image: url("/my-library.svg");
 }
 
 .bottom-nav__label {

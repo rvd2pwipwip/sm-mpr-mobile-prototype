@@ -67,7 +67,7 @@ Add or confirm entries in **`docs/figma-nodes.md`** when implementation starts.
 
 **`BottomNav`:**
 
-- Third tab: **`to: "/my-library"`**, label **My Library**; keep gear icon asset if it matches Figma.
+- Third tab: **`to: "/my-library"`**, label **My Library**; tab icon **`public/my-library.svg`** (mask in **`BottomNav.css`**). **App Info** swimlane on the hub keeps the **gear** asset (**`infoGear.svg`**) per story.
 - **Stack active:** tab highlighted for **`pathname.startsWith("/my-library")`** and optionally **`pathname.startsWith("/info")`** for contact/about **if** UX wants the Library tab lit on those stacks (mirror Search + `/radio` pattern).
 
 ---
@@ -89,20 +89,26 @@ Tune exact labels against Figma **`rowCategory`** instances.
 
 ## Phase 1 — Tab, redirect, empty hub
 
+**Status: shipped** in codebase (2026-05-13).
+
 - Add **`MyLibrary.jsx`** scaffold (title / inset optional per Figma).
 - Register **`/my-library`**; **`/info`** → **`Navigate`** to **`/my-library`**.
 - Update **`BottomNav`** label + `to` + active logic.
-- Remove or stop using **`Info.jsx`** three-section layout as the tab root (components stay; screen splits per above).
+- Remove or stop using **`Info.jsx`** three-section layout as the tab root (components stay; screen splits per above). **`Info.jsx`** remains in **`src/pages/`** for Phase 2 reference until account-settings route replaces duplication.
 
 ---
 
 ## Phase 2 — App Info swimlane + account drill-in
+
+**Status: shipped** in codebase (2026-05-13).
 
 - **Component:** e.g. **`AppInfoSwimlane`** — gear + title row; horizontal scroll of **four** tiles.
 - **Account and settings** → **`/my-library/account-settings`** with **`InfoCollapsibleSection`** x2 **or** equivalent, **`useState`** both **`expanded: true`** on mount.
 - **FAQ:** **`INFO_FAQ_HREF`** (`InfoHelpSection` rules for external link).
 - **Contact us / About:** **`Link`** to **`/info/contact`**, **`/info/about`**.
 - Optionally extract shared row constants from **`InfoHelpSection`** to avoid duplication (small refactor).
+
+**Shipped:** **`src/components/AppInfoSwimlane.jsx`** + **`.css`**; **`pages/MyLibraryAccountSettings.jsx`**; **`infoHelpLinks.js`** exports paths + **`externalFaqAnchorProps`** reused by **`InfoHelpSection`**.
 
 ---
 
@@ -140,10 +146,10 @@ Tune exact labels against Figma **`rowCategory`** instances.
 
 ## Verification checklist
 
-- [ ] **`/my-library`** loads hub; **`/info`** redirects.
-- [ ] Bottom tab reads **My Library** and highlights on hub + configured **`/info/*`** stacks.
-- [ ] App Info tiles navigate correctly (FAQ external, Contact/About stacks, Account settings drill-in **both expanded**).
-- [ ] Listening updates **Listen again** and **filtered** Library rails from **same** **`items`** array.
+- [x] **`/my-library`** loads hub; **`/info`** redirects.
+- [x] Bottom tab reads **My Library** and highlights on hub + configured **`/info/*`** stacks.
+- [x] App Info tiles navigate correctly (FAQ external, Contact/About stacks, Account settings drill-in **both expanded**).
+- [ ] Listening updates **Listen again** and **filtered** Library rails from **same** **`items`** array (Phase 4+).
 - [ ] History rails show **ghosts** when empty + **More** always; scoped **Clear** on More screens.
 - [ ] Non-history rails hidden when empty; **More** only when over card max.
 
