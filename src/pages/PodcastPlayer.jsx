@@ -17,6 +17,11 @@ import VisualAdStrip from "../components/VisualAdStrip";
 import { EpisodeActionIconMask } from "../components/EpisodeCard";
 import "./MusicChannelInfo.css";
 import { PODCAST_SPEED_STEPS } from "../constants/podcastPlayback";
+import {
+  userMayBookmarkEpisodes,
+  userMaySubscribePodcasts,
+} from "../constants/userContentGates";
+import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
@@ -120,6 +125,7 @@ export default function PodcastPlayer() {
   const { graceActive } = useGuestPrerollGrace();
   const { recordPodcastShowListen } = useListenHistory();
   const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
   const needsPreroll = showPlayerPreroll(userType);
   const expandFromMini = location.state?.expandFromMiniPlayer === true;
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
@@ -311,7 +317,23 @@ export default function PodcastPlayer() {
   const subscribedHere = isSubscribed(podcast.id);
   const bookmarkedHere = isBookmarked(episode.id);
 
-  /** Minimize: from mini’s `push`, pop back to the shell under the player; else replace to show (detail stack). */
+  const onSubscribePress = () => {
+    if (!subscribedHere && !userMaySubscribePodcasts(userType)) {
+      openAccountRequiredDialog("podcastSubscribe");
+      return;
+    }
+    toggleSubscribe(podcast.id);
+  };
+
+  const onBookmarkPress = () => {
+    if (!bookmarkedHere && !userMayBookmarkEpisodes(userType)) {
+      openAccountRequiredDialog("episodeBookmark");
+      return;
+    }
+    toggleBookmark(episode.id);
+  };
+
+  /** Minimize: from mini's `push`, pop back to the shell under the player; else replace to show (detail stack). */
   const leaveFullPlayerForShow = () => {
     if (expandFromMini) {
       navigate(-1);
@@ -415,7 +437,7 @@ export default function PodcastPlayer() {
                   subscribedHere ? "Unsubscribe from podcast" : "Subscribe"
                 }
                 aria-pressed={subscribedHere}
-                onClick={() => toggleSubscribe(podcast.id)}
+                onClick={onSubscribePress}
               >
                 <PlayerSubscribeMask subscribed={subscribedHere} />
               </button>
@@ -604,7 +626,7 @@ export default function PodcastPlayer() {
                       bookmarkedHere ? "Remove bookmark" : "Bookmark episode"
                     }
                     aria-pressed={bookmarkedHere}
-                    onClick={() => toggleBookmark(episode.id)}
+                    onClick={onBookmarkPress}
                   >
                     <EpisodeActionIconMask
                       variant={

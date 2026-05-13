@@ -207,6 +207,11 @@
   -webkit-mask-image: url("/like.svg");
 }
 
+.music-player__meta-action-icon--unlike {
+  mask-image: url("/unlike.svg");
+  -webkit-mask-image: url("/unlike.svg");
+}
+
 .music-player__meta-action-icon--share {
   mask-image: url("/share.svg");
   -webkit-mask-image: url("/share.svg");

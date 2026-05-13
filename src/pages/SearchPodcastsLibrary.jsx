@@ -8,7 +8,13 @@ import {
   isPodcastLibrarySlug,
 } from "../constants/podcastSearchLibrary.js";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
+import {
+  userMayBookmarkEpisodes,
+  userMayDownloadEpisodesOffline,
+} from "../constants/userContentGates";
+import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
+import { useUserType } from "../context/UserTypeContext";
 import "./Search.css";
 import "./SwimlaneMore.css";
 
@@ -26,6 +32,9 @@ const TITLES = {
 export default function SearchPodcastsLibrary() {
   const { librarySection } = useParams();
   const navigate = useNavigate();
+  const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
+
   const {
     continueListening,
     subscribedPodcasts,
@@ -55,8 +64,26 @@ export default function SearchPodcastsLibrary() {
         replace: true,
         state: playOverDetailNavigateState(),
       }),
-    onToggleBookmark: () => toggleBookmark(episode.id),
-    onToggleDownload: () => toggleDownload(episode.id),
+    onToggleBookmark: () => {
+      if (
+        !isBookmarked(episode.id) &&
+        !userMayBookmarkEpisodes(userType)
+      ) {
+        openAccountRequiredDialog("episodeBookmark");
+        return;
+      }
+      toggleBookmark(episode.id);
+    },
+    onToggleDownload: () => {
+      if (
+        !isDownloaded(episode.id) &&
+        !userMayDownloadEpisodesOffline(userType)
+      ) {
+        openAccountRequiredDialog("episodeOfflineDownload");
+        return;
+      }
+      toggleDownload(episode.id);
+    },
   });
 
   let body = null;

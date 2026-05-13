@@ -13,6 +13,7 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import {
   showPlayerPreroll,
@@ -80,6 +81,7 @@ export default function MusicPlayer() {
   const [playing, setPlaying] = useState(() => skipPrerollGate);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
+  const likeAction = useMusicRadioLikeAction("music", channel?.id);
 
   useLayoutEffect(() => {
     if (!channel) return;
@@ -180,9 +182,10 @@ export default function MusicPlayer() {
             <button
               type="button"
               className="music-player__icon-btn"
-              aria-label="Like"
+              aria-label={likeAction.ariaLabel}
+              onClick={likeAction.onPress}
             >
-              <PlayerMetaActionIcon variant="like" />
+              <PlayerMetaActionIcon variant={likeAction.iconVariant} />
             </button>
             <button
               type="button"

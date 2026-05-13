@@ -99,6 +99,11 @@
   -webkit-mask-image: url("/like.svg");
 }
 
+.music-info__action-icon-mask--unlike {
+  mask-image: url("/unlike.svg");
+  -webkit-mask-image: url("/unlike.svg");
+}
+
 .music-info__action-icon-mask--share {
   mask-image: url("/share.svg");
   -webkit-mask-image: url("/share.svg");

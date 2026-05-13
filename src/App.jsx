@@ -1,10 +1,13 @@
 import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
+import AccountRequiredDialog from "./components/AccountRequiredDialog";
 import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
 import MiniPlayer from "./components/MiniPlayer";
 import VisualAdsHtmlSync from "./components/VisualAdsHtmlSync";
 import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext";
 import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext";
+import { AccountRequiredDialogProvider } from "./context/AccountRequiredDialogContext";
+import { LikesProvider } from "./context/LikesContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
@@ -74,6 +77,7 @@ function AppRoutes() {
     <>
       <VisualAdsHtmlSync />
       <GuestSkipLimitDialog />
+      <AccountRequiredDialog />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/upgrade/store" element={<UpgradeStoreMock />} />
@@ -126,19 +130,23 @@ function AppRoutes() {
 function App() {
   return (
     <UserTypeProvider>
-      <TerritoryProvider>
-        <GuestMusicSkipProvider>
+      <AccountRequiredDialogProvider>
+        <TerritoryProvider>
+          <GuestMusicSkipProvider>
           <GuestPrerollGraceProvider>
             <ListenHistoryProvider>
-              <PodcastUserStateProvider>
-                <PlaybackProvider>
-                  <AppRoutes />
-                </PlaybackProvider>
-              </PodcastUserStateProvider>
+              <LikesProvider>
+                <PodcastUserStateProvider>
+                  <PlaybackProvider>
+                    <AppRoutes />
+                  </PlaybackProvider>
+                </PodcastUserStateProvider>
+              </LikesProvider>
             </ListenHistoryProvider>
           </GuestPrerollGraceProvider>
         </GuestMusicSkipProvider>
-      </TerritoryProvider>
+        </TerritoryProvider>
+      </AccountRequiredDialogProvider>
     </UserTypeProvider>
   );
 }

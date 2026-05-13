@@ -4,9 +4,16 @@ import ButtonSmall from "../components/ButtonSmall";
 import EpisodeCard from "../components/EpisodeCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
+import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
+import { useUserType } from "../context/UserTypeContext";
 import { getPodcastById } from "../data/podcasts";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import {
+  userMayBookmarkEpisodes,
+  userMayDownloadEpisodesOffline,
+  userMaySubscribePodcasts,
+} from "../constants/userContentGates";
 import "./MusicChannelInfo.css";
 import "./PodcastInfo.css";
 
@@ -43,6 +50,9 @@ export default function PodcastInfo() {
     downloadedEpisodes,
   } = usePodcastUserState();
 
+  const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
+
   const podcast = podcastId ? getPodcastById(podcastId) : null;
 
   useEffect(() => {
@@ -58,6 +68,16 @@ export default function PodcastInfo() {
     return <Navigate to="/" replace />;
   }
 
+  const subscribedHere = isSubscribed(podcast.id);
+
+  const onSubscribePress = () => {
+    if (!subscribedHere && !userMaySubscribePodcasts(userType)) {
+      openAccountRequiredDialog("podcastSubscribe");
+      return;
+    }
+    toggleSubscribe(podcast.id);
+  };
+
   const goBack = () => navigate(-1);
   const firstEpisode = podcast.episodes[0] ?? null;
   const playFirstEpisode = () => {
@@ -68,8 +88,6 @@ export default function PodcastInfo() {
       });
     }
   };
-
-  const subscribedHere = isSubscribed(podcast.id);
 
   const toggleStubResume = (episodeId) => {
     const f = getEpisodeProgress(episodeId);
@@ -141,7 +159,7 @@ export default function PodcastInfo() {
                       }
                     />
                   }
-                  onClick={() => toggleSubscribe(podcast.id)}
+                  onClick={onSubscribePress}
                 >
                   {subscribedHere ? "Unsubscribe" : "Subscribe"}
                 </ButtonSmall>
@@ -209,8 +227,26 @@ export default function PodcastInfo() {
                         state: playOverDetailNavigateState(),
                       })
                     }
-                    onToggleBookmark={() => toggleBookmark(ep.id)}
-                    onToggleDownload={() => toggleDownload(ep.id)}
+                    onToggleBookmark={() => {
+                      if (
+                        !isBookmarked(ep.id) &&
+                        !userMayBookmarkEpisodes(userType)
+                      ) {
+                        openAccountRequiredDialog("episodeBookmark");
+                        return;
+                      }
+                      toggleBookmark(ep.id);
+                    }}
+                    onToggleDownload={() => {
+                      if (
+                        !isDownloaded(ep.id) &&
+                        !userMayDownloadEpisodesOffline(userType)
+                      ) {
+                        openAccountRequiredDialog("episodeOfflineDownload");
+                        return;
+                      }
+                      toggleDownload(ep.id);
+                    }}
                     onStubResumeToggle={() => toggleStubResume(ep.id)}
                   />
                 ))}

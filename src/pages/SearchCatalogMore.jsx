@@ -7,7 +7,13 @@ import PodcastCard from "../components/PodcastCard";
 import RadioStationCard from "../components/RadioStationCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
+import {
+  userMayBookmarkEpisodes,
+  userMayDownloadEpisodesOffline,
+} from "../constants/userContentGates";
+import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
+import { useUserType } from "../context/UserTypeContext";
 import {
   normalizeSearchNeedle,
   searchEpisodeRows,
@@ -55,6 +61,9 @@ export default function SearchCatalogMore() {
   const rawQ = params.get("q") ?? "";
   const needle = useMemo(() => normalizeSearchNeedle(rawQ), [rawQ]);
 
+  const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
+
   const {
     toggleBookmark,
     toggleDownload,
@@ -101,8 +110,26 @@ export default function SearchCatalogMore() {
         replace: true,
         state: playOverDetailNavigateState(),
       }),
-    onToggleBookmark: () => toggleBookmark(episode.id),
-    onToggleDownload: () => toggleDownload(episode.id),
+    onToggleBookmark: () => {
+      if (
+        !isBookmarked(episode.id) &&
+        !userMayBookmarkEpisodes(userType)
+      ) {
+        openAccountRequiredDialog("episodeBookmark");
+        return;
+      }
+      toggleBookmark(episode.id);
+    },
+    onToggleDownload: () => {
+      if (
+        !isDownloaded(episode.id) &&
+        !userMayDownloadEpisodesOffline(userType)
+      ) {
+        openAccountRequiredDialog("episodeOfflineDownload");
+        return;
+      }
+      toggleDownload(episode.id);
+    },
   });
 
   const listForLane =

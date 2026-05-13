@@ -12,6 +12,7 @@ import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
 import {
@@ -79,6 +80,7 @@ export default function RadioPlayer() {
   const [playing, setPlaying] = useState(() => skipPrerollGate);
 
   const station = stationId ? resolveRadioStationForStub(stationId) : null;
+  const likeAction = useMusicRadioLikeAction("radio", station?.id);
 
   useLayoutEffect(() => {
     if (!station) return;
@@ -180,9 +182,10 @@ export default function RadioPlayer() {
             <button
               type="button"
               className="music-player__icon-btn"
-              aria-label="Like"
+              aria-label={likeAction.ariaLabel}
+              onClick={likeAction.onPress}
             >
-              <PlayerMetaActionIcon variant="like" />
+              <PlayerMetaActionIcon variant={likeAction.iconVariant} />
             </button>
             <button
               type="button"

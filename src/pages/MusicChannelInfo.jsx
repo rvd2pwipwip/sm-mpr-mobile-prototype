@@ -6,6 +6,7 @@ import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeade
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { getMusicChannelById } from "../data/musicChannels";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import "./MusicChannelInfo.css";
 
 /** Icons from `public/*.svg` via CSS mask so they follow `ButtonSmall` `currentColor`. */
@@ -27,6 +28,7 @@ export default function MusicChannelInfo() {
   const [descExpanded, setDescExpanded] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
+  const musicLike = useMusicRadioLikeAction("music", channel?.id);
 
   useEffect(() => {
     setDescExpanded(false);
@@ -92,9 +94,12 @@ export default function MusicChannelInfo() {
                 <ButtonSmall
                   variant="secondary"
                   fullWidth
-                  startIcon={<ActionIconMask variant="like" />}
+                  startIcon={
+                    <ActionIconMask variant={musicLike.iconVariant} />
+                  }
+                  onClick={musicLike.onPress}
                 >
-                  Like
+                  {musicLike.label}
                 </ButtonSmall>
                 <ButtonSmall
                   variant="secondary"

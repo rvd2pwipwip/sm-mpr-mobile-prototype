@@ -8,7 +8,13 @@ import PodcastCard from "../components/PodcastCard";
 import RadioStationCard from "../components/RadioStationCard";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
+import {
+  userMayBookmarkEpisodes,
+  userMayDownloadEpisodesOffline,
+} from "../constants/userContentGates";
+import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
+import { useUserType } from "../context/UserTypeContext";
 import {
   normalizeSearchNeedle,
   primaryTagLabelForSearchMore,
@@ -29,6 +35,9 @@ export default function SearchResultsPanel({ debouncedQuery }) {
     () => normalizeSearchNeedle(debouncedQuery),
     [debouncedQuery],
   );
+
+  const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
 
   const {
     toggleBookmark,
@@ -62,8 +71,26 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         replace: true,
         state: playOverDetailNavigateState(),
       }),
-    onToggleBookmark: () => toggleBookmark(episode.id),
-    onToggleDownload: () => toggleDownload(episode.id),
+    onToggleBookmark: () => {
+      if (
+        !isBookmarked(episode.id) &&
+        !userMayBookmarkEpisodes(userType)
+      ) {
+        openAccountRequiredDialog("episodeBookmark");
+        return;
+      }
+      toggleBookmark(episode.id);
+    },
+    onToggleDownload: () => {
+      if (
+        !isDownloaded(episode.id) &&
+        !userMayDownloadEpisodesOffline(userType)
+      ) {
+        openAccountRequiredDialog("episodeOfflineDownload");
+        return;
+      }
+      toggleDownload(episode.id);
+    },
   });
 
   const qEnc = encodeURIComponent(debouncedQuery.trim());

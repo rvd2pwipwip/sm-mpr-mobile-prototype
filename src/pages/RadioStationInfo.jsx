@@ -5,6 +5,7 @@ import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeade
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import "./MusicChannelInfo.css";
 import "./RadioStationInfo.css";
 
@@ -31,6 +32,7 @@ export default function RadioStationInfo() {
   const [descExpanded, setDescExpanded] = useState(false);
 
   const station = stationId ? resolveRadioStationForStub(stationId) : null;
+  const radioLike = useMusicRadioLikeAction("radio", station?.id);
 
   const metaRows = useMemo(() => {
     if (!station) return [];
@@ -117,9 +119,12 @@ export default function RadioStationInfo() {
                 <ButtonSmall
                   variant="secondary"
                   fullWidth
-                  startIcon={<ActionIconMask variant="like" />}
+                  startIcon={
+                    <ActionIconMask variant={radioLike.iconVariant} />
+                  }
+                  onClick={radioLike.onPress}
                 >
-                  Like
+                  {radioLike.label}
                 </ButtonSmall>
                 <ButtonSmall
                   variant="secondary"
