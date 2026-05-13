@@ -11,7 +11,8 @@ import { LikesProvider } from "./context/LikesContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
-import { TerritoryProvider } from "./context/TerritoryContext.jsx";
+import { CATALOG_SCOPE } from "./constants/catalogScope.js";
+import { TerritoryProvider, useTerritory } from "./context/TerritoryContext.jsx";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
 import ListenAgainMore from "./pages/ListenAgainMore";
@@ -32,6 +33,7 @@ import SearchRadioInternationalStack from "./pages/SearchRadioInternationalStack
 import SearchRadioStationGrid from "./pages/SearchRadioStationGrid";
 import SearchCatalogMore from "./pages/SearchCatalogMore";
 import SearchTagsMore from "./pages/SearchTagsMore";
+import Info from "./pages/Info";
 import InfoAbout from "./pages/InfoAbout";
 import InfoContact from "./pages/InfoContact";
 import MyLibrary from "./pages/MyLibrary";
@@ -68,6 +70,15 @@ function hideBottomNavForPath(pathname) {
     /^\/radio\/[^/]+\/play\/?$/.test(pathname) ||
     /^\/upgrade\/store\/?$/.test(pathname)
   );
+}
+
+/** `/info` root: **broad** catalog sends users to My Library; **limited** shows classic Info hub. */
+function InfoRootRoute() {
+  const { catalogScope } = useTerritory();
+  if (catalogScope === CATALOG_SCOPE.broad) {
+    return <Navigate to="/my-library" replace />;
+  }
+  return <Info />;
 }
 
 function AppRoutes() {
@@ -109,7 +120,7 @@ function AppRoutes() {
         <Route path="/search" element={<Navigate to="/search/music" replace />} />
         <Route path="/info/contact" element={<InfoContact />} />
         <Route path="/info/about" element={<InfoAbout />} />
-        <Route path="/info" element={<Navigate to="/my-library" replace />} />
+        <Route path="/info" element={<InfoRootRoute />} />
         <Route path="/my-library/account-settings" element={<MyLibraryAccountSettings />} />
         <Route
           path="/my-library/history/:historySegment"

@@ -98,6 +98,11 @@
   -webkit-mask-image: url("/my-library.svg");
 }
 
+.bottom-nav__icon-mask--info {
+  mask-image: url("/infoGear.svg");
+  -webkit-mask-image: url("/infoGear.svg");
+}
+
 .bottom-nav__label {
   font-size: var(--bottom-nav-label-size);
   font-weight: 400;
