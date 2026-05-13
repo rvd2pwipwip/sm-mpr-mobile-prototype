@@ -34,6 +34,32 @@
   line-height: 0;
 }
 
+/* Prototype: wordmark toggles catalog scope / music lineup (pairs with Search Music double-tap). */
+.home-header__catalog-toggle {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  color: inherit;
+}
+
+.home-header__catalog-toggle:focus-visible {
+  outline: 2px solid var(--color-accent2, currentColor);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.home-header__brand--solo .home-header__catalog-toggle {
+  margin-inline: auto;
+  text-align: center;
+}
+
 /* Logo — tune height to Figma header row; `object-fit` keeps aspect. */
 .home-header__wordmark {
   display: block;

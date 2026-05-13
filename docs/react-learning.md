@@ -134,7 +134,8 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 ## Catalog scope (`catalogScope`) vs music lineup
 
 - **Idea:** **Navigation / IA** will branch on **`limited` | `broad`** catalog (Info vs My Library, Browse home, etc.). **State** still lives in one place: **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`). **`musicLineupMode`** drives Search/Browse music data shape; **`catalogScope`** is derived via **`catalogScopeFromMusicLineup()`** in **`src/constants/catalogScope.js`** (`CATALOG_SCOPE` mirrors **`MUSIC_LINEUP`** for now).
-- **Usage:** **`const { catalogScope, musicLineupMode } = useTerritory()`**. Toggle is unchanged: **second tap on Music** in **Search** (`Search.jsx`) calls **`toggleMusicLineupMode`** — **`catalogScope`** updates with it.
+- **Usage:** **`const { catalogScope, musicLineupMode, toggleMusicLineupMode } = useTerritory()`**.
+- **Prototype toggles (same state):** (1) **Home** — tap the **Stingray wordmark** in **`HomeHeader`**. (2) **Search** — **second tap on Music** (`Search.jsx`). **`sessionStorage`** key **`sm-mpr-prototype-music-lineup-mode`** (`PROTOTYPE_MUSIC_LINEUP_STORAGE_KEY`) restores the choice after refresh in this tab.
 - **Later:** If real rules split territory from IA, add separate state in **`TerritoryProvider`** and stop deriving **`catalogScope`** from lineup only.
 
 ---

@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useUserType } from "../context/UserTypeContext";
 import { PROVIDER_LOGO_DARK_URL, PROVIDER_LOGO_LIGHT_URL } from "../constants/externalLinks";
 import { showUpgradeCallToAction } from "../utils/showVisualAds";
@@ -93,12 +94,21 @@ function ProviderLogoPair() {
 export default function HomeHeader({ onUpgrade }) {
   const headerRef = useHomeHeaderOffset();
   const { userType } = useUserType();
+  const { toggleMusicLineupMode } = useTerritory();
 
   if (userType === "subscribed") {
     return (
       <header ref={headerRef} className="home-header--fixed home-header--subscribed">
         <div className="home-header__brand home-header__brand--solo">
-          <WordmarkPair />
+          <button
+            type="button"
+            className="home-header__catalog-toggle"
+            onClick={toggleMusicLineupMode}
+            aria-label="Prototype: toggle catalog scope between limited and broad"
+            title="Prototype: tap to switch limited vs broad catalog (same as Search Music double-tap)"
+          >
+            <WordmarkPair />
+          </button>
         </div>
       </header>
     );
@@ -107,7 +117,15 @@ export default function HomeHeader({ onUpgrade }) {
   return (
     <header ref={headerRef} className="home-header--fixed">
       <div className="home-header__brand">
-        <WordmarkPair />
+        <button
+          type="button"
+          className="home-header__catalog-toggle"
+          onClick={toggleMusicLineupMode}
+          aria-label="Prototype: toggle catalog scope between limited and broad"
+          title="Prototype: tap to switch limited vs broad catalog (same as Search Music double-tap)"
+        >
+          <WordmarkPair />
+        </button>
       </div>
       <div className="home-header__actions">
         {showUpgradeCallToAction(userType) ? (

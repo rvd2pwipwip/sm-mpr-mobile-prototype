@@ -16,3 +16,28 @@ export const CATALOG_SCOPE = {
 export function catalogScopeFromMusicLineup(musicLineupMode) {
   return musicLineupMode === MUSIC_LINEUP.broad ? CATALOG_SCOPE.broad : CATALOG_SCOPE.limited;
 }
+
+/** Prototype only: persist lineup / catalog scope across refresh (session tab). */
+export const PROTOTYPE_MUSIC_LINEUP_STORAGE_KEY = "sm-mpr-prototype-music-lineup-mode";
+
+/** @returns {'limited' | 'broad' | null} */
+export function readStoredMusicLineupMode() {
+  if (typeof sessionStorage === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(PROTOTYPE_MUSIC_LINEUP_STORAGE_KEY);
+    if (raw === MUSIC_LINEUP.limited || raw === MUSIC_LINEUP.broad) return raw;
+  } catch {
+    /* quota / private mode */
+  }
+  return null;
+}
+
+/** @param {string} mode */
+export function writeStoredMusicLineupMode(mode) {
+  if (typeof sessionStorage === "undefined") return;
+  try {
+    sessionStorage.setItem(PROTOTYPE_MUSIC_LINEUP_STORAGE_KEY, mode);
+  } catch {
+    /* ignore */
+  }
+}
