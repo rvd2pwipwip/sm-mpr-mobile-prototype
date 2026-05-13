@@ -131,6 +131,14 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Catalog scope (`catalogScope`) vs music lineup
+
+- **Idea:** **Navigation / IA** will branch on **`limited` | `broad`** catalog (Info vs My Library, Browse home, etc.). **State** still lives in one place: **`TerritoryProvider`** (`src/context/TerritoryContext.jsx`). **`musicLineupMode`** drives Search/Browse music data shape; **`catalogScope`** is derived via **`catalogScopeFromMusicLineup()`** in **`src/constants/catalogScope.js`** (`CATALOG_SCOPE` mirrors **`MUSIC_LINEUP`** for now).
+- **Usage:** **`const { catalogScope, musicLineupMode } = useTerritory()`**. Toggle is unchanged: **second tap on Music** in **Search** (`Search.jsx`) calls **`toggleMusicLineupMode`** — **`catalogScope`** updates with it.
+- **Later:** If real rules split territory from IA, add separate state in **`TerritoryProvider`** and stop deriving **`catalogScope`** from lineup only.
+
+---
+
 ## Search browse content switcher — layout before paint + tab-only motion
 
 - **Problem:** A sliding thumb needs real **pixels** from the DOM (`left` / `width`). **Global** motion after mount (`useEffect([])`) plus **`ResizeObserver`** makes the thumb **animate again** when returning to Search (remount / layout nudge).
