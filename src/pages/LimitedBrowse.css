@@ -89,25 +89,14 @@
   );
 }
 
-.limited-browse__scroll-inner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-screen-gap);
+.limited-browse__screen {
   min-width: 0;
 }
 
-.limited-browse__intro {
-  padding-block: 0 var(--space-4);
-}
-
-.limited-browse__title {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.limited-browse__lede {
-  margin: var(--space-3) 0 0;
-  font-size: 0.9375rem;
-  line-height: 1.45;
+/* Music | Podcasts | Radio — same pill as Search browse; local state only on limited Browse. */
+.limited-browse__switcher-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
 }

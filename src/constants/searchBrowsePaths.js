@@ -19,3 +19,30 @@ export function getSearchBrowseTabFromPathname(pathname) {
   if (pathname.startsWith("/search/music")) return "music";
   return "music";
 }
+
+/** Prototype: last Music \| Podcasts \| Radio on Limited Browse `/` survives drill-down / Back (session tab). */
+export const PROTOTYPE_LIMITED_BROWSE_TAB_STORAGE_KEY =
+  "sm-mpr-prototype-limited-browse-tab";
+
+/** @returns {typeof BROWSE_TABS[number]["id"] | null} */
+export function readStoredLimitedBrowseTab() {
+  if (typeof sessionStorage === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(PROTOTYPE_LIMITED_BROWSE_TAB_STORAGE_KEY);
+    if (BROWSE_TABS.some((t) => t.id === raw)) return raw;
+  } catch {
+    /* quota / private mode */
+  }
+  return null;
+}
+
+/** @param {string} tabId */
+export function writeStoredLimitedBrowseTab(tabId) {
+  if (typeof sessionStorage === "undefined") return;
+  if (!BROWSE_TABS.some((t) => t.id === tabId)) return;
+  try {
+    sessionStorage.setItem(PROTOTYPE_LIMITED_BROWSE_TAB_STORAGE_KEY, tabId);
+  } catch {
+    /* ignore */
+  }
+}
