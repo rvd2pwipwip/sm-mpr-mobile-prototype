@@ -23,6 +23,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Limited Search: `ScreenHeader` + back above — pin search chrome under the 80px stack bar. */
+.search-browse-header--under-screen-header {
+  top: var(--screen-header-height);
+  padding-top: var(--space-3);
+}
+
 .search-browse-header__field-row {
   display: flex;
   flex-direction: row;

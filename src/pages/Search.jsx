@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SearchBrowseHeader from "../components/SearchBrowseHeader.jsx";
+import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import SearchBrowseHeader, {
+  SEARCH_SCREEN_HEADER_STACK_PX,
+} from "../components/SearchBrowseHeader.jsx";
 import {
   SearchBrowseTile,
   SearchBrowseTileGrid,
 } from "../components/SearchBrowseTile.jsx";
-import { MUSIC_LINEUP, musicLineupLabel } from "../constants/musicLineup.js";
+import { CATALOG_SCOPE } from "../constants/catalogScope.js";
+import { MUSIC_LINEUP } from "../constants/musicLineup.js";
 import { getSearchBrowseTabFromPathname } from "../constants/searchBrowsePaths.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
@@ -21,18 +25,29 @@ function searchParamFromLocationSearch(search) {
   return new URLSearchParams(search).get("q") ?? "";
 }
 
+/** URL sync + query restore for broad tab paths or limited `/search` only. */
+function matchesSearchShellPath(pathname, catalogScope) {
+  if (catalogScope === CATALOG_SCOPE.limited) {
+    return pathname === "/search";
+  }
+  return (
+    pathname.startsWith("/search/music") ||
+    pathname.startsWith("/search/podcasts") ||
+    pathname.startsWith("/search/radio")
+  );
+}
+
 /**
- * Search & Browse tab. Browse content-type strip uses `/search/music`, `/search/podcasts`,
- * `/search/radio` so back navigation preserves the tab. Re-tap Music on `/search/music`
- * toggles lineup (prototype easter egg).
+ * Search & Browse. **Broad:** browse tabs on `/search/music` | …; **limited:** canonical **`/search`**
+ * only (no browse chrome). `docs/Plans/catalog-scope-search-browse-refactor.md`.
  *
- * Active query is mirrored to `?q=` on the current tab URL (replace) so drill-down
- * (More, channel info, etc.) and Back restore populated results instead of resetting.
+ * Active query is mirrored to `?q=` on the current path (replace) so drill-down and Back restore
+ * results.
  */
 export default function Search() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { musicLineupMode, toggleMusicLineupMode } = useTerritory();
+  const { musicLineupMode, catalogScope } = useTerritory();
   const browseTab = getSearchBrowseTabFromPathname(location.pathname);
 
   const [query, setQuery] = useState(() =>
@@ -46,16 +61,16 @@ export default function Search() {
 
   const showBrowseTabs = query.trim().length === 0;
   const isSearchActive = query.trim().length > 0;
+  /** Limited catalog never shows Music/Podcasts/Radio strip on Search. */
+  const showHeaderBrowseTabs =
+    catalogScope === CATALOG_SCOPE.broad && showBrowseTabs;
 
-  // After browser Back/Forward (new history entry under /search/*), reload field + results from `?q=`.
+  const isLimitedSearchRoot =
+    catalogScope === CATALOG_SCOPE.limited && location.pathname === "/search";
+
+  // After browser Back/Forward, reload field + results from `?q=`.
   useEffect(() => {
-    if (
-      !location.pathname.startsWith("/search/music") &&
-      !location.pathname.startsWith("/search/podcasts") &&
-      !location.pathname.startsWith("/search/radio")
-    ) {
-      return;
-    }
+    if (!matchesSearchShellPath(location.pathname, catalogScope)) return;
     if (stackKeySeenRef.current === null) {
       stackKeySeenRef.current = location.key;
       return;
@@ -66,7 +81,7 @@ export default function Search() {
     const u = searchParamFromLocationSearch(location.search);
     setQuery(u);
     setDebouncedQuery(u.trim() === "" ? "" : u);
-  }, [location.key, location.pathname, location.search]);
+  }, [location.key, location.pathname, location.search, catalogScope]);
 
   useEffect(() => {
     if (query.trim() === "") {
@@ -79,15 +94,8 @@ export default function Search() {
     return () => window.clearTimeout(id);
   }, [query]);
 
-  // Debounced query -> URL (replace) keeps history clean; stack grows on push to More / channels only.
   useEffect(() => {
-    if (
-      !location.pathname.startsWith("/search/music") &&
-      !location.pathname.startsWith("/search/podcasts") &&
-      !location.pathname.startsWith("/search/radio")
-    ) {
-      return;
-    }
+    if (!matchesSearchShellPath(location.pathname, catalogScope)) return;
 
     const next = debouncedQuery.trim();
     const current = searchParamFromLocationSearch(location.search).trim();
@@ -95,7 +103,7 @@ export default function Search() {
 
     const search = next ? `?q=${encodeURIComponent(next)}` : "";
     navigate({ pathname: location.pathname, search }, { replace: true });
-  }, [debouncedQuery, navigate, location.pathname, location.search]);
+  }, [debouncedQuery, navigate, location.pathname, location.search, catalogScope]);
 
   function handleQueryChange(next) {
     setQuery(next);
@@ -109,35 +117,44 @@ export default function Search() {
 
   return (
     <main className="app-shell app-shell--footer-fixed search-page">
+      {isLimitedSearchRoot ? (
+        <ScreenHeader
+          title="Search"
+          startSlot={
+            <button
+              type="button"
+              className="screen-header__icon-btn"
+              onClick={() => navigate(-1)}
+              aria-label="Back"
+            >
+              <ScreenHeaderChevronBack />
+            </button>
+          }
+        />
+      ) : null}
+
       <SearchBrowseHeader
         query={query}
         onQueryChange={handleQueryChange}
-        onMusicLineupToggle={toggleMusicLineupMode}
-        showBrowseTabs={showBrowseTabs}
+        showBrowseTabs={showHeaderBrowseTabs}
+        underScreenHeader={isLimitedSearchRoot}
+        stackOffsetPrependPx={
+          isLimitedSearchRoot ? SEARCH_SCREEN_HEADER_STACK_PX : 0
+        }
       />
 
       <div className="search-page-scroll">
         {isSearchActive ? (
           <SearchResultsPanel debouncedQuery={debouncedQuery} />
+        ) : isLimitedSearchRoot ? (
+          <div className="content-inset search-page__body">
+            <p className="text-muted search-page__limited-empty">
+              Type to search music, podcasts, or radio. Stacked category swimlanes stay on Browse.
+            </p>
+          </div>
         ) : browseTab === "music" ? (
           <div className="content-inset search-page__body">
             <>
-              {/* <p className="search-page__demo-note" style={{ marginTop: 0 }}>
-                <strong>Prototype only (not for production):</strong> with{" "}
-                <strong>Music</strong> selected, tap <strong>Music</strong> in the header
-                again to switch music lineup mode for demos.
-              </p> */}
-              {/* <p className="search-page__lineup-badge" aria-live="polite">
-                Music lineup: {musicLineupLabel(musicLineupMode)}
-              </p> */}
-              {/* <h2
-                id={musicBrowseTitleId}
-                className="search-page__browse-heading"
-              >
-                {musicLineupMode === MUSIC_LINEUP.limited
-                  ? "Browse by genre"
-                  : "Browse by vibe"}
-              </h2> */}
               <SearchBrowseTileGrid labelId={musicBrowseTitleId}>
                 {musicLineupMode === MUSIC_LINEUP.limited
                   ? MUSIC_GENRES.map((g) => (

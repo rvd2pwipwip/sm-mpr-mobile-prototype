@@ -1,0 +1,113 @@
+/* Fixed top chrome: row 1 wordmark (left) + icons (right); row 2 centered Upgrade (guest / free). */
+.limited-browse-header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-chrome);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: var(--app-max-width);
+  min-width: 0;
+  box-sizing: border-box;
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--space-4);
+  padding-inline: var(--space-content-inline);
+  background-color: var(--color-header-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-tap-highlight-color: transparent;
+  gap: var(--space-3);
+}
+
+.limited-browse-header__wordmark-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+  line-height: 0;
+}
+
+.limited-browse-header__wordmark-btn {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.limited-browse-header__wordmark-btn .home-header__wordmark {
+  object-position: left center;
+  margin-inline: 0;
+}
+
+.limited-browse-header__wordmark-row-icons {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.limited-browse-header__upgrade-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Icon-only links: reuse bottom-nav mask colors (active = full text color). */
+.limited-browse-header__icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  margin: 0;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.limited-browse-header__icon-link:focus-visible {
+  outline: 2px solid var(--color-accent2, currentColor);
+  outline-offset: 2px;
+}
+
+/* Same `--home-header-offset` publish as `HomeHeader` — scroll clears fixed chrome. */
+.limited-browse__scroll {
+  padding-top: calc(
+    var(--home-header-offset) + var(--home-header-scroll-gap)
+  );
+}
+
+.limited-browse__scroll-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-screen-gap);
+  min-width: 0;
+}
+
+.limited-browse__intro {
+  padding-block: 0 var(--space-4);
+}
+
+.limited-browse__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.limited-browse__lede {
+  margin: var(--space-3) 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}

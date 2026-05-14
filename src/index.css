@@ -177,6 +177,11 @@ html[data-visual-ads] {
   --bottom-nav-ad-height: var(--visual-ad-strip-min-height);
 }
 
+/* Limited catalog: no primary tab bar — scroll padding uses mini player + safe area only. */
+html[data-catalog-scope="limited"] {
+  --bottom-nav-stack-height: 0px;
+}
+
 /* System dark when no manual theme is set */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {

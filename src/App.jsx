@@ -1,4 +1,10 @@
-import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import AccountRequiredDialog from "./components/AccountRequiredDialog";
 import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
@@ -15,6 +21,7 @@ import { CATALOG_SCOPE } from "./constants/catalogScope.js";
 import { TerritoryProvider, useTerritory } from "./context/TerritoryContext.jsx";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
 import Home from "./pages/Home";
+import LimitedBrowse from "./pages/LimitedBrowse";
 import ListenAgainMore from "./pages/ListenAgainMore";
 import MusicChannelInfo from "./pages/MusicChannelInfo";
 import MusicPlayer from "./pages/MusicPlayer";
@@ -81,9 +88,40 @@ function InfoRootRoute() {
   return <Info />;
 }
 
+/** `/`: **broad** Home; **limited** Browse landing (`docs/Plans/catalog-scope-search-browse-refactor.md`). */
+function HomeOrLimitedBrowse() {
+  const { catalogScope } = useTerritory();
+  if (catalogScope === CATALOG_SCOPE.limited) {
+    return <LimitedBrowse />;
+  }
+  return <Home />;
+}
+
+/** **Broad:** `/search` redirects to `/search/music`. **Limited:** `Search` at canonical `/search`. */
+function SearchEntryRoute() {
+  const { catalogScope } = useTerritory();
+  if (catalogScope === CATALOG_SCOPE.limited) {
+    return <Search />;
+  }
+  return <Navigate to="/search/music" replace />;
+}
+
+/** **Limited:** `/search/*` tab paths fold to `/search` (keep `?q=`). **Broad:** `Search` as today. */
+function SearchTabRoute() {
+  const { catalogScope } = useTerritory();
+  const location = useLocation();
+  if (catalogScope === CATALOG_SCOPE.limited) {
+    return <Navigate to={`/search${location.search}`} replace />;
+  }
+  return <Search />;
+}
+
 function AppRoutes() {
   const location = useLocation();
+  const { catalogScope } = useTerritory();
   const hideBottomNav = hideBottomNavForPath(location.pathname);
+  const showBottomNav =
+    catalogScope === CATALOG_SCOPE.broad && !hideBottomNav;
 
   return (
     <>
@@ -91,7 +129,7 @@ function AppRoutes() {
       <GuestSkipLimitDialog />
       <AccountRequiredDialog />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomeOrLimitedBrowse />} />
         <Route path="/upgrade/store" element={<UpgradeStoreMock />} />
         <Route path="/upgrade" element={<Subscription />} />
         <Route path="/more/listen-again" element={<ListenAgainMore />} />
@@ -114,10 +152,10 @@ function AppRoutes() {
         <Route path="/search/more/radio-geo/*" element={<SearchRadioGeoMore />} />
         <Route path="/search/more/catalog" element={<SearchCatalogMore />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
-        <Route path="/search/music" element={<Search />} />
-        <Route path="/search/podcasts" element={<Search />} />
-        <Route path="/search/radio" element={<Search />} />
-        <Route path="/search" element={<Navigate to="/search/music" replace />} />
+        <Route path="/search/music" element={<SearchTabRoute />} />
+        <Route path="/search/podcasts" element={<SearchTabRoute />} />
+        <Route path="/search/radio" element={<SearchTabRoute />} />
+        <Route path="/search" element={<SearchEntryRoute />} />
         <Route path="/info/contact" element={<InfoContact />} />
         <Route path="/info/about" element={<InfoAbout />} />
         <Route path="/info" element={<InfoRootRoute />} />
@@ -132,7 +170,7 @@ function AppRoutes() {
       {hideBottomNav ? null : (
         <>
           <MiniPlayer />
-          <BottomNav />
+          {showBottomNav ? <BottomNav /> : null}
         </>
       )}
     </>

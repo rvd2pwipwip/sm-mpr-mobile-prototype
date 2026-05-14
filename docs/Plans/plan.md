@@ -2,7 +2,7 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
-**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -53,6 +53,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Search & Browse — Phase 2 (music browse)** — **`musicBrowseTaxonomy.js`**; limited genre grid → **`SearchMusicCategory`**; broad vibes → **`SearchMusicVibe`** → tags → **`SearchMusicBroadTagChannels`**; **`SearchBrowseTile`**. See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 2.
 - [x] **Search & Browse — Phase 3 (podcasts browse)** — **`SearchPodcastsBrowse`**: library + **`PODCAST_CATEGORIES`** in one **`SearchBrowseTileGrid`** (library tiles only when populated); **`SearchPodcastsLibrary`** drill-down for each shelf; **`SearchPodcastsCategory`** (**`getPodcastsByCategory`**, 2-col **`PodcastCard`**) → **`/podcast/:id`**. Story: **`docs/Stories/Podcasts-story.md`**; Figma **`19805:39266`**. See **`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 3.
 - [x] **Search & Browse — Phase 4 (radio browse)** — **`SearchRadioBrowse`** (seven tiles); **`SearchRadioInternationalStack`** (continents + **North America → Canada → Alberta → cities** with **popular swimlane + geo pills** — walkthrough **`docs/Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md`**); **`SearchRadioStationGrid`** (Near You + format rows); **`radioInternationalBrowse.js`** + **`radioBrowsePaths.js`**; **`/radio/:stationId`** → **`RadioStationInfo`**; **`/radio/:stationId/play`** → **`RadioPlayer`** with **`upsertRadioSession`**. Plan detail: **`docs/Plans/Radio-Browse-implementation-plan.md`**.
+- [x] **Catalog scope refactor — Phase A (entry + limited chrome)** — **`/`** renders **`LimitedBrowse.jsx`** when **`catalogScope === limited`** (**`Home`** when broad); **`BottomNav`** only when broad; **`html[data-catalog-scope]`** + **`--bottom-nav-stack-height: 0`** on limited for scroll padding. Details: **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
+- [x] **Catalog scope refactor — Header row + Search fork (Phase C / D partial)** — **`LimitedBrowse`**: stacked wordmark + **Upgrade** (guest / free Stingray) + **Search** / **Info** links + **`HomeBanner`**; **`/search`** canonical on limited with redirects from **`/search/music`** etc.; **limited Search** empty state (no browse grids); **removed** Search Music lineup easter egg (wordmark-only toggle). Plan: **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
 
 ## Home screen — implementation approach
 
@@ -170,4 +172,4 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-13* — **My Library Phase 4**: typed history swimlanes hub + **`MyLibraryHistoryMore`** + **`myLibraryHistory.js`**. **Next:** Phase **5** (conditional user rails).
+*Last updated: 2026-05-13* — **Catalog scope**: Limited Browse **header row** (Upgrade + Search + Info) + **banner**; **limited `/search`** + tab-path redirects; Search **Music** lineup **easter egg removed**. **Next:** stacked **taxonomy swimlanes** on **LimitedBrowse**; optional **limited Search result swimlanes** polish.

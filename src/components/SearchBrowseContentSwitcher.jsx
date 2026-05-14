@@ -29,7 +29,6 @@ function activeIdFromPathname(segments, pathname) {
  * Default: Search browse tabs + pathname. Override `segments` (+ optional `activeId`) to reuse elsewhere.
  *
  * @param {object} props
- * @param {() => void} props.onMusicLineupToggle — Search only: re-tap Music on `/search/music`
  * @param {ContentSwitcherSegment[]} [props.segments]
  * @param {string} [props.activeId] — required for `mode="local"`; otherwise optional override of pathname
  * @param {'local' | undefined} [props.mode] — `local`: buttons + `onActiveIdChange`, no `NavLink`
@@ -37,7 +36,6 @@ function activeIdFromPathname(segments, pathname) {
  * @param {string} [props.ariaLabel] — `role="tablist"` label (default: Browse content type)
  */
 export default function SearchBrowseContentSwitcher({
-  onMusicLineupToggle,
   segments: segmentsProp,
   activeId: activeIdProp,
   mode,
@@ -188,35 +186,6 @@ export default function SearchBrowseContentSwitcher({
                 >
                   <span className={labelClass}>{tab.label}</span>
                 </button>
-              );
-            }
-
-            if (tab.id === "music" && onMusicLineupToggle) {
-              return (
-                <NavLink
-                  key={tab.id}
-                  ref={setSegmentRef(i)}
-                  to={tab.to}
-                  end
-                  role="tab"
-                  aria-selected={active}
-                  className={({ isActive }) =>
-                    [
-                      "search-browse-content-switcher__segment",
-                      isActive
-                        ? "search-browse-content-switcher__segment--active"
-                        : "",
-                    ].join(" ")
-                  }
-                  onClick={(e) => {
-                    if (location.pathname === SEARCH_BROWSE.music) {
-                      e.preventDefault();
-                      onMusicLineupToggle();
-                    }
-                  }}
-                >
-                  <span className={labelClass}>{tab.label}</span>
-                </NavLink>
               );
             }
 

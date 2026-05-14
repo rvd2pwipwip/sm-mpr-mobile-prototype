@@ -11,7 +11,7 @@ import "./HomeHeader.css";
  * top padding is `calc(offset + var(--home-header-scroll-gap))` in `index.css` so a gap below
  * the bar is not overwritten when this sets `--home-header-offset` on `<html>`.
  */
-function useHomeHeaderOffset() {
+export function useHomeHeaderOffset() {
   const ref = useRef(null);
 
   useLayoutEffect(() => {
@@ -38,7 +38,7 @@ function useHomeHeaderOffset() {
   return ref;
 }
 
-function WordmarkPair() {
+export function WordmarkPair() {
   return (
     <>
       <img
@@ -105,7 +105,7 @@ export default function HomeHeader({ onUpgrade }) {
             className="home-header__catalog-toggle"
             onClick={toggleMusicLineupMode}
             aria-label="Prototype: toggle catalog scope between limited and broad"
-            title="Prototype: tap to switch limited vs broad catalog (same as Search Music double-tap)"
+            title="Prototype: tap wordmark to switch limited vs broad catalog"
           >
             <WordmarkPair />
           </button>
@@ -122,7 +122,7 @@ export default function HomeHeader({ onUpgrade }) {
           className="home-header__catalog-toggle"
           onClick={toggleMusicLineupMode}
           aria-label="Prototype: toggle catalog scope between limited and broad"
-          title="Prototype: tap to switch limited vs broad catalog (same as Search Music double-tap)"
+          title="Prototype: tap wordmark to switch limited vs broad catalog"
         >
           <WordmarkPair />
         </button>

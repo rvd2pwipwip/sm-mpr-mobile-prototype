@@ -84,3 +84,7 @@
   max-width: 100%;
   box-sizing: border-box;
 }
+
+.search-page__limited-empty {
+  margin-top: 0;
+}
