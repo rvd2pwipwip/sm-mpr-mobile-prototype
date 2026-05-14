@@ -177,9 +177,14 @@ html[data-visual-ads] {
   --bottom-nav-ad-height: var(--visual-ad-strip-min-height);
 }
 
-/* Limited catalog: no primary tab bar — scroll padding uses mini player + safe area only. */
+/* Limited catalog: no primary tab bar — default stack height 0 for scroll + mini player anchor. */
 html[data-catalog-scope="limited"] {
   --bottom-nav-stack-height: 0px;
+}
+
+/* Limited + visual ads: reserve the same footer strip height as `BottomNav`'s ad row (no tab icons). */
+html[data-catalog-scope="limited"][data-visual-ads] {
+  --bottom-nav-stack-height: var(--visual-ad-strip-min-height);
 }
 
 /* System dark when no manual theme is set */

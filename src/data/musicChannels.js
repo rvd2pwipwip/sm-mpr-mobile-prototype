@@ -162,11 +162,13 @@ function descriptionFor(categoryId, name) {
 }
 
 /**
- * Raw lineup from Figma browse grids (`SmLineupMusicGrids` variants).
- * Names are copied from design text layers (including spelling/casing such as “Kid's Movie HIts”).
+ * Raw lineup from Figma browse grids (`SmLineupMusicGrids` variants), tuned per prototype counts.
+ * Names are copied from design text layers where noted (including spelling/casing such as “Kid's Movie HIts”).
+ * Channel counts per genre: Pop 20, Rock 21, Country & Roots 10, Hip-Hop 4, Dance/Electronic 8,
+ * Latin 7, R&B/Soul 7, Classical 6, Jazz & Blues 8, Mood 14, Around the World 7, Kids 6, Variety 10.
  */
 const RAW_LINEUP = [
-  // Pop
+  // Pop (20)
   { categoryId: "pop", name: "Adult Alternative US" },
   { categoryId: "pop", name: "Pop Adult" },
   { categoryId: "pop", name: "Hit List" },
@@ -182,8 +184,13 @@ const RAW_LINEUP = [
   { categoryId: "pop", name: "Special Event" },
   { categoryId: "pop", name: "Breezy Yacht Rock (70-80s Summer Pop/Rock)" },
   { categoryId: "pop", name: "Coffee Shop Blend" },
+  { categoryId: "pop", name: "Chartbreakers" },
+  { categoryId: "pop", name: "Feel-Good Pop Mix" },
+  { categoryId: "pop", name: "Throwback Pop Smash" },
+  { categoryId: "pop", name: "Pure Pop Drive" },
+  { categoryId: "pop", name: "Radio Hits Rewind" },
 
-  // Rock
+  // Rock (21)
   { categoryId: "rock", name: "Heavy Metal" },
   { categoryId: "rock", name: "Classic Rock US" },
   { categoryId: "rock", name: "Alternative" },
@@ -202,8 +209,11 @@ const RAW_LINEUP = [
   { categoryId: "rock", name: "Pop Rock Party" },
   { categoryId: "rock", name: "Gods Of Hard Rock" },
   { categoryId: "rock", name: "Classic Rock: Forgotten Gems" },
+  { categoryId: "rock", name: "Arena Rock Live" },
+  { categoryId: "rock", name: "Southern Rock Journey" },
+  { categoryId: "rock", name: "Garage Rock Revival" },
 
-  // Country & Roots
+  // Country & Roots (10)
   { categoryId: "country-roots", name: "Hot Country US" },
   { categoryId: "country-roots", name: "Country Classics" },
   { categoryId: "country-roots", name: "Alt-Country/Americana" },
@@ -213,35 +223,43 @@ const RAW_LINEUP = [
   { categoryId: "country-roots", name: "Everything Outlaw Country" },
   { categoryId: "country-roots", name: "Hot Country Summer" },
   { categoryId: "country-roots", name: "Country's Biggest Hits: the '00s" },
+  { categoryId: "country-roots", name: "Country Summer Nights" },
 
-  // Hip-Hop
+  // Hip-Hop (4)
   { categoryId: "hip-hop", name: "Hip Hop Classics" },
   { categoryId: "hip-hop", name: "Hip-Hop/R&B" },
   { categoryId: "hip-hop", name: "Hip-Hop Flashback" },
   { categoryId: "hip-hop", name: "Hip-Hop Heatwave" },
-  { categoryId: "hip-hop", name: "Hip-Hop Nights: the '00s" },
 
-  // Dance/Electronic
+  // Dance/Electronic (8)
   { categoryId: "dance-electronic", name: "Chill Lounge" },
   { categoryId: "dance-electronic", name: "Dance Classics" },
   { categoryId: "dance-electronic", name: "Dancefloor Fillers" },
   { categoryId: "dance-electronic", name: "Groove (Disco And Funk)" },
+  { categoryId: "dance-electronic", name: "Deep House Sessions" },
+  { categoryId: "dance-electronic", name: "Techno Underground" },
+  { categoryId: "dance-electronic", name: "Trance Anthems" },
+  { categoryId: "dance-electronic", name: "EDM Party Starters" },
 
-  // Latin
+  // Latin (7)
   { categoryId: "latin", name: "Éxitos Tropicales" },
   { categoryId: "latin", name: "Exitos Del Momento" },
   { categoryId: "latin", name: "Éxitos Regional Mexicanos" },
   { categoryId: "latin", name: "Romance Latino" },
   { categoryId: "latin", name: "Exitos Latinos" },
+  { categoryId: "latin", name: "Salsa Classics" },
+  { categoryId: "latin", name: "Bachata Romance" },
 
-  // R&B/Soul
+  // R&B/Soul (7)
   { categoryId: "rb-soul", name: "Soul Storm" },
   { categoryId: "rb-soul", name: "Gospel" },
   { categoryId: "rb-soul", name: "Classic R'n'B And Soul" },
   { categoryId: "rb-soul", name: "Hot R&B" },
   { categoryId: "rb-soul", name: "Retro R&B Love Songs" },
+  { categoryId: "rb-soul", name: "Slow Jams Tonight" },
+  { categoryId: "rb-soul", name: "Neo-Soul Collective" },
 
-  // Classical
+  // Classical (6)
   { categoryId: "classical", name: "Classical Hits" },
   { categoryId: "classical", name: "Classical Greats" },
   { categoryId: "classical", name: "Baroque" },
@@ -249,7 +267,7 @@ const RAW_LINEUP = [
   { categoryId: "classical", name: "Soft Classical" },
   { categoryId: "classical", name: "Opera" },
 
-  // Jazz & Blues
+  // Jazz & Blues (8)
   { categoryId: "jazz-blues", name: "Jazz Masters" },
   { categoryId: "jazz-blues", name: "The Blues" },
   { categoryId: "jazz-blues", name: "Swinging Standards" },
@@ -257,8 +275,9 @@ const RAW_LINEUP = [
   { categoryId: "jazz-blues", name: "Smooth Jazz" },
   { categoryId: "jazz-blues", name: "Broadway" },
   { categoryId: "jazz-blues", name: "Today's Jazz" },
+  { categoryId: "jazz-blues", name: "Cool Jazz Evening" },
 
-  // Mood
+  // Mood (14)
   { categoryId: "mood", name: "The Spa" },
   { categoryId: "mood", name: "Easy Listening" },
   { categoryId: "mood", name: "New Age" },
@@ -274,7 +293,7 @@ const RAW_LINEUP = [
   { categoryId: "mood", name: "Peaceful Cello" },
   { categoryId: "mood", name: "Relaxing Rain Sounds" },
 
-  // Around the World
+  // Around the World (7)
   { categoryId: "around-the-world", name: "Today's Global Hits" },
   { categoryId: "around-the-world", name: "Today's K-Pop" },
   { categoryId: "around-the-world", name: "Reggae Classics" },
@@ -283,7 +302,7 @@ const RAW_LINEUP = [
   { categoryId: "around-the-world", name: "Afrobeats" },
   { categoryId: "around-the-world", name: "Bollywood Hits" },
 
-  // Kids
+  // Kids (6)
   { categoryId: "kids", name: "Kid's Movie HIts" },
   { categoryId: "kids", name: "Kids Hits" },
   { categoryId: "kids", name: "Family Friendly Pop" },
@@ -291,7 +310,7 @@ const RAW_LINEUP = [
   { categoryId: "kids", name: "Para Peques" },
   { categoryId: "kids", name: "Mousses Musique" },
 
-  // Variety
+  // Variety (10)
   { categoryId: "variety", name: "Greatest Love Songs" },
   { categoryId: "variety", name: "Christian Hits" },
   { categoryId: "variety", name: "Gospel" },

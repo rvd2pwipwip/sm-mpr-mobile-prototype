@@ -93,6 +93,17 @@
   min-width: 0;
 }
 
+/* Podcast episode tiles in Browse swimlanes (matches `MyLibrary.css` horizontal lane sizing). */
+.limited-browse-taxonomy .my-library__episode-tile {
+  width: min(300px, calc(100vw - 2 * var(--space-content-inline)));
+  flex-shrink: 0;
+}
+
+.limited-browse-taxonomy .my-library__episode-tile .episode-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* Music | Podcasts | Radio — same pill as Search browse; local state only on limited Browse. */
 .limited-browse__switcher-wrap {
   display: flex;

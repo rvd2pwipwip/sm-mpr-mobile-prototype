@@ -6,6 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
+import LimitedCatalogFooterAd from "./components/LimitedCatalogFooterAd";
 import AccountRequiredDialog from "./components/AccountRequiredDialog";
 import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
 import MiniPlayer from "./components/MiniPlayer";
@@ -50,6 +51,7 @@ import MyLibraryLikesMore from "./pages/MyLibraryLikesMore";
 import Subscription from "./pages/Subscription";
 import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
+import { hideFooterChromeForPath } from "./utils/hideFooterChromeForPath";
 
 /** Remount when channel or user type changes so pre-roll + playback state reset. */
 function MusicPlayerRoute() {
@@ -68,15 +70,6 @@ function RadioPlayerRoute() {
   const { stationId } = useParams();
   const { userType } = useUserType();
   return <RadioPlayer key={`${stationId}-${userType}`} />;
-}
-
-function hideBottomNavForPath(pathname) {
-  return (
-    /^\/music\/[^/]+\/play\/?$/.test(pathname) ||
-    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(pathname) ||
-    /^\/radio\/[^/]+\/play\/?$/.test(pathname) ||
-    /^\/upgrade\/store\/?$/.test(pathname)
-  );
 }
 
 /** `/info` root: **broad** catalog sends users to My Library; **limited** shows classic Info hub. */
@@ -119,7 +112,7 @@ function SearchTabRoute() {
 function AppRoutes() {
   const location = useLocation();
   const { catalogScope } = useTerritory();
-  const hideBottomNav = hideBottomNavForPath(location.pathname);
+  const hideBottomNav = hideFooterChromeForPath(location.pathname);
   const showBottomNav =
     catalogScope === CATALOG_SCOPE.broad && !hideBottomNav;
 
@@ -170,7 +163,7 @@ function AppRoutes() {
       {hideBottomNav ? null : (
         <>
           <MiniPlayer />
-          {showBottomNav ? <BottomNav /> : null}
+          {showBottomNav ? <BottomNav /> : <LimitedCatalogFooterAd />}
         </>
       )}
     </>

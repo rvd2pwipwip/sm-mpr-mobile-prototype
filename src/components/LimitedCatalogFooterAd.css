@@ -1,0 +1,15 @@
+/* Fixed band for `VisualAdStrip` when limited catalog hides `BottomNav` (broad stacks tabs + strip). */
+.limited-catalog-footer-ad {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-bottom-nav);
+  width: 100%;
+  max-width: var(--app-max-width);
+  box-sizing: border-box;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background-color: var(--color-nav-bar-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
+}
