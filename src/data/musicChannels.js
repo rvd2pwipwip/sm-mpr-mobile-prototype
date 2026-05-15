@@ -4,7 +4,8 @@
  * - Lineup / grid names come from Figma `SmLineupMusicGrids` variants (browse grids).
  * - Channel **tags**: mock API mix — **one** IA genre pillar, **≤one** IA subgenre when that row
  *   has subs (for sub-browse parity), **one** era chip, plus **three or four** Activity / Mood /
- *   Theme tags (slots trimmed when a subgenre chip is placed) — see `tagsFor`.
+ *   Theme tags (slots trimmed when a subgenre chip is placed) — see `tagsFor`. After build,
+ *   **`ensureMinChannelsWithTag`** pads Mood **Adventurous** to 20 rows for category-rail **More** QA.
  * - Detail shape follows the Channel Info screen (`musicInfo`): name, square thumbnail,
  *   long description, vibe **tags** (`.music-info__tag`), and up to 6 related medium cards.
  *
@@ -325,6 +326,36 @@ const RAW_LINEUP = [
 
 const MAX_RELATED = 6;
 
+/** Mood IA parent label (`musicVibesIa.broad1000.json`, vibe mood); used for swimlane More QA. */
+const MOOD_ADVENTUROUS_TAG_LABEL = "Adventurous";
+/** Target matches for `getMusicChannelsWithTag` on that label (`SWIMLANE_CARD_MAX` is 12). */
+const MOOD_ADVENTUROUS_TAG_CHANNEL_COUNT = 20;
+
+function hasTagIgnoreCase(tags, label) {
+  const needle = label.trim().toLowerCase();
+  return (tags ?? []).some(
+    (t) => String(t).trim().toLowerCase() === needle,
+  );
+}
+
+/**
+ * Mutates channels so the catalog has at least `minCount` rows carrying `tagLabel`.
+ * Prototype-only: predictable Mood leaf density without hand-editing every `tagsFor` outcome.
+ *
+ * @param {MusicChannel[]} channels
+ */
+function ensureMinChannelsWithTag(channels, tagLabel, minCount) {
+  let count = channels.filter((c) =>
+    hasTagIgnoreCase(c.tags, tagLabel),
+  ).length;
+  for (let i = 0; i < channels.length && count < minCount; i += 1) {
+    const c = channels[i];
+    if (hasTagIgnoreCase(c.tags, tagLabel)) continue;
+    c.tags = [...(c.tags ?? []), tagLabel];
+    count += 1;
+  }
+}
+
 function buildRelated(siblings, selfId) {
   const others = siblings.filter((c) => c.id !== selfId);
   const out = [];
@@ -370,6 +401,13 @@ function buildChannels() {
       all.push(ch);
     }
   }
+
+  ensureMinChannelsWithTag(
+    all,
+    MOOD_ADVENTUROUS_TAG_LABEL,
+    MOOD_ADVENTUROUS_TAG_CHANNEL_COUNT,
+  );
+
   return all;
 }
 
