@@ -148,9 +148,9 @@ Implement as **`Search.jsx`** branching on **`catalogScope`**. **Limited:** only
 5. **`Search.jsx`:** Limited branch -- **`/search` only**; **no** `SearchBrowseContentSwitcher` / browse chrome; **result swimlanes** when `q` present. **`App.jsx`:** limited redirects **`/search/music`**, **`/search/podcasts`**, **`/search/radio`** -> **`/search`** (preserve **`?q=`**).
 6. Remove **lineup toggle** from **`Search`** Music tab interaction; document **wordmark-only** toggle in `TerritoryContext` comment.
 
-**Phase E -- Docs**
+**Phase E -- Docs (shipped)**
 
-7. **`docs/react-learning.md`** when you ask; **`docs/Plans/plan.md`** pointer.
+7. **Deliverables:** **`docs/react-learning.md`** (**Catalog scope**, **Limited Browse**, **Listen again**, **Visual ads**); **`docs/Plans/plan.md`** (checklist + **Last updated** footer); this plan (Phase E label + **§11 Companion documentation**).
 
 ---
 
@@ -166,8 +166,10 @@ Implement as **`Search.jsx`** branching on **`catalogScope`**. **Limited:** only
 | Search URLs (limited) | **Canonical `/search` only**; redirect **`/search/*` tab paths** to **`/search`** when limited (bookmark hygiene) |
 | Search URLs (broad) | **`/search/music`**, **`/search/podcasts`**, **`/search/radio`** as today |
 | Search UI (limited) | **Field only** until query; then **result swimlanes**; **no** browse switcher or browse swimlanes when empty |
-| Header layout | **Stacked:** centered wordmark row, then **Upgrade pill \| Search \| Info**, then **banner**, then body |
+| Header layout | **Stacked:** centered wordmark row, then **Upgrade pill \| Search \| Info**, then **banner**, then body (see **prototype note** below) |
 | Personal / library content (limited) | **Swimlanes on Browse only** |
+
+**Implementation note:** **LimitedBrowse** chrome may deliberately differ from this table (**wordmark**, row layout) while preserving the same IA (**Search \| Info**, upgrade tier rules, taxonomy first screen). Treat the row as **product anchor**, not pixel law for the clickable prototype.
 
 ---
 
@@ -214,4 +216,11 @@ Implement as **`Search.jsx`** branching on **`catalogScope`**. **Limited:** only
 - **Upgrade** hidden for tiers where it should not show.
 - **Wordmark** remains the **single** developer demo toggle for lineup (Music double-tap removed).
 
-**No open IA items.** Plan is **ready for implementation**.
+**No open IA items.** Implementation matches this plan as of archived Phase E (**`docs/react-learning.md`**, **`docs/Plans/plan.md`** checklist).
+
+---
+
+## 11. Companion documentation (prototype)
+
+Longer developer notes for implemented behavior (**Catalog scope**, **Limited Browse**, **Listen again** variants, **`SearchBrowseContentSwitcher`** **`mode="local"`**, **visual ads** on limited). See **`docs/react-learning.md`**. **`docs/Plans/plan.md`** (**What we have done**) lists shipped bullets.
+

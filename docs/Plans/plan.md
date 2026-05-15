@@ -2,7 +2,7 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
-**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table), **`docs/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), **`docs/Plans/ContentSwimlane-category-rail-variant.md`** (`ContentSwimlane` reference + category rail variant plan/tutorial), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -56,6 +56,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Catalog scope refactor — Phase A (entry + limited chrome)** — **`/`** renders **`LimitedBrowse.jsx`** when **`catalogScope === limited`** (**`Home`** when broad); **`BottomNav`** only when broad; **`html[data-catalog-scope]`** + **`--bottom-nav-stack-height: 0`** on limited for scroll padding. Details: **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
 - [x] **Catalog scope refactor — Header row + Search fork (Phase C / D partial)** — **`LimitedBrowse`**: stacked wordmark + **Upgrade** (guest / free Stingray) + **Search** / **Info** links + **`HomeBanner`**; **`/search`** canonical on limited with redirects from **`/search/music`** etc.; **limited Search** empty state (no browse grids); **removed** Search Music lineup easter egg (wordmark-only toggle). Plan: **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
 - [x] **Catalog scope refactor — Limited Browse taxonomy swimlanes (Phase C)** — **`LimitedBrowseTaxonomyRails`**: tab-scoped **user rails** (**`LibraryLikedMusicSwimlane`**, **`LibraryPodcastUserSwimlanes`**, **`LibraryLikedRadioSwimlane`**) prepended above **Listen again**; tab-scoped **Listen again** (matching history kinds); **Music** \| **Podcasts** \| **Radio** **`SearchBrowseContentSwitcher`** (**`mode="local"`**) between **`HomeBanner`** and rails; genre / category / format taxonomy swimlanes; **More** routes match **`/search/browse/...`**. **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
+- [x] **Catalog scope refactor — Limited ads parity + Phase E (docs)** — Footer **`LimitedCatalogFooterAd`** (**`VisualAdStrip`** **`variant="nav"`**) when **`showVisualAds`** on limited. **`hideFooterChromeForPath`** (**`utils/hideFooterChromeForPath.js`**, shared by **`LimitedCatalogFooterAd`** and **`App.jsx`**). **`index.css`:** **`html[data-catalog-scope="limited"][data-visual-ads]`** sets **`--bottom-nav-stack-height`** to **`--visual-ad-strip-min-height`**. In-feed **`SwimlaneBannerAd`** in **`LimitedBrowseTaxonomyRails`** after **two** taxonomy swimlanes. **Phase E docs:** **`docs/react-learning.md`**, **`catalog-scope-search-browse-refactor.md`** §6, and this **`plan.md`** update.
 
 ## Home screen — implementation approach
 
@@ -92,7 +93,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Starts empty** on load; **in-memory** is enough (optional `localStorage` later).
 - **Updates from real listens** in the prototype (not a static mock list): **music** when playback is allowed after preroll; **podcasts** after preroll when the user presses play / scrubs past **~5%** (see **`PodcastPlayer`**); **radio** after preroll when **`RadioPlayer`** playback is allowed ( **`MusicPlayer`** parity).
 - **Dedupe + recency:** prepend or bump-on-repeat; cap stored entries for UI (rail shows up to **12** slots visually — see below).
-- **Single source of truth:** one ordered **`items`** list in **`ListenHistoryProvider`**. **Home — Listen again** uses the **full list** (mixed recap, **unfiltered by type**). **My Library** adds **typed** rails by **`filter(kind)`** on the same store (music / podcasts / radio) — see **`docs/Plans/My-Library-implementation-plan.md`** § Single source of truth.
+- **Single source of truth:** one ordered **`items`** list in **`ListenHistoryProvider`**. **Home — Listen again** uses the **full list** (mixed recap, **unfiltered by type**). **Limited Browse** (**`LimitedBrowseTaxonomyRails`**) shows **Listen again** filtered to the active **Music** \| **Podcasts** \| **Radio** tab (**`music` \| `podcast` \| `radio`** in storage). **My Library** adds **typed** rails by **`filter(kind)`** on the same store (music / podcasts / radio) — see **`docs/Plans/My-Library-implementation-plan.md`** § Single source of truth.
 
 **Home — layout order (prepare for Favorites)**
 
@@ -144,6 +145,12 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ---
 
+## ContentSwimlane — category rail variant (planned)
+
+Optional category pill row + **More as trailing card** (two-level IA in one rail). **Full reference** for today's component, locked UX decisions, and step-by-step build notes: **`docs/Plans/ContentSwimlane-category-rail-variant.md`**.
+
+---
+
 ## Next steps (near term)
 
 Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, cards, swimlanes) lives under **What we have done** above.
@@ -155,6 +162,8 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 3. [ ] **Search & Browse (remaining)** — **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5–8** (query swimlanes, More, reset polish). **Product:** `docs/Stories/Search-story.md`.
 
 4. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
+
+5. [ ] **ContentSwimlane — category rail variant** — **`docs/Plans/ContentSwimlane-category-rail-variant.md`**.
 
 ## Backlog / later
 
@@ -173,4 +182,6 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-13* — **Catalog scope**: **Limited Browse** pill + tab-scoped **likes / podcast library** swimlanes + **Listen again** + taxonomy stacks. **Next:** **limited Search** results polish if needed; optional **LimitedBrowse** header layout vs **catalog-scope-search-browse-refactor.md** §5.2 (centered wordmark row).
+*Last updated: 2026-05-14* — **ContentSwimlane** category rail spec moved to **`docs/Plans/ContentSwimlane-category-rail-variant.md`**; **`plan.md`** keeps a short pointer + **See also** link; **Next steps** item **5** points at that file.
+
+*Prior (2026-05-13):* **Catalog scope refactor** (Phases **A through E**) in **`docs/react-learning.md`**, **`docs/Plans/catalog-scope-search-browse-refactor.md`** (**Phase E** in §6), and **What we have done**. **Next:** **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5-8**; optional **`LimitedBrowse`** header vs **catalog-scope-search-browse-refactor.md** §5.2 (centered wordmark).

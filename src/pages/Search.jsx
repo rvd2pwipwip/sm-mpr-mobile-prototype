@@ -14,6 +14,7 @@ import { getSearchBrowseTabFromPathname } from "../constants/searchBrowsePaths.j
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
 import { MUSIC_GENRES } from "../data/musicChannels.js";
+import SearchMusicGenreBrowseRail from "../components/SearchMusicGenreBrowseRail.jsx";
 import SearchPodcastsBrowse from "./SearchPodcastsBrowse.jsx";
 import SearchRadioBrowse from "./SearchRadioBrowse.jsx";
 import SearchResultsPanel from "./SearchResultsPanel.jsx";
@@ -153,8 +154,11 @@ export default function Search() {
             </p>
           </div>
         ) : browseTab === "music" ? (
-          <div className="content-inset search-page__body">
-            <>
+          <div className="home-screen">
+            {musicLineupMode === MUSIC_LINEUP.broad ? (
+              <SearchMusicGenreBrowseRail />
+            ) : null}
+            <div className="content-inset search-page__body">
               <SearchBrowseTileGrid labelId={musicBrowseTitleId}>
                 {musicLineupMode === MUSIC_LINEUP.limited
                   ? MUSIC_GENRES.map((g) => (
@@ -178,7 +182,7 @@ export default function Search() {
                       </SearchBrowseTile>
                     ))}
               </SearchBrowseTileGrid>
-            </>
+            </div>
           </div>
         ) : browseTab === "podcasts" ? (
           <div className="home-screen">
