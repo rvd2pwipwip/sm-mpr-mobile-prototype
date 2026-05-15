@@ -16,6 +16,7 @@ import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext";
 import { AccountRequiredDialogProvider } from "./context/AccountRequiredDialogContext";
 import { LikesProvider } from "./context/LikesContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
+import { CategoryRailMemoryProvider } from "./context/CategoryRailMemoryContext.jsx";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
 import { CATALOG_SCOPE } from "./constants/catalogScope.js";
@@ -182,7 +183,9 @@ function App() {
               <LikesProvider>
                 <PodcastUserStateProvider>
                   <PlaybackProvider>
-                    <AppRoutes />
+                    <CategoryRailMemoryProvider>
+                      <AppRoutes />
+                    </CategoryRailMemoryProvider>
                   </PlaybackProvider>
                 </PodcastUserStateProvider>
               </LikesProvider>

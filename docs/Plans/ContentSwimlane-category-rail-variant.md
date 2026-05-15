@@ -19,6 +19,7 @@ Horizontal **content rail**: inset **title** + optional **More** button in the h
 | Component | `src/components/ContentSwimlane.jsx` |
 | Styles | `src/components/ContentSwimlane.css` |
 | Default card cap | `src/constants/swimlane.js` (`SWIMLANE_CARD_MAX` = 12) |
+| Category rail memory (prototype) | `src/context/CategoryRailMemoryContext.jsx` |
 
 ### 1.3 DOM structure
 
@@ -47,6 +48,9 @@ section.content-swimlane
 | `sourceCount` | - | If set: More shows when `sourceCount > maxVisible`, unless `alwaysShowMore` |
 | `alwaysShowMore` | `false` | If true: More always shows when other logic allows (Listen again pattern) |
 | `categoryRail` | - | If set: horizontal pill row between header and cards (variant scaffold); pills use CSS classes in §4 Step A |
+| `categoryPillAlignKey` | - | When set with a single-element `categoryRail`, merged props align active pill (§4 Step E) |
+| `trailingMoreCard` | `false` | True: hide header More; append More tile after tiles when More predicate passes |
+| `cardScrollerResetKey` | - | When changed: card scroller `scrollLeft` resets (category switch) |
 
 **More visibility rule (same logic you reuse for the More card in the variant):**
 
@@ -78,15 +82,17 @@ Call sites slice **`children`** to `maxVisible` where relevant (example patterns
 
 ## 3. UX and behavior decisions (locked for prototype)
 
-1. **Persistence:** Active category is remembered **only while the app stays open** (in-memory). No `sessionStorage` / `localStorage` in this pass.
-2. **State:** Prefer **internal state** in `ContentSwimlane` (or a thin wrapper). Allow optional **initial selected id** / light sync hooks later if a parent must seed selection.
+1. **Persistence:** Active category pill is remembered **while the app stays open**, including **after the user navigates away and returns** (e.g. browse drill-down + Back, or any remount of the screen that hosts the rail). Same-tab **full reload** clears memory (no `sessionStorage` / `localStorage` unless product asks later). Implementation: **`CategoryRailMemoryProvider`** (`src/context/CategoryRailMemoryContext.jsx`) holds a **stable key-value map** (`memoryKey` string per swimlane); consumers read on mount and write when selection changes.
+2. **State:** **`ContentSwimlane`** stays presentational; selection + persistence live in the consumer (or thin wrapper). Optional **`memoryKey`** pattern scales when multiple category rails exist.
 3. **More:** In this variant, **remove** the header **More** text button. Append a **More tile** after the last visible **content** card in the card row.
 4. **More visibility:** The More tile follows **exactly** the same predicate as the header More button today (section 1.4).
 5. **`onMore`:** Same callback as standard swimlane; **no extra arguments** for v1.
 6. **Pill scroll alignment:**
-   - Run whenever **selection changes**.
-   - Run when the user **returns** to this rail if the active pill would be **off-screen** (implementation detail below).
-   - **Prefer centering** the active pill in the rail viewport; for **first** / **last** pill use **leading** / **trailing** alignment so you do not show empty space past the ends.
+   - Run in **`useLayoutEffect`**.
+   - **Navigate back / remount / same slug:** assign **`scrollLeft`** synchronously (**before paint**) so the strip shows no motion.
+   - **User taps a different pill** (same mount): **`requestAnimationFrame`** tween (**ease-out cubic**, ~**280ms**) unless **`prefers-reduced-motion`** or movement under ~**2px** (then snap).
+   - Run whenever **selection changes** and when the **scroll container** mounts (return to screen).
+   - **Prefer centering** the active pill in the rail viewport; for **first** / **last** pill use **leading** / **trailing** alignment **inside** the inset (padding-aware math), not **`scrollIntoView`** against the bare scrollport edge.
 
 ---
 
@@ -121,16 +127,13 @@ Call sites slice **`children`** to `maxVisible` where relevant (example patterns
 
 ### Step E - Scroll active pill into view
 
-- Store refs per pill (or data attributes + `querySelector`).
-- On selection change and on **visibility restore**, compute scroll position:
-  - **`element.scrollIntoView({ inline: 'center', block: 'nearest' })`** is a first cut; **first** pill may need `inline: 'start'`, **last** `inline: 'end'` (or manual `scrollLeft` math for precise centering vs gutters).
-- **`prefers-reduced-motion`:** use `auto` behavior or skip animation when `reduce` is set.
-- **Returning user:** When the swimlane mounts again or the route focuses Browse, if the selected pill is clipped, run the same alignment (`useLayoutEffect` on mount + when `selectedCategoryId` changes). If needed, **`IntersectionObserver`** on the active pill can detect clipping after navigation.
+**Done (Genre browse):** `ContentSwimlane` accepts optional **`categoryPillAlignKey`**. When set and `categoryRail` is a single element, it receives **`categoriesScrollEl`** + **`categoryPillAlignKey`** via **`cloneElement`**. **`GenrePillsRail`** **`useLayoutEffect`**: **instant `scrollLeft`** when returning after navigation (**first alignment or slug unchanged**); **ease-out ~280ms rAF tween** only when the user **taps a different pill** on the same mount (**reduced motion** → always snap). Cancel prior tween when selection changes again. **`data-genre-pill`** selects the active button.
+
+**Navigate-away memory (Genre browse):** **`CategoryRailMemoryProvider`** + **`memoryKey`** `search-music-genre`; **`SearchMusicGenreBrowseRail`** restores the last pill after drill-down / Back. Same pattern for future rails (unique **`memoryKey`** each).
 
 ### Step F - Accessibility (light prototype bar)
 
-- Pills: consider `role="tablist"` / `role="tab"` / `aria-selected` only if you keep semantics consistent (avoid misleading tabs without panels). Minimum: buttons with clear pressed/selected style.
-- More card: `aria-label` including lane title (mirror header More).
+**Done:** **`ContentSwimlane`** uses **`useId()`** for the lane **`h2`**, **`section`** **`aria-labelledby`**, and passes **`categoryRailTitleId`** into cloned **`categoryRail`**. **`GenrePillsRail`** is a **`role="radiogroup"`** ( **`display: contents`** so flex layout is unchanged) labeled by that heading, with pills as **`role="radio"`** / **`aria-checked`**, roving **`tabIndex`** and **ArrowLeft/ArrowRight/Home/End** to move selection. Header and trailing More **`aria-label`** stay **`More in ${title}`**; decorative More card text has **`aria-hidden`** so the label is not doubled.
 
 ### Step G - First consumer
 

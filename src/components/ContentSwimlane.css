@@ -79,6 +79,11 @@
   box-sizing: border-box;
 }
 
+/* Single-select pill strip: radiogroup semantics without disturbing flex (children stay row children). */
+.content-swimlane__category-radiogroup {
+  display: contents;
+}
+
 /* Pill buttons inside categoryRail (selection wired in Steps B/C). */
 .content-swimlane__category-pill {
   flex-shrink: 0;
