@@ -127,13 +127,13 @@ Call sites slice **`children`** to `maxVisible` where relevant (example patterns
 
 ### Step E - Scroll active pill into view
 
-**Done (Genre browse):** `ContentSwimlane` accepts optional **`categoryPillAlignKey`**. When set and `categoryRail` is a single element, it receives **`categoriesScrollEl`** + **`categoryPillAlignKey`** via **`cloneElement`**. **`GenrePillsRail`** **`useLayoutEffect`**: **instant `scrollLeft`** when returning after navigation (**first alignment or slug unchanged**); **ease-out ~280ms rAF tween** only when the user **taps a different pill** on the same mount (**reduced motion** → always snap). Cancel prior tween when selection changes again. **`data-genre-pill`** selects the active button.
+**Done (Genre browse):** `ContentSwimlane` accepts optional **`categoryPillAlignKey`**. When set and `categoryRail` is a single element, it receives **`categoriesScrollEl`** + **`categoryPillAlignKey`** via **`cloneElement`**. Generic **`CategoryPillsRail`** + **`src/utils/categoryRailPillScroll.js`** (**`useLayoutEffect`**): **instant `scrollLeft`** when returning after navigation (**first alignment or slug unchanged**); **ease-out ~280ms rAF tween** only when the user **taps a different pill** on the same mount (**reduced motion** → always snap). Cancel prior tween when selection changes again. **`data-category-pill`** selects the active button.
 
 **Navigate-away memory (Genre browse):** **`CategoryRailMemoryProvider`** + **`memoryKey`** `search-music-genre`; **`SearchMusicGenreBrowseRail`** restores the last pill after drill-down / Back. Same pattern for future rails (unique **`memoryKey`** each).
 
 ### Step F - Accessibility (light prototype bar)
 
-**Done:** **`ContentSwimlane`** uses **`useId()`** for the lane **`h2`**, **`section`** **`aria-labelledby`**, and passes **`categoryRailTitleId`** into cloned **`categoryRail`**. **`GenrePillsRail`** is a **`role="radiogroup"`** ( **`display: contents`** so flex layout is unchanged) labeled by that heading, with pills as **`role="radio"`** / **`aria-checked`**, roving **`tabIndex`** and **ArrowLeft/ArrowRight/Home/End** to move selection. Header and trailing More **`aria-label`** stay **`More in ${title}`**; decorative More card text has **`aria-hidden`** so the label is not doubled.
+**Done:** **`ContentSwimlane`** uses **`useId()`** for the lane **`h2`**, **`section`** **`aria-labelledby`**, and passes **`categoryRailTitleId`** into cloned **`categoryRail`**. **`CategoryPillsRail`** is a **`role="radiogroup"`** ( **`display: contents`** so flex layout is unchanged) labeled by that heading, with pills as **`role="radio"`** / **`aria-checked`**, roving **`tabIndex`** and **ArrowLeft/ArrowRight/Home/End** to move selection. Header and trailing More **`aria-label`** stay **`More in ${title}`**; decorative More card text has **`aria-hidden`** so the label is not doubled.
 
 ### Step G - First consumer
 
