@@ -33,17 +33,18 @@ export const RADIO_STATION_CATEGORIES = [
 ];
 
 /**
- * Planned continental buckets for International (not used in station rows yet—see docs).
+ * International continent browse order (geo: Americas, then Europe, Africa, Asia, Australasia).
+ * **North America first** matches the prototype mock listener locale (pills + continent grid).
  * @type {{ id: string, label: string }[]}
  */
 export const INTERNATIONAL_CONTINENTS_PLANNED = [
+  { id: "north-america", label: "North America" },
+  { id: "central-america", label: "Central America" },
+  { id: "south-america", label: "South America" },
+  { id: "europe", label: "Europe" },
   { id: "africa", label: "Africa" },
   { id: "asia", label: "Asia" },
   { id: "australasia", label: "Australasia" },
-  { id: "central-america", label: "Central America" },
-  { id: "europe", label: "Europe" },
-  { id: "north-america", label: "North America" },
-  { id: "south-america", label: "South America" },
 ];
 
 const STATIONS_PER_CATEGORY = 20;

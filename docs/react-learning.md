@@ -163,6 +163,12 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Broad Search — remembered Music \| Podcasts \| Radio (session)
+
+- **Idea:** **Broad** catalog keeps the last browse strip choice when the user leaves **Search** via **Home / My Library** and returns via bottom nav. **`sessionStorage`:** **`readStoredBroadSearchBrowseTab`** / **`writeStoredBroadSearchBrowseTab`** (**`PROTOTYPE_BROAD_SEARCH_BROWSE_TAB_STORAGE_KEY`** in **`searchBrowsePaths.js`**). **`App.jsx`** **`SearchEntryRoute`**: **`/search`** → **`Navigate`** to **`/search/${stored ?? 'music'}`**. **`Search.jsx`:** **`useLayoutEffect`** writes the tab whenever the shell URL is **`/search/music`**, **`/search/podcasts`**, or **`/search/radio`** (layout phase — switcher thumb aligns with **Limited Browse** pattern: no extra motion on return). **`BottomNav`:** Search **`NavLink`** **`to`** = **`/search/${readStoredBroadSearchBrowseTab() ?? 'music'}`**; **`onClick`** only when **`pathname.startsWith('/search')`**: **`preventDefault`**, **`writeStoredBroadSearchBrowseTab('music')`**, **`navigate({ pathname: '/search/music', search: '' })`** (re-tap Search **on the Search stack** resets to **Music** + empty field — **not** when the highlight includes **`/radio`** only).
+
+---
+
 ## Radio International — swimlane + geo pill row
 
 - **Problem:** **Browse Radio → International** needs a **repeating subregion screen**: show **what is popular** in the current geo node **and** let the user drill into **child** regions (countries, provinces, cities) without inventing a new layout per level.

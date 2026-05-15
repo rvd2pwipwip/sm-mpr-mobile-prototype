@@ -52,6 +52,7 @@ import MyLibraryLikesMore from "./pages/MyLibraryLikesMore";
 import Subscription from "./pages/Subscription";
 import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
+import { readStoredBroadSearchBrowseTab } from "./constants/searchBrowsePaths.js";
 import { hideFooterChromeForPath } from "./utils/hideFooterChromeForPath";
 
 /** Remount when channel or user type changes so pre-roll + playback state reset. */
@@ -91,13 +92,14 @@ function HomeOrLimitedBrowse() {
   return <Home />;
 }
 
-/** **Broad:** `/search` redirects to `/search/music`. **Limited:** `Search` at canonical `/search`. */
+/** **Broad:** `/search` redirects to last Music \| Podcasts \| Radio (session) or `/search/music`. **Limited:** `Search` at canonical `/search`. */
 function SearchEntryRoute() {
   const { catalogScope } = useTerritory();
   if (catalogScope === CATALOG_SCOPE.limited) {
     return <Search />;
   }
-  return <Navigate to="/search/music" replace />;
+  const tab = readStoredBroadSearchBrowseTab() ?? "music";
+  return <Navigate to={`/search/${tab}`} replace />;
 }
 
 /** **Limited:** `/search/*` tab paths fold to `/search` (keep `?q=`). **Broad:** `Search` as today. */

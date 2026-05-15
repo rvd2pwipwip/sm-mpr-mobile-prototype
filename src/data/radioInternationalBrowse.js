@@ -2,6 +2,7 @@
  * International radio browse tree (prototype).
  * Pill labels for North America / Canada / Alberta match Figma `19871:33453`.
  * Every geo node gets **20** generated `RadioStation` rows (IDs `geo-{nodeSlug}-00` … `19`).
+ * Browse Radio swimlanes without mocked country lists use generic placeholder rows (see {@link getInternationalBrowseLaneRows}).
  */
 
 import {
@@ -9,6 +10,7 @@ import {
   getRadioStationById,
   radioStationThumbnailUrl,
 } from "./radioStations.js";
+import { SWIMLANE_CARD_MAX } from "../constants/swimlane.js";
 
 export { INTERNATIONAL_CONTINENTS_PLANNED };
 
@@ -304,6 +306,45 @@ export function getChildGeoNodes(parentNode) {
     .map((id) => GEO_BROWSE_NODES[id])
     .filter(Boolean)
     .map((n) => ({ id: n.id, label: n.label, type: n.type }));
+}
+
+/**
+ * Countries / regions directly under a continent (Browse Radio International swimlane).
+ * Continents only stubbed in {@link GEO_BROWSE_NODES} return children; others empty until API data.
+ *
+ * @param {string} continentId
+ * @returns {{ id: string, label: string, type: string }[]}
+ */
+export function getGeoChildrenForContinent(continentId) {
+  const node = GEO_BROWSE_NODES[continentId];
+  if (node?.type === "continent") {
+    return getChildGeoNodes(node);
+  }
+  const synthetic = syntheticContinentNode(continentId);
+  if (synthetic) {
+    return getChildGeoNodes(synthetic);
+  }
+  return [];
+}
+
+/**
+ * Swimlane rows under a continent pill: real geo children when mocked; otherwise generic
+ * country placeholders so every continent shows cards until API-backed markets exist.
+ *
+ * @param {string} continentId
+ * @returns {{ rows: { id: string, label: string, type: string }[], usesPlaceholderCountries: boolean }}
+ */
+export function getInternationalBrowseLaneRows(continentId) {
+  const real = getGeoChildrenForContinent(continentId);
+  if (real.length > 0) {
+    return { rows: real, usesPlaceholderCountries: false };
+  }
+  const rows = Array.from({ length: SWIMLANE_CARD_MAX }, (_, i) => ({
+    id: `__placeholder-${continentId}-${i + 1}`,
+    label: `Country ${i + 1}`,
+    type: "country",
+  }));
+  return { rows, usesPlaceholderCountries: true };
 }
 
 export function getPopularStationsForGeoNode(nodeId) {

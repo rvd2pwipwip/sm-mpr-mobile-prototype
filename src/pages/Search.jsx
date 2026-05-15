@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import SearchBrowseHeader, {
@@ -10,7 +10,10 @@ import {
 } from "../components/SearchBrowseTile.jsx";
 import { CATALOG_SCOPE } from "../constants/catalogScope.js";
 import { MUSIC_LINEUP } from "../constants/musicLineup.js";
-import { getSearchBrowseTabFromPathname } from "../constants/searchBrowsePaths.js";
+import {
+  getSearchBrowseTabFromPathname,
+  writeStoredBroadSearchBrowseTab,
+} from "../constants/searchBrowsePaths.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
 import { MUSIC_GENRES } from "../data/musicChannels.js";
@@ -105,6 +108,19 @@ export default function Search() {
     const search = next ? `?q=${encodeURIComponent(next)}` : "";
     navigate({ pathname: location.pathname, search }, { replace: true });
   }, [debouncedQuery, navigate, location.pathname, location.search, catalogScope]);
+
+  /** Persist browse strip for **broad** Search shell only; layout phase so BottomNav + switcher agree on first paint after return. */
+  useLayoutEffect(() => {
+    if (catalogScope !== CATALOG_SCOPE.broad) return;
+    const { pathname } = location;
+    if (
+      pathname === "/search/music" ||
+      pathname === "/search/podcasts" ||
+      pathname === "/search/radio"
+    ) {
+      writeStoredBroadSearchBrowseTab(getSearchBrowseTabFromPathname(pathname));
+    }
+  }, [catalogScope, location.pathname]);
 
   function handleQueryChange(next) {
     setQuery(next);

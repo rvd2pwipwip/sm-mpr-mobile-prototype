@@ -52,7 +52,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 Implement these (see **Search-story** Integration notes for nuance on **Reset**):
 
 1. **First character typed** → replace **entire** Browse UI **and** **Music / Podcasts / Radio** tabs; show **only** search field (hugging height) + result swimlanes (**Channels**, **Artists**, **Tags**, **Podcasts**, **Episodes**, **Radio** — only populated lanes). Result categories **≠** content-type tabs; **do not** filter results by the browse tab the user was on.
-2. **Reset to Browse** depends on **how** the user leaves search mode (see **Phase 7**): **Clear** keeps the current **Music / Podcasts / Radio** tab and strips **`?q=`** only; **BottomNav Search** (**`to="/search/music"`**) and **leave tab + tap Search again** always land on **Music** with an empty field (**`/search`** redirects to **`/search/music`**).
+2. **Reset to Browse** depends on **how** the user leaves search mode (see **Phase 7**): **Clear** keeps the current **Music / Podcasts / Radio** tab and strips **`?q=`** only; **BottomNav Search** from **Home / My Library** lands on the **last stored** browse tab (**`sessionStorage`**, default **Music**); **re-tap Search** while already on **`/search/*`** resets to **Music** with an empty field.
 3. **Header** height is **adaptive**; **remeasure** and update **scroll padding** when switching browse ↔ search mode (same philosophy as **`HomeHeader`** + **`--home-header-offset`** on Home—consider a **`--search-header-offset`** or generic `--top-fixed-chrome-offset` set from `ResizeObserver` / `useLayoutEffect`).
 4. **Keyboard** **overlaps** bottom chrome (miniplayer, visual ads, tabs)—no requirement to pin footer above keyboard in v1.
 5. **Radio** Browse targets **full** geo + format story (Near You, International hierarchy, News/Talk/Sports/Public/Religion)—align **`radioStations.js`** over time; staged data is OK if UX structure is right (**`figma-nodes.md`** radio section + **Search-story**).
@@ -211,8 +211,9 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 **Goal:** Document **implemented** reset behavior (**`Search.jsx`** + **`BottomNav.jsx`**); matches **`docs/Stories/Search-story.md`** Integration notes.
 
 1. **Clear** (header control or empty field) → **`query` ''**, **`?q=`** removed, browse mode (**tabs visible**); pathname stays **`/search/music`** | **`/search/podcasts`** | **`/search/radio`** — **preserve** whichever tab the user had.
-2. **BottomNav Search:** **`NavLink`** **`to="/search/music"`** (no **`?q=`**). From **Home**, **Info**, or any non-Search route, tap **Search** → **Music**, empty field (**`/search`** index route **redirects** to **`/search/music`** — there is **no** long-lived **`/search`** screen). Returning from another main tab does **not** need a **`useEffect`** reset: mounting **`/search/music`** plus missing **`q`** yields browse.
-3. **Re-tap Search while Search is active:** **`to`** is always **`/search/music`** (path-only — no search string). Examples: **`/search/podcasts?q=foo` → `/search/music`** clears query **and** switches to Music (navigation happens because path or search differs from target). **`/search/music?q=foo` → `/search/music`** drops **`q`** (**`replace`** is not required on BottomNav — default **push** is fine for the prototype). If the user is already on **`/search/music`** with no **`q`** and taps **Search**, **React Router** treats it as **same destination** → **no** navigation; UI is already reset. **No** **`onClick`**, **`pathname === '/search'`**, or **`resetSearchBrowse()``** helper — not applicable with **`/search` → `/search/music`** routing.
+2. **BottomNav Search (from another main tab):** **`NavLink`** **`to`** = **`/search/`** + **`readStoredBroadSearchBrowseTab() ?? 'music'`** (no **`?q=`**). **`/search`** redirects to the same stored tab. From **Home**, **My Library**, etc., tap **Search** → last **Music / Podcasts / Radio** + empty field (**sessionStorage** key **`PROTOTYPE_BROAD_SEARCH_BROWSE_TAB_STORAGE_KEY`**).
+3. **Re-tap Search** while **`pathname`** is under **`/search`:** **`onClick`** **`preventDefault`**, **`writeStoredBroadSearchBrowseTab('music')`**, **`navigate({ pathname: '/search/music', search: '' })`** — always **Music** + empty field (including **`/search/podcasts?q=foo`**). **`/radio/*`** is **not** treated as the Search stack for this reset (user opens Search from radio via normal **`NavLink`** **`to`**).
+4. **`Search.jsx`:** **`useLayoutEffect`** updates stored tab when the shell path is **`/search/music`** \| **`podcasts`** \| **`radio`** so the switcher + storage stay aligned **before paint**.
 
 **Deliverable:** Clear vs **BottomNav Search** behaviors are distinct and predictable; **URL** carries **`?q=`** while searching so **Back** from deeper screens still works together with **Phase 6**.
 
@@ -228,7 +229,7 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
   - [ ] Radio hierarchy navigable through at least one full path to stations.
   - [ ] Search replaces browse chrome; swimlanes include **Tags**; Artists shows when query hits stub artists.
   - [ ] More grids + back behavior correct.
-  - [ ] Reset: **Clear** restores browse with **same** content-type tab; **BottomNav Search** / leave tab + tap Search restores **Music** + empty query.
+  - [ ] Reset: **Clear** restores browse with **same** content-type tab; **BottomNav Search** from Home restores **last** browse tab + empty query; **re-tap Search** on **`/search/*`** resets **Music** + empty query.
   - [ ] Footer stack + keyboard overlap acceptable; miniplayer still usable after dismiss keyboard.
 
 ---
