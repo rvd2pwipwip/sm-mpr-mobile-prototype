@@ -129,7 +129,7 @@ Call sites slice **`children`** to `maxVisible` where relevant (example patterns
 
 **Done (Genre browse):** `ContentSwimlane` accepts optional **`categoryPillAlignKey`**. When set and `categoryRail` is a single element, it receives **`categoriesScrollEl`** + **`categoryPillAlignKey`** via **`cloneElement`**. Generic **`CategoryPillsRail`** + **`src/utils/categoryRailPillScroll.js`** (**`useLayoutEffect`**): **instant `scrollLeft`** when returning after navigation (**first alignment or slug unchanged**); **ease-out ~280ms rAF tween** only when the user **taps a different pill** on the same mount (**reduced motion** → always snap). Cancel prior tween when selection changes again. **`data-category-pill`** selects the active button.
 
-**Navigate-away memory (Genre browse):** **`CategoryRailMemoryProvider`** + **`memoryKey`** `search-music-genre`; **`SearchMusicGenreBrowseRail`** restores the last pill after drill-down / Back. Same pattern for future rails (unique **`memoryKey`** each).
+**Navigate-away memory (broad music):** **`CategoryRailMemoryProvider`** + distinct **`memoryKey`** values (`search-music-genre`, `search-music-activity`, …); **`SearchMusicVibeBrowseRail`** restores the last pill per row after drill-down / Back.
 
 ### Step F - Accessibility (light prototype bar)
 
@@ -139,6 +139,30 @@ Call sites slice **`children`** to `maxVisible` where relevant (example patterns
 
 - Wire one swimlane (for example in **`LimitedBrowseTaxonomyRails.jsx`** or a small demo route) with fake multi-category data.
 - Update **`docs/figma-nodes.md`** with node `19943:107145` when the screen is finalized.
+
+---
+
+## Roadmap notes (prototype vs desktop web)
+
+### Keyboard and browser focus — defer until needed
+
+The **product target is native mobile**, not a shipped desktop web app. This repo stays a **touch-first browser prototype**. **Full desktop keyboard support** (focus rings polish, roving tabindex behavior, `preventScroll`, arrow-key APG completeness) is **deferred** until there is an explicit **desktop web** milestone or a fork aimed at browser distribution.
+
+**Still reasonable to keep here:** lightweight structure that costs little — e.g. **`aria-labelledby`** on the swimlane section, **`aria-label`** on More controls, **`CategoryPillsRail`** radiogroup/radio semantics — as **documentation of intent** and for occasional **VoiceOver / TalkBack** checks in the web shell. **Do not** chase browser focus-scroll edge cases for touch-only demos until desktop scope exists.
+
+### Category rail transition glitch — investigation and planned fix
+
+**Symptom (reported):** First pill is selected; the user **manually scrolls** the category strip; then taps a **far** pill (e.g. last). The strip can **appear to jump toward the start**, then **almost instantly** move to the new pill — reads like a bug.
+
+**Static code review:** `categoryRailPillScroll.js` computes target **`scrollLeft`** from **current** geometry plus **current** `scrollLeft`; **`startAnimatedCategoryPillScroll`** tweens from **`scrollEl.scrollLeft` at tween start** to that target. **`CategoryPillsRail`** uses **snap** only when the alignment effect treats the change as **not** a user pill change (`userChangedPill` false); **pill changes** use the **animate** path. So the pipeline **already intends** “from wherever the strip is now toward the new pill,” not “via the previous pill.”
+
+**Prime hypothesis:** the **browser** scrolling the strip to bring the **focused** control into view when the pill **`button`** receives focus after tap — **outside** our `useLayoutEffect` math — producing a competing jump (often toward scroll-start feel).
+
+**Secondary hypothesis:** the category **scrollport** **remounts** briefly (`scrollLeft` resets to **0**); then alignment runs from zero. Worth ruling out with DevTools / logging if the primary fix does not stick.
+
+**When prioritized — fix approach:** Prefer **small, localized** changes on **`CategoryPillsRail`** before rewriting scroll math — e.g. **`pointerDown`** **`preventDefault`** for mouse/pen only, and/or **`focus({ preventScroll: true })`** after alignment — **confirm** with **`scrollLeft`** on **`.content-swimlane__categories-scroll`**. **Note:** A prototype attempt added visible **focus rings** and did not fully fix middle-pill-off-screen cases; it was **reverted**. Treat as **Known acceptable quirk** until desktop web / polish scope.
+
+**Tutorial:** See also **`docs/Tutorials/ContentSwimlane-category-rail-tutorial.md`** for module boundaries (`CategoryPillsRail`, `categoryRailPillScroll.js`).
 
 ---
 

@@ -1,6 +1,6 @@
 # Tutorial: `ContentSwimlane` and the category rail variant
 
-This document walks through **[`src/components/ContentSwimlane.jsx`](../../src/components/ContentSwimlane.jsx)** and the **reusable** category rail pieces: **[`CategoryPillsRail.jsx`](../../src/components/CategoryPillsRail.jsx)**, **[`categoryRailPillScroll.js`](../../src/utils/categoryRailPillScroll.js)**, **[`useCategoryRailMemorySlug.js`](../../src/hooks/useCategoryRailMemorySlug.js)**, **[`CategoryRailMemoryContext.jsx`](../../src/context/CategoryRailMemoryContext.jsx)**, plus the **first consumer** **[`SearchMusicGenreBrowseRail.jsx`](../../src/components/SearchMusicGenreBrowseRail.jsx)** (music genre IA only) and **[`ContentSwimlane.css`](../../src/components/ContentSwimlane.css)**.
+This document walks through **[`src/components/ContentSwimlane.jsx`](../../src/components/ContentSwimlane.jsx)** and the **reusable** category rail pieces: **[`CategoryPillsRail.jsx`](../../src/components/CategoryPillsRail.jsx)**, **[`categoryRailPillScroll.js`](../../src/utils/categoryRailPillScroll.js)**, **[`useCategoryRailMemorySlug.js`](../../src/hooks/useCategoryRailMemorySlug.js)**, **[`CategoryRailMemoryContext.jsx`](../../src/context/CategoryRailMemoryContext.jsx)**, plus the **consumer** **[`SearchMusicVibeBrowseRail.jsx`](../../src/components/SearchMusicVibeBrowseRail.jsx)** (broad music vibes: Genre, Activity, Mood, Era, Theme) and **[`ContentSwimlane.css`](../../src/components/ContentSwimlane.css)**.
 
 It assumes you know **JSX**, **`useState`**, and **`useEffect`** basics. New ideas introduced here include **`useLayoutEffect`** (run **before** the browser paints), **`cloneElement`** (inject props into an existing element), **`useId`** (stable ids for accessibility), **`useRef`** for mutable boxes **without** re-render, and a tiny **`Map`** behind **`useMemo`** for cross-route memory.
 
@@ -12,7 +12,7 @@ It assumes you know **JSX**, **`useState`**, and **`useEffect`** basics. New ide
 | Pill UI + alignment effect | **`CategoryPillsRail.jsx`** | Yes — pass **`rows`** + selection |
 | Scroll math / tween | **`categoryRailPillScroll.js`** | Yes — expects **`ContentSwimlane`** category DOM + **`data-category-pill`** |
 | Session slug memory | **`CategoryRailMemoryContext`** + **`useCategoryRailMemorySlug`** | Yes — new **`memoryKey`** per rail |
-| Product wiring | Example: **`SearchMusicGenreBrowseRail.jsx`** | No — replace with your taxonomy, **`children`**, routes |
+| Product wiring | Example: **`SearchMusicVibeBrowseRail.jsx`** | No — replace with your taxonomy, **`children`**, routes |
 
 **Companion docs**
 
@@ -28,7 +28,7 @@ It assumes you know **JSX**, **`useState`**, and **`useEffect`** basics. New ide
 | **`ContentSwimlane`** | **Presentational** shell: title row, optional **category rail** strip (horizontal scroll), **card row** (horizontal scroll). Implements **More** either as a header button **or** (variant) a **trailing More tile** in the card row. Resets card **`scrollLeft`** when **`cardScrollerResetKey`** changes. **Does not** own **which** pill is selected. |
 | **`CategoryRailMemoryProvider`** | Holds an **in-memory Map**: **`memoryKey` → last-selected slug**. Loses state on **full reload**, keeps state across **route unmount/remount** (e.g. user drilled down and pressed Back). |
 | **`CategoryPillsRail`** | **Generic** pill row for any IA: props **`rows`** (`slug` + **`label`**). Receives **`categoriesScrollEl`**, **`categoryPillAlignKey`**, **`categoryRailTitleId`** via **`cloneElement`** from **`ContentSwimlane`**. Uses **`categoryRailPillScroll`** helpers inside **`useLayoutEffect`** (**snap vs tween**). **`radiogroupFallbackLabel`** when there is no lane heading id. |
-| **`SearchMusicGenreBrowseRail`** | **Genre-only** wiring: taxonomy **`genreRows`**, **`useCategoryRailMemorySlug('search-music-genre', …)`**, channel/sub tiles, **`navigate`** routes. Composes **`ContentSwimlane`** + **`CategoryPillsRail`**; does **not** own scroll math. |
+| **`SearchMusicVibeBrowseRail`** | **Broad music vibe** wiring: **`getChildTagsForBroadVibe(vibeId)`**, **`useCategoryRailMemorySlug(memoryKey, …)`**, genre vs tag leaf routes, **`navigate`** drill-down. Composes **`ContentSwimlane`** + **`CategoryPillsRail`**; does **not** own scroll math. |
 
 ---
 
@@ -42,8 +42,8 @@ It assumes you know **JSX**, **`useState`**, and **`useEffect`** basics. New ide
 | [`src/components/CategoryPillsRail.jsx`](../../src/components/CategoryPillsRail.jsx) | Generic category pills + alignment effect |
 | [`src/utils/categoryRailPillScroll.js`](../../src/utils/categoryRailPillScroll.js) | **`computeCategoryPillTargetScrollLeft`**, snap / animate helpers |
 | [`src/hooks/useCategoryRailMemorySlug.js`](../../src/hooks/useCategoryRailMemorySlug.js) | **`memoryKey`** + **`rows`** + optional **`preferredSlug`** |
-| [`src/components/SearchMusicGenreBrowseRail.jsx`](../../src/components/SearchMusicGenreBrowseRail.jsx) | Music genre consumer only |
-| [`src/pages/Search.jsx`](../../src/pages/Search.jsx) | Mounts **`SearchMusicGenreBrowseRail`** when **`musicLineupMode === broad`** |
+| [`src/components/SearchMusicVibeBrowseRail.jsx`](../../src/components/SearchMusicVibeBrowseRail.jsx) | Broad music — one swimlane per vibe (**Genre**, **Activity**, **Mood**, **Era**, **Theme**) |
+| [`src/pages/Search.jsx`](../../src/pages/Search.jsx) | **`BROAD_VIBES.map`** → **`SearchMusicVibeBrowseRail`** when **`musicLineupMode === broad`** |
 | [`src/App.jsx`](../../src/App.jsx) | **`CategoryRailMemoryProvider`** wraps **`AppRoutes`** (inside **`PlaybackProvider`**) |
 | [`src/constants/swimlane.js`](../../src/constants/swimlane.js) | **`SWIMLANE_CARD_MAX`** (visible card cap for More predicate) |
 
@@ -60,7 +60,7 @@ flowchart TB
     Routes["AppRoutes / pages"]
   end
 
-  subgraph BrowseScreen["SearchMusicGenreBrowseRail"]
+  subgraph BrowseScreen["SearchMusicVibeBrowseRail"]
     MemHook["useCategoryRailMemorySlug()"]
     Lane["ContentSwimlane"]
     Pills["CategoryPillsRail in JSX<br/>initial props only"]
@@ -89,7 +89,7 @@ flowchart TB
 - **`ContentSwimlane`** keeps a **DOM reference** to the **category scroll container** (**`categoriesScrollEl`**) and passes it **down** into **`CategoryPillsRail`** through **`cloneElement`**. The parent wrote **`CategoryPillsRail`** without those props in JSX; **`ContentSwimlane`** adds them at runtime.
 - **Card row reset** is separate: **`cardScrollerResetKey={selectedSlug}`** tells **`ContentSwimlane`** to zero **`scrollLeft`** on the **card** scroller when the **category** changes (genre example; same pattern for any IA).
 
-The flowchart names **`SearchMusicGenreBrowseRail`** only because it is the first consumer; a podcasts or radio rail would plug **`useCategoryRailMemorySlug`** + **`CategoryPillsRail`** into **`ContentSwimlane`** the same way.
+The flowchart names **`SearchMusicVibeBrowseRail`** as the reference consumer; a podcasts or radio rail would plug **`useCategoryRailMemorySlug`** + **`CategoryPillsRail`** into **`ContentSwimlane`** the same way.
 
 ---
 
@@ -274,21 +274,20 @@ File: [`src/hooks/useCategoryRailMemorySlug.js`](../../src/hooks/useCategoryRail
 
 ---
 
-## 9. Consumer — `SearchMusicGenreBrowseRail` (genre IA only)
+## 9. Consumer — `SearchMusicVibeBrowseRail` (broad music vibes)
 
-File: [`src/components/SearchMusicGenreBrowseRail.jsx`](../../src/components/SearchMusicGenreBrowseRail.jsx)
+File: [`src/components/SearchMusicVibeBrowseRail.jsx`](../../src/components/SearchMusicVibeBrowseRail.jsx)
 
-Thin composition layer: **no** scroll helpers in this file.
+Thin composition layer: **no** scroll helpers in this file. **`Search.jsx`** mounts **five** instances (props **`vibeId`**, **`title`**, **`memoryKey`**, optional **`preferredSlug`** — Genre passes **`pop`**).
 
 | Lines | What it does |
 |-------|----------------|
 | **1–16** | Imports (**`useNavigate`**, **`CategoryPillsRail`**, music data modules, **`AppInfoSwimlane.css`**). |
-| **18–21** | **`GENRE_VIBE_ID`**, **`SEARCH_MUSIC_GENRE_MEMORY_KEY`**. |
-| **27–31** | **`genreRows`** from **`getChildTagsForBroadVibe`** filtered to **`kind === 'genre'`**. |
-| **33–37** | **`useCategoryRailMemorySlug(SEARCH_MUSIC_GENRE_MEMORY_KEY, genreRows, { preferredSlug: 'pop' })`**. |
-| **39–51** | **`selectedRow`**, **`leafChannels`**, **`subTiles`** from music data helpers. |
-| **53–62** | **`navigateGenreMore`** — route branch on **`selectedRow.id`**. |
-| **64–116** | Early **`null`**; **`ContentSwimlane`** + **`CategoryPillsRail`** (**`rows`**, **`radiogroupFallbackLabel="Genre"`**); leaf **`MusicChannelCard`** vs sub **`app-info-swimlane__tile`** **`children`**. |
+| **29–37** | Props → **`pillRows`** via **`getChildTagsForBroadVibe(vibeId)`**. |
+| **39–45** | **`useCategoryRailMemorySlug(memoryKey, pillRows, …)`** — optional **`preferredSlug`** only when passed. |
+| **47–58** | **`selectedRow`**, **`leafChannels`** — **`kind === 'genre'`** uses **`getMusicChannelsByCategory`** / **`getMusicChannelsWithTag`**; **`tag`** rows filter by **`tagLabel`**. |
+| **60–73** | **`subsMeta`** / **`subTiles`**; **`navigateVibeMore`** — category route when genre has **`id`**, else **`/vibe/.../tag/...`**. |
+| **75–126** | Early **`null`**; **`ContentSwimlane`** + **`CategoryPillsRail`** (**`radiogroupFallbackLabel={title}`**); leaf **`MusicChannelCard`** vs sub **`app-info-swimlane__tile`** **`children`**. |
 
 ---
 
@@ -336,8 +335,8 @@ File: [`src/components/CategoryPillsRail.jsx`](../../src/components/CategoryPill
 | **`useMemo`** | **`CategoryRailMemoryProvider`** | Stable **`{ get, set }`** API object |
 | **`useRef`** | **`CategoryRailMemoryProvider`** | **`Map`** storage |
 | **`useContext`** | **`useCategoryRailMemory`** | Read API or fallback |
-| **`useNavigate`** | **`SearchMusicGenreBrowseRail`** | Drill-down / channel navigation |
-| **`useMemo`** | **`SearchMusicGenreBrowseRail`** | **`genreRows`**, **`leafChannels`** |
+| **`useNavigate`** | **`SearchMusicVibeBrowseRail`** | Drill-down / channel navigation |
+| **`useMemo`** | **`SearchMusicVibeBrowseRail`** | **`pillRows`**, **`leafChannels`** |
 | **`useState`** / **`useLayoutEffect`** | **`useCategoryRailMemorySlug`** | Selected slug + invalid-slug repair |
 | **`useLayoutEffect`** | **`CategoryPillsRail`** | Snap vs animate pill **`scrollLeft`** |
 | **`useRef`** | **`CategoryPillsRail`** | Tween cancel + **`prevSlug`** tracking |
@@ -351,13 +350,13 @@ File: [`src/components/CategoryPillsRail.jsx`](../../src/components/CategoryPill
 3. **`const [slug, setSlug] = useCategoryRailMemorySlug(memoryKey, rows, { preferredSlug: '…' })`** (optional **`preferredSlug`**; omit or pass **`undefined`** if first pill is fine).
 4. Render **`ContentSwimlane`** with **`categoryRail={<CategoryPillsRail rows={…} selectedSlug={slug} onSelect={setSlug} radiogroupFallbackLabel="…" />}`** and **`categoryPillAlignKey={slug}`** / **`cardScrollerResetKey`** when card content should reset as the pill changes.
 5. Keep pill DOM inside **`ContentSwimlane`** category strip so **`categoryRailPillScroll`** still finds **`.content-swimlane__categories-inner`** and **`data-category-pill`** (**do not** rename those unless you fork the util).
-6. Implement **`children`** (tiles, cards, **`sourceCount`**, **`trailingMoreCard`**, **`onMore`**) in your screen component — that logic stays **IA-specific**, like **`SearchMusicGenreBrowseRail`**.
+6. Implement **`children`** (tiles, cards, **`sourceCount`**, **`trailingMoreCard`**, **`onMore`**) in your screen component — that logic stays **IA-specific**, like **`SearchMusicVibeBrowseRail`**.
 
 ---
 
 ## 14. Click-through (prototype)
 
-**Search** → **Browse** → **Music** (broad lineup) → **Genre** swimlane appears above the search body in **`Search.jsx`** → tap pills → optional **More** tile on busy leaf genres → drill down and **Back** → **same pill** should still be selected and **visible** without a spurious tween.
+**Search** → **Browse** → **Music** (broad lineup) → **five** stacked vibe swimlanes (**Genre**, **Activity**, **Mood**, **Era**, **Theme**) appear above the vibe tile grid in **`Search.jsx`** → tap pills → optional **More** tile on busy leaf rows → drill down and **Back** → **same pill** should still be selected and **visible** without a spurious tween (**per** **`memoryKey`**).
 
 ---
 

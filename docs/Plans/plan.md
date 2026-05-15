@@ -145,9 +145,14 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ---
 
-## ContentSwimlane — category rail variant (planned)
+## ContentSwimlane — category rail variant
 
-Optional category pill row + **More as trailing card** (two-level IA in one rail). **Full reference** for today's component, locked UX decisions, and step-by-step build notes: **`docs/Plans/ContentSwimlane-category-rail-variant.md`**.
+**Spec, UX locks, and roadmap:** **`docs/Plans/ContentSwimlane-category-rail-variant.md`**. **Code walkthrough:** **`docs/Tutorials/ContentSwimlane-category-rail-tutorial.md`**. **Broad music vibe rails** wiring: **`SearchMusicVibeBrowseRail`**, shared **`CategoryPillsRail`**, **`src/utils/categoryRailPillScroll.js`**, **`useCategoryRailMemorySlug`**, **`CategoryRailMemoryContext`**.
+
+**Decisions (detail under “Roadmap notes” in the variant doc):**
+
+- **Desktop keyboard and browser focus** — **Deferred** until a **desktop web** milestone or fork. This repo stays a **touch-first mobile prototype** in the browser; do not spend time on full keyboard navigation / `preventScroll` polish now. **Keep** lightweight landmarks (`aria-labelledby`, More labels, radiogroup-style pills) as low-cost handoff and occasional VoiceOver checks.
+- **Category rail transition issue** (manual scroll then tap a distant pill; strip can appear to jump then settle) — **Known acceptable quirk** for now; likely browser **focus scroll** vs tween (see variant doc **Roadmap notes**). A small **focus / pointerDown** mitigation was **tried and reverted** (focus ring + incomplete edge-case fix).
 
 ---
 
@@ -163,7 +168,7 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 4. [ ] **Visual pass** — refine nav / header / card tokens; swap **placeholder SVGs** (icons, logo) from Figma.
 
-5. [ ] **ContentSwimlane — category rail variant** — **`docs/Plans/ContentSwimlane-category-rail-variant.md`**.
+5. [ ] **ContentSwimlane — category rail variant** — **Genre rail shipped** (Search Music broad lineup); extend/reuse per **`docs/Plans/ContentSwimlane-category-rail-variant.md`**. **Follow-ups:** optional pill-strip transition polish (see variant **Roadmap notes**); Step G consumer elsewhere if needed; desktop keyboard/focus when scoped.
 
 ## Backlog / later
 
@@ -182,6 +187,8 @@ Ordered roughly **do first → do next**. Shipped baseline (tabs, Subscription, 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-*Last updated: 2026-05-14* — **ContentSwimlane** category rail spec moved to **`docs/Plans/ContentSwimlane-category-rail-variant.md`**; **`plan.md`** keeps a short pointer + **See also** link; **Next steps** item **5** points at that file.
+*Last updated: 2026-05-14* — **ContentSwimlane** category rail section expanded (**keyboard/focus deferral**, **transition glitch** approach); tie-in **`docs/Plans/ContentSwimlane-category-rail-variant.md`** Roadmap notes; **Next steps** item **5** notes Genre rail shipped + follow-ups.
+
+*Prior (2026-05-14):* **ContentSwimlane** category rail spec moved to **`docs/Plans/ContentSwimlane-category-rail-variant.md`**; **`plan.md`** short pointer + **See also** link; **Next steps** item **5** pointed at that file.
 
 *Prior (2026-05-13):* **Catalog scope refactor** (Phases **A through E**) in **`docs/react-learning.md`**, **`docs/Plans/catalog-scope-search-browse-refactor.md`** (**Phase E** in §6), and **What we have done**. **Next:** **`docs/Plans/Search-Browse-implementation-plan.md`** phases **5-8**; optional **`LimitedBrowse`** header vs **catalog-scope-search-browse-refactor.md** §5.2 (centered wordmark).
