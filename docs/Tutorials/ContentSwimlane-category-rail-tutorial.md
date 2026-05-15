@@ -184,8 +184,7 @@ File: [`src/components/ContentSwimlane.jsx`](../../src/components/ContentSwimlan
 | **`maxVisible`** | Threshold vs **`sourceCount`** for More visibility (default cap constant). |
 | **`sourceCount`** | If set: More shows when **`sourceCount > maxVisible`** (unless **`alwaysShowMore`**). |
 | **`alwaysShowMore`** | Listen-again style: More always on when other logic allows. |
-| **`categoryRail`** | Optional **React node** (usually **one** element). If **`null`/`undefined`**, no pill row. |
-| **`trailingMoreCard`** | If **true** and More predicate passes: **hide** header More, render **square More tile** after **`children`**. |
+| **`categoryRail`** | Optional **React node** (usually **one** element). If **`null`/`undefined`**, no pill row. When set, **More** (if shown) is the **trailing tile** in the card row, not the header button. |
 | **`cardScrollerResetKey`** | When this **value changes**, **`scrollLeft`** of **card** row → **0**. |
 | **`categoryPillAlignKey`** | When **defined**, merged into cloned **`categoryRail`** together with **`categoriesScrollEl`** so **`CategoryPillsRail`** can align pills (**often equals selected slug**). Omitting it still clones **`categoryRail`** with **`categoryRailTitleId`** for labeling when **`categoryRail`** is a single element. |
 
@@ -197,8 +196,8 @@ File: [`src/components/ContentSwimlane.jsx`](../../src/components/ContentSwimlan
 | **62** | **`cardScrollRef`** — **`ref`** on the **card** scroll container (**`.content-swimlane__scroll`**). |
 | **63** | **`categoriesScrollEl` / `setCategoriesScrollEl`** — **`ref={setCategoriesScrollEl}`** on the **category** scroll viewport stores that DOM node in state so **children cloned via **`cloneElement`** receive the **latest** element reference after mount. |
 | **65–69** | **`useLayoutEffect`**: if **`cardScrollerResetKey`** is defined and changed, set **`cardScrollRef.current.scrollLeft = 0`**. **Why layout:** avoids flashing scrolled cards before reset when switching categories. |
-| **71–75** | **`showMoreAffordance`** — same predicate as legacy swimlane: **`alwaysShowMore`** wins; else **`sourceCount`** vs **`maxVisible`**; else **`showMore`**. |
-| **77–78** | Split into **header** vs **trailing** More visibility. |
+| **(see source)** | **`showMoreAffordance`** — **`alwaysShowMore`** wins; else **`sourceCount`** vs **`maxVisible`**; else **`showMore`**. |
+| **(see source)** | **More placement:** **no `categoryRail`** → header More; **`categoryRail`** → trailing More tile (**`alwaysShowMore`** keeps header for Listen again — category-free lanes only). |
 
 ### 6.4 JSX (**lines 80–134**)
 
@@ -350,7 +349,7 @@ File: [`src/components/CategoryPillsRail.jsx`](../../src/components/CategoryPill
 3. **`const [slug, setSlug] = useCategoryRailMemorySlug(memoryKey, rows, { preferredSlug: '…' })`** (optional **`preferredSlug`**; omit or pass **`undefined`** if first pill is fine).
 4. Render **`ContentSwimlane`** with **`categoryRail={<CategoryPillsRail rows={…} selectedSlug={slug} onSelect={setSlug} radiogroupFallbackLabel="…" />}`** and **`categoryPillAlignKey={slug}`** / **`cardScrollerResetKey`** when card content should reset as the pill changes.
 5. Keep pill DOM inside **`ContentSwimlane`** category strip so **`categoryRailPillScroll`** still finds **`.content-swimlane__categories-inner`** and **`data-category-pill`** (**do not** rename those unless you fork the util).
-6. Implement **`children`** (tiles, cards, **`sourceCount`**, **`trailingMoreCard`**, **`onMore`**) in your screen component — that logic stays **IA-specific**, like **`SearchMusicVibeBrowseRail`**.
+6. Implement **`children`** (tiles, cards, **`sourceCount`**, **`onMore`**) in your screen component — that logic stays **IA-specific**, like **`SearchMusicVibeBrowseRail`**. More placement (header vs trailing tile) is derived from **`categoryRail`** inside **`ContentSwimlane`**.
 
 ---
 

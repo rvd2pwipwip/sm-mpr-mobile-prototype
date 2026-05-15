@@ -1,4 +1,4 @@
-import { MUSIC_CHANNELS } from "../data/musicChannels";
+import { getRecommendationsMusicChannels, MUSIC_CHANNELS } from "../data/musicChannels";
 import { PODCASTS } from "../data/podcasts";
 import { RADIO_STATIONS } from "../data/radioStations";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { showVisualAds } from "../utils/showVisualAds";
 import MusicChannelCard from "../components/MusicChannelCard";
 import PodcastCard from "../components/PodcastCard";
+import ProviderLineupMusicSwimlane from "../components/ProviderLineupMusicSwimlane";
 import RadioStationCard from "../components/RadioStationCard";
 
 /** Home: fixed `HomeHeader` (top chrome); `home-body-scroll` is the main column so lanes scroll under the header. */
@@ -30,6 +31,8 @@ export default function Home() {
     listenAgainItems.length >= LISTEN_AGAIN_RAIL_SLOT_CAP
       ? 0
       : LISTEN_AGAIN_RAIL_SLOT_CAP - listenAgainItems.length;
+
+  const recommendedChannels = getRecommendationsMusicChannels();
 
   return (
     <main className="app-shell app-shell--home">
@@ -68,8 +71,12 @@ export default function Home() {
             </ContentSwimlane>
           ) : null}
 
+          {userType === "freeProvided" ? (
+            <ProviderLineupMusicSwimlane />
+          ) : null}
+
           <ContentSwimlane
-            title="Music"
+            title="Most popular music"
             sourceCount={MUSIC_CHANNELS.length}
             onMore={() => navigate("/more/music")}
           >
@@ -83,7 +90,7 @@ export default function Home() {
           </ContentSwimlane>
 
           <ContentSwimlane
-            title="Podcasts"
+            title="Popular podcasts in your area"
             sourceCount={PODCASTS.length}
             onMore={() => navigate("/more/podcasts")}
           >
@@ -99,7 +106,7 @@ export default function Home() {
             {showBannerAd ? <SwimlaneBannerAd /> : null}
           </div>
           <ContentSwimlane
-            title="Radio"
+            title="Top radio stations"
             sourceCount={RADIO_STATIONS.length}
             onMore={() => navigate("/more/radio")}
           >
@@ -110,6 +117,22 @@ export default function Home() {
                 onSelect={() => navigate(`/radio/${station.id}`)}
               />
             ))}
+          </ContentSwimlane>
+
+          <ContentSwimlane
+            title="Recommendations"
+            sourceCount={recommendedChannels.length}
+            onMore={() => navigate("/more/recommendations")}
+          >
+            {recommendedChannels
+              .slice(0, SWIMLANE_CARD_MAX)
+              .map((channel) => (
+                <MusicChannelCard
+                  key={channel.id}
+                  channel={channel}
+                  onSelect={() => navigate(`/music/${channel.id}`)}
+                />
+              ))}
           </ContentSwimlane>
         </div>
       </div>

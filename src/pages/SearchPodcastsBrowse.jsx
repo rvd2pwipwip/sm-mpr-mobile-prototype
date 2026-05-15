@@ -46,7 +46,6 @@ export default function SearchPodcastsBrowse() {
       {PODCAST_CATEGORIES.map((cat) => {
         const podcasts = getPodcastsByCategory(cat.id);
         const visible = podcasts.slice(0, SWIMLANE_CARD_MAX);
-        const trailingMore = podcasts.length > SWIMLANE_CARD_MAX;
         return (
           <ContentSwimlane
             key={cat.id}
@@ -54,7 +53,6 @@ export default function SearchPodcastsBrowse() {
             showMore={false}
             sourceCount={podcasts.length}
             maxVisible={SWIMLANE_CARD_MAX}
-            trailingMoreCard={trailingMore}
             onMore={() =>
               navigate(`/search/browse/podcasts/category/${cat.id}`)
             }

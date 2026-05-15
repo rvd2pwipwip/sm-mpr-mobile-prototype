@@ -1,6 +1,6 @@
 import { getMusicChannelById } from "../data/musicChannels";
 import { getPodcastById } from "../data/podcasts";
-import { getRadioStationById } from "../data/radioStations";
+import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
 import MusicChannelCard from "./MusicChannelCard";
 import PodcastCard from "./PodcastCard";
 import RadioStationCard from "./RadioStationCard";
@@ -35,7 +35,7 @@ export function renderListenAgainTile(item, navigate, compact = false) {
     );
   }
   if (item.kind === "radio") {
-    const station = getRadioStationById(item.id);
+    const station = resolveRadioStationForStub(item.id);
     if (!station) return null;
     return (
       <RadioStationCard

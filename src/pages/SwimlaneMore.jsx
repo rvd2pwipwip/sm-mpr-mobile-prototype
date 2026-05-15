@@ -3,13 +3,28 @@ import MusicChannelCard from "../components/MusicChannelCard";
 import PodcastCard from "../components/PodcastCard";
 import RadioStationCard from "../components/RadioStationCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
-import { MUSIC_CHANNELS } from "../data/musicChannels";
+import {
+  getRecommendationsMusicChannels,
+  MUSIC_CHANNELS,
+} from "../data/musicChannels";
 import { PODCASTS } from "../data/podcasts";
 import { RADIO_STATIONS } from "../data/radioStations";
 import "./SwimlaneMore.css";
 
 /** URL segment → data + header title (swimlane title only, matches Home). */
 const CATEGORIES = {
+  recommendations: {
+    title: "Recommendations",
+    render: (navigate) =>
+      getRecommendationsMusicChannels().map((channel) => (
+        <li key={channel.id} className="swimlane-more__cell">
+          <MusicChannelCard
+            channel={channel}
+            onSelect={() => navigate(`/music/${channel.id}`)}
+          />
+        </li>
+      )),
+  },
   music: {
     title: "Music",
     render: (navigate) =>

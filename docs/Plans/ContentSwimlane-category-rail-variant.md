@@ -49,16 +49,17 @@ section.content-swimlane
 | `alwaysShowMore` | `false` | If true: More always shows when other logic allows (Listen again pattern) |
 | `categoryRail` | - | If set: horizontal pill row between header and cards (variant scaffold); pills use CSS classes in §4 Step A |
 | `categoryPillAlignKey` | - | When set with a single-element `categoryRail`, merged props align active pill (§4 Step E) |
-| `trailingMoreCard` | `false` | True: hide header More; append More tile after tiles when More predicate passes |
 | `cardScrollerResetKey` | - | When changed: card scroller `scrollLeft` resets (category switch) |
 
-**More visibility rule (same logic you reuse for the More card in the variant):**
+**More predicate (when a More affordance exists):**
 
 ```
 alwaysShowMore ? true
   : sourceCount !== undefined ? sourceCount > maxVisible
   : showMore
 ```
+
+**More placement (enforced in `ContentSwimlane`):** With **`categoryRail`**, More is the **trailing tile** in the card scroller (not the header button), unless **`alwaysShowMore`** (not used with category rails today). Without **`categoryRail`**, More is the **header** button (never a trailing tile). Listen again uses **`alwaysShowMore`** on non–category-rail lanes only.
 
 Call sites slice **`children`** to `maxVisible` where relevant (example patterns in `Home.jsx`, `LimitedBrowseTaxonomyRails.jsx`, library rails).
 

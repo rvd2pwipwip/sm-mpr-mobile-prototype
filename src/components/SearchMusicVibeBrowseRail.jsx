@@ -78,7 +78,6 @@ export default function SearchMusicVibeBrowseRail({
 
   const isLeaf = !selectedRow.hasSubs;
   const visibleLeaf = leafChannels.slice(0, SWIMLANE_CARD_MAX);
-  const leafNeedsTrailingMore = isLeaf && leafChannels.length > SWIMLANE_CARD_MAX;
 
   return (
     <ContentSwimlane
@@ -94,7 +93,6 @@ export default function SearchMusicVibeBrowseRail({
       showMore={false}
       sourceCount={isLeaf ? leafChannels.length : undefined}
       maxVisible={SWIMLANE_CARD_MAX}
-      trailingMoreCard={leafNeedsTrailingMore}
       onMore={navigateVibeMore}
       cardScrollerResetKey={selectedSlug}
       categoryPillAlignKey={selectedSlug}

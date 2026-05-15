@@ -49,7 +49,6 @@ export default function SearchRadioInternationalBrowseRail({
   const usesPlaceholderCountries = lane.usesPlaceholderCountries;
 
   const visible = countries.slice(0, SWIMLANE_CARD_MAX);
-  const trailingMore = countries.length > SWIMLANE_CARD_MAX;
 
   function navigateMore() {
     if (!selectedSlug) return;
@@ -83,7 +82,6 @@ export default function SearchRadioInternationalBrowseRail({
       showMore={false}
       sourceCount={countries.length}
       maxVisible={SWIMLANE_CARD_MAX}
-      trailingMoreCard={trailingMore}
       onMore={navigateMore}
       cardScrollerResetKey={selectedSlug}
       categoryPillAlignKey={selectedSlug}

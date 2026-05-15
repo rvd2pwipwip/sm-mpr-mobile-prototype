@@ -41,7 +41,6 @@ export default function SearchRadioBrowse() {
         }
         const stations = getRadioStationsByCategory(cat.id);
         const visible = stations.slice(0, SWIMLANE_CARD_MAX);
-        const trailingMore = stations.length > SWIMLANE_CARD_MAX;
         const morePath = radioBrowseMorePath(cat);
         return (
           <ContentSwimlane
@@ -50,7 +49,6 @@ export default function SearchRadioBrowse() {
             showMore={false}
             sourceCount={stations.length}
             maxVisible={SWIMLANE_CARD_MAX}
-            trailingMoreCard={trailingMore}
             onMore={() => navigate(morePath)}
           >
             {visible.map((station) => (

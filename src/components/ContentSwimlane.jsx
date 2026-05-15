@@ -13,16 +13,17 @@ import "./ContentSwimlane.css";
  * Horizontal swimlane: inset row title + More, full-bleed scroll with inner gutters.
  * Pass card components as children (see `App.jsx`). Touch-first prototype; light landmarks (`aria-labelledby` on section).
  *
- * **More button:** If `sourceCount` is set, it shows when `sourceCount > maxVisible` unless
- * `alwaysShowMore` is true (e.g. Listen again — full list / clear history). If `sourceCount`
- * is omitted, `showMore` is used (default true).
+ * **More placement (fixed rules):**
+ * - **No `categoryRail`:** More is the **header** button (never a trailing tile). Same when
+ *   `alwaysShowMore` is true (Listen again / history — full list affordance).
+ * - **With `categoryRail`:** More is the **trailing** square tile after `children` (never
+ *   the header button), when the More predicate passes and `alwaysShowMore` is false.
+ *
+ * **More predicate:** If `sourceCount` is set, More shows when `sourceCount > maxVisible` unless
+ * `alwaysShowMore` is true. If `sourceCount` is omitted, `showMore` is used (default true).
  *
  * **Category rail (variant):** When `categoryRail` is set, a horizontally scrolling pill row
  * renders between the header and the card scroller (`ContentSwimlane-category-rail-variant.md` Step A).
- *
- * **Trailing More card:** When `trailingMoreCard` is true and More would show (`sourceCount` vs
- * `maxVisible`, etc.), the header More button is hidden and a square **More** tile is appended
- * after `children` in the card scroller.
  *
  * **Card scroller reset:** When `cardScrollerResetKey` changes, the horizontal card row scrolls
  * back to the start (category pill changes).
@@ -40,7 +41,6 @@ import "./ContentSwimlane.css";
  *   sourceCount?: number,
  *   alwaysShowMore?: boolean,
  *   categoryRail?: import("react").ReactNode,
- *   trailingMoreCard?: boolean,
  *   cardScrollerResetKey?: string | number,
  *   categoryPillAlignKey?: string | number,
  * }} props
@@ -54,7 +54,6 @@ export default function ContentSwimlane({
   sourceCount,
   alwaysShowMore = false,
   categoryRail,
-  trailingMoreCard = false,
   cardScrollerResetKey,
   categoryPillAlignKey,
 }) {
@@ -68,14 +67,18 @@ export default function ContentSwimlane({
     if (el) el.scrollLeft = 0;
   }, [cardScrollerResetKey]);
 
+  const hasCategoryRail = categoryRail != null;
+
   const showMoreAffordance = alwaysShowMore
     ? true
     : sourceCount !== undefined
       ? sourceCount > maxVisible
       : showMore;
 
-  const showHeaderMore = showMoreAffordance && !trailingMoreCard;
-  const showTrailingMore = showMoreAffordance && trailingMoreCard;
+  const showHeaderMore =
+    showMoreAffordance && (!hasCategoryRail || alwaysShowMore);
+  const showTrailingMore =
+    showMoreAffordance && hasCategoryRail && !alwaysShowMore;
 
   return (
     <section className="content-swimlane" aria-labelledby={titleId}>

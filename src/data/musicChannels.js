@@ -434,3 +434,26 @@ export function getMusicChannelsWithTag(tagLabel) {
     (c.tags ?? []).some((t) => String(t).trim().toLowerCase() === needle),
   );
 }
+
+/** Home Recommendations rail + `/more/recommendations` (stable order, same subset on both). */
+const RECOMMENDATIONS_ROW_COUNT = 20;
+const RECOMMENDATIONS_SHUFFLE_SEED = 0x5c377e4d;
+
+function seededShuffleChannels(channels, seed) {
+  const next = [...channels];
+  let s = seed >>> 0;
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    const j = s % (i + 1);
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
+/** Curated-size list for the Recommendations swimlane and its More grid (prototype). */
+export function getRecommendationsMusicChannels() {
+  return seededShuffleChannels(MUSIC_CHANNELS, RECOMMENDATIONS_SHUFFLE_SEED).slice(
+    0,
+    RECOMMENDATIONS_ROW_COUNT,
+  );
+}
