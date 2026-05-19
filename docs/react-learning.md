@@ -143,6 +143,8 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **`BottomNav`:** Rendered **only when broad** (**`App.jsx`**). Tabs: Home, Search, My Library.
 - **`InfoRootRoute`**, **limited footer stack:** **`/info`** redirects to **`/my-library`** when broad; **`Info.jsx`** hub when limited. **`LimitedCatalogFooterAd`** shows **`VisualAdStrip`** (**`MiniPlayer`** above); **`hideFooterChromeForPath`** (**`src/utils/hideFooterChromeForPath.js`**, shared with **`App.jsx`**) skips both on fullscreen play URLs and **`/upgrade/store`**.
 - **Full IA write-up:** **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
+- **Home vs limited landing (how layout differs):** **`docs/Home-limited-catalog-and-layout.md`**.
+- **Home vs limited landing (how layout differs):** **`docs/Home-limited-catalog-and-layout.md`**.
 - **Later:** Split real geo or IA from **`musicLineupMode`** when the product needs it.
 
 ---
@@ -150,7 +152,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 ## Limited Browse — rails, local pill, ads
 
 - **`HomeOrLimitedBrowse`:** **`App.jsx`** swaps **`LimitedBrowse`** vs **`Home`** on **`/`** by **`catalogScope`**.
-- **Layout:** **`LimitedBrowse.jsx`** — **`useHomeHeaderOffset`**, **`WordmarkPair`**, **`UpgradeButton`** (**`showUpgradeCallToAction`**), **`Link`** **`/search`** and **`/info`**, **`HomeBanner`**, **`SearchBrowseContentSwitcher`** **`mode="local"`** (Music \| Podcasts \| Radio; segment ids mirror **`BROWSE_TABS`** in **`searchBrowsePaths.js`**). Persisted **`Music` \| `Podcasts` \| `Radio`** choice (`sessionStorage`): **`readStoredLimitedBrowseTab`**, **`writeStoredLimitedBrowseTab`**, **`useState`** initializer plus **`useLayoutEffect`** persistence (first render matches **`SearchBrowseContentSwitcher`** thumb layout expectations).
+- **Layout:** **`LimitedBrowse.jsx`** — **`useHomeHeaderOffset`**, chrome branches: **`freeProvided`** (wordmark + provider row, then Upgrade + icons), **`showUpgradeCallToAction`** (wordmark + icons, centered Upgrade), **subscribed** (wordmark + icons). **`WordmarkPair`** / **`ProviderLogoPair`** from **`HomeHeader.jsx`**, **`HomeBanner`**, **`SearchBrowseContentSwitcher`** **`mode="local"`** (Music \| Podcasts \| Radio). Persisted tab: **`readStoredLimitedBrowseTab`** / **`writeStoredLimitedBrowseTab`**.
 - **Rails:** **`LimitedBrowseTaxonomyRails`** (**`activeBrowseTab`**) prepends likes / **`LibraryPodcastUserSwimlanes`**, then tab-scoped **Listen again** (**`ListenHistoryProvider`** **`items`** filtered by **`music` \| `podcast` \| `radio`** kind per tab), then taxonomy **`ContentSwimlane`** stacks. **`SwimlaneBannerAd`** after the **second** taxonomy lane when **`showVisualAds(userType)`**; taxonomy **More** uses **`/search/browse/...`**. **`LimitedBrowse.css`:** **`my-library__episode-tile`** width rules scoped under **`.limited-browse-taxonomy`**.
 
 ---

@@ -8,6 +8,7 @@ import LibraryPodcastUserSwimlanes from "./LibraryPodcastUserSwimlanes";
 import ListenAgainCard from "./ListenAgainCard";
 import MusicChannelCard from "./MusicChannelCard";
 import PodcastCard from "./PodcastCard";
+import ProviderLineupMusicSwimlane from "./ProviderLineupMusicSwimlane";
 import RadioStationCard from "./RadioStationCard";
 import SwimlaneBannerAd from "./SwimlaneBannerAd";
 import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
@@ -174,6 +175,7 @@ function LimitedRadioTaxonomySwimlanes({ navigate, showBannerAd }) {
  * Stacked taxonomy swimlanes for limited-catalog Browse (per plan: genre / topic / format rows).
  * **`activeBrowseTab`** filters which stack is shown (switcher lives on `LimitedBrowse.jsx`).
  * **User-driven rails** prepend per tab; **Listen again** when that tab's history kind is non-empty.
+ * **`freeProvided`** + music tab: **`ProviderLineupMusicSwimlane`** after Listen again, before liked music + genre taxonomy (same order as broad **`Home.jsx`**).
  * **In-feed** `SwimlaneBannerAd` after the **second** taxonomy lane (third taxonomy row) when `showVisualAds(userType)` (single lane: banner still follows that lane).
  *
  * @param {{ activeBrowseTab: 'music' | 'podcasts' | 'radio' }} props
@@ -196,10 +198,6 @@ export default function LimitedBrowseTaxonomyRails({ activeBrowseTab }) {
 
   return (
     <div className="limited-browse-taxonomy">
-      {activeBrowseTab === "music" ? <LibraryLikedMusicSwimlane /> : null}
-      {activeBrowseTab === "podcasts" ? <LibraryPodcastUserSwimlanes /> : null}
-      {activeBrowseTab === "radio" ? <LibraryLikedRadioSwimlane /> : null}
-
       {tabListenItems.length > 0 ? (
         <ContentSwimlane
           title="Listen again"
@@ -225,6 +223,14 @@ export default function LimitedBrowseTaxonomyRails({ activeBrowseTab }) {
           ))}
         </ContentSwimlane>
       ) : null}
+
+      {activeBrowseTab === "music" && userType === "freeProvided" ? (
+        <ProviderLineupMusicSwimlane />
+      ) : null}
+
+      {activeBrowseTab === "music" ? <LibraryLikedMusicSwimlane /> : null}
+      {activeBrowseTab === "podcasts" ? <LibraryPodcastUserSwimlanes /> : null}
+      {activeBrowseTab === "radio" ? <LibraryLikedRadioSwimlane /> : null}
 
       {activeBrowseTab === "music" ? (
         <LimitedMusicTaxonomySwimlanes

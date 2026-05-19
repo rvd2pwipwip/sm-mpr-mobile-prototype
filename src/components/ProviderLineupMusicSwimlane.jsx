@@ -13,7 +13,7 @@ import { useCategoryRailMemorySlug } from "../hooks/useCategoryRailMemorySlug";
 const MEMORY_KEY = "home-provider-lineup-music";
 
 /**
- * Home-only: cable / TV provider tier sees genre pills (limited lineup mirrors Browse music taxonomy).
+ * **`freeProvided`** tier: genre pills + channels — broad **`Home`** and limited Browse **music** tab (`MEMORY_KEY` keeps pill choice in sync).
  */
 export default function ProviderLineupMusicSwimlane() {
   const navigate = useNavigate();

@@ -1,4 +1,9 @@
-/* Fixed top chrome: row 1 wordmark (left) + icons (right); row 2 centered Upgrade (guest / free). */
+/*
+ * Limited chrome variants:
+ * - freeProvided: row 1 = wordmark + provider logo (space-between); row 2 = Upgrade (start) + Search + Info.
+ * - guest / freeStingray: row 1 = wordmark + icons; row 2 = centered Upgrade.
+ * - subscribed: row 1 = wordmark + icons only.
+ */
 .limited-browse-header {
   position: fixed;
   top: 0;
@@ -13,16 +18,16 @@
   min-width: 0;
   box-sizing: border-box;
   padding-top: var(--safe-area-inset-top);
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--space-5);
   padding-inline: var(--space-content-inline);
   background-color: var(--color-header-bg);
   backdrop-filter: blur(var(--chrome-backdrop-blur));
   -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
   -webkit-tap-highlight-color: transparent;
-  gap: var(--space-3);
+  gap: var(--space-7);
 }
 
-.limited-browse-header__wordmark-row {
+.limited-browse-header__top-row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -30,12 +35,18 @@
   gap: var(--space-3);
   width: 100%;
   min-width: 0;
+  line-height: normal;
+}
+
+.limited-browse-header__brand {
+  flex: 1;
+  min-width: 0;
   line-height: 0;
 }
 
 .limited-browse-header__wordmark-btn {
-  flex: 0 1 auto;
-  min-width: 0;
+  display: block;
+  max-width: 100%;
   margin: 0;
   text-align: left;
 }
@@ -45,20 +56,71 @@
   margin-inline: 0;
 }
 
-.limited-browse-header__wordmark-row-icons {
-  flex: 0 0 auto;
+/* Trailing cluster: Search + Info at the screen edge. */
+.limited-browse-header__top-row-end {
+  flex-shrink: 0;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--space-2);
+  min-width: 0;
+  line-height: 0;
 }
 
-.limited-browse-header__upgrade-row {
+/* freeProvided row 2 (below logos): Upgrade leading; icons trailing. */
+.limited-browse-header__top-row--free-provided {
+  align-items: center;
+}
+
+.limited-browse-header__upgrade-lead {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  line-height: normal;
+}
+
+.limited-browse-header__upgrade-lead .btn {
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+/* freeProvided row 1 — wordmark + provider (matches broad dual-logo intent). */
+.limited-browse-header__logos-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+  line-height: normal;
+}
+
+.limited-browse-header__logos-row-brand {
+  flex: 1;
+  min-width: 0;
+  line-height: 0;
+}
+
+.limited-browse-header__logos-row-provider {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+/* Row 2 — centered Upgrade (guest / freeStingray only). */
+.limited-browse-header__cta-row {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-width: 0;
+  line-height: normal;
 }
 
 /* Icon-only links: reuse bottom-nav mask colors (active = full text color). */
@@ -84,9 +146,7 @@
 
 /* Same `--home-header-offset` publish as `HomeHeader` — scroll clears fixed chrome. */
 .limited-browse__scroll {
-  padding-top: calc(
-    var(--home-header-offset) + var(--home-header-scroll-gap)
-  );
+  padding-top: calc(var(--home-header-offset) + var(--home-header-scroll-gap));
 }
 
 .limited-browse__screen {

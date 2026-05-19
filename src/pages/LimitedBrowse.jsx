@@ -4,7 +4,11 @@ import HomeBanner from "../components/HomeBanner.jsx";
 import LimitedBrowseTaxonomyRails from "../components/LimitedBrowseTaxonomyRails.jsx";
 import SearchBrowseContentSwitcher from "../components/SearchBrowseContentSwitcher.jsx";
 import UpgradeButton from "../components/UpgradeButton.jsx";
-import { useHomeHeaderOffset, WordmarkPair } from "../components/HomeHeader.jsx";
+import {
+  ProviderLogoPair,
+  useHomeHeaderOffset,
+  WordmarkPair,
+} from "../components/HomeHeader.jsx";
 import {
   BROWSE_TABS,
   readStoredLimitedBrowseTab,
@@ -23,6 +27,37 @@ const LIMITED_BROWSE_SWITCHER_SEGMENTS = BROWSE_TABS.map((t) => ({
   id: t.id,
   label: t.label,
 }));
+
+function LimitedBrowseHeaderIcons() {
+  return (
+    <div className="limited-browse-header__top-row-end">
+      <Link
+        to="/search"
+        className="limited-browse-header__icon-link"
+        aria-label="Search"
+      >
+        <span className="bottom-nav__icon-slot">
+          <span
+            className="bottom-nav__icon-mask bottom-nav__icon-mask--search"
+            aria-hidden={true}
+          />
+        </span>
+      </Link>
+      <Link
+        to="/info"
+        className="limited-browse-header__icon-link"
+        aria-label="Account, settings, and info"
+      >
+        <span className="bottom-nav__icon-slot">
+          <span
+            className="bottom-nav__icon-mask bottom-nav__icon-mask--info"
+            aria-hidden={true}
+          />
+        </span>
+      </Link>
+    </div>
+  );
+}
 
 /**
  * Limited-catalog landing: header chrome + banner + Music|Podcasts|Radio switcher + taxonomy swimlanes.
@@ -49,52 +84,63 @@ export default function LimitedBrowse() {
   const { userType } = useUserType();
   const showUpgrade = showUpgradeCallToAction(userType);
 
+  const catalogToggleProps = {
+    type: "button",
+    className: "home-header__catalog-toggle limited-browse-header__wordmark-btn",
+    onClick: toggleMusicLineupMode,
+    "aria-label": "Prototype: toggle catalog scope between limited and broad",
+    title: "Prototype: tap wordmark to switch limited vs broad catalog",
+  };
+
+  const headerChrome =
+    userType === "freeProvided" ? (
+      <>
+        <div className="limited-browse-header__logos-row">
+          <div className="limited-browse-header__logos-row-brand">
+            <button {...catalogToggleProps}>
+              <WordmarkPair />
+            </button>
+          </div>
+          <div className="limited-browse-header__logos-row-provider">
+            <ProviderLogoPair />
+          </div>
+        </div>
+        <div className="limited-browse-header__top-row limited-browse-header__top-row--free-provided">
+          <div className="limited-browse-header__upgrade-lead">
+            <UpgradeButton onClick={goUpgrade} />
+          </div>
+          <LimitedBrowseHeaderIcons />
+        </div>
+      </>
+    ) : showUpgrade ? (
+      <>
+        <div className="limited-browse-header__top-row">
+          <div className="limited-browse-header__brand">
+            <button {...catalogToggleProps}>
+              <WordmarkPair />
+            </button>
+          </div>
+          <LimitedBrowseHeaderIcons />
+        </div>
+        <div className="limited-browse-header__cta-row">
+          <UpgradeButton onClick={goUpgrade} />
+        </div>
+      </>
+    ) : (
+      <div className="limited-browse-header__top-row">
+        <div className="limited-browse-header__brand">
+          <button {...catalogToggleProps}>
+            <WordmarkPair />
+          </button>
+        </div>
+        <LimitedBrowseHeaderIcons />
+      </div>
+    );
+
   return (
     <main className="app-shell app-shell--footer-fixed limited-browse">
       <header ref={headerRef} className="limited-browse-header">
-        <div className="limited-browse-header__wordmark-row">
-          <button
-            type="button"
-            className="home-header__catalog-toggle limited-browse-header__wordmark-btn"
-            onClick={toggleMusicLineupMode}
-            aria-label="Prototype: toggle catalog scope between limited and broad"
-            title="Prototype: tap to switch limited vs broad catalog"
-          >
-            <WordmarkPair />
-          </button>
-          <div className="limited-browse-header__wordmark-row-icons">
-            <Link
-              to="/search"
-              className="limited-browse-header__icon-link"
-              aria-label="Search"
-            >
-              <span className="bottom-nav__icon-slot">
-                <span
-                  className="bottom-nav__icon-mask bottom-nav__icon-mask--search"
-                  aria-hidden={true}
-                />
-              </span>
-            </Link>
-            <Link
-              to="/info"
-              className="limited-browse-header__icon-link"
-              aria-label="Account, settings, and info"
-            >
-              <span className="bottom-nav__icon-slot">
-                <span
-                  className="bottom-nav__icon-mask bottom-nav__icon-mask--info"
-                  aria-hidden={true}
-                />
-              </span>
-            </Link>
-          </div>
-        </div>
-
-        {showUpgrade ? (
-          <div className="limited-browse-header__upgrade-row">
-            <UpgradeButton onClick={goUpgrade} />
-          </div>
-        ) : null}
+        {headerChrome}
       </header>
 
       <div className="app-shell-footer-scroll limited-browse__scroll">

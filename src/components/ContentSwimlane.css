@@ -19,9 +19,9 @@
 .content-swimlane__title {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: 300;
+  font-weight: 900;
   line-height: 1.25;
-  letter-spacing: normal;
+  letter-spacing: 0.025em;
   color: var(--color-text);
   flex: 1;
   min-width: 0;

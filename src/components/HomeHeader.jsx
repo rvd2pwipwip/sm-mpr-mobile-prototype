@@ -63,7 +63,7 @@ export function WordmarkPair() {
   );
 }
 
-function ProviderLogoPair() {
+export function ProviderLogoPair() {
   return (
     <>
       <img

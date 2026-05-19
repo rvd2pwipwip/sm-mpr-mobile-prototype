@@ -82,7 +82,8 @@
   --font-size-button: 1.5rem; /* 24px*/
   --font-weight-button: 400;
   --letter-spacing-button: 0.03em;
-  /* --line-height-button: 1.5; */
+  /* Required by `Button.css` — if unset, `line-height` is invalid and inherits (e.g. `line-height: 0` from chrome rows hides labels). */
+  --line-height-button: 1.5;
   /* Secondary variant outline — ~30% of foreground on light; flips in dark. */
   --color-button-secondary-border: color-mix(
     in srgb,
