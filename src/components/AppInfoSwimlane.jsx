@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import BrowseTagCard from "./BrowseTagCard.jsx";
 import {
   externalFaqAnchorProps,
   INFO_ABOUT_PATH,
@@ -46,12 +47,11 @@ export default function AppInfoSwimlane() {
       </div>
       <div className="app-info-swimlane__scroll">
         <div className="app-info-swimlane__scroll-inner">
-          <Link
+          <BrowseTagCard
             to={TILE_ACCOUNT.to}
-            className="app-info-swimlane__tile"
-          >
-            <span className="app-info-swimlane__tile-label">{TILE_ACCOUNT.label}</span>
-          </Link>
+            label={TILE_ACCOUNT.label}
+            accentIconSvg="gear.svg"
+          />
 
           <a
             href={TILE_FAQ.href}

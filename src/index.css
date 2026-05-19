@@ -31,6 +31,17 @@
   --color-border-subtle: rgba(24, 24, 27, 0.08);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
 
+  /*
+   * My Library placeholder tiles: masked SVG tint (`LibraryHistoryEmptyCard`, `BrowseTagCard` gear).
+   * Fill matches `.library-history-empty-card__icon`; `--opacity-library-history-empty-media` matches `.library-history-empty-card__media` (apply to masked glyph alone on BrowseTag).
+   */
+  --color-library-masked-placeholder-icon-fill: color-mix(
+    in srgb,
+    var(--color-text-muted) 90%,
+    var(--color-text)
+  );
+  --opacity-library-history-empty-media: 0.45;
+
   /* `AppStackedDialog` title band — light app: inverted strip (Figma); dark app: light band (overridden below) */
   --app-stacked-dialog-header-bg: #191919;
   --app-stacked-dialog-header-fg: #fafafa;

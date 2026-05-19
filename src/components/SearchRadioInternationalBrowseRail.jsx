@@ -6,12 +6,15 @@ import ContentSwimlane from "./ContentSwimlane.jsx";
 import { radioInternationalPath } from "../constants/radioBrowsePaths.js";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane.js";
 import { useCategoryRailMemorySlug } from "../hooks/useCategoryRailMemorySlug.js";
-import { getInternationalBrowseLaneRows } from "../data/radioInternationalBrowse.js";
+import {
+  getInternationalBrowseLaneRows,
+  getNorthAmericaInternationalFlagIso2,
+} from "../data/radioInternationalBrowse.js";
 import { INTERNATIONAL_CONTINENTS_PLANNED } from "../data/radioStations.js";
 
 const MEMORY_KEY = "search-radio-international";
 
-/** Default continent when rail memory is empty (prototype listener in North America). */
+/** Default continent when rail memory is empty (prototype listener in Montreal, Canada). */
 const DEFAULT_CONTINENT_SLUG = "north-america";
 
 /**
@@ -86,14 +89,21 @@ export default function SearchRadioInternationalBrowseRail({
       cardScrollerResetKey={selectedSlug}
       categoryPillAlignKey={selectedSlug}
     >
-      {visible.map((row) => (
-        <BrowseTagCard
-          key={row.id}
-          label={row.label}
-          geoType={row.type}
-          onSelect={() => navigateToRow(row)}
-        />
-      ))}
+      {visible.map((row) => {
+        const flagIso2 =
+          selectedSlug === "north-america" && !usesPlaceholderCountries
+            ? getNorthAmericaInternationalFlagIso2(row.id)
+            : undefined;
+        return (
+          <BrowseTagCard
+            key={row.id}
+            label={row.label}
+            geoType={row.type}
+            onSelect={() => navigateToRow(row)}
+            {...(flagIso2 ? { flagIso2 } : {})}
+          />
+        );
+      })}
     </ContentSwimlane>
   );
 }

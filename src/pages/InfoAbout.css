@@ -83,9 +83,9 @@ html[data-theme="dark"] .info-about__wordmark--dark {
   margin: 0;
   max-width: 32rem;
   font-family: var(--font-sans);
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: normal;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5;
   color: var(--color-text);
   text-wrap: balance;
 }

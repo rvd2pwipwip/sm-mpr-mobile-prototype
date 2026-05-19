@@ -1,6 +1,7 @@
 /**
  * International radio browse tree (prototype).
  * Pill labels for North America / Canada / Alberta match Figma `19871:33453`.
+ * **North America** country/region cards are ordered by great-circle distance from a mock listener in **Montreal, Canada** (45.5017 N, 73.5673 W), nearest first.
  * Every geo node gets **20** generated `RadioStation` rows (IDs `geo-{nodeSlug}-00` … `19`).
  * Browse Radio swimlanes without mocked country lists use generic placeholder rows (see {@link getInternationalBrowseLaneRows}).
  */
@@ -60,14 +61,15 @@ export const GEO_BROWSE_NODES = {
     label: "North America",
     type: "continent",
     parentId: null,
+    // Order: proximity to mock listener (Montreal). Canada, US, French Atlantic archipelago, Atlantic islands, Caribbean (Bahamas-weighted), Arctic, then Mexico.
     childIds: [
-      "bermuda",
       "canada",
+      "united-states",
+      "st-pierre-miquelon",
+      "bermuda",
       "caribbean-islands",
       "greenland",
       "mexico",
-      "st-pierre-miquelon",
-      "united-states",
     ],
   },
   bermuda: leafGeo("bermuda", "Bermuda", "north-america"),
@@ -151,6 +153,28 @@ export const GEO_BROWSE_NODES = {
   "medicine-hat": leafGeo("medicine-hat", "Medicine Hat", "alberta", "city"),
   "red-deer": leafGeo("red-deer", "Red Deer", "alberta", "city"),
 };
+
+/**
+ * North America Browse swimlane cards: SVG in `public/flags/{code}.svg` (ISO 3166-1 alpha-2).
+ * Omit aggregate regions without a single flag (e.g. Caribbean Islands).
+ * @type {Record<string, string>}
+ */
+export const NORTH_AMERICA_INTERNATIONAL_FLAG_ISO2 = {
+  bermuda: "bm",
+  canada: "ca",
+  greenland: "gl",
+  mexico: "mx",
+  "st-pierre-miquelon": "pm",
+  "united-states": "us",
+};
+
+/**
+ * @param {string} geoId child id under continent `north-america`
+ * @returns {string | undefined} alpha-2 when a flag SVG exists under `public/flags/`
+ */
+export function getNorthAmericaInternationalFlagIso2(geoId) {
+  return NORTH_AMERICA_INTERNATIONAL_FLAG_ISO2[geoId];
+}
 
 /**
  * Mock city / country for Radio Info Location row; uses geo hierarchy when available.

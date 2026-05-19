@@ -8,7 +8,7 @@ Prototype inventory for swimlane and browse **tiles that are not standard catalo
 
 | Component / pattern | Role | Notes |
 |---------------------|------|--------|
-| **`BrowseTagCard`** | Geo / taxonomy row in **Radio International** browse and similar | Documented as without artwork until flags or CDN art; label + kind (Country, Region, City). See `SearchRadioInternationalBrowseRail`. |
+| **`BrowseTagCard`** | Geo / taxonomy row in **Radio International** browse; **My Library** Account tile (**`AppInfoSwimlane`**) | Default: uppercase kind + centered label. **Stacked accent** (**`browse-tag-card--accent`**, vertically centered): **`flagIso2`** (**`public/flags/{iso2}.svg`** in **56 px** circular ring) **or** **`accentIconSvg`** (**`public/gear.svg`** via CSS mask; fill + fade match **`LibraryHistoryEmptyCard`** history icon: **`--color-library-masked-placeholder-icon-fill`** and **`--opacity-library-history-empty-media`** from **`src/index.css`**). Optional **`to`** renders **`react-router`** **`Link`**. **North America**: Caribbean aggregate stays without flag (**`getNorthAmericaInternationalFlagIso2`**). |
 | **`SearchBrowseTile`** | **Search** tab browse grids | Text-only buttons (genres, library shortcuts, catalog shortcuts); no cover column. |
 | **`LibraryHistoryEmptyCard`** | **My Library** listen-history swimlane when **empty** | Icon-sized media area + message; Figma-aligned empty state, not a photo thumbnail. |
 | **`MusicTagCard`** | **Search → Tags** swimlane / **More** grid | Same **`app-info-swimlane__tile`** label square as **`MusicArtistCard`**. Tap → **`/search/more/tags?q=`** (exact tag) → 2-col channel grid. |

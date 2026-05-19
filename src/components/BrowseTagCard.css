@@ -22,6 +22,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+a.browse-tag-card--router-link {
+  text-decoration: none;
+}
+
 .browse-tag-card:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
@@ -43,6 +47,100 @@
   color: var(--color-text);
   display: block;
   max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * Stacked accent: circular flag **or** square icon (**`accentIconSvg`**, flat slot, themed masked fill equals **`LibraryHistoryEmptyCard`** glyph).
+ * Intl North America flags + My Library Account tile (gear) — aligns with UX-SM-MPR-Mobile-2604 ~19953-107868.
+ */
+.browse-tag-card--accent {
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3);
+  gap: 0;
+}
+
+.browse-tag-card__accent-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  max-width: 100%;
+  min-height: 0;
+}
+
+.browse-tag-card__accent-slot {
+  display: block;
+  flex-shrink: 0;
+}
+
+.browse-tag-card__accent-ring {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+}
+
+/* Overrides circular flag ring — flat 40 sq. slot, gear mask fills box (see **`BrowseTagCard`** `accentIconSvg`). */
+.browse-tag-card__accent-ring--icon-slot {
+  width: 80px;
+  height: 80px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.browse-tag-card__accent-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Flags fill the circle; icons use their own masking + inset (see `--icon-slot`). */
+.browse-tag-card__accent-img--flag {
+  object-fit: cover;
+}
+
+.browse-tag-card__accent-icon-mask {
+  display: block;
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  box-sizing: border-box;
+  background-color: var(--color-library-masked-placeholder-icon-fill);
+  opacity: var(--opacity-library-history-empty-media);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+}
+
+.browse-tag-card__accent-caption {
+  display: block;
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-card-title);
+  line-height: var(--line-height-card-title);
+  color: var(--color-text);
+  text-align: center;
+  width: 100%;
+  padding-inline: var(--space-1);
+  box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
