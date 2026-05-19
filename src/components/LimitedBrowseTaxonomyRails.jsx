@@ -10,8 +10,10 @@ import MusicChannelCard from "./MusicChannelCard";
 import PodcastCard from "./PodcastCard";
 import ProviderLineupMusicSwimlane from "./ProviderLineupMusicSwimlane";
 import RadioStationCard from "./RadioStationCard";
+import SearchRadioInternationalBrowseRail from "./SearchRadioInternationalBrowseRail";
 import SwimlaneBannerAd from "./SwimlaneBannerAd";
 import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
+import { RADIO_BROWSE_PATH } from "../constants/radioBrowsePaths";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
 import { useUserType } from "../context/UserTypeContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
@@ -131,12 +133,36 @@ function LimitedPodcastsTaxonomySwimlanes({ navigate, showBannerAd }) {
 }
 
 function LimitedRadioTaxonomySwimlanes({ navigate, showBannerAd }) {
+  const nearYouCategory = RADIO_STATION_CATEGORIES.find(
+    (c) => c.id === "near-you",
+  );
+  const nearYouStations = nearYouCategory
+    ? getRadioStationsByCategory("near-you")
+    : [];
+  const nearYouLane =
+    nearYouCategory && nearYouStations.length > 0 ? (
+      <ContentSwimlane
+        key="limited-radio-near-you"
+        title={nearYouCategory.label}
+        sourceCount={nearYouStations.length}
+        maxVisible={SWIMLANE_CARD_MAX}
+        onMore={() => navigate(RADIO_BROWSE_PATH.nearYou)}
+      >
+        {nearYouStations.slice(0, SWIMLANE_CARD_MAX).map((station) => (
+          <RadioStationCard
+            key={station.id}
+            station={station}
+            onSelect={() => navigate(`/radio/${station.id}`)}
+          />
+        ))}
+      </ContentSwimlane>
+    ) : null;
+
   const categories = RADIO_FORMAT_CATEGORIES.filter(
     (cat) => getRadioStationsByCategory(cat.id).length > 0,
   );
-  if (categories.length === 0) return null;
 
-  const renderLane = (cat) => {
+  const renderFormatLane = (cat) => {
     const stations = getRadioStationsByCategory(cat.id);
     return (
       <ContentSwimlane
@@ -157,16 +183,48 @@ function LimitedRadioTaxonomySwimlanes({ navigate, showBannerAd }) {
     );
   };
 
+  /** Same International rail as broad Search / Browse / Radio (`SearchRadioBrowse.jsx`). */
+  const internationalRail = <SearchRadioInternationalBrowseRail />;
+
+  /** After two taxonomy lanes: Near You + International, or International + first format if no Near You. */
+  const midStack = (
+    <LimitedBrowseMidStackAd showBannerAd={showBannerAd} />
+  );
+
+  if (categories.length === 0) {
+    return (
+      <>
+        {nearYouLane}
+        {internationalRail}
+        {midStack}
+      </>
+    );
+  }
+
   const first = categories[0];
   const second = categories[1];
   const rest = categories.slice(2);
 
+  if (nearYouLane) {
+    return (
+      <>
+        {nearYouLane}
+        {internationalRail}
+        {midStack}
+        {renderFormatLane(first)}
+        {second ? renderFormatLane(second) : null}
+        {rest.map((cat) => renderFormatLane(cat))}
+      </>
+    );
+  }
+
   return (
     <>
-      {renderLane(first)}
-      {second ? renderLane(second) : null}
-      <LimitedBrowseMidStackAd showBannerAd={showBannerAd} />
-      {rest.map((cat) => renderLane(cat))}
+      {internationalRail}
+      {renderFormatLane(first)}
+      {midStack}
+      {second ? renderFormatLane(second) : null}
+      {rest.map((cat) => renderFormatLane(cat))}
     </>
   );
 }
@@ -175,6 +233,7 @@ function LimitedRadioTaxonomySwimlanes({ navigate, showBannerAd }) {
  * Stacked taxonomy swimlanes for limited-catalog Browse (per plan: genre / topic / format rows).
  * **`activeBrowseTab`** filters which stack is shown (switcher lives on `LimitedBrowse.jsx`).
  * **User-driven rails** prepend per tab; **Listen again** when that tab's history kind is non-empty.
+ * **Radio** tab: **Near You** swimlane, then **`SearchRadioInternationalBrowseRail`**, then format rows (same stack order as broad **`SearchRadioBrowse`**). **In-feed** ad after **Near You + International** when Near You renders; otherwise after **International + first format** (two taxonomy lanes, then banner).
  * **`freeProvided`** + music tab: **`ProviderLineupMusicSwimlane`** after Listen again, before liked music + genre taxonomy (same order as broad **`Home.jsx`**).
  * **In-feed** `SwimlaneBannerAd` after the **second** taxonomy lane (third taxonomy row) when `showVisualAds(userType)` (single lane: banner still follows that lane).
  *

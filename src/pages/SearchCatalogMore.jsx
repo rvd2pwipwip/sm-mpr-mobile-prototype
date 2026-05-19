@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import EpisodeCard from "../components/EpisodeCard";
 import MusicArtistCard from "../components/MusicArtistCard";
 import MusicChannelCard from "../components/MusicChannelCard";
+import MusicTagCard from "../components/MusicTagCard";
 import PodcastCard from "../components/PodcastCard";
 import RadioStationCard from "../components/RadioStationCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
@@ -17,9 +18,9 @@ import { useUserType } from "../context/UserTypeContext";
 import {
   normalizeSearchNeedle,
   searchEpisodeRows,
+  searchMatchingMusicTagLabels,
   searchMusicArtists,
   searchMusicChannels,
-  searchMusicChannelsByTagSubstring,
   searchPodcasts,
   searchRadioStations,
 } from "../search/searchCatalog";
@@ -46,8 +47,8 @@ const VALID_LANES = [
 ];
 
 /**
- * Full list for a Search results **More** rail (`?lane=&q=`). Tags lane uses substring tag match
- * (same filter as Search) so partial queries still populate the grid.
+ * Full list for a Search results **More** rail (`?lane=&q=`). Tags lane lists **matching tag labels**
+ * (square label tiles, same substring filter as Search). Other lanes unchanged.
  */
 export default function SearchCatalogMore() {
   const [params] = useSearchParams();
@@ -78,8 +79,8 @@ export default function SearchCatalogMore() {
     () => (lane === "channels" ? searchMusicChannels(needle) : []),
     [lane, needle],
   );
-  const tagsChannels = useMemo(
-    () => (lane === "tags" ? searchMusicChannelsByTagSubstring(needle) : []),
+  const tagLabels = useMemo(
+    () => (lane === "tags" ? searchMatchingMusicTagLabels(needle) : []),
     [lane, needle],
   );
   const artists = useMemo(
@@ -136,7 +137,7 @@ export default function SearchCatalogMore() {
     lane === "channels"
       ? channels
       : lane === "tags"
-        ? tagsChannels
+        ? tagLabels
         : lane === "artists"
           ? artists
           : lane === "podcasts"
@@ -194,11 +195,13 @@ export default function SearchCatalogMore() {
                 </li>
               ))}
             {lane === "tags" &&
-              tagsChannels.map((channel) => (
-                <li key={channel.id} className="swimlane-more__cell">
-                  <MusicChannelCard
-                    channel={channel}
-                    onSelect={() => navigate(`/music/${channel.id}`)}
+              tagLabels.map((label) => (
+                <li key={label} className="swimlane-more__cell">
+                  <MusicTagCard
+                    tagLabel={label}
+                    onSelect={() =>
+                      navigate(`/search/more/tags?q=${encodeURIComponent(label)}`)
+                    }
                   />
                 </li>
               ))}
@@ -207,10 +210,9 @@ export default function SearchCatalogMore() {
                 <li key={artist.id} className="swimlane-more__cell">
                   <MusicArtistCard
                     artist={artist}
-                    onSelect={() => {
-                      const id = artist.representativeChannelIds[0];
-                      if (id) navigate(`/music/${id}`);
-                    }}
+                    onSelect={() =>
+                      navigate(`/search/browse/music/artist/${artist.id}`)
+                    }
                   />
                 </li>
               ))}

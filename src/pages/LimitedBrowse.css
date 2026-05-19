@@ -153,6 +153,19 @@
   min-width: 0;
 }
 
+/*
+ * Mirror `.home-screen` vertical rhythm: broad Home lists swimlanes + inset banner as siblings
+ * under one column with `gap: var(--space-screen-gap)` (`index.css`). Here taxonomy + mid-stack
+ * ad live inside one wrapper, so this inner stack needs the same gap between rails and banner.
+ */
+.limited-browse-taxonomy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-screen-gap);
+  width: 100%;
+  min-width: 0;
+}
+
 /* Podcast episode tiles in Browse swimlanes (matches `MyLibrary.css` horizontal lane sizing). */
 .limited-browse-taxonomy .my-library__episode-tile {
   width: min(300px, calc(100vw - 2 * var(--space-content-inline)));

@@ -259,6 +259,15 @@ html[data-theme="dark"] {
 *::before,
 *::after {
   box-sizing: border-box;
+  /* Prototype: hide scrollbars everywhere; touch / wheel / trackpad scroll unchanged. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /* Buttons: UA stylesheet sets its own font stack; use design token (Roboto) like body. */

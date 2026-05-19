@@ -4,6 +4,7 @@ import ContentSwimlane from "../components/ContentSwimlane";
 import EpisodeCard from "../components/EpisodeCard";
 import MusicArtistCard from "../components/MusicArtistCard";
 import MusicChannelCard from "../components/MusicChannelCard";
+import MusicTagCard from "../components/MusicTagCard";
 import PodcastCard from "../components/PodcastCard";
 import RadioStationCard from "../components/RadioStationCard";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
@@ -17,11 +18,10 @@ import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
 import {
   normalizeSearchNeedle,
-  primaryTagLabelForSearchMore,
   searchEpisodeRows,
+  searchMatchingMusicTagLabels,
   searchMusicArtists,
   searchMusicChannels,
-  searchMusicChannelsByTagSubstring,
   searchPodcasts,
   searchRadioStations,
 } from "../search/searchCatalog";
@@ -48,19 +48,14 @@ export default function SearchResultsPanel({ debouncedQuery }) {
   } = usePodcastUserState();
 
   const channels = useMemo(() => searchMusicChannels(needle), [needle]);
-  const tagChannels = useMemo(
-    () => searchMusicChannelsByTagSubstring(needle),
+  const matchingTagLabels = useMemo(
+    () => searchMatchingMusicTagLabels(needle),
     [needle],
   );
   const artists = useMemo(() => searchMusicArtists(needle), [needle]);
   const podcasts = useMemo(() => searchPodcasts(needle), [needle]);
   const episodeRows = useMemo(() => searchEpisodeRows(needle), [needle]);
   const radioStations = useMemo(() => searchRadioStations(needle), [needle]);
-
-  const tagMoreLabel = useMemo(
-    () => primaryTagLabelForSearchMore(needle),
-    [needle],
-  );
 
   const episodeHandlers = (podcast, episode) => ({
     isBookmarked: isBookmarked(episode.id),
@@ -101,7 +96,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
 
   const anyHits =
     channels.length > 0 ||
-    tagChannels.length > 0 ||
+    matchingTagLabels.length > 0 ||
     artists.length > 0 ||
     podcasts.length > 0 ||
     episodeRows.length > 0 ||
@@ -151,31 +146,28 @@ export default function SearchResultsPanel({ debouncedQuery }) {
             <MusicArtistCard
               key={artist.id}
               artist={artist}
-              onSelect={() => {
-                const id = artist.representativeChannelIds[0];
-                if (id) navigate(`/music/${id}`);
-              }}
+              onSelect={() =>
+                navigate(`/search/browse/music/artist/${artist.id}`)
+              }
             />
           ))}
         </ContentSwimlane>
       ) : null}
 
-      {tagChannels.length > 0 ? (
+      {matchingTagLabels.length > 0 ? (
         <ContentSwimlane
           title="Tags"
-          sourceCount={tagChannels.length}
+          sourceCount={matchingTagLabels.length}
           maxVisible={SWIMLANE_CARD_MAX}
-          onMore={() => {
-            const t = tagMoreLabel;
-            if (t) navigate(`/search/more/tags?q=${encodeURIComponent(t)}`);
-            else navigateCatalogMore("tags");
-          }}
+          onMore={() => navigateCatalogMore("tags")}
         >
-          {tagChannels.slice(0, SWIMLANE_CARD_MAX).map((channel) => (
-            <MusicChannelCard
-              key={channel.id}
-              channel={channel}
-              onSelect={() => navigate(`/music/${channel.id}`)}
+          {matchingTagLabels.slice(0, SWIMLANE_CARD_MAX).map((label) => (
+            <MusicTagCard
+              key={label}
+              tagLabel={label}
+              onSelect={() =>
+                navigate(`/search/more/tags?q=${encodeURIComponent(label)}`)
+              }
             />
           ))}
         </ContentSwimlane>

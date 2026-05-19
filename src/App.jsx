@@ -33,6 +33,7 @@ import RadioPlayer from "./pages/RadioPlayer";
 import RadioStationInfo from "./pages/RadioStationInfo";
 import Search from "./pages/Search";
 import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels";
+import SearchMusicArtistChannels from "./pages/SearchMusicArtistChannels";
 import SearchMusicCategory from "./pages/SearchMusicCategory";
 import SearchMusicVibe from "./pages/SearchMusicVibe";
 import SearchPodcastsCategory from "./pages/SearchPodcastsCategory";
@@ -138,6 +139,7 @@ function AppRoutes() {
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
+        <Route path="/search/browse/music/artist/:artistId" element={<SearchMusicArtistChannels />} />
         <Route path="/radio/:stationId/play" element={<RadioPlayerRoute />} />
         <Route path="/radio/:stationId" element={<RadioStationInfo />} />
         <Route path="/search/browse/radio/international/*" element={<SearchRadioInternationalStack />} />

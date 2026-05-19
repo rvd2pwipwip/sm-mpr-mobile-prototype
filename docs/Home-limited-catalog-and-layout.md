@@ -42,7 +42,7 @@ When **`catalogScope === limited`**, **`/`** does **not** render **`Home.jsx`**.
 - **No primary bottom tab bar.** **`BottomNav`** is omitted when limited; **`LimitedCatalogFooterAd`** can still show the **visual ad strip** for tiers where **`showVisualAds`** applies.
 - **Chrome:** **`limited-browse-header`** varies by **`userType`**: **`freeProvided`** — row **1** **wordmark** (catalog toggle) + **provider logo** (`space-between`); row **2** **Upgrade** (leading) + **Search** / **Info**. **Guest** / **freeStingray** — row **1** wordmark + icons; row **2** centered **Upgrade**. **Subscribed** — single row, wordmark + icons (**`src/pages/LimitedBrowse.jsx`**).
 - **Body:** Reuses **`home-screen`** / **`content-inset`** patterns for the **banner**, then **`SearchBrowseContentSwitcher`** in **`mode="local"`** (Music | Podcasts | Radio **without** `/search/*` URL segments).
-- **Rails:** **`LimitedBrowseTaxonomyRails`** renders **Listen again** (tab-scoped), then **`ProviderLineupMusicSwimlane`** when **`freeProvided`** and **Music** tab (same rail order as broad **`Home`** before genre stacks), then likes / podcast library rails, then taxonomy **`ContentSwimlane`** stacks. **More** jumps into **`/search/browse/...`** drills.
+- **Rails:** **`LimitedBrowseTaxonomyRails`** renders **Listen again** (tab-scoped), then **`ProviderLineupMusicSwimlane`** when **`freeProvided`** and **Music** tab (same rail order as broad **`Home`** before genre stacks), then likes / podcast library rails, then taxonomy **`ContentSwimlane`** stacks. **Radio** uses **Near You**, then the **International** pill rail (**`SearchRadioInternationalBrowseRail`**), then per-format station swimlanes (**`More`** uses **`/search/browse/...`** like broad Browse).
 
 **User-driven content on limited:** There is **no My Library tab**. Likes, podcast library sections, and **Listen again** surface as **prepended rails inside** the active Browse tab (filtered by content kind for Listen again). See **`LibraryLikedMusicSwimlane`**, **`LibraryPodcastUserSwimlanes`**, **`LibraryLikedRadioSwimlane`**, and the tab-scoped Listen again block in **`LimitedBrowseTaxonomyRails.jsx`**.
 
@@ -61,7 +61,7 @@ For **`html[data-catalog-scope="limited"]`**, **`src/index.css`** sets **`--bott
 | Landing role | Curated **sampler** across types | **Browse-first** taxonomy stacks |
 | Bottom navigation | Yes (`BottomNav`) | No (header links only) |
 | Music discovery on landing | One “Most popular music” rail (+ provider rail if `freeProvided`) | **Per-genre** swimlanes |
-| Podcasts / radio on landing | One rail each | **Per-category / per-format** swimlanes |
+| Podcasts / radio on landing | One rail each | Podcasts: **per-topic** swimlanes. Radio: **Near You**, **International** pill rail, then **per-format** swimlanes |
 | My Library | Dedicated tab | Surfaced **inside** Browse tabs |
 | Toggle in prototype | Wordmark tap | Same |
 

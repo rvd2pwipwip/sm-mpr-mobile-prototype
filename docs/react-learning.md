@@ -181,6 +181,22 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Search — artist hits (generic label tile + channel grid drill-down)
+
+- **Artists lane:** **`MusicArtistCard`** is **not** a **`ContentTileCard`** cover. It wraps the same **`app-info-swimlane__tile`** pattern as **`SearchMusicVibeBrowseRail`** FAQ-style subs (Browse **Music → Genre**: “All Pop” style). Keeps typography and **`--card-tile-width`** square in horizontal swimlanes; **`MusicArtistCard.css`** adds **`line-clamp`** so long synthetic names wrap inside the thumb.
+- **Data:** **`src/data/musicArtists.js`** – **`featuredChannelIds`**: **1–12** channels per artist, **deterministic** from **`artist.id`** (FNV-ish seed + same shuffle rhythm as **`getRecommendationsMusicChannels`** in **`musicChannels.js`**). Helpers: **`getMusicArtistById`**, **`getFeaturedChannelsForArtist`**.
+- **Route:** **`SearchMusicArtistChannels.jsx`** – **`/search/browse/music/artist/:artistId`**, **`ScreenHeader`** + **`swimlane-more__grid`** (two **`MusicChannelCard`** columns, same shell as **`SearchMusicCategory`**). Registered in **`App.jsx`** next to **`SearchMusicCategory`**.
+
+---
+
+## Search — tag hits (label tiles + existing `SearchTagsMore` grid)
+
+- **Tags lane:** **`searchMatchingMusicTagLabels(needle)`** in **`search/searchCatalog.js`** returns **distinct** tag strings on channels whose label **contains** the query (substring, case-insensitive). **`MusicTagCard`** (**`MusicTagCard.jsx`**) reuses **`MusicArtistCard`** styles (**`music-artist-card`**) for the same square label treatment.
+- **Drill-down:** Tap a tag tile → **`/search/more/tags?q=`** with the **exact** chip text (**`encodeURIComponent`**). **`SearchTagsMore.jsx`** already loads **`getMusicChannelsWithTag(q)`** and renders the **2-column** **`MusicChannelCard`** grid. **`SearchCatalogMore`** **`lane=tags`** lists the **same tag tiles**, not channels.
+- **Tag vocabulary snapshot:** **`docs/mock-data-music-tags.md`**; runtime helper **`getDistinctMusicChannelTagLabels()`** in **`musicChannels.js`**.
+
+---
+
 ## How to use this file
 
 - When you learn something new with the AI or in docs, ask to **append a short section** here (or add it yourself).

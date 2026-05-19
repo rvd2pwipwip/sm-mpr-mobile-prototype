@@ -178,11 +178,11 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 **Artists lane**
 
-- **No** artist browse in app; add **`src/data/musicArtists.js`** (or `artistNames` on channels) with `{ id, name, thumbnail?, representativeChannelIds[] }` for **client-side** matching. Tapping an artist can navigate to **`/music/:channelId`** (first rep) or a tiny **artist** stub screen—decide in Phase 5; **simplest:** land on first channel.
+- **`src/data/musicArtists.js`**: **`{ id, name, featuredChannelIds[] }`** (1–12 seeded **`MUSIC_CHANNELS`** ids per artist). **`MusicArtistCard`**: Genre-vibe-sub-style **`app-info-swimlane__tile`** (label on square). Tap → **`/search/browse/music/artist/:artistId`** → 2-col **`MusicChannelCard`** grid (**`SearchMusicArtistChannels.jsx`**).
 
 **Tags lane**
 
-- Match query against **vibe tag** strings on channels (**`channel.tags`** — same labels as **Channel Info** `.music-info__tag`). **More** → **`/search/more/tags?q=`** (see **Phase 6** partial ship).
+- **Substring match** against **`channel.tags`** (same strings as Channel Info `.music-info__tag`). **Distinct matching labels** → **`MusicTagCard`** tiles (**`music-artist-card`** styling); tap → **`/search/more/tags?q=`** (exact tag → 2-col channel grid **`SearchTagsMore`**). **`searchMatchingMusicTagLabels`** (**`search/searchCatalog.js`**). **More** (**`lane=tags`**) shows remaining tag tiles in **`SearchCatalogMore`**. Vocabulary: **`docs/mock-data-music-tags.md`** / **`getDistinctMusicChannelTagLabels()`**.
 
 **Swimlanes**
 
@@ -200,7 +200,7 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 **Shipped (prototype slice)**
 
 - **`SearchTagsMore.jsx`** at **`/search/more/tags?q=`** — 2-col **`MusicChannelCard`** grid for all channels sharing a **vibe tag** ( **`getMusicChannelsWithTag`** in **`musicChannels.js`**). **Channel Info** `.music-info__tag` navigates here (equivalent to Search → **Tags** **More**).
-- **`SearchCatalogMore.jsx`** at **`/search/more/catalog?lane=&q=`** — one route for **Channels, Artists, Tags, Podcasts, Episodes, Radio** **More** grids; **`lane`** picks the list. **`q`** is the same search string as on **`/search/{music|podcasts|radio}?q=`** so the stack stays consistent.
+- **`SearchCatalogMore.jsx`** at **`/search/more/catalog?lane=&q=`** — one route for **More** grids (**Channels**, **Artists**, **Tags**, …). **`lane`** picks row type (**`lane=tags`** → **`MusicTagCard`** tiles for substring-matching distinct tag labels; other lanes unchanged). **`q`** is the same **`/search/...`** query string (**`normalizeSearchNeedle`** in **`search/searchCatalog.js`**).
 
 **Deliverable:** More screens show full filtered lists; **Back** (**`navigate(-1)`**) pops to the prior history entry — typically **`/search/...?q=...`**, so the search field + swimlanes return without relying on ephemeral **`location.state`**.
 

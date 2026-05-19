@@ -1,0 +1,152 @@
+# Mock music channel vibe tags (distinct labels)
+
+Sorted unique strings that appear on at least one **`MUSIC_CHANNELS`** row in **`channel.tags`** (built in **`src/data/musicChannels.js`** via **`tagsFor()`** from IA / lineup data).
+
+**Canonical in code:** **`getDistinctMusicChannelTagLabels()`** in **`musicChannels.js`** returns this set at runtime. Refresh this document when the lineup or taxonomy changes and you need a static reference for design or QA.
+
+**Count:** 144
+
+- 1940s
+- 1950s
+- 1960s
+- 1970s
+- 1980s
+- 1990s
+- 2000s
+- 2010s
+- 2020s
+- Adult Pop
+- Adventurous
+- Africa
+- Alternative Rock
+- Americana / Alternative Country
+- Around the House
+- Artist Channel
+- Asia
+- Asian Pop
+- Baroque
+- Best of Lists
+- Bluegrass
+- Blues
+- Bold
+- Brazil
+- Britain
+- Brunch
+- Canada
+- Cardio Workout
+- Caribbean
+- Celtic
+- Cerebral
+- Chamber
+- Chill
+- Chilling on the Back Porch
+- Classic Country
+- Classic R&B
+- Classic Rock
+- Classical
+- Contemporary Country
+- Contemporary R&B
+- Cooking
+- Country and Roots
+- Cute
+- Dance
+- Defiant
+- Dramatic
+- Driving/Commuting
+- Earthy
+- Easy Listening
+- Electro Pop
+- Electronic
+- Elegant
+- Energetic
+- Entertaining
+- Entertaining Guests
+- Europe
+- Exercise
+- Family Time
+- Festive
+- Focus
+- Folk
+- France
+- Franco-Country
+- Francophonie
+- Fun
+- Funk
+- Furious
+- Happy
+- Hard Rock
+- Heartbreak
+- Hip-Hop
+- House
+- Housework
+- In the Garage
+- Indie
+- Indie: Electronic
+- Indie: Hip-Hop
+- Indie: Rock
+- Instrumental
+- Jazz
+- Jazz & Blues
+- Kids and Teens
+- Kids: Fun Time
+- Kids: Quiet Time
+- Latin
+- Latin America
+- Latin Pop
+- Lazy Day
+- Melancholy
+- Metal
+- Mexico
+- Middle East
+- Miscellaneous
+- Mood
+- Nature Sounds
+- New Age
+- North America
+- Nostalgic
+- Opera
+- Party!
+- Pop
+- Powerful
+- Praise and Worship
+- Punk
+- Quebec
+- Quirky
+- R&B/Soul
+- Reggae
+- Reggaeton
+- Relaxation
+- Relaxing
+- Rock
+- Rock n' Roll
+- Romance
+- Romantic
+- Romantic Moments
+- Running
+- Salsa
+- Sexy
+- Silly
+- Singer-Songwriter
+- Sleeping
+- Small Ensembles
+- Smooth Jazz
+- Snowboarding/Skiing
+- Soaking Up the Sun
+- Soul
+- Special Curator
+- Special Occasions
+- Starting the Day
+- Summertime Grilling
+- Teen Pop
+- The Holidays/Christmas
+- Today
+- Top 40
+- Trance
+- Trendy
+- United States
+- Uplifted
+- Vocal
+- Weight Lifting
+- World
+- Yoga/Meditation
+- Zen

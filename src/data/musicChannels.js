@@ -435,6 +435,23 @@ export function getMusicChannelsWithTag(tagLabel) {
   );
 }
 
+/**
+ * Sorted unique tag strings present on mock channels (`channel.tags`).
+ * Mirrors **`docs/mock-data-music-tags.md`** (refresh that file when taxonomy or lineup changes materially).
+ *
+ * @returns {string[]}
+ */
+export function getDistinctMusicChannelTagLabels() {
+  const set = new Set();
+  for (const c of MUSIC_CHANNELS) {
+    for (const t of c.tags ?? []) {
+      const s = String(t).trim();
+      if (s) set.add(s);
+    }
+  }
+  return Array.from(set).sort((a, b) => a.localeCompare(b));
+}
+
 /** Home Recommendations rail + `/more/recommendations` (stable order, same subset on both). */
 const RECOMMENDATIONS_ROW_COUNT = 20;
 const RECOMMENDATIONS_SHUFFLE_SEED = 0x5c377e4d;

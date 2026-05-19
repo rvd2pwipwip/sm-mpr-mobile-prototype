@@ -45,27 +45,29 @@ export function searchMusicChannels(needle) {
 export function searchMusicChannelsByTagSubstring(needle) {
   if (!needle) return [];
   return MUSIC_CHANNELS.filter((c) =>
-    (c.tags ?? []).some((t) => String(t).toLowerCase().includes(needle)),
+    (c.tags ?? []).some((t) =>
+      String(t).trim().toLowerCase().includes(needle),
+    ),
   );
 }
 
 /**
- * Pick a canonical tag label for **Search → Tags → More** (`/search/more/tags?q=`) so
- * `getMusicChannelsWithTag` returns the grid. Chooses the first label in stable sort order.
+ * Sorted unique vibe **tag labels** (`channel.tags`) whose text contains `needle`
+ * (substring, case-insensitive). Search **Tags** lane shows one tile per label; tap → channel grid for that chip.
  *
  * @param {string} needle normalized (lowercase)
+ * @returns {string[]}
  */
-export function primaryTagLabelForSearchMore(needle) {
-  if (!needle) return "";
+export function searchMatchingMusicTagLabels(needle) {
+  if (!needle) return [];
   const labels = new Set();
   for (const c of MUSIC_CHANNELS) {
     for (const t of c.tags ?? []) {
       const s = String(t).trim();
-      if (s.toLowerCase().includes(needle)) labels.add(s);
+      if (s && s.toLowerCase().includes(needle)) labels.add(s);
     }
   }
-  const sorted = Array.from(labels).sort((a, b) => a.localeCompare(b));
-  return sorted[0] ?? "";
+  return Array.from(labels).sort((a, b) => a.localeCompare(b));
 }
 
 /**
