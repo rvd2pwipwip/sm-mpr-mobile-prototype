@@ -330,6 +330,14 @@ body {
   min-width: 0;
 }
 
+/* Broad Home: Upgrade below fixed header logos row, above hero banner (freeProvided only). */
+.home-free-provided-upgrade-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 /*
  * Screens with fixed footer chrome (MiniPlayer + BottomNav + optional ad strip):
  * `main` is full viewport with no vertical padding — content scrolls in an inner

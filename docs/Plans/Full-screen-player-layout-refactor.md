@@ -67,21 +67,17 @@ Use one **fullscreen shell** (component + CSS module or shared BEM prefix) that 
 
 ## Implementation phases
 
-### Phase 1 — Shell extract (no behavior change goal)
+### Phase 1 — Shell extract ✅ (prototype)
 
-- Add **`FullScreenPlayerShell.jsx`** (name TBD) under **`src/components/`** + **`FullScreenPlayerShell.css`**:
-  - Props: **`header`**, **`hero`** (title/actions/thumb/metadata slots or render props), **`footer`** (controls), **`showProviderBrand`**, **`showPlayerAd`**, **`children`** preroll overlay unchanged at route level.
-  - Maps **`showVisualAds`** / **`freeProvided`** to provider row + **`VisualAdStrip`** placement matching today.
+**Shipped:** **`src/components/FullScreenPlayerShell.jsx`** (+ **`FullScreenPlayerShell.css`** placeholder for future shell tokens). **`MusicPlayer.jsx`**, **`RadioPlayer.jsx`**, and **`PodcastPlayer.jsx`** render **`header`** / **`hero`** / **`footer`** slots through the shell; **`showProviderBrand`** / **`showPlayerAd`** centralize **`PlayerProvidedBrandRow`** and **`VisualAdStrip variant="player"`**. **`podcastLayout`** preserves **`podcast-player__body`** + **`podcast-player__scroll`** + **`podcast-player__footer-stack`**. **`PlayerPrerollAd`** stays the first child of **`<main>`** on each route (outside the shell fragment).
 
-- Move shared classes out of **`MusicPlayer.css`** only where duplicated — avoid breaking **`MiniPlayer`** dependencies.
+### Phase 2 — Music + radio layout fixes ✅
 
-### Phase 2 — Music + radio migrate
+- Removed **`music-player__body--no-player-ad .music-player__controls { flex: 1 1 0 }`** (**`MusicPlayer.css`**). **`music-player__top`** keeps **`flex: 1 1 0`** so spare height sits above the footer stack; controls no longer stretch inside **`music-player__bottom-player-stack`** (fixes subscribed bleed). Applies to **`RadioPlayer`** as well (shared stylesheet).
 
-- **`MusicPlayer.jsx`** / **`RadioPlayer.jsx`** render through shell; delete **`music-player__body--no-player-ad .music-player__controls`** stretch rule; verify subscribed / guest / **`freeProvided`** screenshots.
+### Phase 3 — Podcast parity cleanup ✅
 
-### Phase 3 — Podcast migrate
-
-- Fold **`podcast-player__body`** into same shell; drop redundant **`overflow: hidden`** vs **`auto`** divergence unless still needed for speed menu layering — validate speed picker **`position: fixed`** still correct.
+- **`PodcastPlayer.css`:** **`podcast-player__body--with-ad`** uses **`justify-content: space-between`** (parity with default **`music-player__body`** when the fixed player ad strip shows). **`--no-ad`** uses **`flex-start`** plus **`podcast-player__scroll`** **`flex: 1 1 0`** + **`overflow-y: auto`** so spare height sits above the footer like **`music-player__top`** under **`--no-player-ad`**. **`overflow: hidden`** on **`podcast-player__body`** retained so the shell clips as before; speed menu stays **`position: fixed`** (unchanged).
 
 ### Phase 4 — Thumbnail clamp integration
 

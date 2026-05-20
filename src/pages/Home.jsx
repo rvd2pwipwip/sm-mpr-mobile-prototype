@@ -8,6 +8,7 @@ import HomeBanner from "../components/HomeBanner";
 import HomeHeader from "../components/HomeHeader";
 import ListenAgainCard from "../components/ListenAgainCard";
 import SwimlaneBannerAd from "../components/SwimlaneBannerAd";
+import UpgradeButton from "../components/UpgradeButton";
 import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
 import { useListenHistory } from "../context/ListenHistoryContext";
@@ -40,6 +41,11 @@ export default function Home() {
       <div className="home-body-scroll">
         <div className="home-screen">
           <div className="content-inset">
+            {userType === "freeProvided" ? (
+              <div className="home-free-provided-upgrade-row">
+                <UpgradeButton onClick={goUpgrade} />
+              </div>
+            ) : null}
             <HomeBanner />
           </div>
 

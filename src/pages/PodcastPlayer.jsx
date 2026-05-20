@@ -11,10 +11,9 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import FullScreenPlayerShell from "../components/FullScreenPlayerShell";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
-import PlayerProvidedBrandRow from "../components/PlayerProvidedBrandRow";
-import VisualAdStrip from "../components/VisualAdStrip";
 import { EpisodeActionIconMask } from "../components/EpisodeCard";
 import "./MusicChannelInfo.css";
 import { PODCAST_SPEED_STEPS } from "../constants/podcastPlayback";
@@ -378,37 +377,31 @@ export default function PodcastPlayer() {
           }}
         />
       ) : null}
-      <header className="music-player__header">
-        <button
-          type="button"
-          className="music-player__header-btn music-player__header-btn--start"
-          onClick={dismiss}
-          aria-label="Minimize player"
-        >
-          <PlayerHeaderIcon variant="down" />
-        </button>
-        <div className="music-player__header-center">
-          <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
-        </div>
-        <button
-          type="button"
-          className="music-player__header-btn music-player__header-btn--end"
-          aria-label="Cast"
-        >
-          <PlayerHeaderIcon variant="cast" />
-        </button>
-      </header>
-
-      <div
-        className={[
-          "podcast-player__body",
-          showAds ? "podcast-player__body--with-ad" : "",
-          !showAds ? "podcast-player__body--no-ad" : "",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div className="podcast-player__scroll">
+      <FullScreenPlayerShell
+        podcastLayout={true}
+        header={
+          <header className="music-player__header">
+            <button
+              type="button"
+              className="music-player__header-btn music-player__header-btn--start"
+              onClick={dismiss}
+              aria-label="Minimize player"
+            >
+              <PlayerHeaderIcon variant="down" />
+            </button>
+            <div className="music-player__header-center">
+              <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
+            </div>
+            <button
+              type="button"
+              className="music-player__header-btn music-player__header-btn--end"
+              aria-label="Cast"
+            >
+              <PlayerHeaderIcon variant="cast" />
+            </button>
+          </header>
+        }
+        hero={
           <div className="music-player__top podcast-player__hero-top">
             <h1 className="music-player__channel-name">{podcast.title}</h1>
             <div className="music-player__meta-actions">
@@ -461,9 +454,8 @@ export default function PodcastPlayer() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="podcast-player__footer-stack">
+        }
+        footer={
           <div className="music-player__controls podcast-player__controls">
             <div className="podcast-player__scrub-cluster">
               <div className="podcast-player__time-row">
@@ -635,12 +627,10 @@ export default function PodcastPlayer() {
               </div>
             </div>
           </div>
-
-          {userType === "freeProvided" ? <PlayerProvidedBrandRow /> : null}
-
-          {showAds ? <VisualAdStrip variant="player" /> : null}
-        </div>
-      </div>
+        }
+        showProviderBrand={userType === "freeProvided"}
+        showPlayerAd={showAds}
+      />
     </main>
   );
 }

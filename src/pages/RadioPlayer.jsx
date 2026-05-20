@@ -5,10 +5,9 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import FullScreenPlayerShell from "../components/FullScreenPlayerShell";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
-import PlayerProvidedBrandRow from "../components/PlayerProvidedBrandRow";
-import VisualAdStrip from "../components/VisualAdStrip";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
@@ -122,6 +121,8 @@ export default function RadioPlayer() {
   const subtitleLine =
     station.frequencyLabel ?? station.categoryLabel ?? "";
 
+  const showAds = showVisualAds(userType);
+
   return (
     <main className="app-shell music-player-screen radio-player-screen">
       {needsPreroll && !prerollComplete ? (
@@ -132,83 +133,78 @@ export default function RadioPlayer() {
           }}
         />
       ) : null}
-      <header className="music-player__header">
-        <button
-          type="button"
-          className="music-player__header-btn music-player__header-btn--start"
-          onClick={dismiss}
-          aria-label="Minimize player"
-        >
-          <PlayerHeaderIcon variant="down" />
-        </button>
-        <div className="music-player__header-center">
-          <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
-        </div>
-        <button
-          type="button"
-          className="music-player__header-btn music-player__header-btn--end"
-          aria-label="Cast"
-        >
-          <PlayerHeaderIcon variant="cast" />
-        </button>
-      </header>
-
-      <div
-        className={[
-          "music-player__body",
-          !showVisualAds(userType) ? "music-player__body--no-player-ad" : "",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div className="music-player__top">
-          <h1 className="music-player__channel-name">{station.name}</h1>
-          <div className="music-player__meta-actions">
+      <FullScreenPlayerShell
+        header={
+          <header className="music-player__header">
             <button
               type="button"
-              className="music-player__icon-btn"
-              aria-label="Station info"
-              onClick={leaveFullPlayerForStationInfo}
+              className="music-player__header-btn music-player__header-btn--start"
+              onClick={dismiss}
+              aria-label="Minimize player"
             >
-              <PlayerMetaActionIcon variant="info" />
+              <PlayerHeaderIcon variant="down" />
             </button>
-            <button
-              type="button"
-              className="music-player__icon-btn"
-              aria-label={likeAction.ariaLabel}
-              onClick={likeAction.onPress}
-            >
-              <PlayerMetaActionIcon variant={likeAction.iconVariant} />
-            </button>
-            <button
-              type="button"
-              className="music-player__icon-btn"
-              aria-label="Share"
-            >
-              <PlayerMetaActionIcon variant="share" />
-            </button>
-          </div>
-
-          <div className="music-player__cover-block">
-            <div className="music-player__cover">
-              <img
-                src={station.thumbnail}
-                alt=""
-                width={300}
-                height={300}
-                loading="eager"
-                decoding="async"
-              />
+            <div className="music-player__header-center">
+              <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
             </div>
-            <div className="music-player__track-text">
-              <p className="music-player__song">Now playing (prototype)</p>
-              <p className="music-player__artist">{station.name}</p>
-              <p className="music-player__album">{subtitleLine}</p>
+            <button
+              type="button"
+              className="music-player__header-btn music-player__header-btn--end"
+              aria-label="Cast"
+            >
+              <PlayerHeaderIcon variant="cast" />
+            </button>
+          </header>
+        }
+        hero={
+          <div className="music-player__top">
+            <h1 className="music-player__channel-name">{station.name}</h1>
+            <div className="music-player__meta-actions">
+              <button
+                type="button"
+                className="music-player__icon-btn"
+                aria-label="Station info"
+                onClick={leaveFullPlayerForStationInfo}
+              >
+                <PlayerMetaActionIcon variant="info" />
+              </button>
+              <button
+                type="button"
+                className="music-player__icon-btn"
+                aria-label={likeAction.ariaLabel}
+                onClick={likeAction.onPress}
+              >
+                <PlayerMetaActionIcon variant={likeAction.iconVariant} />
+              </button>
+              <button
+                type="button"
+                className="music-player__icon-btn"
+                aria-label="Share"
+              >
+                <PlayerMetaActionIcon variant="share" />
+              </button>
+            </div>
+
+            <div className="music-player__cover-block">
+              <div className="music-player__cover">
+                <img
+                  src={station.thumbnail}
+                  alt=""
+                  width={300}
+                  height={300}
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+              <div className="music-player__track-text">
+                <p className="music-player__song">Now playing (prototype)</p>
+                <p className="music-player__artist">{station.name}</p>
+                <p className="music-player__album">{subtitleLine}</p>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="music-player__bottom-player-stack">
+        }
+        footer={
           <div className="music-player__controls">
             <div className="music-player__progress radio-player__progress">
               <div className="music-player__progress-track radio-player__progress-track">
@@ -229,11 +225,10 @@ export default function RadioPlayer() {
               </div>
             </div>
           </div>
-          {userType === "freeProvided" ? <PlayerProvidedBrandRow /> : null}
-        </div>
-
-        {showVisualAds(userType) ? <VisualAdStrip variant="player" /> : null}
-      </div>
+        }
+        showProviderBrand={userType === "freeProvided"}
+        showPlayerAd={showAds}
+      />
     </main>
   );
 }

@@ -154,12 +154,9 @@
   padding-bottom: var(--space-3);
 }
 
-.music-player__body--no-player-ad .music-player__controls {
-  flex: 1 1 0;
-  min-height: 0;
-  justify-content: center;
-  padding: var(--space-4) 0;
-}
+/* Footer stack stays intrinsic height; extra vertical space stays in `.music-player__top`
+   (subscribed / no fixed player ad). Do not flex-grow `.music-player__controls` — it
+   blew past the viewport when nested under `.music-player__bottom-player-stack`. */
 
 .music-player__top {
   display: flex;

@@ -212,6 +212,14 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Full-screen player shell (`FullScreenPlayerShell`)
+
+- **`FullScreenPlayerShell.jsx`:** Shared markup for fullscreen **music**, **radio**, and **podcast** routes below **`<main>`** (after optional **`PlayerPrerollAd`**). Props **`header`**, **`hero`**, **`footer`** (**`music-player__controls`** subtree); **`showPlayerAd`** drives **`music-player__body--no-player-ad`** vs ad reserve + **`VisualAdStrip--player`** (music/radio) or **`podcast-player__body--with-ad` / `--no-ad`** + footer-strip ad ( **`podcastLayout`** ); **`showProviderBrand`** toggles **`PlayerProvidedBrandRow`**. Keeps tier parity in one place.
+- **Phase 2 layout:** Subscribed music/radio had **`music-player__controls`** **`flex: 1 1 0`** under **`--no-player-ad`** — removed; **`music-player__top`** alone **`flex-grow`**s so transport stays content-sized (**`MusicPlayer.css`**).
+- **Phase 3 layout:** **`podcast-player__body--with-ad`** **`justify-content: space-between`**; **`--no-ad`** grows **`podcast-player__scroll`** (**`flex: 1 1 0`**, **`overflow-y: auto`**) for music/radio-style slack above the footer (**`PodcastPlayer.css`**).
+
+---
+
 ## How to use this file
 
 - When you learn something new with the AI or in docs, ask to **append a short section** here (or add it yourself).
