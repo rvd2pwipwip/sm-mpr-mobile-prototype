@@ -130,7 +130,7 @@ Tune exact labels against Figma **`rowCategory`** instances.
 
 - Three **`ContentSwimlane`** sections: derive **`filteredItems`** per kind; **ghost** fillers to **`LISTEN_AGAIN_RAIL_SLOT_CAP`** (or aligned cap constant) like Home **Listen again**; **`alwaysShowMore`** + **`onMore`** → corresponding **`/my-library/history/...`** route.
 - **`ScreenHeader`** + **`SwimlaneMore`-style** grids (reuse **`MusicChannelCard`**, **`PodcastCard`**, **`RadioStationCard`**, **`ListenAgainCard`** / **`renderListenAgainTile`** as appropriate).
-- Header **Clear** calls **`clearHistoryByKind`** for that rail only.
+- Header **Clear** calls **`clearHistoryByKind`** for that rail only. Podcast History **Clear** also calls **`PodcastUserStateContext.clearAllEpisodeProgress`** so **Continue listening** is empty (**limited / broad**, same **`/my-library/history/podcasts`** screen).
 
 **Shipped:** **`src/constants/myLibraryHistory.js`** (segment **`podcasts` → `kind: podcast`**); **`LibraryHistoryRails.jsx`**; **`pages/MyLibraryHistoryMore.jsx`** (**`/my-library/history/:historySegment`**); **`App.jsx`** routes; hub title restored; three rails after **App Info**.
 

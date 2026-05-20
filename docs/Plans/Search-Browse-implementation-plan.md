@@ -8,7 +8,7 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 - Podcasts browse detail (conditional rows, card sizing): [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md), [`Podcasts-implementation-plan.md`](Podcasts-implementation-plan.md) (Phase 7)
 - **Radio Browse (detailed):** [`Radio-Browse-implementation-plan.md`](Radio-Browse-implementation-plan.md)
 - Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
-- Living repo plan: [`plan.md`](plan.md) — update when this slice ships
+- Living repo plan: [`plan.md`](plan.md) — **Search & Browse** Phases **0–8** under **What we have done**
 - Layout patterns: [`docs/react-learning.md`](../react-learning.md) (swimlanes, BottomNav), project rules in `.cursor/rules/stingray-music-prototype.mdc`
 
 **Prototype scope**
@@ -219,26 +219,30 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 ---
 
-## Phase 8 — Polish + docs
+## Phase 8 — Polish + docs ✅ (prototype — acceptance confirmed 2026-05-19)
 
-- **`plan.md`**: move **Search & Browse** to **What we have done** when acceptance passes.
-- **`docs/react-learning.md`**: short entry on **adaptive fixed header** + **Search reset** pattern if non-obvious.
-- **Acceptance checklist (manual)**
-  - [ ] Limited vs broad music top level matches territory stub.
-  - [ ] Podcast conditional rows hide when empty.
-  - [ ] Radio hierarchy navigable through at least one full path to stations.
-  - [ ] Search replaces browse chrome; swimlanes include **Tags**; Artists shows when query hits stub artists.
-  - [ ] More grids + back behavior correct.
-  - [ ] Reset: **Clear** restores browse with **same** content-type tab; **BottomNav Search** from Home restores **last** browse tab + empty query; **re-tap Search** on **`/search/*`** resets **Music** + empty query.
-  - [ ] Footer stack + keyboard overlap acceptable; miniplayer still usable after dismiss keyboard.
+**Delivered**
+
+- **`docs/Plans/plan.md`** — Search & Browse **Phase 8** under **What we have done**; **Next steps** trimmed.
+- **`docs/react-learning.md`** — **Search shell — adaptive header** entry (**`SearchBrowseHeader`**, **`--search-header-offset`**, **`ResizeObserver`** parity with Home); reset rules cross-reference **Broad Search** + **`Search-story`** Integration notes.
+
+**Acceptance checklist (manual)**
+
+- [x] Limited vs broad music top level matches territory stub.
+- [x] Podcast conditional rows hide when empty.
+- [x] Radio hierarchy navigable through at least one full path to stations.
+- [x] Search replaces browse chrome; swimlanes include **Tags**; Artists shows when query hits stub artists.
+- [x] More grids + back behavior correct.
+- [x] Reset: **Clear** restores browse with **same** content-type tab; **BottomNav Search** from Home restores **last** browse tab + empty query; **re-tap Search** on **`/search/*`** resets **Music** + empty query.
+- [x] Footer stack + keyboard overlap acceptable; miniplayer still usable after dismiss keyboard.
 
 ---
 
 ## After you ship
 
-- Update **`plan.md`** and **`docs/figma-nodes.md`** only if node map or data notes materially change.
+- **`plan.md`** and **`docs/figma-nodes.md`:** update after future Search/Browse regressions only if IA or screen map materially changes (**Phases 0–8 baseline is recorded** — see **Phase 8** in this plan).
 - Keep **podcast** and **radio** player stacks aligned with **`visual-ads-and-user-types.md`** when users tune from Search surfaces.
 
 ---
 
-*Last updated: 2026-05-08* — **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. **Docs:** implementation plans live under **`docs/Plans/`**. **Phase 4** radio: **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** pattern walkthrough [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md) + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.
+*Last updated: 2026-05-19* — **Phase 8** (polish + docs + manual acceptance): complete. Prior: 2026-05-08 **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. **Docs:** implementation plans live under **`docs/Plans/`**. **Phase 4** radio: **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** pattern walkthrough [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md) + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.

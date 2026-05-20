@@ -78,6 +78,31 @@
   height: var(--size-action-icon-btn);
 }
 
+/* Footer stack under artwork: controls then optional provider row (freeProvided); then fixed VisualAdStrip. */
+.music-player__bottom-player-stack {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Provider mark — reuse HomeHeader SVG tokens; centered row above fixed player ad strip. */
+.music-player__provided-brand-row {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* Extra bottom padding clears the gap above the fixed `VisualAdStrip--player`. */
+  padding: var(--space-3) 0 var(--space-9);
+  box-sizing: border-box;
+}
+
+.music-player__provided-brand-row .home-header__provider-logo {
+  max-height: 40px;
+  max-width: min(220px, 100%);
+  object-position: center center;
+}
+
 .music-player__header-icon-mask {
   display: block;
   flex-shrink: 0;
@@ -227,7 +252,7 @@
 }
 
 .music-player__cover {
-  width: min(320px, 100%);
+  width: min(300px, 100%);
   aspect-ratio: 1 / 1;
   border-radius: 30px;
   overflow: hidden;

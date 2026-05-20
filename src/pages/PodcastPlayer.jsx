@@ -12,7 +12,8 @@ import {
   useParams,
 } from "react-router-dom";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
-import UpgradeButton from "../components/UpgradeButton";
+import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
+import PlayerProvidedBrandRow from "../components/PlayerProvidedBrandRow";
 import VisualAdStrip from "../components/VisualAdStrip";
 import { EpisodeActionIconMask } from "../components/EpisodeCard";
 import "./MusicChannelInfo.css";
@@ -32,7 +33,7 @@ import {
   getPodcastById,
   getPodcastEpisodeById,
 } from "../data/podcasts";
-import { showPlayerPreroll, showUpgradeCallToAction, showVisualAds } from "../utils/showVisualAds";
+import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import {
   approxDurationSecondsFromLabel,
   formatPlaybackClock,
@@ -387,11 +388,7 @@ export default function PodcastPlayer() {
           <PlayerHeaderIcon variant="down" />
         </button>
         <div className="music-player__header-center">
-          {showUpgradeCallToAction(userType) ? (
-            <UpgradeButton onClick={goUpgrade} />
-          ) : (
-            <span className="music-player__header-spacer" aria-hidden={true} />
-          )}
+          <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
         </div>
         <button
           type="button"
@@ -448,8 +445,8 @@ export default function PodcastPlayer() {
                 <img
                   src={episode.thumbnail}
                   alt=""
-                  width={320}
-                  height={320}
+                  width={300}
+                  height={300}
                   loading="eager"
                   decoding="async"
                 />
@@ -638,6 +635,8 @@ export default function PodcastPlayer() {
               </div>
             </div>
           </div>
+
+          {userType === "freeProvided" ? <PlayerProvidedBrandRow /> : null}
 
           {showAds ? <VisualAdStrip variant="player" /> : null}
         </div>

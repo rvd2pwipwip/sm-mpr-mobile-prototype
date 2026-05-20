@@ -6,7 +6,8 @@ import {
   useParams,
 } from "react-router-dom";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
-import UpgradeButton from "../components/UpgradeButton";
+import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
+import PlayerProvidedBrandRow from "../components/PlayerProvidedBrandRow";
 import VisualAdStrip from "../components/VisualAdStrip";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { usePlayback } from "../context/PlaybackContext";
@@ -15,11 +16,7 @@ import { useUserType } from "../context/UserTypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
-import {
-  showPlayerPreroll,
-  showUpgradeCallToAction,
-  showVisualAds,
-} from "../utils/showVisualAds";
+import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import "./MusicPlayer.css";
 import "./RadioPlayer.css";
 
@@ -145,11 +142,7 @@ export default function RadioPlayer() {
           <PlayerHeaderIcon variant="down" />
         </button>
         <div className="music-player__header-center">
-          {showUpgradeCallToAction(userType) ? (
-            <UpgradeButton onClick={goUpgrade} />
-          ) : (
-            <span className="music-player__header-spacer" aria-hidden={true} />
-          )}
+          <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
         </div>
         <button
           type="button"
@@ -201,8 +194,8 @@ export default function RadioPlayer() {
               <img
                 src={station.thumbnail}
                 alt=""
-                width={320}
-                height={320}
+                width={300}
+                height={300}
                 loading="eager"
                 decoding="async"
               />
@@ -215,25 +208,28 @@ export default function RadioPlayer() {
           </div>
         </div>
 
-        <div className="music-player__controls">
-          <div className="music-player__progress radio-player__progress">
-            <div className="music-player__progress-track radio-player__progress-track">
-              <div className="music-player__progress-fill radio-player__progress-fill" />
+        <div className="music-player__bottom-player-stack">
+          <div className="music-player__controls">
+            <div className="music-player__progress radio-player__progress">
+              <div className="music-player__progress-track radio-player__progress-track">
+                <div className="music-player__progress-fill radio-player__progress-fill" />
+              </div>
+              <p className="radio-player__live-label">Live</p>
             </div>
-            <p className="radio-player__live-label">Live</p>
-          </div>
-          <div className="music-player__transport radio-player__transport">
-            <div className="music-player__transport-middle">
-              <button
-                type="button"
-                className="music-player__play-toggle"
-                onClick={() => setPlaying((p) => !p)}
-                aria-label={playing ? "Pause" : "Play"}
-              >
-                <PlayerPlayPauseIcon playing={playing} />
-              </button>
+            <div className="music-player__transport radio-player__transport">
+              <div className="music-player__transport-middle">
+                <button
+                  type="button"
+                  className="music-player__play-toggle"
+                  onClick={() => setPlaying((p) => !p)}
+                  aria-label={playing ? "Pause" : "Play"}
+                >
+                  <PlayerPlayPauseIcon playing={playing} />
+                </button>
+              </div>
             </div>
           </div>
+          {userType === "freeProvided" ? <PlayerProvidedBrandRow /> : null}
         </div>
 
         {showVisualAds(userType) ? <VisualAdStrip variant="player" /> : null}

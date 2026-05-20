@@ -110,6 +110,11 @@ export function PodcastUserStateProvider({ children }) {
     });
   }, []);
 
+  /** Wipes in-progress stubs so Continue listening empties alongside Podcast History Clear in My Library. */
+  const clearAllEpisodeProgress = useCallback(() => {
+    setEpisodeProgressById({});
+  }, []);
+
   /** @param {number} [whenMissing] defaults to `0`. */
   const getEpisodeProgress = useCallback(
     (episodeId, whenMissing = 0) => {
@@ -188,6 +193,7 @@ export function PodcastUserStateProvider({ children }) {
       toggleBookmark,
       toggleDownload,
       setEpisodeProgress,
+      clearAllEpisodeProgress,
       getEpisodeProgress,
       isSubscribed,
       isBookmarked,
@@ -207,6 +213,7 @@ export function PodcastUserStateProvider({ children }) {
       toggleBookmark,
       toggleDownload,
       setEpisodeProgress,
+      clearAllEpisodeProgress,
       getEpisodeProgress,
       isSubscribed,
       isBookmarked,

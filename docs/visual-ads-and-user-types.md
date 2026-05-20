@@ -14,7 +14,8 @@ This note ties **`UserTypeContext`** to **footer ad placeholders** and documents
 **Helpers** (`src/utils/showVisualAds.js`):
 
 - **`showVisualAds(userType)`** — `true` for **`guest`**, **`freeStingray`**, and **`freeProvided`**, `false` for **`subscribed`** (footer strip, in-feed banner, player footer strip).
-- **`showUpgradeCallToAction(userType)`** — `true` for **`guest`** and **`freeStingray`** (Home header + full players).
+- **`showUpgradeCallToAction(userType)`** — `true` for **`guest`** and **`freeStingray`** only (**`HomeHeader`**: **`UpgradeButton`** vs provider logo row for **`freeProvided`**).
+- **`showUpgradeInFullPlayerHeader(userType)`** — `true` for every tier except **`subscribed`** (**`PlayerHeaderCenterSlot`**, **`music`/`radio`/`podcast`** fullscreen routes): **`guest`**, **`freeStingray`**, and **`freeProvided`** see **Upgrade** in the header; **`freeProvided`** also gets **`PlayerProvidedBrandRow`** (provider **`ProviderLogoPair`**) below transport and above **`VisualAdStrip--player`**.
 - **`usesGuestMusicSkipCap(userType)`** — `true` for **`guest`** and **`freeStingray`** (hourly music skip cap in **`GuestMusicSkipContext`**).
 - **`showPlayerPreroll(userType)`** — `true` for **`guest`** and **`freeStingray`** (same as skip cap): full-screen **15s** countdown before the **music** player UI is usable; **`freeProvided`** / **`subscribed`** skip pre-roll. Podcast / radio play entry points should reuse **`PlayerPrerollAd`** when those stacks exist.
 

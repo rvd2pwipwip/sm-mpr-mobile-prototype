@@ -7,7 +7,8 @@ import {
 } from "react-router-dom";
 import MusicSkipButton from "../components/MusicSkipButton";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
-import UpgradeButton from "../components/UpgradeButton";
+import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
+import PlayerProvidedBrandRow from "../components/PlayerProvidedBrandRow";
 import VisualAdStrip from "../components/VisualAdStrip";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
@@ -15,11 +16,7 @@ import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
-import {
-  showPlayerPreroll,
-  showUpgradeCallToAction,
-  showVisualAds,
-} from "../utils/showVisualAds";
+import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
 import "./MusicPlayer.css";
 
@@ -145,11 +142,7 @@ export default function MusicPlayer() {
           <PlayerHeaderIcon variant="down" />
         </button>
         <div className="music-player__header-center">
-          {showUpgradeCallToAction(userType) ? (
-            <UpgradeButton onClick={goUpgrade} />
-          ) : (
-            <span className="music-player__header-spacer" aria-hidden={true} />
-          )}
+          <PlayerHeaderCenterSlot userType={userType} onUpgrade={goUpgrade} />
         </div>
         <button
           type="button"
@@ -201,8 +194,8 @@ export default function MusicPlayer() {
               <img
                 src={channel.thumbnail}
                 alt=""
-                width={320}
-                height={320}
+                width={300}
+                height={300}
                 loading="eager"
                 decoding="async"
               />
@@ -215,32 +208,35 @@ export default function MusicPlayer() {
           </div>
         </div>
 
-        <div className="music-player__controls">
-          <div className="music-player__progress">
-            <div className="music-player__progress-track">
-              <div className="music-player__progress-fill" />
+        <div className="music-player__bottom-player-stack">
+          <div className="music-player__controls">
+            <div className="music-player__progress">
+              <div className="music-player__progress-track">
+                <div className="music-player__progress-fill" />
+              </div>
             </div>
-          </div>
-          <div className="music-player__transport">
-            <div className="music-player__transport-start">
-              <div className="music-player__transport-start-cluster" />
-            </div>
-            <div className="music-player__transport-middle">
-              <button
-                type="button"
-                className="music-player__play-toggle"
-                onClick={() => setPlaying((p) => !p)}
-                aria-label={playing ? "Pause" : "Play"}
-              >
-                <PlayerPlayPauseIcon playing={playing} />
-              </button>
-            </div>
-            <div className="music-player__transport-end">
-              <div className="music-player__transport-end-cluster">
-                <MusicSkipButton size="full" />
+            <div className="music-player__transport">
+              <div className="music-player__transport-start">
+                <div className="music-player__transport-start-cluster" />
+              </div>
+              <div className="music-player__transport-middle">
+                <button
+                  type="button"
+                  className="music-player__play-toggle"
+                  onClick={() => setPlaying((p) => !p)}
+                  aria-label={playing ? "Pause" : "Play"}
+                >
+                  <PlayerPlayPauseIcon playing={playing} />
+                </button>
+              </div>
+              <div className="music-player__transport-end">
+                <div className="music-player__transport-end-cluster">
+                  <MusicSkipButton size="full" />
+                </div>
               </div>
             </div>
           </div>
+          {userType === "freeProvided" ? <PlayerProvidedBrandRow /> : null}
         </div>
 
         {showVisualAds(userType) ? <VisualAdStrip variant="player" /> : null}

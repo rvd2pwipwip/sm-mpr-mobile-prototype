@@ -3,6 +3,7 @@ import { renderListenAgainTile } from "../components/ListenAgainCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { getMyLibraryHistoryRouteConfig } from "../constants/myLibraryHistory";
 import { useListenHistory } from "../context/ListenHistoryContext";
+import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import "./ListenAgainMore.css";
 import "./SwimlaneMore.css";
 
@@ -15,6 +16,7 @@ export default function MyLibraryHistoryMore() {
       ? getMyLibraryHistoryRouteConfig(historySegment)
       : null;
   const { items, clearHistoryByKind } = useListenHistory();
+  const { clearAllEpisodeProgress } = usePodcastUserState();
   const goBack = () => navigate(-1);
 
   if (!config) {
@@ -25,6 +27,9 @@ export default function MyLibraryHistoryMore() {
 
   const handleClear = () => {
     clearHistoryByKind(config.listenKind);
+    if (config.listenKind === "podcast") {
+      clearAllEpisodeProgress();
+    }
     goBack();
   };
 

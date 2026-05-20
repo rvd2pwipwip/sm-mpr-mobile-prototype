@@ -15,6 +15,14 @@ export function showUpgradeCallToAction(userType) {
 }
 
 /**
+ * Full-screen players only: Upgrade in header for every tier except subscribed.
+ * (Home still uses {@link showUpgradeCallToAction} + provider logo for freeProvided.)
+ */
+export function showUpgradeInFullPlayerHeader(userType) {
+  return userType !== "subscribed";
+}
+
+/**
  * Music hourly skip cap applies to unsigned guest and free Stingray (prototype).
  */
 export function usesGuestMusicSkipCap(userType) {
