@@ -14,6 +14,7 @@
   overflow: hidden;
   background: var(--app-screen-bg);
   background-attachment: fixed;
+  --player-thumb-side: 300px;
 }
 
 /* Fixed `--player` ad owns bottom safe inset; reserve space in scrolling column only. */
@@ -249,7 +250,7 @@
 }
 
 .music-player__cover {
-  width: min(300px, 100%);
+  width: min(var(--player-thumb-side, 300px), 100%);
   aspect-ratio: 1 / 1;
   border-radius: 30px;
   overflow: hidden;

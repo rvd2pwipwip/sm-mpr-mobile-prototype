@@ -79,31 +79,35 @@ Use one **fullscreen shell** (component + CSS module or shared BEM prefix) that 
 
 - **`PodcastPlayer.css`:** **`podcast-player__body--with-ad`** uses **`justify-content: space-between`** (parity with default **`music-player__body`** when the fixed player ad strip shows). **`--no-ad`** uses **`flex-start`** plus **`podcast-player__scroll`** **`flex: 1 1 0`** + **`overflow-y: auto`** so spare height sits above the footer like **`music-player__top`** under **`--no-player-ad`**. **`overflow: hidden`** on **`podcast-player__body`** retained so the shell clips as before; speed menu stays **`position: fixed`** (unchanged).
 
-### Phase 4 — Thumbnail clamp integration
+### Phase 4 — Thumbnail clamp integration ✅
 
-- Shared **`PlayerHeroThumbnail`** hook or shell-internal **`usePlayerThumbMaxSize`** applying measured **`S`** to music/radio/podcast thumbs.
+- **`src/hooks/useFullscreenPlayerThumbSidePx.js`:** **`ResizeObserver`** + **`visualViewport`** / window **`resize`** measure **`main`**, hero body ( **`music-player__body`** / **`podcast-player__body`** ), footer stack, cover row overhead; clamps square side **`S`** between **`160px`** and **`300px`**. Second argument **`enabled`**: when **`false`** (no resolved station/channel/episode yet), returns **`300`** so **`Navigate`** shells do not depend on layout.
 
-### Phase 5 — Docs + cleanup
+- **`MusicPlayer.jsx`**, **`RadioPlayer.jsx`**, **`PodcastPlayer.jsx`:** **`useRef`** on **`<main>`**, **`style={{ "--player-thumb-side": `${thumbSidePx}px` }}`**, hero **`<img width={thumbSidePx} height={thumbSidePx}>`**. **`MusicPlayer.css`**: **`.music-player__cover`** **`width: min(var(--player-thumb-side, 300px), 100%)`** (fallback **`300px`** on **`.music-player-screen`**).
 
-- **`docs/react-learning.md`** — shell pattern + thumb measurement note.
+### Phase 5 — Docs + cleanup ✅
 
-- **`docs/Plans/plan.md`** — link here; mark refactor done.
+- **`docs/react-learning.md`** — **`FullScreenPlayerShell`** + Phase 2–4 layout/thumb notes live under **Full-screen player shell** (Phase 4 entry covers **`useFullscreenPlayerThumbSidePx`** / **`--player-thumb-side`**).
 
-- **`docs/visual-ads-and-user-types.md`** — align wording if shell centralizes reserve height.
+- **`docs/Plans/plan.md`** — **What we have done** lists refactor **Phases 1–5**; backlog Phase 5 item closed.
+
+- **`docs/visual-ads-and-user-types.md`** — **Fullscreen players** subsection: **`FullScreenPlayerShell`**, fixed **`VisualAdStrip--player`**, **`--visual-ad-player-reserve-height`** via **`:has(.visual-ad-strip--player)`** on **`.music-player__body`** / **`.podcast-player__body`** (**`MusicPlayer.css`**).
 
 ---
 
 ## Acceptance checklist
 
-- [ ] Subscribed **music** / **radio**: header pinned top; controls fully visible above safe area; **no** vertical scroll at common viewport (**390×844** style).
+Prototype targets below; confirm on change with **`Subscription`** preview (**guest** / **`freeStingray`** / **`freeProvided`** / **`subscribed`**) + a short viewport height for thumb clamp.
 
-- [ ] Guest / **`freeStingray`**: fixed ad reserve respected; controls not underlap strip.
+- [x] Subscribed **music** / **radio**: header pinned top; controls fully visible above safe area; **no** vertical scroll at common viewport (**390×844** style).
 
-- [ ] **`freeProvided`**: Upgrade header; provider row visible between controls and ad reserve; thumb scales down on short height without scroll.
+- [x] Guest / **`freeStingray`**: fixed ad reserve respected; controls not underlap strip.
 
-- [ ] **Podcast**: parity with music/radio anchoring; speed menu still usable.
+- [x] **`freeProvided`**: Upgrade header; provider row visible between controls and ad reserve; thumb scales down on short height without scroll.
 
-- [ ] **`npm run build`** + quick manual tier sweep from **`Subscription`** preview.
+- [x] **Podcast**: parity with music/radio anchoring; speed menu still usable.
+
+- [x] **`npm run build`** + quick manual tier sweep from **`Subscription`** preview.
 
 ---
 

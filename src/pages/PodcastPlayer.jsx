@@ -27,6 +27,7 @@ import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
+import { useFullscreenPlayerThumbSidePx } from "../hooks/useFullscreenPlayerThumbSidePx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import {
   getPodcastById,
@@ -165,6 +166,12 @@ export default function PodcastPlayer() {
       ? getPodcastEpisodeById(podcast.id, episodeId)
       : null;
   const episode = bundle?.episode ?? null;
+
+  const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
+  const thumbSidePx = useFullscreenPlayerThumbSidePx(
+    mainRef,
+    Boolean(podcast && episode),
+  );
 
   const durationSec = useMemo(() => {
     if (!episode) return 0;
@@ -368,7 +375,11 @@ export default function PodcastPlayer() {
   const showAds = showVisualAds(userType);
 
   return (
-    <main className="app-shell music-player-screen podcast-player-shell">
+    <main
+      ref={mainRef}
+      className="app-shell music-player-screen podcast-player-shell"
+      style={{ "--player-thumb-side": `${thumbSidePx}px` }}
+    >
       {needsPreroll && !prerollComplete ? (
         <PlayerPrerollAd
           onComplete={() => {
@@ -438,8 +449,8 @@ export default function PodcastPlayer() {
                 <img
                   src={episode.thumbnail}
                   alt=""
-                  width={300}
-                  height={300}
+                  width={thumbSidePx}
+                  height={thumbSidePx}
                   loading="eager"
                   decoding="async"
                 />

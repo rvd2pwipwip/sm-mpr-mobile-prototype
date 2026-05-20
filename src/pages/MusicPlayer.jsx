@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Navigate,
   useLocation,
@@ -14,6 +14,7 @@ import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
 import { useUserType } from "../context/UserTypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
+import { useFullscreenPlayerThumbSidePx } from "../hooks/useFullscreenPlayerThumbSidePx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
@@ -79,6 +80,9 @@ export default function MusicPlayer() {
   const channel = channelId ? getMusicChannelById(channelId) : null;
   const likeAction = useMusicRadioLikeAction("music", channel?.id);
 
+  const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
+  const thumbSidePx = useFullscreenPlayerThumbSidePx(mainRef, Boolean(channel));
+
   useLayoutEffect(() => {
     if (!channel) return;
     if (needsPreroll && !prerollComplete) return;
@@ -124,7 +128,11 @@ export default function MusicPlayer() {
   const showAds = showVisualAds(userType);
 
   return (
-    <main className="app-shell music-player-screen">
+    <main
+      ref={mainRef}
+      className="app-shell music-player-screen"
+      style={{ "--player-thumb-side": `${thumbSidePx}px` }}
+    >
       {needsPreroll && !prerollComplete ? (
         <PlayerPrerollAd
           onComplete={() => {
@@ -190,8 +198,8 @@ export default function MusicPlayer() {
                 <img
                   src={channel.thumbnail}
                   alt=""
-                  width={300}
-                  height={300}
+                  width={thumbSidePx}
+                  height={thumbSidePx}
                   loading="eager"
                   decoding="async"
                 />

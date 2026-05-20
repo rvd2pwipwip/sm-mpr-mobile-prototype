@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Navigate,
   useLocation,
@@ -13,6 +13,7 @@ import { usePlayback } from "../context/PlaybackContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { useUserType } from "../context/UserTypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
+import { useFullscreenPlayerThumbSidePx } from "../hooks/useFullscreenPlayerThumbSidePx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
@@ -78,6 +79,9 @@ export default function RadioPlayer() {
   const station = stationId ? resolveRadioStationForStub(stationId) : null;
   const likeAction = useMusicRadioLikeAction("radio", station?.id);
 
+  const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
+  const thumbSidePx = useFullscreenPlayerThumbSidePx(mainRef, Boolean(station));
+
   useLayoutEffect(() => {
     if (!station) return;
     if (needsPreroll && !prerollComplete) return;
@@ -124,7 +128,11 @@ export default function RadioPlayer() {
   const showAds = showVisualAds(userType);
 
   return (
-    <main className="app-shell music-player-screen radio-player-screen">
+    <main
+      ref={mainRef}
+      className="app-shell music-player-screen radio-player-screen"
+      style={{ "--player-thumb-side": `${thumbSidePx}px` }}
+    >
       {needsPreroll && !prerollComplete ? (
         <PlayerPrerollAd
           onComplete={() => {
@@ -190,8 +198,8 @@ export default function RadioPlayer() {
                 <img
                   src={station.thumbnail}
                   alt=""
-                  width={300}
-                  height={300}
+                  width={thumbSidePx}
+                  height={thumbSidePx}
                   loading="eager"
                   decoding="async"
                 />
