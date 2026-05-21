@@ -17,6 +17,7 @@ import { AccountRequiredDialogProvider } from "./context/AccountRequiredDialogCo
 import { LikesProvider } from "./context/LikesContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { CategoryRailMemoryProvider } from "./context/CategoryRailMemoryContext.jsx";
+import { CastPrototypeProvider } from "./context/CastPrototypeContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
 import { CATALOG_SCOPE } from "./constants/catalogScope.js";
@@ -55,6 +56,7 @@ import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
 import { readStoredBroadSearchBrowseTab } from "./constants/searchBrowsePaths.js";
 import { hideFooterChromeForPath } from "./utils/hideFooterChromeForPath";
+import CastPrototypeDialogs from "./components/CastPrototypeDialogs";
 
 /** Remount when channel or user type changes so pre-roll + playback state reset. */
 function MusicPlayerRoute() {
@@ -187,9 +189,14 @@ function App() {
               <LikesProvider>
                 <PodcastUserStateProvider>
                   <PlaybackProvider>
-                    <CategoryRailMemoryProvider>
-                      <AppRoutes />
-                    </CategoryRailMemoryProvider>
+                    <CastPrototypeProvider>
+                      <>
+                        <CastPrototypeDialogs />
+                        <CategoryRailMemoryProvider>
+                          <AppRoutes />
+                        </CategoryRailMemoryProvider>
+                      </>
+                    </CastPrototypeProvider>
                   </PlaybackProvider>
                 </PodcastUserStateProvider>
               </LikesProvider>

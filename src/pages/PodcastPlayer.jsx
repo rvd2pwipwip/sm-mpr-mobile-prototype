@@ -17,11 +17,13 @@ import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
 import { EpisodeActionIconMask } from "../components/EpisodeCard";
 import "./MusicChannelInfo.css";
 import { PODCAST_SPEED_STEPS } from "../constants/podcastPlayback";
+import { CASTING_ON } from "../constants/castPrototypeCopy";
 import {
   userMayBookmarkEpisodes,
   userMaySubscribePodcasts,
 } from "../constants/userContentGates";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
+import { useCastPrototype } from "../context/CastPrototypeContext";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
@@ -127,6 +129,7 @@ export default function PodcastPlayer() {
   const { recordPodcastShowListen } = useListenHistory();
   const { userType } = useUserType();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
+  const { isCasting, castDeviceName, openCastTo } = useCastPrototype();
   const needsPreroll = showPlayerPreroll(userType);
   const expandFromMini = location.state?.expandFromMiniPlayer === true;
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
@@ -406,9 +409,10 @@ export default function PodcastPlayer() {
             <button
               type="button"
               className="music-player__header-btn music-player__header-btn--end"
-              aria-label="Cast"
+              aria-label={isCasting ? "Casting on" : "Cast"}
+              onClick={openCastTo}
             >
-              <PlayerHeaderIcon variant="cast" />
+              <PlayerHeaderIcon variant={isCasting ? "casting" : "cast"} />
             </button>
           </header>
         }
@@ -445,16 +449,43 @@ export default function PodcastPlayer() {
             </div>
 
             <div className="music-player__cover-block podcast-player__hero-cover">
-              <div className="music-player__cover">
-                <img
-                  src={episode.thumbnail}
-                  alt=""
-                  width={thumbSidePx}
-                  height={thumbSidePx}
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
+              {isCasting && castDeviceName ? (
+                <button
+                  type="button"
+                  className="music-player__cover music-player__cover--casting-touch"
+                  onClick={openCastTo}
+                  aria-label="Casting on"
+                >
+                  <img
+                    src={episode.thumbnail}
+                    alt=""
+                    width={thumbSidePx}
+                    height={thumbSidePx}
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <span className="music-player__cover-scrim" aria-hidden={true} />
+                  <span className="music-player__cover-casting-label">
+                    <span className="music-player__cover-casting-line1">
+                      {CASTING_ON.lineCasting}
+                    </span>
+                    <span className="music-player__cover-casting-line2">
+                      {castDeviceName}
+                    </span>
+                  </span>
+                </button>
+              ) : (
+                <div className="music-player__cover">
+                  <img
+                    src={episode.thumbnail}
+                    alt=""
+                    width={thumbSidePx}
+                    height={thumbSidePx}
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+              )}
               <div className="music-player__track-text">
                 <p className="music-player__song">{episode.title}</p>
                 <p className="music-player__artist">

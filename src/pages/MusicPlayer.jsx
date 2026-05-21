@@ -18,6 +18,8 @@ import { useFullscreenPlayerThumbSidePx } from "../hooks/useFullscreenPlayerThum
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
 import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
+import { CASTING_ON } from "../constants/castPrototypeCopy";
+import { useCastPrototype } from "../context/CastPrototypeContext";
 import "./MusicPlayer.css";
 
 /** `public/down.svg`, `cast.svg` — mask + `currentColor`. */
@@ -79,6 +81,8 @@ export default function MusicPlayer() {
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
   const likeAction = useMusicRadioLikeAction("music", channel?.id);
+
+  const { isCasting, castDeviceName, openCastTo } = useCastPrototype();
 
   const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
   const thumbSidePx = useFullscreenPlayerThumbSidePx(mainRef, Boolean(channel));
@@ -158,9 +162,10 @@ export default function MusicPlayer() {
             <button
               type="button"
               className="music-player__header-btn music-player__header-btn--end"
-              aria-label="Cast"
+              aria-label={isCasting ? "Casting on" : "Cast"}
+              onClick={openCastTo}
             >
-              <PlayerHeaderIcon variant="cast" />
+              <PlayerHeaderIcon variant={isCasting ? "casting" : "cast"} />
             </button>
           </header>
         }
@@ -194,16 +199,43 @@ export default function MusicPlayer() {
             </div>
 
             <div className="music-player__cover-block">
-              <div className="music-player__cover">
-                <img
-                  src={channel.thumbnail}
-                  alt=""
-                  width={thumbSidePx}
-                  height={thumbSidePx}
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
+              {isCasting && castDeviceName ? (
+                <button
+                  type="button"
+                  className="music-player__cover music-player__cover--casting-touch"
+                  onClick={openCastTo}
+                  aria-label="Casting on"
+                >
+                  <img
+                    src={channel.thumbnail}
+                    alt=""
+                    width={thumbSidePx}
+                    height={thumbSidePx}
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <span className="music-player__cover-scrim" aria-hidden={true} />
+                  <span className="music-player__cover-casting-label">
+                    <span className="music-player__cover-casting-line1">
+                      {CASTING_ON.lineCasting}
+                    </span>
+                    <span className="music-player__cover-casting-line2">
+                      {castDeviceName}
+                    </span>
+                  </span>
+                </button>
+              ) : (
+                <div className="music-player__cover">
+                  <img
+                    src={channel.thumbnail}
+                    alt=""
+                    width={thumbSidePx}
+                    height={thumbSidePx}
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+              )}
               <div className="music-player__track-text">
                 <p className="music-player__song">Song title (prototype)</p>
                 <p className="music-player__artist">Artist name</p>

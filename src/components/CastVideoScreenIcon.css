@@ -1,0 +1,17 @@
+/* Device / TV icon for Cast UI — mask + `currentColor` tracks label text (light/dark). */
+
+.cast-video-screen-icon {
+  display: block;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background-color: currentColor;
+  mask-image: url("/videoScreen.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url("/videoScreen.svg");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}

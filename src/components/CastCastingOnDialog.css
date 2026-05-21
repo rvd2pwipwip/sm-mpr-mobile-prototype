@@ -1,0 +1,22 @@
+/* Device row inside Casting on dialog — icon + label (Figma menu row) */
+
+.cast-casting-on-dialog__device-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 80px;
+  padding: 0 var(--space-2);
+  box-sizing: border-box;
+  color: var(--color-text);
+}
+
+.cast-casting-on-dialog__device-name {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--color-text);
+  text-align: left;
+}

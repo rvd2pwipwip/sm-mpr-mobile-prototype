@@ -222,6 +222,15 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Cast prototype context (`CastPrototypeProvider`)
+
+- **Idea:** **`isCasting`** + **`castDeviceName`** live in **`CastPrototypeContext`** so **music**, **podcast**, and **radio** fullscreen players share one dumb cast state (no real network). **`CastPrototypeDialogs`** mounts next to **`Routes`** and renders **Cast to** (`CastToDialog`), **Network Access**, **Local Network**, and **Casting on** (`AppStackedDialog` for the latter three). **`openCastTo()`** on the header either opens the device list or, if already casting, the **Casting on** summary.
+- **Wizard:** Pick device -> **OK** through permission dialogs -> **`localNetworkOk`** sets casting. **Cancel** / **Block** / scrim on those steps calls **`abortWizard`** (not casting).
+- **Thumbnail:** **`CASTING_ON.lineCasting`** + device name over **`rgba(0,0,0,0.5)`**; the square is a **`<button>`** that calls **`openCastTo`** so tapping art matches the casting header icon.
+- **Files:** **`src/context/CastPrototypeContext.jsx`**, **`src/components/CastPrototypeDialogs.jsx`**, **`src/constants/castPrototypeCopy.js`**; plan **`docs/Plans/Cast-prototype-implementation-plan.md`**.
+
+---
+
 ## How to use this file
 
 - When you learn something new with the AI or in docs, ask to **append a short section** here (or add it yourself).
