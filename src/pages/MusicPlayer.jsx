@@ -20,6 +20,7 @@ import { showPlayerPreroll, showVisualAds } from "../utils/showVisualAds";
 import { getMusicChannelById } from "../data/musicChannels";
 import { CASTING_ON } from "../constants/castPrototypeCopy";
 import { useCastPrototype } from "../context/CastPrototypeContext";
+import { useSharePrototype } from "../context/SharePrototypeContext";
 import "./MusicPlayer.css";
 
 /** `public/down.svg`, `cast.svg` — mask + `currentColor`. */
@@ -83,6 +84,7 @@ export default function MusicPlayer() {
   const likeAction = useMusicRadioLikeAction("music", channel?.id);
 
   const { isCasting, castDeviceName, openCastTo } = useCastPrototype();
+  const { openSharePrototype } = useSharePrototype();
 
   const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
   const thumbSidePx = useFullscreenPlayerThumbSidePx(mainRef, Boolean(channel));
@@ -119,7 +121,7 @@ export default function MusicPlayer() {
   }
 
   /** Overlay dismiss — replaces `/play` when opened from Channel Info; from mini player, pop instead. */
-  const leaveFullPlayerForChannel = () => {
+  const leaveFullPlayerMinimize = () => {
     if (expandFromMini) {
       navigate(-1);
       return;
@@ -127,7 +129,12 @@ export default function MusicPlayer() {
     navigate(`/music/${channel.id}`, { replace: true });
   };
 
-  const dismiss = leaveFullPlayerForChannel;
+  /** Info icon always opens Channel Info — never pop mini stack (often Home). */
+  const leaveFullPlayerForChannel = () => {
+    navigate(`/music/${channel.id}`, { replace: true });
+  };
+
+  const dismiss = leaveFullPlayerMinimize;
 
   const showAds = showVisualAds(userType);
 
@@ -193,6 +200,7 @@ export default function MusicPlayer() {
                 type="button"
                 className="music-player__icon-btn"
                 aria-label="Share"
+                onClick={openSharePrototype}
               >
                 <PlayerMetaActionIcon variant="share" />
               </button>

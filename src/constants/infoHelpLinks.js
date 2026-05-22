@@ -3,8 +3,10 @@
  * FAQ: set from Figma when available; placeholder keeps row clickable in prototype.
  */
 
-// TODO: replace with FAQ URL from Figma when published.
-export const INFO_FAQ_HREF = "#";
+/** Stingray Music support FAQ / help center (opens in new tab from App Info). */
+export const INFO_FAQ_HREF =
+  "https://musicsupport.stingray.com/hc/en-us/categories/360002161253-Troubleshooting";
+// "https://music.stingray.com/en/CA/support";
 
 /** Drill-in from My Library App Info swimlane (Phase 2). */
 export const MY_LIBRARY_ACCOUNT_SETTINGS_PATH = "/my-library/account-settings";

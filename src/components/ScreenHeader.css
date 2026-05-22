@@ -140,3 +140,8 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+.screen-header__text-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

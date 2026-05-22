@@ -5,6 +5,7 @@ import EpisodeCard from "../components/EpisodeCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
+import { useSharePrototype } from "../context/SharePrototypeContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
 import { getPodcastById } from "../data/podcasts";
@@ -52,6 +53,7 @@ export default function PodcastInfo() {
 
   const { userType } = useUserType();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
+  const { openSharePrototype } = useSharePrototype();
 
   const podcast = podcastId ? getPodcastById(podcastId) : null;
 
@@ -167,6 +169,7 @@ export default function PodcastInfo() {
                   variant="secondary"
                   fullWidth
                   startIcon={<ActionIconMask variant="share" />}
+                  onClick={openSharePrototype}
                 >
                   Share
                 </ButtonSmall>

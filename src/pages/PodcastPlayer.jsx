@@ -24,6 +24,7 @@ import {
 } from "../constants/userContentGates";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { useCastPrototype } from "../context/CastPrototypeContext";
+import { useSharePrototype } from "../context/SharePrototypeContext";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
@@ -130,6 +131,7 @@ export default function PodcastPlayer() {
   const { userType } = useUserType();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
   const { isCasting, castDeviceName, openCastTo } = useCastPrototype();
+  const { openSharePrototype } = useSharePrototype();
   const needsPreroll = showPlayerPreroll(userType);
   const expandFromMini = location.state?.expandFromMiniPlayer === true;
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
@@ -445,6 +447,14 @@ export default function PodcastPlayer() {
                 onClick={onSubscribePress}
               >
                 <PlayerSubscribeMask subscribed={subscribedHere} />
+              </button>
+              <button
+                type="button"
+                className="music-player__icon-btn"
+                aria-label="Share"
+                onClick={openSharePrototype}
+              >
+                <PlayerMetaActionIcon variant="share" />
               </button>
             </div>
 

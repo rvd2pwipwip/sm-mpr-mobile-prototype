@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 import ContentSwimlane from "../components/ContentSwimlane.jsx";
 import RadioStationCard from "../components/RadioStationCard.jsx";
 import SearchRadioInternationalBrowseRail from "../components/SearchRadioInternationalBrowseRail.jsx";
-import {
-  SearchBrowseTile,
-  SearchBrowseTileGrid,
-} from "../components/SearchBrowseTile.jsx";
 import { RADIO_BROWSE_PATH } from "../constants/radioBrowsePaths.js";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane.js";
 import {
@@ -26,7 +22,6 @@ function radioBrowseMorePath(cat) {
  */
 export default function SearchRadioBrowse() {
   const navigate = useNavigate();
-  const headingId = "search-radio-browse-heading";
 
   return (
     <Fragment>
@@ -61,21 +56,6 @@ export default function SearchRadioBrowse() {
           </ContentSwimlane>
         );
       })}
-      <div className="content-inset search-page__body">
-        {/* <h2 id={headingId} className="search-page__browse-heading">
-        Browse radio
-      </h2> */}
-        <SearchBrowseTileGrid labelId={headingId}>
-          {RADIO_STATION_CATEGORIES.map((cat) => (
-            <SearchBrowseTile
-              key={cat.id}
-              onClick={() => navigate(radioBrowseMorePath(cat))}
-            >
-              {cat.label}
-            </SearchBrowseTile>
-          ))}
-        </SearchBrowseTileGrid>
-      </div>
     </Fragment>
   );
 }

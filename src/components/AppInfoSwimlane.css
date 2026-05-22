@@ -95,3 +95,33 @@
   line-height: 1.25;
   color: var(--color-text);
 }
+
+/*
+ * FAQ: icon hangs after word but is out of flow so `justify-content: center` still
+ * aligns the tile to “FAQ”; `openInNew.svg` masked to `currentColor`.
+ */
+.app-info-swimlane__tile-label--faq {
+  position: relative;
+  display: inline-block;
+}
+
+.app-info-swimlane__faq-text {
+  display: inline;
+}
+
+.app-info-swimlane__tile-label-external {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-left: 0.5em;
+  transform: translateY(-50%);
+  width: 0.92em;
+  height: 0.92em;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}

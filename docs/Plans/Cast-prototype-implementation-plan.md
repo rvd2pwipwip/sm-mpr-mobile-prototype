@@ -57,11 +57,11 @@ Clickable **UX-only** cast flow: no real discovery, pairing, or network APIs. Al
 ## Flow (state machine)
 
 1. User taps **Cast** in the full-screen player header (`cast.svg` via existing mask).
-2. Open **Cast to** sheet/dialog: list fake devices; scrim dismiss (match existing modal patterns).
-3. User taps a **device** -> close Cast to, open **Network Access**.
-4. **OK** -> close Network Access, open **Local Network**.
-5. **Cancel** on Network Access -> dismiss entire chain; **stay not casting** (abort flow).
-6. **OK** on Local Network -> close dialog, set **casting = true**, store **selected device name**, show casting UI on full-screen players.
+2. Open **Network Access** dialog first.
+3. **OK** -> close Network Access, open **Local Network**.
+4. **Cancel** on Network Access -> dismiss entire chain; **stay not casting** (abort flow).
+5. **OK** on Local Network -> close dialog, open **Cast to** sheet/dialog (fake device list).
+6. User taps a **device** -> close Cast to, set **casting = true**, store **selected device name**, show casting UI on full-screen players.
 7. While casting:
    - Header icon: **`casting.svg`** instead of cast mask (same mask treatment as `cast.svg`; see Assets).
    - Thumbnail: **50% black** overlay + centered two-line label (**Casting on** / device name).
@@ -71,6 +71,8 @@ Clickable **UX-only** cast flow: no real discovery, pairing, or network APIs. Al
 
 **Block** on Local Network -> same as **Cancel** on Network Access: **abort flow**, **stay not casting**.
 
+Scrim-dismiss on **Cast to** without picking a device ends the wizard **without** casting (user already passed permission dialogs).
+
 ## Technical approach
 
 ### Shared state
@@ -79,7 +81,7 @@ Introduce **`CastPrototypeContext`** (or `CastContext`) in `src/context/`:
 
 - `isCasting: boolean`
 - `castDeviceName: string | null`
-- `startCastFromSelection(deviceName: string)` — called after Local Network OK
+- `startCastFromSelection(deviceName: string)` — called when user picks a device on **Cast to** (after permission dialogs)
 - `stopCasting()`
 - Optional: `castDialogStep` if you prefer one component to own the wizard instead of nested open flags
 
@@ -104,7 +106,7 @@ Keep all copy in a small **`src/constants/castPrototypeCopy.js`** (or under `con
 
 Files: `src/pages/MusicPlayer.jsx`, `PodcastPlayer.jsx`, `RadioPlayer.jsx` + shared **`MusicPlayer.css`** (and any player-specific overrides).
 
-- Wire the header **Cast** button: `onClick` opens **Cast to** (if not casting). If **isCasting**, open **Casting on** summary dialog instead (or same handler branches).
+- Wire the header **Cast** button: `onClick` starts the wizard (**Network Access** -> **Local Network** -> **Cast to** when not casting). If **isCasting**, open **Casting on** summary dialog instead (or same handler branches).
 - Swap icon:
   - Not casting: existing **`PlayerHeaderIcon variant="cast"`** (mask `cast.svg`).
   - Casting: variant **`casting`** with **`mask-image: url("/casting.svg")`** — same **CSS mask + `currentColor`** pattern as idle cast (`casting.svg` uses **`#FAFAFA`** fills like **`cast.svg`**).
@@ -126,7 +128,7 @@ export const CAST_DEVICE_OPTIONS = [
 ];
 ```
 
-Selecting a row sets pending device name for the Network / Local Network chain; **startCast** commits the name on Local Network **OK**.
+Selecting a row sets **casting** and stores the device name (**permission dialogs** run before this step).
 
 ### Assets
 

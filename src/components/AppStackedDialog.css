@@ -94,6 +94,19 @@ html[data-theme="light"] .app-stacked-dialog__scrim {
   margin-bottom: 0;
 }
 
+/* Confirmation dialogs (Clear history speed bump — Figma dialogsClear `19979:36464`). */
+.app-stacked-dialog__confirm-line {
+  margin: 0;
+  font-size: inherit;
+  line-height: 1.35;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+.app-stacked-dialog__confirm-line + .app-stacked-dialog__confirm-line {
+  margin-top: var(--space-6);
+}
+
 /* Guest skip + similar: smaller muted body vs promo h9 block */
 .app-stacked-dialog__lede {
   margin: 0;

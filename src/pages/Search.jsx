@@ -1,13 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
+import ScreenHeader, {
+  ScreenHeaderChevronBack,
+} from "../components/ScreenHeader";
 import SearchBrowseHeader, {
   SEARCH_SCREEN_HEADER_STACK_PX,
 } from "../components/SearchBrowseHeader.jsx";
-import {
-  SearchBrowseTile,
-  SearchBrowseTileGrid,
-} from "../components/SearchBrowseTile.jsx";
 import { CATALOG_SCOPE } from "../constants/catalogScope.js";
 import { MUSIC_LINEUP } from "../constants/musicLineup.js";
 import {
@@ -16,7 +14,6 @@ import {
 } from "../constants/searchBrowsePaths.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
-import { MUSIC_GENRES } from "../data/musicChannels.js";
 import SearchMusicVibeBrowseRail from "../components/SearchMusicVibeBrowseRail.jsx";
 import SearchPodcastsBrowse from "./SearchPodcastsBrowse.jsx";
 import SearchRadioBrowse from "./SearchRadioBrowse.jsx";
@@ -107,7 +104,13 @@ export default function Search() {
 
     const search = next ? `?q=${encodeURIComponent(next)}` : "";
     navigate({ pathname: location.pathname, search }, { replace: true });
-  }, [debouncedQuery, navigate, location.pathname, location.search, catalogScope]);
+  }, [
+    debouncedQuery,
+    navigate,
+    location.pathname,
+    location.search,
+    catalogScope,
+  ]);
 
   /** Persist browse strip for **broad** Search shell only; layout phase so BottomNav + switcher agree on first paint after return. */
   useLayoutEffect(() => {
@@ -129,8 +132,6 @@ export default function Search() {
       navigate({ pathname: location.pathname, search: "" }, { replace: true });
     }
   }
-
-  const musicBrowseTitleId = "search-music-browse-heading";
 
   return (
     <main className="app-shell app-shell--footer-fixed search-page">
@@ -166,7 +167,7 @@ export default function Search() {
         ) : isLimitedSearchRoot ? (
           <div className="content-inset search-page__body">
             <p className="text-muted search-page__limited-empty">
-              Type to search music, podcasts, or radio. Stacked category swimlanes stay on Browse.
+              Type to search music, podcasts, or radio.
             </p>
           </div>
         ) : browseTab === "music" ? (
@@ -182,31 +183,6 @@ export default function Search() {
                   />
                 ))
               : null}
-            <div className="content-inset search-page__body">
-              <SearchBrowseTileGrid labelId={musicBrowseTitleId}>
-                {musicLineupMode === MUSIC_LINEUP.limited
-                  ? MUSIC_GENRES.map((g) => (
-                      <SearchBrowseTile
-                        key={g.id}
-                        onClick={() =>
-                          navigate(`/search/browse/music/category/${g.id}`)
-                        }
-                      >
-                        {g.label}
-                      </SearchBrowseTile>
-                    ))
-                  : BROAD_VIBES.map((v) => (
-                      <SearchBrowseTile
-                        key={v.id}
-                        onClick={() =>
-                          navigate(`/search/browse/music/vibe/${v.id}`)
-                        }
-                      >
-                        {v.label}
-                      </SearchBrowseTile>
-                    ))}
-              </SearchBrowseTileGrid>
-            </div>
           </div>
         ) : browseTab === "podcasts" ? (
           <div className="home-screen">

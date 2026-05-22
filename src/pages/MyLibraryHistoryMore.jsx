@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import AppStackedDialog from "../components/AppStackedDialog";
 import { renderListenAgainTile } from "../components/ListenAgainCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { getMyLibraryHistoryRouteConfig } from "../constants/myLibraryHistory";
@@ -18,6 +20,7 @@ export default function MyLibraryHistoryMore() {
   const { items, clearHistoryByKind } = useListenHistory();
   const { clearAllEpisodeProgress } = usePodcastUserState();
   const goBack = () => navigate(-1);
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
   if (!config) {
     return <Navigate to="/my-library" replace />;
@@ -25,13 +28,19 @@ export default function MyLibraryHistoryMore() {
 
   const filtered = items.filter((x) => x.kind === config.listenKind);
 
-  const handleClear = () => {
+  const closeClearDialog = () => setClearDialogOpen(false);
+
+  const confirmClear = () => {
     clearHistoryByKind(config.listenKind);
     if (config.listenKind === "podcast") {
       clearAllEpisodeProgress();
     }
+    closeClearDialog();
     goBack();
   };
+
+  const dialogTitleId = `my-library-history-clear-dialog-title-${historySegment}`;
+  const dialogDescId = `my-library-history-clear-dialog-desc-${historySegment}`;
 
   return (
     <main className="app-shell app-shell--footer-fixed swimlane-more">
@@ -51,7 +60,8 @@ export default function MyLibraryHistoryMore() {
           <button
             type="button"
             className="screen-header__text-btn"
-            onClick={handleClear}
+            disabled={filtered.length === 0}
+            onClick={() => setClearDialogOpen(true)}
             aria-label={config.clearAriaLabel}
           >
             Clear
@@ -79,6 +89,33 @@ export default function MyLibraryHistoryMore() {
           </ul>
         )}
       </div>
+
+      <AppStackedDialog
+        open={clearDialogOpen}
+        onClose={closeClearDialog}
+        scrimCloseLabel="Close dialog without clearing history"
+        title={config.clearConfirmDialogTitle}
+        titleId={dialogTitleId}
+        descriptionId={dialogDescId}
+        primaryButton={{
+          label: config.clearConfirmPrimaryLabel,
+          onClick: confirmClear,
+          variant: "subscribe-primary",
+        }}
+        secondaryButton={{
+          label: "Cancel",
+          onClick: closeClearDialog,
+          appearance: "outline",
+        }}
+      >
+        <p className="app-stacked-dialog__confirm-line">
+          Are you sure you want to clear your{" "}
+          {config.clearConfirmBodyHistoryPhrase}?
+        </p>
+        <p className="app-stacked-dialog__confirm-line">
+          This action cannot be undone.
+        </p>
+      </AppStackedDialog>
     </main>
   );
 }

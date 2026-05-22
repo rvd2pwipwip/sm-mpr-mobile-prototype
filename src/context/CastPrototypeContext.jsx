@@ -13,10 +13,6 @@ export function CastPrototypeProvider({ children }) {
   const [castDeviceName, setCastDeviceName] = useState(
     /** @type {string | null} */ (null),
   );
-  const [pendingDeviceName, setPendingDeviceName] = useState(
-    /** @type {string | null} */ (null),
-  );
-
   const [castToOpen, setCastToOpen] = useState(false);
   const [networkAccessOpen, setNetworkAccessOpen] = useState(false);
   const [localNetworkOpen, setLocalNetworkOpen] = useState(false);
@@ -26,7 +22,6 @@ export function CastPrototypeProvider({ children }) {
     setCastToOpen(false);
     setNetworkAccessOpen(false);
     setLocalNetworkOpen(false);
-    setPendingDeviceName(null);
   }, []);
 
   const openCastTo = useCallback(() => {
@@ -34,7 +29,8 @@ export function CastPrototypeProvider({ children }) {
       setCastingOnDialogOpen(true);
       return;
     }
-    setCastToOpen(true);
+    /** Wizard order: Network Access -> Local Network -> Cast to device list */
+    setNetworkAccessOpen(true);
   }, [isCasting]);
 
   const closeCastTo = useCallback(() => {
@@ -44,9 +40,9 @@ export function CastPrototypeProvider({ children }) {
   const selectCastDevice = useCallback(
     /** @param {string} name */
     (name) => {
-      setPendingDeviceName(name);
       setCastToOpen(false);
-      setNetworkAccessOpen(true);
+      setIsCasting(true);
+      setCastDeviceName(name);
     },
     [],
   );
@@ -62,10 +58,8 @@ export function CastPrototypeProvider({ children }) {
 
   const localNetworkOk = useCallback(() => {
     setLocalNetworkOpen(false);
-    setIsCasting(true);
-    setCastDeviceName(pendingDeviceName);
-    setPendingDeviceName(null);
-  }, [pendingDeviceName]);
+    setCastToOpen(true);
+  }, []);
 
   const localNetworkBlock = useCallback(() => {
     abortWizard();

@@ -6,6 +6,7 @@ import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeade
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { getMusicChannelById } from "../data/musicChannels";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import { useSharePrototype } from "../context/SharePrototypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import "./MusicChannelInfo.css";
 
@@ -29,6 +30,7 @@ export default function MusicChannelInfo() {
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
   const musicLike = useMusicRadioLikeAction("music", channel?.id);
+  const { openSharePrototype } = useSharePrototype();
 
   useEffect(() => {
     setDescExpanded(false);
@@ -105,6 +107,7 @@ export default function MusicChannelInfo() {
                   variant="secondary"
                   fullWidth
                   startIcon={<ActionIconMask variant="share" />}
+                  onClick={openSharePrototype}
                 >
                   Share
                 </ButtonSmall>

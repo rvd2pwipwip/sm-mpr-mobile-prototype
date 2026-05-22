@@ -1,0 +1,48 @@
+/* Mock Web Share API -> Facebook composer — layered PNG taps (`SharePrototypeProvider`). */
+
+.share-prototype-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-share-prototype);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: var(--app-max-width);
+  height: 100%;
+  margin: 0 auto;
+  padding: var(--space-content-inline);
+  border: none;
+  background-color: rgb(0 0 0 / 0.45);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.share-prototype-overlay:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+}
+
+.share-prototype-overlay__img {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .share-prototype-overlay {
+    background-color: rgb(255 255 255 / 0.18);
+  }
+}
+
+html[data-theme="dark"] .share-prototype-overlay {
+  background-color: rgb(255 255 255 / 0.18);
+}
+
+html[data-theme="light"] .share-prototype-overlay {
+  background-color: rgb(0 0 0 / 0.45);
+}

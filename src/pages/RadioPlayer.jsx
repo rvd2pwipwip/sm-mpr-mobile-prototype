@@ -21,6 +21,7 @@ import "./MusicPlayer.css";
 import "./RadioPlayer.css";
 import { CASTING_ON } from "../constants/castPrototypeCopy";
 import { useCastPrototype } from "../context/CastPrototypeContext";
+import { useSharePrototype } from "../context/SharePrototypeContext";
 
 /** `public/down.svg`, `cast.svg` — same as `MusicPlayer`. */
 function PlayerHeaderIcon({ variant }) {
@@ -82,6 +83,7 @@ export default function RadioPlayer() {
   const likeAction = useMusicRadioLikeAction("radio", station?.id);
 
   const { isCasting, castDeviceName, openCastTo } = useCastPrototype();
+  const { openSharePrototype } = useSharePrototype();
 
   const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
   const thumbSidePx = useFullscreenPlayerThumbSidePx(mainRef, Boolean(station));
@@ -116,7 +118,8 @@ export default function RadioPlayer() {
     return <Navigate to="/search/radio" replace />;
   }
 
-  const leaveFullPlayerForStationInfo = () => {
+  /** Minimize: from mini player pop stack; else replace with station detail (same URL as card tap). */
+  const leaveFullPlayerMinimize = () => {
     if (expandFromMini) {
       navigate(-1);
       return;
@@ -124,7 +127,12 @@ export default function RadioPlayer() {
     navigate(`/radio/${station.id}`, { replace: true });
   };
 
-  const dismiss = leaveFullPlayerForStationInfo;
+  /** Info icon always opens Radio Info — never `history.back()`, which often lands on Home after mini expand. */
+  const leaveFullPlayerForStationInfo = () => {
+    navigate(`/radio/${station.id}`, { replace: true });
+  };
+
+  const dismiss = leaveFullPlayerMinimize;
 
   const subtitleLine =
     station.frequencyLabel ?? station.categoryLabel ?? "";
@@ -193,6 +201,7 @@ export default function RadioPlayer() {
                 type="button"
                 className="music-player__icon-btn"
                 aria-label="Share"
+                onClick={openSharePrototype}
               >
                 <PlayerMetaActionIcon variant="share" />
               </button>

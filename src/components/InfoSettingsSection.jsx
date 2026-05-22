@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AppStackedDialog from "./AppStackedDialog";
 import OpenInNewIcon from "./OpenInNewIcon";
 import SearchBrowseContentSwitcher from "./SearchBrowseContentSwitcher";
 import {
+  AUDIO_QUALITY_DATA_CHARGES_NOTE,
   AUDIO_QUALITY_SEGMENTS,
   AUDIO_QUALITY_UPSELL,
   COMMUNICATION_PREFERENCES_HREF,
@@ -28,6 +29,16 @@ export default function InfoSettingsSection() {
   );
   const [audioExpanded, setAudioExpanded] = useState(hasAccess);
   const [audioUpsellOpen, setAudioUpsellOpen] = useState(false);
+
+  const audioSwitcherSegments = useMemo(
+    () => AUDIO_QUALITY_SEGMENTS.map(({ id, label }) => ({ id, label })),
+    [],
+  );
+
+  const audioQualityTier = useMemo(() => {
+    const hit = AUDIO_QUALITY_SEGMENTS.find((s) => s.id === audioQualityId);
+    return hit ?? AUDIO_QUALITY_SEGMENTS[0];
+  }, [audioQualityId]);
 
   useEffect(() => {
     if (hasAccess) {
@@ -105,10 +116,27 @@ export default function InfoSettingsSection() {
             <SearchBrowseContentSwitcher
               mode="local"
               ariaLabel="Audio Quality"
-              segments={AUDIO_QUALITY_SEGMENTS}
+              segments={audioSwitcherSegments}
               activeId={audioQualityId}
               onActiveIdChange={setAudioQualityId}
             />
+            <div
+              className="info-settings__audio-meta"
+              aria-live="polite"
+            >
+              <p className="info-settings__audio-tier-description">
+                <strong>{audioQualityTier.label}</strong>
+                {audioQualityTier.recommendedParenthetical ? (
+                  <> (Recommended)</>
+                ) : null}{" "}
+                audio quality uses <strong>{audioQualityTier.bitrate}</strong>{" "}
+                encoding and an average of{" "}
+                <strong>{audioQualityTier.consumption}</strong>.
+              </p>
+              <p className="info-settings__audio-data-note">
+                {AUDIO_QUALITY_DATA_CHARGES_NOTE}
+              </p>
+            </div>
           </div>
         ) : null}
       </div>

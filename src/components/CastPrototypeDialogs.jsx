@@ -27,12 +27,6 @@ export default function CastPrototypeDialogs() {
 
   return (
     <>
-      <CastToDialog
-        open={castToOpen}
-        onClose={closeCastTo}
-        devices={CAST_DEVICE_OPTIONS}
-        onSelectDevice={selectCastDevice}
-      />
       <CastNetworkAccessDialog
         open={networkAccessOpen}
         onClose={networkAccessCancel}
@@ -44,6 +38,12 @@ export default function CastPrototypeDialogs() {
         onClose={localNetworkBlock}
         onOk={localNetworkOk}
         onBlock={localNetworkBlock}
+      />
+      <CastToDialog
+        open={castToOpen}
+        onClose={closeCastTo}
+        devices={CAST_DEVICE_OPTIONS}
+        onSelectDevice={selectCastDevice}
       />
       <CastCastingOnDialog
         open={castingOnDialogOpen}

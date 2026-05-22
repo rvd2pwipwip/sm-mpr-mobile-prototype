@@ -18,6 +18,7 @@ import { LikesProvider } from "./context/LikesContext";
 import { ListenHistoryProvider } from "./context/ListenHistoryContext";
 import { CategoryRailMemoryProvider } from "./context/CategoryRailMemoryContext.jsx";
 import { CastPrototypeProvider } from "./context/CastPrototypeContext";
+import { SharePrototypeProvider } from "./context/SharePrototypeContext";
 import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
 import { CATALOG_SCOPE } from "./constants/catalogScope.js";
@@ -57,6 +58,7 @@ import SwimlaneMore from "./pages/SwimlaneMore";
 import { readStoredBroadSearchBrowseTab } from "./constants/searchBrowsePaths.js";
 import { hideFooterChromeForPath } from "./utils/hideFooterChromeForPath";
 import CastPrototypeDialogs from "./components/CastPrototypeDialogs";
+import SharePrototypeOverlays from "./components/SharePrototypeOverlays";
 
 /** Remount when channel or user type changes so pre-roll + playback state reset. */
 function MusicPlayerRoute() {
@@ -190,12 +192,15 @@ function App() {
                 <PodcastUserStateProvider>
                   <PlaybackProvider>
                     <CastPrototypeProvider>
-                      <>
-                        <CastPrototypeDialogs />
-                        <CategoryRailMemoryProvider>
-                          <AppRoutes />
-                        </CategoryRailMemoryProvider>
-                      </>
+                      <SharePrototypeProvider>
+                        <>
+                          <CastPrototypeDialogs />
+                          <SharePrototypeOverlays />
+                          <CategoryRailMemoryProvider>
+                            <AppRoutes />
+                          </CategoryRailMemoryProvider>
+                        </>
+                      </SharePrototypeProvider>
                     </CastPrototypeProvider>
                   </PlaybackProvider>
                 </PodcastUserStateProvider>

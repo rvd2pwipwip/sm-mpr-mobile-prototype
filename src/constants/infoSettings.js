@@ -7,11 +7,34 @@
 export const INFO_AUTOPLAY_DESCRIPTION =
   "Start playing music as soon as the app is launched";
 
-export const AUDIO_QUALITY_SEGMENTS = [
-  { id: "normal", label: "Normal" },
-  { id: "high", label: "High" },
-  { id: "lossless", label: "Lossless" },
-];
+export const AUDIO_QUALITY_SEGMENTS = Object.freeze([
+  {
+    id: "normal",
+    label: "Normal",
+    bitrate: "96 Kbps",
+    consumption: "45 MB/hour",
+    /** Renders trailing “(Recommended)” after tier name in copy. */
+    recommendedParenthetical: true,
+  },
+  {
+    id: "high",
+    label: "High",
+    bitrate: "160 Kbps",
+    consumption: "75 MB/hour",
+    recommendedParenthetical: false,
+  },
+  {
+    id: "maximum",
+    label: "Maximum",
+    bitrate: "320 Kbps",
+    consumption: "150 MB/hour",
+    recommendedParenthetical: false,
+  },
+]);
+
+/** Shown below the tier description whenever Audio Quality expanded (all tiers). */
+export const AUDIO_QUALITY_DATA_CHARGES_NOTE =
+  "Increasing the audio quality may result in additional data charges.";
 
 /**
  * Communication preferences — Figma `5518:74308` (marketing preference center).

@@ -176,6 +176,27 @@ html[data-theme="dark"] .info-settings__switch-track::after {
   padding-bottom: var(--space-4);
 }
 
+.info-settings__audio-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.info-settings__audio-tier-description,
+.info-settings__audio-data-note {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+}
+
+.info-settings__audio-tier-description strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .info-settings__chevron {
     transition: none;

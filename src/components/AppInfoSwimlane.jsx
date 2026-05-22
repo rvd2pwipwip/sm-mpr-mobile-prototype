@@ -9,6 +9,16 @@ import {
 } from "../constants/infoHelpLinks";
 import "./AppInfoSwimlane.css";
 
+function publicAssetHref(relativePath) {
+  const raw =
+    typeof import.meta.env.BASE_URL === "string" ? import.meta.env.BASE_URL : "/";
+  const base = raw.endsWith("/") ? raw : `${raw}/`;
+  const trimmed = relativePath.replace(/^\/+/, "");
+  return `${base}${trimmed}`;
+}
+
+const FAQ_OPEN_ICON_MASK_URL = publicAssetHref("openInNew.svg");
+
 const TILE_ACCOUNT = {
   key: "account",
   label: "Account and settings",
@@ -58,7 +68,17 @@ export default function AppInfoSwimlane() {
             className="app-info-swimlane__tile"
             {...faqExtras}
           >
-            <span className="app-info-swimlane__tile-label">{TILE_FAQ.label}</span>
+            <span className="app-info-swimlane__tile-label app-info-swimlane__tile-label--faq">
+              <span className="app-info-swimlane__faq-text">{TILE_FAQ.label}</span>
+              <span
+                className="app-info-swimlane__tile-label-external"
+                aria-hidden={true}
+                style={{
+                  maskImage: `url(${FAQ_OPEN_ICON_MASK_URL})`,
+                  WebkitMaskImage: `url(${FAQ_OPEN_ICON_MASK_URL})`,
+                }}
+              />
+            </span>
           </a>
 
           <Link to={TILE_CONTACT.to} className="app-info-swimlane__tile">
