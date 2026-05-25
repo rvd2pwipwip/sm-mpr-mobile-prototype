@@ -9,9 +9,14 @@ import {
   STINGRAY_ACCOUNT_LOGIN_URL,
   STINGRAY_SIGNUP_EMAIL_URL,
 } from "../constants/externalLinks";
-import { INFO_ACCOUNT_COPY } from "../constants/infoAccount";
+import {
+  INFO_ACCOUNT_COPY,
+  RESTORE_PURCHASE_PROTOTYPE_DIALOG,
+} from "../constants/infoAccount";
 import { useUserType } from "../context/UserTypeContext";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
+import { useRestorePurchasePrototypeDialog } from "../hooks/useRestorePurchasePrototypeDialog";
+import RestorePurchasePrototypeDialog from "./RestorePurchasePrototypeDialog";
 import "./InfoAccountSection.css";
 
 /**
@@ -21,6 +26,12 @@ export default function InfoAccountSection() {
   const navigate = useNavigate();
   const { userType, setUserType } = useUserType();
   const goUpgrade = useGoUpgrade();
+  const {
+    dialogOpen: restoreDialogOpen,
+    working: restoreWorking,
+    triggerRestore,
+    closeDialog: closeRestoreDialog,
+  } = useRestorePurchasePrototypeDialog();
   const logOut = () => setUserType("guest");
 
   const mockProviderAccess = () => {
@@ -71,11 +82,12 @@ export default function InfoAccountSection() {
             <Button
               variant="secondary"
               className="info-account__action-full"
-              onClick={() => {
-                console.log("Restore purchase");
-              }}
+              disabled={restoreWorking}
+              onClick={triggerRestore}
             >
-              Restore purchase
+              {restoreWorking
+                ? RESTORE_PURCHASE_PROTOTYPE_DIALOG.workingLabel
+                : RESTORE_PURCHASE_PROTOTYPE_DIALOG.buttonLabel}
             </Button>
           </div>
           <div className="info-account__action-group">
@@ -158,6 +170,16 @@ export default function InfoAccountSection() {
             <Button
               variant="secondary"
               className="info-account__action-full"
+              disabled={restoreWorking}
+              onClick={triggerRestore}
+            >
+              {restoreWorking
+                ? RESTORE_PURCHASE_PROTOTYPE_DIALOG.workingLabel
+                : RESTORE_PURCHASE_PROTOTYPE_DIALOG.buttonLabel}
+            </Button>
+            <Button
+              variant="secondary"
+              className="info-account__action-full"
               onClick={logOut}
             >
               Log out
@@ -173,6 +195,11 @@ export default function InfoAccountSection() {
           </div>
         </div>
       ) : null}
+
+      <RestorePurchasePrototypeDialog
+        open={restoreDialogOpen}
+        onClose={closeRestoreDialog}
+      />
     </div>
   );
 }

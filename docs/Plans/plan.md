@@ -64,6 +64,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - [x] **Catalog scope refactor — Limited ads parity + Phase E (docs)** — Footer **`LimitedCatalogFooterAd`** (**`VisualAdStrip`** **`variant="nav"`**) when **`showVisualAds`** on limited. **`hideFooterChromeForPath`** (**`utils/hideFooterChromeForPath.js`**, shared by **`LimitedCatalogFooterAd`** and **`App.jsx`**). **`index.css`:** **`html[data-catalog-scope="limited"][data-visual-ads]`** sets **`--bottom-nav-stack-height`** to **`--visual-ad-strip-min-height`**. In-feed **`SwimlaneBannerAd`** in **`LimitedBrowseTaxonomyRails`** after **two** taxonomy swimlanes. **Phase E docs:** **`docs/react-learning.md`**, **`catalog-scope-search-browse-refactor.md`** §6, and this **`plan.md`** update.
 
 - [x] **Cast (dumb prototype)** — **`CastPrototypeProvider`** + **`CastPrototypeDialogs`** (**`CastToDialog`**, **`AppStackedDialog`** shells for Network / Local Network / Casting on); fullscreen **`MusicPlayer`**, **`RadioPlayer`**, **`PodcastPlayer`**: cast / casting icon mask, thumbnail scrim + overlay, **`docs/Plans/Cast-prototype-implementation-plan.md`**.
+- [x] **Restore purchases (Tier A stub)** — **`RestorePurchasePrototypeDialog`** + **`useRestorePurchasePrototypeDialog`**: brief **Working...** then **`AppStackedDialog`** explaining no store connection; **`InfoAccountSection`** (guest, free Stingray) + **`Subscription`**.
 
 ## Home screen — implementation approach
 
@@ -76,7 +77,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 3. **Home page (first vertical slice)** — **done** for routing: **`/` → `Home`**, with `main.app-shell` → `home-screen` + swimlanes + **Listen again** when history non-empty. **Chrome** (nav, header, …) in step 4.
 
 4. **Chrome after core content** — **done (baseline)**  
-   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). _Follow-up:_ **Favorites**, **Recommendations**, full banner art / SVGs from Figma.
+   `BottomNav`, `HomeHeader`, `HomeBanner` placeholder, nav + safe-area padding on **`.app-shell`**. Ads wired; **mini player** baseline shipped (see **What we have done**). **Broad Home** has **no** liked / Favorites rail (**`My Library`** only for that on broad catalog); **Recommendations** swimlane ships on Home. _Follow-up:_ full banner art / SVGs from Figma.
 
 5. **User mode stub** — **done (baseline)**  
    **`UserTypeContext`**: `guest` | `freeStingray` | `freeProvided` | `subscribed` — drives **`HomeHeader`** and **Subscription**; **`docs/Stories/Home-screen-story.md`** for chrome intent.
@@ -102,9 +103,9 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 - **Dedupe + recency:** prepend or bump-on-repeat; cap stored entries for UI (rail shows up to **12** slots visually — see below).
 - **Single source of truth:** one ordered **`items`** list in **`ListenHistoryProvider`**. **Home — Listen again** uses the **full list** (mixed recap, **unfiltered by type**). **Limited Browse** (**`LimitedBrowseTaxonomyRails`**) shows **Listen again** filtered to the active **Music** \| **Podcasts** \| **Radio** tab (**`music` \| `podcast` \| `radio`** in storage). **My Library** adds **typed** rails by **`filter(kind)`** on the same store (music / podcasts / radio) — see **`docs/Plans/My-Library-implementation-plan.md`** § Single source of truth.
 
-**Home — layout order (prepare for Favorites)**
+**Broad Home — layout order (Favorites)**
 
-- Below **banner** (and existing `.content-inset` blocks): leave a clear **placeholder** for **Favorites** (future): render **Favorites** here when populated; **then** **Listen again** when history is non-empty; then existing **Music → Podcasts → …** lanes. Comments or a small wrapper in `Home.jsx` keep the slot obvious.
+- **Broad catalog** **`/`** (**`Home.jsx`**): **no** liked / Favorites swimlane for now (product scope); users open **My Library** for **`LibraryLiked*`** rails. Below **banner**: **Listen again** when history is non-empty, then **Music → Podcasts → …** (and **Recommendations**, etc.). **Limited Browse** (narrow catalog) still shows tab-scoped liked rails in **`LimitedBrowseTaxonomyRails`** — see **Catalog scope refactor — Phase C** above.
 
 **Home — Listen again swimlane**
 
@@ -163,22 +164,6 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ---
 
-## Backlog / later
-
-- [x] **Favorites** — liked content rail (sparse by design); insert **above** **Listen again** on Home when populated (slot reserved in spec above).
-- [x] **Recommendations** — generic stub, then “informed by” fake history.
-- [ ] **International radio (expand beyond v1)** — **`docs/Stories/Search-story.md`** (full geo tree + format IA beyond the **North America → Canada → Alberta → cities** mock); align `radioInternationalBrowse.js`, `radioStations.js`, + `docs/figma-nodes.md` when adding regions.
-- [x] **Territory / OEM depth** — today **`catalogScope`** (**limited** \| **broad**) tracks **musicLineupMode** for IA; split real **geo / OEM** rules from lineup when product needs it.
-- [x] **Provider lineup** — surface partner / provider lineup and entitlement hints in UX (beyond **`freeProvided`** header copy); stub flows only unless product specifies screens.
-- [x] **Full-screen player layout refactor — Phase 5 + acceptance** — **`docs/Plans/Full-screen-player-layout-refactor.md`** checklist marked; **`docs/visual-ads-and-user-types.md`** **`FullScreenPlayerShell`** + fixed player strip + **`--visual-ad-player-reserve-height`** (**Phase 5**).
-- [x] **Cast** — dumb prototype cast flow; **`docs/Plans/Cast-prototype-implementation-plan.md`**.
-- [ ] **Share** — **`Share`** on players and info screens invokes native share stub or modal (today non-functional placeholder).
-- [ ] **Artists & Tags search results** — **`SearchResultsPanel`** / **`searchCatalog.js`** already index artists + tag rows; deepen lanes (routing, thumbnails, empty states, parity with **`Search-story`**).
-- [ ] **Restore purchase** — **Subscription** / account paths: **`Restore purchases`** (or portal link) stub for IAP / storefront handoff narratives.
-- [ ] **Global grace period** — extend **guest preroll** / entitlement grace (**`GuestPrerollGraceContext`**, **`MusicPlayer`** / **`RadioPlayer`** gates) beyond current scope if product defines app-wide vs per-session rules.
-
----
-
 ## How to maintain this file
 
 - After **meaningful** work (a feature, a milestone, or a clear scope change): update **What we have done** and **Next steps**; adjust **Backlog** as needed.
@@ -187,7 +172,11 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-_Last updated: 2026-05-19_ — **Full-screen player refactor Phase 5** (docs + **`visual-ads-and-user-types.md`** player subsection + acceptance checklist); Phases **1–5** marked complete in **`plan.md`**.
+_Last updated: 2026-05-26_ — **Broad Home**: no favorites / likes rail; document **My Library** + **`Home.jsx`** comment; backlog + Listen again layout note.
+
+_Prior (2026-05-25):_ **Restore purchases Tier A** (`AppStackedDialog` stub, **`useRestorePurchasePrototypeDialog`**, **`Subscription`** + **`InfoAccountSection`**).
+
+_Prior (2026-05-19):_ **Full-screen player refactor Phase 5** (docs + **`visual-ads-and-user-types.md`** player subsection + acceptance checklist); Phases **1–5** marked complete in **`plan.md`**.
 
 _Prior (2026-05-19):_ **Full-screen player refactor Phase 4** (**`useFullscreenPlayerThumbSidePx`** on music / radio / podcast); **`plan.md`** + **`Full-screen-player-layout-refactor.md`** + **`react-learning.md`** updated.
 

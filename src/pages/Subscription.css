@@ -72,11 +72,17 @@
 
 .subscription-screen__btn-primary {
   width: 100%;
-  max-width: 251px;
+  max-width: var(--button-stack-max-width);
+}
+
+.subscription-screen__btn-restore {
+  width: 100%;
+  max-width: var(--button-stack-max-width);
 }
 
 .subscription-screen__btn-secondary {
-  max-width: 100%;
+  width: 100%;
+  max-width: var(--button-stack-max-width);
 }
 
 .subscription-screen__provider-block {

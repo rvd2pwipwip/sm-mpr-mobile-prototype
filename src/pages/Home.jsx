@@ -49,7 +49,7 @@ export default function Home() {
             <HomeBanner />
           </div>
 
-          {/* Favorites (future): render a swimlane here when the user has likes. */}
+          {/* Broad catalog Home: no liked / Favorites swimlane (by product); use My Library. Limited Browse still has tab-scoped likes in `LimitedBrowseTaxonomyRails`. */}
 
           {listenAgainItems.length > 0 ? (
             <ContentSwimlane

@@ -137,7 +137,7 @@ html[data-theme="light"] .app-stacked-dialog__scrim {
 
 .app-stacked-dialog__btn-wide.btn {
   width: 100%;
-  max-width: 300px;
+  max-width: var(--button-stack-max-width);
   min-height: 60px;
   justify-content: center;
 }

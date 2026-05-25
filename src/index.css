@@ -95,6 +95,12 @@
   --letter-spacing-button: 0.03em;
   /* Required by `Button.css` — if unset, `line-height` is invalid and inherits (e.g. `line-height: 0` from chrome rows hides labels). */
   --line-height-button: 1.5;
+  /*
+   * Stacked primary/secondary rows: buttons fill their column up to this cap.
+   * Default `.btn` remains `inline-flex` (hug content) unless a section adds width.
+   */
+  --button-stack-max-width: 300px;
+
   /* Secondary variant outline — ~30% of foreground on light; flips in dark. */
   --color-button-secondary-border: color-mix(
     in srgb,

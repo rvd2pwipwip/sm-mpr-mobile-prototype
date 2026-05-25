@@ -23,3 +23,15 @@ export const INFO_ACCOUNT_COPY = {
     subline: INFO_ACCOUNT_SUBSCRIPTION_UNTIL,
   },
 };
+
+/** Tier A prototype: Restore purchases opens AppStackedDialog only (no store / IAP). */
+export const RESTORE_PURCHASE_PROTOTYPE_DIALOG = {
+  title: "Restore purchases",
+  buttonLabel: "Restore purchases",
+  workingLabel: "Working...",
+  primaryLabel: "Done",
+  paragraphs: [
+    "In a live app, this would ask the App Store or Google Play to restore your purchases, then refresh your subscription in the app.",
+    "This clickable prototype does not connect to any store.",
+  ],
+};

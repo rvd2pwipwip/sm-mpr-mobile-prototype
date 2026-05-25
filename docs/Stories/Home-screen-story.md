@@ -34,6 +34,8 @@ I’ve also been mandated to display visual ads for unsubscribed and unprovided 
 
 **Prototype mapping (code):** see **`../visual-ads-and-user-types.md`** — `guest`, `freeStingray`, and `freeProvided` show the footer ad placeholder under the tab bar and on the music player; `subscribed` does not.
 
+**Prototype note (broad catalog Home):** the clickable **`Home.jsx`** route under **broad** catalog intentionally **does not** render a **Favorites** swimlane above **Listen again**; **likes** appear on **My Library** (`LibraryLikedMusicSwimlane` / `LibraryLikedRadioSwimlane`). The narrative above still describes ideal product order if we bring Favorites onto Home later. **Limited Browse** (narrow catalog) shows tab-scoped liked rails separately.
+
 These ads can be displayed below the main menu in my footer and also between my content swimlanes.
 
 I’ve already mentioned that our app caters to different types of users, so I must make sure user types are easily identified through my layout and visuals.

@@ -6,7 +6,10 @@ import ScreenHeader, {
 } from "../components/ScreenHeader";
 import { PROVIDER_SSO_URL, STINGRAY_SIGNUP_EMAIL_URL } from "../constants/externalLinks";
 import { LEGAL_LINKS } from "../constants/legalLinks";
+import { RESTORE_PURCHASE_PROTOTYPE_DIALOG } from "../constants/infoAccount";
 import { useUserType } from "../context/UserTypeContext";
+import { useRestorePurchasePrototypeDialog } from "../hooks/useRestorePurchasePrototypeDialog";
+import RestorePurchasePrototypeDialog from "../components/RestorePurchasePrototypeDialog";
 import "./Subscription.css";
 
 const BENEFITS = [
@@ -27,6 +30,12 @@ const USER_TYPE_OPTIONS = [
 export default function Subscription() {
   const navigate = useNavigate();
   const { userType, setUserType } = useUserType();
+  const {
+    dialogOpen: restoreDialogOpen,
+    working: restoreWorking,
+    triggerRestore,
+    closeDialog: closeRestoreDialog,
+  } = useRestorePurchasePrototypeDialog();
 
   const goBack = () => navigate(-1);
 
@@ -78,6 +87,16 @@ export default function Subscription() {
               onClick={handleSubscribe}
             >
               Upgrade now
+            </Button>
+            <Button
+              variant="secondary"
+              className="subscription-screen__btn-restore"
+              disabled={restoreWorking}
+              onClick={triggerRestore}
+            >
+              {restoreWorking
+                ? RESTORE_PURCHASE_PROTOTYPE_DIALOG.workingLabel
+                : RESTORE_PURCHASE_PROTOTYPE_DIALOG.buttonLabel}
             </Button>
 
             <div className="subscription-screen__provider-block">
@@ -154,6 +173,11 @@ export default function Subscription() {
           </div>
         </div>
       </div>
+
+      <RestorePurchasePrototypeDialog
+        open={restoreDialogOpen}
+        onClose={closeRestoreDialog}
+      />
     </main>
   );
 }

@@ -68,7 +68,7 @@ html[data-theme="dark"] .info-account__provider-logo--dark {
   gap: var(--space-4);
   margin: 0;
   width: 100%;
-  max-width: 300px;
+  max-width: var(--button-stack-max-width);
   margin-inline: auto;
 }
 
