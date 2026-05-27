@@ -150,7 +150,7 @@ Implement as **`Search.jsx`** branching on **`catalogScope`**. **Limited:** only
 
 **Phase E -- Docs (shipped)**
 
-7. **Deliverables:** **`docs/react-learning.md`** (**Catalog scope**, **Limited Browse**, **Listen again**, **Visual ads**); **`docs/Plans/plan.md`** (checklist + **Last updated** footer); this plan (Phase E label + **§11 Companion documentation**).
+7. **Deliverables:** **`docs/mobile/react-learning.md`** (**Catalog scope**, **Limited Browse**, **Listen again**, **Visual ads**); **`docs/mobile/Plans/plan.md`** (checklist + **Last updated** footer); this plan (Phase E label + **§11 Companion documentation**).
 
 ---
 
@@ -216,11 +216,11 @@ Implement as **`Search.jsx`** branching on **`catalogScope`**. **Limited:** only
 - **Upgrade** hidden for tiers where it should not show.
 - **Wordmark** remains the **single** developer demo toggle for lineup (Music double-tap removed).
 
-**No open IA items.** Implementation matches this plan as of archived Phase E (**`docs/react-learning.md`**, **`docs/Plans/plan.md`** checklist).
+**No open IA items.** Implementation matches this plan as of archived Phase E (**`docs/mobile/react-learning.md`**, **`docs/mobile/Plans/plan.md`** checklist).
 
 ---
 
 ## 11. Companion documentation (prototype)
 
-Longer developer notes for implemented behavior (**Catalog scope**, **Limited Browse**, **Listen again** variants, **`SearchBrowseContentSwitcher`** **`mode="local"`**, **visual ads** on limited). See **`docs/react-learning.md`**. **`docs/Plans/plan.md`** (**What we have done**) lists shipped bullets.
+Longer developer notes for implemented behavior (**Catalog scope**, **Limited Browse**, **Listen again** variants, **`SearchBrowseContentSwitcher`** **`mode="local"`**, **visual ads** on limited). See **`docs/mobile/react-learning.md`**. **`docs/mobile/Plans/plan.md`** (**What we have done**) lists shipped bullets.
 

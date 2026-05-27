@@ -4,13 +4,13 @@ Teaching-oriented guide for **you** while we build podcasts in the Stingray Musi
 
 **Companion docs**
 
-- Story: [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md)
-- UX principles: [`docs/UX/Podcasts - UX Principles.md`](../UX/Podcasts%20-%20UX%20Principles.md)
-- Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
+- Story: [`docs/mobile/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md)
+- UX principles: [`docs/mobile/UX/Podcasts - UX Principles.md`](../UX/Podcasts%20-%20UX%20Principles.md)
+- Figma index: [`docs/mobile/figma-nodes.md`](../figma-nodes.md)
 - Living repo plan: [`plan.md`](plan.md) — update “What we have done” when this slice ships
-- Ads, user types & pre-roll entry points: [`docs/visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)
-- Guest pre-roll grace (skip rules, **`expandFromMiniPlayer`**): [`docs/Tutorials/Guest-preroll-grace-tutorial.md`](Guest-preroll-grace-tutorial.md)
-- **Line-by-line / deep dive:** [`docs/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md`](Podcasts-and-episodes-deep-dive-tutorial.md)
+- Ads, user types & pre-roll entry points: [`docs/mobile/visual-ads-and-user-types.md`](../visual-ads-and-user-types.md)
+- Guest pre-roll grace (skip rules, **`expandFromMiniPlayer`**): [`docs/mobile/Tutorials/Guest-preroll-grace-tutorial.md`](Guest-preroll-grace-tutorial.md)
+- **Line-by-line / deep dive:** [`docs/mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md`](Podcasts-and-episodes-deep-dive-tutorial.md)
 
 **No real audio in this prototype** — playback is **UI state only** (progress, play/pause, speed label, seek buttons). That is enough to validate journeys.
 
@@ -67,7 +67,7 @@ Podcasts **do not** invent a separate ad model. Wire **Podcast Player** exactly 
 3. Read **`location.state?.expandFromMiniPlayer`** after **`MiniPlayer`** navigates via **`fullPlayerPath`** — no duplicate pre-roll logic in **`MiniPlayer`** itself.
 4. If you **`key`**-remount the podcast play route (**`podcastId`**, **`episodeId`**, **`userType`**) like **`MusicPlayerRoute`**, retain the same rationale: resets player shell when jumping shows/episodes/types.
 
-**Docs already expect this:** [`docs/visual-ads-and-user-types.md`](../visual-ads-and-user-types.md) states podcast / radio should reuse **`PlayerPrerollAd`** when those stacks exist.
+**Docs already expect this:** [`docs/mobile/visual-ads-and-user-types.md`](../visual-ads-and-user-types.md) states podcast / radio should reuse **`PlayerPrerollAd`** when those stacks exist.
 
 ---
 
@@ -216,7 +216,7 @@ Deliverable: “intent-heavy” browse matches **Stories** positioning relative 
 Reuse **`UserTypeContext`**, **`showVisualAds`**, and **`showPlayerPreroll`** like music (**`src/utils/showVisualAds.js`**):
 
 - **Guest** — **Upgrade** in player chrome; full-screen **`PlayerPrerollAd`** before usable podcast controls; **Listen again** / session writes only **after** the pre-roll gate (same as **`MusicPlayer`**); **guest grace** briefly suppresses repeat pre-rolls (§ *Player pre-roll & guest grace*); **visual** footer ad strip where **`showVisualAds`** applies.
-- **Free provider (`freeProvided`)** — **no** guest pre-roll; **visual ads** still on for prototype (`showVisualAds` treats every non‑`subscribed` type — align nuances with **`docs/visual-ads-and-user-types.md`** if product splits them further).
+- **Free provider (`freeProvided`)** — **no** guest pre-roll; **visual ads** still on for prototype (`showVisualAds` treats every non‑`subscribed` type — align nuances with **`docs/mobile/visual-ads-and-user-types.md`** if product splits them further).
 - **Subscribed** — **no** **`PlayerPrerollAd`**, **no** upgrade CTA strip, **no** visual footer ads (**`showVisualAds`** is **`false`**).
 
 No new subscription **product** flows — stubs only.
@@ -238,7 +238,7 @@ Use this after each phase:
 
 ## After you ship
 
-- Append a short entry to **`docs/react-learning.md`** (Context for library state, nested routes, or speed cycling pattern).
+- Append a short entry to **`docs/mobile/react-learning.md`** (Context for library state, nested routes, or speed cycling pattern).
 - Update **`plan.md`** — move **Podcast stack** from “Next” to **Done** and note **Search / Browse** follow-up scope.
 
 ---

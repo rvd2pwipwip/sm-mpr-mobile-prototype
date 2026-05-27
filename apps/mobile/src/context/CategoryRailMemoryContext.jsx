@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo, useRef } from "react";
 /**
  * Last-selected category slug per rail key (prototype).
  * Survives route remounts while the app stays open; cleared on full reload.
- * Each consumer passes a stable memoryKey string; see docs/Plans/ContentSwimlane-category-rail-variant.md section 3.
+ * Each consumer passes a stable memoryKey string; see docs/mobile/Plans/ContentSwimlane-category-rail-variant.md section 3.
  */
 const CategoryRailMemoryContext = createContext(null);
 

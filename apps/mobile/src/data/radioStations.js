@@ -6,7 +6,7 @@
  *
  * **International:** categories are flat for now (20 stations). A future UX pass
  * should nest International under continents, then countries / regions / cities—see
- * `docs/figma-nodes.md` (Radio mock data — International TODO).
+ * `docs/mobile/figma-nodes.md` (Radio mock data — International TODO).
  */
 
 /** @typedef {Object} RadioStation

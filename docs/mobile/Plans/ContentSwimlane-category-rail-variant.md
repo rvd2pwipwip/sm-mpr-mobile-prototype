@@ -1,8 +1,8 @@
 # ContentSwimlane and category rail variant
 
-Plan and step-by-step notes for **`ContentSwimlane`** (today) and the optional **category rail** variant (not shipped yet). Use this doc instead of duplicating detail in **`docs/Plans/plan.md`**.
+Plan and step-by-step notes for **`ContentSwimlane`** (today) and the optional **category rail** variant (not shipped yet). Use this doc instead of duplicating detail in **`docs/mobile/Plans/plan.md`**.
 
-**Related:** `docs/react-learning.md` (Swimlane layout pattern), `.cursor/rules/stingray-music-prototype.mdc` (swimlane checklist), **`docs/figma-nodes.md`**.
+**Related:** `docs/mobile/react-learning.md` (Swimlane layout pattern), `.cursor/rules/stingray-music-prototype.mdc` (swimlane checklist), **`docs/mobile/figma-nodes.md`**.
 
 ---
 
@@ -139,7 +139,7 @@ Call sites slice **`children`** to `maxVisible` where relevant (example patterns
 ### Step G - First consumer
 
 - Wire one swimlane (for example in **`LimitedBrowseTaxonomyRails.jsx`** or a small demo route) with fake multi-category data.
-- Update **`docs/figma-nodes.md`** with node `19943:107145` when the screen is finalized.
+- Update **`docs/mobile/figma-nodes.md`** with node `19943:107145` when the screen is finalized.
 
 ---
 
@@ -163,7 +163,7 @@ The **product target is native mobile**, not a shipped desktop web app. This rep
 
 **When prioritized — fix approach:** Prefer **small, localized** changes on **`CategoryPillsRail`** before rewriting scroll math — e.g. **`pointerDown`** **`preventDefault`** for mouse/pen only, and/or **`focus({ preventScroll: true })`** after alignment — **confirm** with **`scrollLeft`** on **`.content-swimlane__categories-scroll`**. **Note:** A prototype attempt added visible **focus rings** and did not fully fix middle-pill-off-screen cases; it was **reverted**. Treat as **Known acceptable quirk** until desktop web / polish scope.
 
-**Tutorial:** See also **`docs/Tutorials/ContentSwimlane-category-rail-tutorial.md`** for module boundaries (`CategoryPillsRail`, `categoryRailPillScroll.js`).
+**Tutorial:** See also **`docs/mobile/Tutorials/ContentSwimlane-category-rail-tutorial.md`** for module boundaries (`CategoryPillsRail`, `categoryRailPillScroll.js`).
 
 ---
 
@@ -180,7 +180,7 @@ The **product target is native mobile**, not a shipped desktop web app. This rep
 
 ## 6. After shipping
 
-- Move-or-append a short lesson to **`docs/react-learning.md`** (category rail + scroll-into-view) when you implement.
+- Move-or-append a short lesson to **`docs/mobile/react-learning.md`** (category rail + scroll-into-view) when you implement.
 - Shorten **`plan.md`** Next steps item once done; add a **What we have done** bullet linking this doc.
 
-Path: **`docs/Plans/ContentSwimlane-category-rail-variant.md`**
+Path: **`docs/mobile/Plans/ContentSwimlane-category-rail-variant.md`**

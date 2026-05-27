@@ -43,7 +43,7 @@ const TILE_ABOUT = {
   to: INFO_ABOUT_PATH,
 };
 
-/** Top row on My Library: gear + App Info title, square tiles (`docs/Plans/My-Library-implementation-plan` Phase 2). */
+/** Top row on My Library: gear + App Info title, square tiles (`docs/mobile/Plans/My-Library-implementation-plan` Phase 2). */
 export default function AppInfoSwimlane() {
   const faqExtras = externalFaqAnchorProps(INFO_FAQ_HREF);
 

@@ -1,6 +1,6 @@
 /**
  * My Library typed history rails (URLs + titles). Path segment **`podcasts`**
- * maps to listen-history **`kind: 'podcast'`** (`docs/Plans/My-Library-implementation-plan`).
+ * maps to listen-history **`kind: 'podcast'`** (`docs/mobile/Plans/My-Library-implementation-plan`).
  */
 
 /** Swimlane / More route order under App Info. */

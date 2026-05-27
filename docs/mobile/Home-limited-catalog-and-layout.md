@@ -1,6 +1,6 @@
 # Home, catalog scope, and layout
 
-This note explains how the prototype treats **broad** vs **limited** music lineups, what happens to the **classic Home screen**, and how **layout and navigation** change. It complements **`docs/Stories/Home-screen-story.md`** (product narrative) and **`docs/Plans/catalog-scope-search-browse-refactor.md`** (IA plan).
+This note explains how the prototype treats **broad** vs **limited** music lineups, what happens to the **classic Home screen**, and how **layout and navigation** change. It complements **`docs/mobile/Stories/Home-screen-story.md`** (product narrative) and **`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`** (IA plan).
 
 ## Catalog scope in the prototype
 
@@ -72,4 +72,4 @@ For **`html[data-catalog-scope="limited"]`**, **`src/index.css`** sets **`--bott
 - **`src/pages/LimitedBrowse.jsx`** — limited landing chrome and shell
 - **`src/components/LimitedBrowseTaxonomyRails.jsx`** — taxonomy rails and prepended user rails
 - **`src/context/TerritoryContext.jsx`** — lineup / **`catalogScope`**
-- **`docs/Stories/Search-story.md`** — limited vs broad Browse vocabulary
+- **`docs/mobile/Stories/Search-story.md`** — limited vs broad Browse vocabulary

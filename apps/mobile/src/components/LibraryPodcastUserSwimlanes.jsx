@@ -26,7 +26,7 @@ const RAIL_TITLE = {
 
 /**
  * Podcast library swimlanes from `PodcastUserStateContext` — omitted when empty; More uses
- * Search browse library grids (`docs/Stories/My-Library-story`).
+ * Search browse library grids (`docs/mobile/Stories/My-Library-story`).
  */
 export default function LibraryPodcastUserSwimlanes() {
   const navigate = useNavigate();

@@ -87,11 +87,11 @@ Use one **fullscreen shell** (component + CSS module or shared BEM prefix) that 
 
 ### Phase 5 — Docs + cleanup ✅
 
-- **`docs/react-learning.md`** — **`FullScreenPlayerShell`** + Phase 2–4 layout/thumb notes live under **Full-screen player shell** (Phase 4 entry covers **`useFullscreenPlayerThumbSidePx`** / **`--player-thumb-side`**).
+- **`docs/mobile/react-learning.md`** — **`FullScreenPlayerShell`** + Phase 2–4 layout/thumb notes live under **Full-screen player shell** (Phase 4 entry covers **`useFullscreenPlayerThumbSidePx`** / **`--player-thumb-side`**).
 
-- **`docs/Plans/plan.md`** — **What we have done** lists refactor **Phases 1–5**; backlog Phase 5 item closed.
+- **`docs/mobile/Plans/plan.md`** — **What we have done** lists refactor **Phases 1–5**; backlog Phase 5 item closed.
 
-- **`docs/visual-ads-and-user-types.md`** — **Fullscreen players** subsection: **`FullScreenPlayerShell`**, fixed **`VisualAdStrip--player`**, **`--visual-ad-player-reserve-height`** via **`:has(.visual-ad-strip--player)`** on **`.music-player__body`** / **`.podcast-player__body`** (**`MusicPlayer.css`**).
+- **`docs/mobile/visual-ads-and-user-types.md`** — **Fullscreen players** subsection: **`FullScreenPlayerShell`**, fixed **`VisualAdStrip--player`**, **`--visual-ad-player-reserve-height`** via **`:has(.visual-ad-strip--player)`** on **`.music-player__body`** / **`.podcast-player__body`** (**`MusicPlayer.css`**).
 
 ---
 

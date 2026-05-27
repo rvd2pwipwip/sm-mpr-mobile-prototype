@@ -40,7 +40,7 @@ function matchesSearchShellPath(pathname, catalogScope) {
 
 /**
  * Search & Browse. **Broad:** browse tabs on `/search/music` | …; **limited:** canonical **`/search`**
- * only (no browse chrome). `docs/Plans/catalog-scope-search-browse-refactor.md`.
+ * only (no browse chrome). `docs/mobile/Plans/catalog-scope-search-browse-refactor.md`.
  *
  * Active query is mirrored to `?q=` on the current path (replace) so drill-down and Back restore
  * results.

@@ -5,7 +5,7 @@ import LibraryLikedRadioSwimlane from "../components/LibraryLikedRadioSwimlane";
 import LibraryPodcastUserSwimlanes from "../components/LibraryPodcastUserSwimlanes";
 import "./MyLibrary.css";
 
-/** My Library tab hub (`docs/Plans/My-Library-implementation-plan.md` Phase 5). */
+/** My Library tab hub (`docs/mobile/Plans/My-Library-implementation-plan.md` Phase 5). */
 export default function MyLibrary() {
   return (
     <main className="app-shell app-shell--footer-fixed my-library-page">

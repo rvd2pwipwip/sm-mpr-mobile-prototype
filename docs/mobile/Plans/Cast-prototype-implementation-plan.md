@@ -148,9 +148,9 @@ Selecting a row sets **casting** and stores the device name (**permission dialog
 - [x] `src/App.jsx` — provider + render dialog stack
 - [x] `src/pages/MusicPlayer.jsx`, `PodcastPlayer.jsx`, `RadioPlayer.jsx` — header + cover
 - [x] `src/pages/MusicPlayer.css` — scrim + overlay + `music-player__header-icon-mask--casting`
-- [x] `docs/figma-nodes.md` — cast flow links
-- [x] `docs/Plans/plan.md` — done entry
-- [x] `docs/react-learning.md` — Cast prototype context
+- [x] `docs/mobile/figma-nodes.md` — cast flow links
+- [x] `docs/mobile/Plans/plan.md` — done entry
+- [x] `docs/mobile/react-learning.md` — Cast prototype context
 
 ## Out of scope (prototype)
 

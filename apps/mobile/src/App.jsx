@@ -88,7 +88,7 @@ function InfoRootRoute() {
   return <Info />;
 }
 
-/** `/`: **broad** Home; **limited** Browse landing (`docs/Plans/catalog-scope-search-browse-refactor.md`). */
+/** `/`: **broad** Home; **limited** Browse landing (`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`). */
 function HomeOrLimitedBrowse() {
   const { catalogScope } = useTerritory();
   if (catalogScope === CATALOG_SCOPE.limited) {

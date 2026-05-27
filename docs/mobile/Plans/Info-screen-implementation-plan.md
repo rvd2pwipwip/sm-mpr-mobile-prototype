@@ -1,6 +1,6 @@
 # Info tab — implementation plan
 
-Plan for the **Info** main screen, nested **Contact Us** and **About** screens, and **`freeProvided`** rename. **Do this doc first**, then implement in the phases below. Product context for user-type chrome: **`docs/Stories/Home-screen-story.md`**, **`docs/visual-ads-and-user-types.md`**.
+Plan for the **Info** main screen, nested **Contact Us** and **About** screens, and **`freeProvided`** rename. **Do this doc first**, then implement in the phases below. Product context for user-type chrome: **`docs/mobile/Stories/Home-screen-story.md`**, **`docs/mobile/visual-ads-and-user-types.md`**.
 
 ---
 
@@ -28,7 +28,7 @@ Plan for the **Info** main screen, nested **Contact Us** and **About** screens, 
 | Audio quality — segmented control | [**`5689:80479`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80479&t=RTnR7veKdkyVrhHy-4) | Match **Search** browse pill switcher |
 | Audio quality — labels / values | [**`5689:80689`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5689-80689&t=RTnR7veKdkyVrhHy-4) | Segment ids + visible strings |
 
-Add these to **`docs/figma-nodes.md`** when implementation starts.
+Add these to **`docs/mobile/figma-nodes.md`** when implementation starts.
 
 ---
 
@@ -39,7 +39,7 @@ Add these to **`docs/figma-nodes.md`** when implementation starts.
 **Goal:** One mechanical rename so **`UserTypeContext`** and helpers stay consistent with **`freeStingray`**.
 
 - Replace string **`"provided"`** with **`"freeProvided"`** everywhere in **`src/`** (Subscription **`setUserType`**, preview toggles, **`HomeHeader`**, **`showVisualAds`**, docs references in code comments if any).
-- Update **`docs/visual-ads-and-user-types.md`**, **`docs/react-learning.md`**, **`docs/Plans/plan.md`**, tutorials/plans that list user types, and **`docs/Stories`** lines that name **`provided`** as the code value (keep product words **free provider** where the story uses them).
+- Update **`docs/mobile/visual-ads-and-user-types.md`**, **`docs/mobile/react-learning.md`**, **`docs/mobile/Plans/plan.md`**, tutorials/plans that list user types, and **`docs/mobile/Stories`** lines that name **`provided`** as the code value (keep product words **free provider** where the story uses them).
 - **`Subscription.jsx`**: **Select provider** CTA sets **`freeProvided`**; label in **Preview as** e.g. **Free provider** or **Provider** (match Figma / existing copy).
 - **Regression:** **`npm run build`**, smoke **Home header**, **Upgrade** preview toggles, **music preroll** (still guest + freeStingray only), **ads** for all non-subscribed types.
 
@@ -108,9 +108,9 @@ No change to **`hideBottomNavForPath`** unless a future overlay requires it (not
 ## Phase 7 — Cleanup and docs
 
 - **`Info.jsx`** playback demos removed in **Phase 1**; confirm **`Info.css`** has no orphaned rules.
-- **`docs/react-learning.md`**: short entry for collapsible **`details`-like** pattern and Info routes (**done** for Phase 2 collapsibles + Phase 1 routes).
-- **`docs/Plans/plan.md`**: move **Info** from backlog to **done** with checkbox and link here.
-- **Optional** story file **`docs/Stories/Info-story.md`** later — not required for first ship if Figma + this plan are enough.
+- **`docs/mobile/react-learning.md`**: short entry for collapsible **`details`-like** pattern and Info routes (**done** for Phase 2 collapsibles + Phase 1 routes).
+- **`docs/mobile/Plans/plan.md`**: move **Info** from backlog to **done** with checkbox and link here.
+- **Optional** story file **`docs/mobile/Stories/Info-story.md`** later — not required for first ship if Figma + this plan are enough.
 
 ---
 

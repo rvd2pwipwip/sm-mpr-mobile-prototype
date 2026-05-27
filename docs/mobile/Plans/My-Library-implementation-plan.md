@@ -1,8 +1,8 @@
 # My Library — implementation plan
 
-Refactor the bottom tab **from Info to My Library**: one hub screen for **App Info** (first swimlane) and **user-driven content** swimlanes. **Product:** `docs/Stories/My-Library-story.md`; **UX:** `docs/UX/My Lybrary - UX Principles.md`.
+Refactor the bottom tab **from Info to My Library**: one hub screen for **App Info** (first swimlane) and **user-driven content** swimlanes. **Product:** `docs/mobile/Stories/My-Library-story.md`; **UX:** `docs/mobile/UX/My Lybrary - UX Principles.md`.
 
-**Related:** Home **Listen again** remains the **mixed recap** of the same history store — see **§ Single source of truth** and `docs/Plans/plan.md` (Listen again spec).
+**Related:** Home **Listen again** remains the **mixed recap** of the same history store — see **§ Single source of truth** and `docs/mobile/Plans/plan.md` (Listen again spec).
 
 ---
 
@@ -27,7 +27,7 @@ Refactor the bottom tab **from Info to My Library**: one hub screen for **App In
 | My Library (frame) | `19921:55371` | [myLibrary](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19921-55371) |
 | Body / full swimlane stack | `19921:55373` | [body](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19921-55373) |
 
-Add or confirm entries in **`docs/figma-nodes.md`** when implementation starts.
+Add or confirm entries in **`docs/mobile/figma-nodes.md`** when implementation starts.
 
 ---
 
@@ -142,15 +142,15 @@ Tune exact labels against Figma **`rowCategory`** instances.
 
 - **Music / radio likes:** **`LikesContext`** + **`LibraryLikedMusicSwimlane`** / **`LibraryLikedRadioSwimlane`** (**Your music channels**, **Your radio stations**). **More** → **`/my-library/likes/music`** \| **`/my-library/likes/radio`** (**`MyLibraryLikesMore.jsx`**). Omit swimlane when empty.
 - **Podcasts:** **`LibraryPodcastUserSwimlanes`** wires **`PodcastUserStateContext`** — **Your Podcasts** (subscribed), **Continue listening**, **Your Episodes**, **New Episodes**, **Downloaded Episodes**; **More** → existing **`podcastLibraryBrowsePath`** grids under Search → Browse → Podcasts. Episode rows reuse **`EpisodeCard`** + account-gated bookmark/offline (same as Search). Omit each rail when empty.
-- **Hub order** matches **`docs/Stories/My-Library-story.md`:** App Info → **Music History** → liked music → **Podcast History** → podcast user rails → **Radio History** → liked radio. **`LibraryHistoryRail`** is one segment per instance (replaces **`LibraryHistoryRails`**).
+- **Hub order** matches **`docs/mobile/Stories/My-Library-story.md`:** App Info → **Music History** → liked music → **Podcast History** → podcast user rails → **Radio History** → liked radio. **`LibraryHistoryRail`** is one segment per instance (replaces **`LibraryHistoryRails`**).
 
 ---
 
 ## Phase 6 — Polish
 
 - Tokens / card sizes for **App Info** **`tagCards`** vs content cards.
-- **`docs/figma-nodes.md`**, **`docs/UX/My Lybrary - UX Principles.md`** (§7: exception for **always-on history** rails), **`docs/Plans/plan.md`** cross-links.
-- **`docs/react-learning.md`** append if new patterns merit a short note.
+- **`docs/mobile/figma-nodes.md`**, **`docs/mobile/UX/My Lybrary - UX Principles.md`** (§7: exception for **always-on history** rails), **`docs/mobile/Plans/plan.md`** cross-links.
+- **`docs/mobile/react-learning.md`** append if new patterns merit a short note.
 
 ---
 

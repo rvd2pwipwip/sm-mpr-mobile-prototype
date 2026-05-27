@@ -40,7 +40,7 @@ const INFO_TAB = {
   maskClass: "bottom-nav__icon-mask--info",
 };
 
-/** Fixed tab bar: `NavLink` + URL = active state (URL-driven, see docs/react-learning). */
+/** Fixed tab bar: `NavLink` + URL = active state (URL-driven, see docs/mobile/react-learning.md). */
 export default function BottomNav({ className = "" }) {
   const rootClass = ["bottom-nav", className].filter(Boolean).join(" ");
   const location = useLocation();

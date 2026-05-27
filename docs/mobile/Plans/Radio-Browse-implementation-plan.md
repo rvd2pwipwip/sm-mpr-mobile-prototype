@@ -4,10 +4,10 @@ Teaching-oriented companion to **Search & Browse** [Phase 4](Search-Browse-imple
 
 **Companion docs**
 
-- Story + Integration notes: [`docs/Stories/Search-story.md`](../Stories/Search-story.md)
+- Story + Integration notes: [`docs/mobile/Stories/Search-story.md`](../Stories/Search-story.md)
 - Parent plan (Search & Browse): [`Search-Browse-implementation-plan.md`](Search-Browse-implementation-plan.md)
 - **Subregion UI walkthrough (implemented pattern):** [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md)
-- Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
+- Figma index: [`docs/mobile/figma-nodes.md`](../figma-nodes.md)
 
 **Prototype scope**
 
@@ -91,7 +91,7 @@ Near You and format browses can be **`SearchRadioStationGrid`** or shared layout
 
 ## UI build checklist (reuse project patterns)
 
-- **Swimlane:** **`ContentSwimlane`** — title like “Popular in North America” / “Popular in Canada” (dynamic from node); horizontal **`RadioStationCard`** with **`onSelect`**; **`--space-content-inline`** on header and scroll inner per [`docs/react-learning.md`](../react-learning.md).
+- **Swimlane:** **`ContentSwimlane`** — title like “Popular in North America” / “Popular in Canada” (dynamic from node); horizontal **`RadioStationCard`** with **`onSelect`**; **`--space-content-inline`** on header and scroll inner per [`docs/mobile/react-learning.md`](../react-learning.md).
 - **Pills:** New small component e.g. **`GeoBrowsePill`** — flex wrap, rounded-full, touch targets ≥ 44px height, token-based border/fill from **`index.css`**; map Figma from **`19871:33556`** / **`19871:33453`**.
 - **Chrome:** Under Search, rely on **`SearchBrowseHeader`** + scroll padding already set on **`search-page-scroll`**; sub-screens may use **`ScreenHeader`** only if you stack a full-screen route **outside** Search (prefer staying under Search for one consistent shell).
 - **Station tap:** **`/radio/:stationId`** → **`RadioStationInfo`**; **Play** → **`/radio/:stationId/play`** → **`RadioPlayer`** with **`upsertRadioSession`** in **`PlaybackContext`** (same pattern as other radio entry points).
@@ -117,4 +117,4 @@ Near You and format browses can be **`SearchRadioStationGrid`** or shared layout
 
 ---
 
-*Last updated: 2026-05-08* — acceptance checked; **subregion** tutorial + **react-learning** entry added; **`docs/Plans/`** move reflected in links.
+*Last updated: 2026-05-08* — acceptance checked; **subregion** tutorial + **react-learning** entry added; **`docs/mobile/Plans/`** move reflected in links.

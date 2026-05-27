@@ -19,7 +19,7 @@ This document walks through the **guest-only hourly skip cap** for **music** str
 - **At cap**, a modal explains **approximately how many whole minutes remain** until the **oldest** active stamp expires, and pushes **Upgrade** (**`/upgrade`**) messaging.
 - Successful skip **prototype v1**: **counter + timers only** — no fake “next track.”
 
-### Out of scope (see **`docs/Plans/plan.md`**)
+### Out of scope (see **`docs/mobile/Plans/plan.md`**)
 
 - **Persistence** (`localStorage`) across reload — in-memory OK for now.
 - **Licensing tweaks** when **`freeProvided`** vs **`guest`** need different caps (**plan** calls this out).
@@ -177,4 +177,4 @@ Order (outer → inner):
 - **Persist tallies** — hydrate stamps from **`localStorage`** on mount; filter past expiries.
 - **Analytics / copy** — align strings with legal for **`freeProvided`** if caps diverge.
 
-Shorter reminder: **`docs/react-learning.md`** → **Guest music skip limit (Context + hourly stamps)**.
+Shorter reminder: **`docs/mobile/react-learning.md`** → **Guest music skip limit (Context + hourly stamps)**.

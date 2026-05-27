@@ -18,7 +18,7 @@ function PodcastLibraryTileLabel({ label, count }) {
 
 /**
  * Search tab → Browse → Podcasts: stacked category swimlanes (no pill rail), then library +
- * catalog tiles (see `docs/Stories/Podcasts-story.md`).
+ * catalog tiles (see `docs/mobile/Stories/Podcasts-story.md`).
  */
 export default function SearchPodcastsBrowse() {
   const navigate = useNavigate();

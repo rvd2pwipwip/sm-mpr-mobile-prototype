@@ -2,7 +2,7 @@
 
 Short **append-only** notes for concepts introduced while building this repo. The project rules (`.cursor/rules/stingray-music-prototype.mdc`) summarize patterns for implementation; this file is the **longer memory** when you need a refresher.
 
-**Design tokens (colors, spacing, card sizes)** — not React-specific, but the workflow for you and for UI passes lives in **`docs/design-tokens.md`**, with values in **`apps/mobile/src/index.css`** (mobile app).
+**Design tokens (colors, spacing, card sizes)** — not React-specific, but the workflow for you and for UI passes lives in **`docs/mobile/design-tokens.md`**, with values in **`apps/mobile/src/index.css`** (mobile app).
 
 **Context:** This prototype continues the same React learning journey as the sibling **karaoke** mobile prototype (layout, swimlanes, bottom nav). Company priorities moved work here; ideas you already practiced there still apply—this document records what we do **in this codebase** (music, podcasts, radio, Figma `UX-SM-MPR-Mobile-2604`).
 
@@ -52,8 +52,8 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 - **Idea:** **`createContext`** + **`UserTypeProvider`** in **`src/context/UserTypeContext.jsx`** hold prototype-wide **`userType`**: **`guest`**, **`freeStingray`**, **`freeProvided`**, or **`subscribed`**. **`useUserType()`** returns **`{ userType, setUserType }`**. Wrap the tree that needs it (here: entire **`App`** inside **`App.jsx`**) so **`HomeHeader`**, **`Subscription`**, and later ads can read the same state without **prop drilling**.
 - **Route:** **`/upgrade`** → **`src/pages/Subscription.jsx`** (+ **`Subscription.css`**), aligned with Figma **`220:40551`**: fixed blurred **back** bar, headline + price, bullet benefits, **Upgrade now** ( **`Button`** **`variant="subscribe-primary"`** — blue **`--color-accent`** fill via **`btn--subscribe-primary`**), **Select provider** (secondary + external-link icon; sets **freeProvided** and opens Stingray provider SSO in a new tab), legal copy + Terms/Privacy links, and a dashed **Preview as** control row to flip type for demos.
-- **`HomeHeader`** reads **`userType`**: **`guest`** and **`freeStingray`** show **Upgrade**; **`freeProvided`** shows an outlined **Provider** pill; **`subscribed`** shows **only** the centered wordmark (see **`docs/Stories/Home-screen-story.md`**).
-- **Visual ads** — **`docs/visual-ads-and-user-types.md`**:
+- **`HomeHeader`** reads **`userType`**: **`guest`** and **`freeStingray`** show **Upgrade**; **`freeProvided`** shows an outlined **Provider** pill; **`subscribed`** shows **only** the centered wordmark (see **`docs/mobile/Stories/Home-screen-story.md`**).
+- **Visual ads** — **`docs/mobile/visual-ads-and-user-types.md`**:
   - **`showVisualAds(userType)`**: **`guest`**, **`freeStingray`**, **`freeProvided`** see footer and in-feed placements.** **`subscribed`** does not.** Also:** **`showUpgradeCallToAction`**, **`usesGuestMusicSkipCap`**, **`showPlayerPreroll`** (**`showVisualAds.js`**).
   - **`VisualAdStrip`**: **`variant="nav"`** inside **`BottomNav`** when broad.** **`LimitedCatalogFooterAd`** when limited (**`App.jsx`**). **`variant="player"`** on fullscreen players.
   - **`SwimlaneBannerAd`**: **`Home.jsx`** inserts it between Podcasts and Radio.** **`LimitedBrowseTaxonomyRails`** inserts it after the **second** taxonomy swimlane when ads apply.
@@ -103,7 +103,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Miniplayer (footer strip + PlaybackContext)
 
-- **Idea:** **`MiniPlayer`** (`src/components/MiniPlayer.jsx` + **`MiniPlayer.css`**) is a **fixed** bar **above** **`BottomNav`**, **`z-index`** **`--z-mini-player`** (above **`--z-chrome`**). **Figma:** component **`19777:32024`**. **`data-variant`** = **`music` | `podcasts` | `radio`** — controls follow **`docs/Stories/Miniplayer-component-story.md`**. Inverse tokens **`--miniplayer-*`** (plus **`color-scheme`**) are set **on `.mini-player`** in **`MiniPlayer.css`** so the strip is **dark when the app is light** and **light when the app is dark**.
+- **Idea:** **`MiniPlayer`** (`src/components/MiniPlayer.jsx` + **`MiniPlayer.css`**) is a **fixed** bar **above** **`BottomNav`**, **`z-index`** **`--z-mini-player`** (above **`--z-chrome`**). **Figma:** component **`19777:32024`**. **`data-variant`** = **`music` | `podcasts` | `radio`** — controls follow **`docs/mobile/Stories/Miniplayer-component-story.md`**. Inverse tokens **`--miniplayer-*`** (plus **`color-scheme`**) are set **on `.mini-player`** in **`MiniPlayer.css`** so the strip is **dark when the app is light** and **light when the app is dark**.
 - **PlaybackContext** (`src/context/PlaybackContext.jsx`): **`PlaybackProvider`** wraps **`App`** (inside **`BrowserRouter`**). **`miniPlayerVisible`** = session **`active`** + not on fullscreen **music play** (**`…/music/:channelId/play`**) **or podcast episode play** (**`…/podcast/:id/play/:episodeId`**). **`upsertMusicSession`** / **`upsertPodcastSession`** keep **`fullPlayerPath`** so tapping the MiniPlayer opens the full route with **`playOverDetailNavigateState({ expandFromMiniPlayer: true })`** (see **`MiniPlayer.jsx`**). Full players read **`PlaybackContext`** + **`location.state`** for preroll skip (**`Guest-preroll-grace-tutorial.md`**). **Teaching walkthrough:** [`Podcasts-and-episodes-deep-dive-tutorial.md`](Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md).
 - **Where to preview podcast/radio UI:** **`/`** podcasts swimlane and real **`/podcast/...`** / **`/radio/...`** play routes. (**Legacy Info tab demos were removed earlier; hub is `/my-library`.**)
 
@@ -131,7 +131,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **My Library typed-history Clear:** **`MyLibraryHistoryMore.jsx`** opens **`AppStackedDialog`** (**`dialogsClear`**, [**`19979:36464`**](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19979-36464)) before **`clearHistoryByKind`**; **`Clear`** disabled when grid empty. **Mixed Listen again Clear:** **`ListenAgainMore.jsx`** (**`/more/listen-again`**) uses the same dialog shell before **`clearListenHistory`**; copy in **`LISTEN_AGAIN_CLEAR_CONFIRM`** (`listenHistory.js`); **`Clear`** disabled when empty.
 
 - **Figma:** [Listen again — More + Clear](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19801-39250).
-- **Plan:** **`docs/Plans/plan.md`** → **Listen again (user history) — specification**.
+- **Plan:** **`docs/mobile/Plans/plan.md`** → **Listen again (user history) — specification**.
 - **Walkthrough (wiring):** [`Listen-again-tutorial.md`](Tutorials/Listen-again-tutorial.md).
 - **Podcasts + episodes stack (files, hooks, line-by-line):** [`Podcasts-and-episodes-deep-dive-tutorial.md`](Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md).
 
@@ -144,9 +144,9 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Prototype lineup toggle:** **Wordmark** on **`HomeHeader`** (**broad Home**) or **`LimitedBrowse`** (**limited**). Lineup is **not** toggled from **Search** anymore. **`sessionStorage`** key **`PROTOTYPE_MUSIC_LINEUP_STORAGE_KEY`** — **`readStoredMusicLineupMode`** / **`writeStoredMusicLineupMode`** (**`catalogScope.js`**).
 - **`BottomNav`:** Rendered **only when broad** (**`App.jsx`**). Tabs: Home, Search, My Library.
 - **`InfoRootRoute`**, **limited footer stack:** **`/info`** redirects to **`/my-library`** when broad; **`Info.jsx`** hub when limited. **`LimitedCatalogFooterAd`** shows **`VisualAdStrip`** (**`MiniPlayer`** above); **`hideFooterChromeForPath`** (**`src/utils/hideFooterChromeForPath.js`**, shared with **`App.jsx`**) skips both on fullscreen play URLs and **`/upgrade/store`**.
-- **Full IA write-up:** **`docs/Plans/catalog-scope-search-browse-refactor.md`**.
-- **Home vs limited landing (how layout differs):** **`docs/Home-limited-catalog-and-layout.md`**.
-- **Home vs limited landing (how layout differs):** **`docs/Home-limited-catalog-and-layout.md`**.
+- **Full IA write-up:** **`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`**.
+- **Home vs limited landing (how layout differs):** **`docs/mobile/Home-limited-catalog-and-layout.md`**.
+- **Home vs limited landing (how layout differs):** **`docs/mobile/Home-limited-catalog-and-layout.md`**.
 - **Later:** Split real geo or IA from **`musicLineupMode`** when the product needs it.
 
 ---
@@ -175,8 +175,8 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ## Search shell — adaptive header (measure + scroll inset)
 
-- **Parallel to Home:** **`SearchBrowseHeader.jsx`** uses **`useSearchBrowseHeaderOffset()`** (**`ResizeObserver`** on the fixed Search bar stack) and writes **`--search-header-offset`** on **`<html>`**; **`removeProperty`** on unmount matches **`HomeHeader`** / **`--home-header-offset`** so scroll columns do not keep stale padding (**`docs/Plans/Search-Browse-implementation-plan.md`** § Phase 1). **`main.search-page`** (**`search-page-scroll`**) consumes **`calc(var(--search-header-offset) + var(--search-header-scroll-gap))`** in **`index.css`** so **browse tabs visible** vs **query-only strip** (**tabs hidden**) remeasures cleanly.
-- **Clear vs BottomNav Search vs re-tap Search:** **`docs/Stories/Search-story.md`** Integration notes; implementation **`docs/Plans/Search-Browse-implementation-plan.md`** Phase 7; summary in **Broad Search — remembered Music** above (**`BottomNav.jsx`**, **`Search.jsx`**).
+- **Parallel to Home:** **`SearchBrowseHeader.jsx`** uses **`useSearchBrowseHeaderOffset()`** (**`ResizeObserver`** on the fixed Search bar stack) and writes **`--search-header-offset`** on **`<html>`**; **`removeProperty`** on unmount matches **`HomeHeader`** / **`--home-header-offset`** so scroll columns do not keep stale padding (**`docs/mobile/Plans/Search-Browse-implementation-plan.md`** § Phase 1). **`main.search-page`** (**`search-page-scroll`**) consumes **`calc(var(--search-header-offset) + var(--search-header-scroll-gap))`** in **`index.css`** so **browse tabs visible** vs **query-only strip** (**tabs hidden**) remeasures cleanly.
+- **Clear vs BottomNav Search vs re-tap Search:** **`docs/mobile/Stories/Search-story.md`** Integration notes; implementation **`docs/mobile/Plans/Search-Browse-implementation-plan.md`** Phase 7; summary in **Broad Search — remembered Music** above (**`BottomNav.jsx`**, **`Search.jsx`**).
 
 ---
 
@@ -202,7 +202,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 - **Tags lane:** **`searchMatchingMusicTagLabels(needle)`** in **`search/searchCatalog.js`** returns **distinct** tag strings on channels whose label **contains** the query (substring, case-insensitive). **`MusicTagCard`** (**`MusicTagCard.jsx`**) reuses **`MusicArtistCard`** styles (**`music-artist-card`**) for the same square label treatment.
 - **Drill-down:** Tap a tag tile → **`/search/more/tags?q=`** with the **exact** chip text (**`encodeURIComponent`**). **`SearchTagsMore.jsx`** already loads **`getMusicChannelsWithTag(q)`** and renders the **2-column** **`MusicChannelCard`** grid. **`SearchCatalogMore`** **`lane=tags`** lists the **same tag tiles**, not channels.
-- **Tag vocabulary snapshot:** **`docs/mock-data-music-tags.md`**; runtime helper **`getDistinctMusicChannelTagLabels()`** in **`musicChannels.js`**.
+- **Tag vocabulary snapshot:** **`docs/mobile/mock-data-music-tags.md`**; runtime helper **`getDistinctMusicChannelTagLabels()`** in **`musicChannels.js`**.
 
 ---
 
@@ -220,7 +220,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Phase 2 layout:** Subscribed music/radio had **`music-player__controls`** **`flex: 1 1 0`** under **`--no-player-ad`** — removed; **`music-player__top`** alone **`flex-grow`**s so transport stays content-sized (**`MusicPlayer.css`**).
 - **Phase 3 layout:** **`podcast-player__body--with-ad`** **`justify-content: space-between`**; **`--no-ad`** grows **`podcast-player__scroll`** (**`flex: 1 1 0`**, **`overflow-y: auto`**) for music/radio-style slack above the footer (**`PodcastPlayer.css`**).
 - **Phase 4 thumbnail clamp:** **`useFullscreenPlayerThumbSidePx(mainRef, enabled)`** in **`src/hooks/useFullscreenPlayerThumbSidePx.js`** writes **`thumbSidePx`** for **`MusicPlayer`**, **`RadioPlayer`**, **`PodcastPlayer`**. Each fullscreen route puts **`ref={mainRef}`** on **`<main>`** and sets **`style={{ "--player-thumb-side": `${thumbSidePx}px` }}`** so **`MusicPlayer.css`** **`.music-player__cover`** can **`width: min(var(--player-thumb-side), 100%)`** while keeping **`aspect-ratio: 1 / 1`**. Pass **`enabled`** **`Boolean(channel)`** / station / **`podcast && episode`** so redirects (**`<Navigate>`**) still run hooks legally without measuring an empty shell. **`ResizeObserver`** tracks **`main`**, **`music-player__body`**, footer stack, cover-column siblings so short viewports shrink the square art without scrolling the default chrome stack.
-- **Phase 5 docs:** **`docs/Plans/Full-screen-player-layout-refactor.md`** closes with acceptance checklist + **`docs/visual-ads-and-user-types.md`** § **Where ads render** item **2** ( **`FullScreenPlayerShell`**, **`VisualAdStrip--player`**, **`--visual-ad-player-reserve-height`** on body via **`:has(.visual-ad-strip--player)`** in **`MusicPlayer.css`**). **`docs/Plans/plan.md`** tracks refactor **Phases 1–5** complete.
+- **Phase 5 docs:** **`docs/mobile/Plans/Full-screen-player-layout-refactor.md`** closes with acceptance checklist + **`docs/mobile/visual-ads-and-user-types.md`** § **Where ads render** item **2** ( **`FullScreenPlayerShell`**, **`VisualAdStrip--player`**, **`--visual-ad-player-reserve-height`** on body via **`:has(.visual-ad-strip--player)`** in **`MusicPlayer.css`**). **`docs/mobile/Plans/plan.md`** tracks refactor **Phases 1–5** complete.
 
 ---
 
@@ -229,7 +229,7 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 - **Idea:** **`isCasting`** + **`castDeviceName`** live in **`CastPrototypeContext`** so **music**, **podcast**, and **radio** fullscreen players share one dumb cast state (no real network). **`CastPrototypeDialogs`** mounts next to **`Routes`** and renders **Network Access**, **Local Network**, **Cast to** (`CastToDialog`), and **Casting on** (**Network Access**, **Local Network**, **Casting on** use **`AppStackedDialog`**; **Cast to** is its own sheet list). **`openCastTo()`** on the header starts **Network Access** → **Local Network** → device list when not casting; if already casting, opens **Casting on** summary only.
 - **Wizard:** **OK** through permission dialogs opens **Cast to**; picking a device sets casting. **Cancel** / **Block** / scrim on permission steps calls **`abortWizard`** (not casting).
 - **Thumbnail:** **`CASTING_ON.lineCasting`** + device name over **`rgba(0,0,0,0.5)`**; the square is a **`<button>`** that calls **`openCastTo`** so tapping art matches the casting header icon.
-- **Files:** **`src/context/CastPrototypeContext.jsx`**, **`src/components/CastPrototypeDialogs.jsx`**, **`src/constants/castPrototypeCopy.js`**; plan **`docs/Plans/Cast-prototype-implementation-plan.md`**.
+- **Files:** **`src/context/CastPrototypeContext.jsx`**, **`src/components/CastPrototypeDialogs.jsx`**, **`src/constants/castPrototypeCopy.js`**; plan **`docs/mobile/Plans/Cast-prototype-implementation-plan.md`**.
 
 ---
 

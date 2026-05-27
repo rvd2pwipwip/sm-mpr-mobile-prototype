@@ -3,7 +3,7 @@
  *
  * Internal names: **vibes** (top tiles), **tags** (children under a vibe).
  * IA source: **`musicVibesIa.broad1000.json`** (exported from shared Google Sheets).
- * See `docs/Stories/Search-story.md` Integration notes.
+ * See `docs/mobile/Stories/Search-story.md` Integration notes.
  */
 
 import broadIa from "./musicVibesIa.broad1000.json";

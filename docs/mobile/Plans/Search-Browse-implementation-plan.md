@@ -4,12 +4,12 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 
 **Companion docs**
 
-- Story + **Integration notes:** [`docs/Stories/Search-story.md`](../Stories/Search-story.md)
-- Podcasts browse detail (conditional rows, card sizing): [`docs/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md), [`Podcasts-implementation-plan.md`](Podcasts-implementation-plan.md) (Phase 7)
+- Story + **Integration notes:** [`docs/mobile/Stories/Search-story.md`](../Stories/Search-story.md)
+- Podcasts browse detail (conditional rows, card sizing): [`docs/mobile/Stories/Podcasts-story.md`](../Stories/Podcasts-story.md), [`Podcasts-implementation-plan.md`](Podcasts-implementation-plan.md) (Phase 7)
 - **Radio Browse (detailed):** [`Radio-Browse-implementation-plan.md`](Radio-Browse-implementation-plan.md)
-- Figma index: [`docs/figma-nodes.md`](../figma-nodes.md)
+- Figma index: [`docs/mobile/figma-nodes.md`](../figma-nodes.md)
 - Living repo plan: [`plan.md`](plan.md) — **Search & Browse** Phases **0–8** under **What we have done**
-- Layout patterns: [`docs/react-learning.md`](../react-learning.md) (swimlanes, BottomNav), project rules in `.cursor/rules/stingray-music-prototype.mdc`
+- Layout patterns: [`docs/mobile/react-learning.md`](../react-learning.md) (swimlanes, BottomNav), project rules in `.cursor/rules/stingray-music-prototype.mdc`
 
 **Prototype scope**
 
@@ -22,8 +22,8 @@ Teaching-oriented guide for building the **Search** tab: **Browse** (music, podc
 
 | Source | What it gives you |
 |--------|-------------------|
-| **`docs/figma-nodes.md`** | Canonical **screen** URLs for Search & Browse **150+** / **1000+**, **radio** browse + **International** drill-down, **Search results**, **Subfilter grid**, **View More grid**; frame size **460×990** |
-| **`docs/Stories/Search-story.md`** | Narrative + **locked** browse vs search behavior, reset rules, header modes, keyboard/footer, full radio IA |
+| **`docs/mobile/figma-nodes.md`** | Canonical **screen** URLs for Search & Browse **150+** / **1000+**, **radio** browse + **International** drill-down, **Search results**, **Subfilter grid**, **View More grid**; frame size **460×990** |
+| **`docs/mobile/Stories/Search-story.md`** | Narrative + **locked** browse vs search behavior, reset rules, header modes, keyboard/footer, full radio IA |
 | **Figma MCP** (`get_design_context` / screenshot) | Typography, spacing, tab/search field specs—use when building each phase; MCP output is **reference**, map to **`index.css`** tokens |
 
 **Gap to expect:** Music **1000+** browse adds **vibe** / **tag** taxonomy (UI: **Genre, Activity, Mood, Era, Theme** plus their **tag** subcategories — see **Search-story** Integration notes) that is **not** fully modeled in `musicChannels.js` today beyond per-channel **`tags[]`**; plan assumes you **extend mock data** for browse trees (Phase 2).
@@ -182,7 +182,7 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 **Tags lane**
 
-- **Substring match** against **`channel.tags`** (same strings as Channel Info `.music-info__tag`). **Distinct matching labels** → **`MusicTagCard`** tiles (**`music-artist-card`** styling); tap → **`/search/more/tags?q=`** (exact tag → 2-col channel grid **`SearchTagsMore`**). **`searchMatchingMusicTagLabels`** (**`search/searchCatalog.js`**). **More** (**`lane=tags`**) shows remaining tag tiles in **`SearchCatalogMore`**. Vocabulary: **`docs/mock-data-music-tags.md`** / **`getDistinctMusicChannelTagLabels()`**.
+- **Substring match** against **`channel.tags`** (same strings as Channel Info `.music-info__tag`). **Distinct matching labels** → **`MusicTagCard`** tiles (**`music-artist-card`** styling); tap → **`/search/more/tags?q=`** (exact tag → 2-col channel grid **`SearchTagsMore`**). **`searchMatchingMusicTagLabels`** (**`search/searchCatalog.js`**). **More** (**`lane=tags`**) shows remaining tag tiles in **`SearchCatalogMore`**. Vocabulary: **`docs/mobile/mock-data-music-tags.md`** / **`getDistinctMusicChannelTagLabels()`**.
 
 **Swimlanes**
 
@@ -208,7 +208,7 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 ## Phase 7 — Reset + BottomNav integration ✅ (prototype)
 
-**Goal:** Document **implemented** reset behavior (**`Search.jsx`** + **`BottomNav.jsx`**); matches **`docs/Stories/Search-story.md`** Integration notes.
+**Goal:** Document **implemented** reset behavior (**`Search.jsx`** + **`BottomNav.jsx`**); matches **`docs/mobile/Stories/Search-story.md`** Integration notes.
 
 1. **Clear** (header control or empty field) → **`query` ''**, **`?q=`** removed, browse mode (**tabs visible**); pathname stays **`/search/music`** | **`/search/podcasts`** | **`/search/radio`** — **preserve** whichever tab the user had.
 2. **BottomNav Search (from another main tab):** **`NavLink`** **`to`** = **`/search/`** + **`readStoredBroadSearchBrowseTab() ?? 'music'`** (no **`?q=`**). **`/search`** redirects to the same stored tab. From **Home**, **My Library**, etc., tap **Search** → last **Music / Podcasts / Radio** + empty field (**sessionStorage** key **`PROTOTYPE_BROAD_SEARCH_BROWSE_TAB_STORAGE_KEY`**).
@@ -223,8 +223,8 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 **Delivered**
 
-- **`docs/Plans/plan.md`** — Search & Browse **Phase 8** under **What we have done**; **Next steps** trimmed.
-- **`docs/react-learning.md`** — **Search shell — adaptive header** entry (**`SearchBrowseHeader`**, **`--search-header-offset`**, **`ResizeObserver`** parity with Home); reset rules cross-reference **Broad Search** + **`Search-story`** Integration notes.
+- **`docs/mobile/Plans/plan.md`** — Search & Browse **Phase 8** under **What we have done**; **Next steps** trimmed.
+- **`docs/mobile/react-learning.md`** — **Search shell — adaptive header** entry (**`SearchBrowseHeader`**, **`--search-header-offset`**, **`ResizeObserver`** parity with Home); reset rules cross-reference **Broad Search** + **`Search-story`** Integration notes.
 
 **Acceptance checklist (manual)**
 
@@ -240,9 +240,9 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 ## After you ship
 
-- **`plan.md`** and **`docs/figma-nodes.md`:** update after future Search/Browse regressions only if IA or screen map materially changes (**Phases 0–8 baseline is recorded** — see **Phase 8** in this plan).
+- **`plan.md`** and **`docs/mobile/figma-nodes.md`:** update after future Search/Browse regressions only if IA or screen map materially changes (**Phases 0–8 baseline is recorded** — see **Phase 8** in this plan).
 - Keep **podcast** and **radio** player stacks aligned with **`visual-ads-and-user-types.md`** when users tune from Search surfaces.
 
 ---
 
-*Last updated: 2026-05-19* — **Phase 8** (polish + docs + manual acceptance): complete. Prior: 2026-05-08 **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. **Docs:** implementation plans live under **`docs/Plans/`**. **Phase 4** radio: **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** pattern walkthrough [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md) + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.
+*Last updated: 2026-05-19* — **Phase 8** (polish + docs + manual acceptance): complete. Prior: 2026-05-08 **Phase 6 / 7** doc sync: **`/search/more/catalog`**, **`?q=`** on search-tab URLs, **Clear** preserves content-type tab, **BottomNav** **`to="/search/music"`** replaces older **`onClick` / `/search`** notes. **Docs:** implementation plans live under **`docs/mobile/Plans/`**. **Phase 4** radio: **Figma** anchors (**`19868:32686`**, **`19676:35051`**, **`19871:33556`**), **International subregion** pattern walkthrough [`Radio-geo-subregion-swimlane-pills-tutorial.md`](../Tutorials/Radio-geo-subregion-swimlane-pills-tutorial.md) + [**`Radio-Browse-implementation-plan.md`**](Radio-Browse-implementation-plan.md). **Phase 3** podcasts browse shipped earlier.

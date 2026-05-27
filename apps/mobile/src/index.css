@@ -1,8 +1,8 @@
 /**
  * Global design tokens and layout primitives for the SM MPR mobile prototype.
  *
- * Values are a first pass aligned with `docs/figma-nodes.md` (460×990 frame, ~30px gutter).
- * Update here when Figma variables or inspection change — see `docs/design-tokens.md`.
+ * Values are a first pass aligned with `docs/mobile/figma-nodes.md` (460×990 frame, ~30px gutter).
+ * Update here when Figma variables or inspection change — see `docs/mobile/design-tokens.md`.
  */
 
 :root {
@@ -192,7 +192,7 @@
   --music-skip-count-on-full: var(--color-bg);
 }
 
-/* Set by `VisualAdsHtmlSync` when `showVisualAds(userType)` — see `docs/visual-ads-and-user-types.md`. */
+/* Set by `VisualAdsHtmlSync` when `showVisualAds(userType)` — see `docs/mobile/visual-ads-and-user-types.md`. */
 html[data-visual-ads] {
   --bottom-nav-ad-height: var(--visual-ad-strip-min-height);
 }
@@ -312,7 +312,7 @@ body {
   color: var(--color-text-muted);
 }
 
-/* Mobile frame — `docs/figma-nodes.md` */
+/* Mobile frame — `docs/mobile/figma-nodes.md` */
 .app-shell {
   margin: 0 auto;
   max-width: var(--app-max-width);

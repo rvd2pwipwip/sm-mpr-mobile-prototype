@@ -33,7 +33,7 @@ Used for:
 
 **`src/data/musicArtists.js`** – synthetic **`MUSIC_ARTISTS`** for substring search; **`featuredChannelIds`** lists **1–12** seeded channels per artist. **`MusicArtistCard`** reuses **`app-info-swimlane__tile`** (**`MusicArtistCard.css`**) — same **label-on-square** pattern as Browse **Genre** vibe **sub** tiles (e.g. “All Pop” on **`SearchMusicVibeBrowseRail`**), **not** a **`ContentTileCard`** thumbnail. Drill-down: **`/search/browse/music/artist/:artistId`** → 2-column **`MusicChannelCard`** grid (**`SearchMusicArtistChannels.jsx`**).
 
-**Tags (Search)** — Tag strings live on **`MUSIC_CHANNELS[].tags`**; distinct vocabulary: **`docs/mock-data-music-tags.md`** / **`getDistinctMusicChannelTagLabels()`**. **`MusicTagCard`** matches Artists visually; substring match → tap → **`/search/more/tags?q=`**.
+**Tags (Search)** — Tag strings live on **`MUSIC_CHANNELS[].tags`**; distinct vocabulary: **`docs/mobile/mock-data-music-tags.md`** / **`getDistinctMusicChannelTagLabels()`**. **`MusicTagCard`** matches Artists visually; substring match → tap → **`/search/more/tags?q=`**.
 
 ---
 
@@ -41,4 +41,4 @@ Used for:
 
 - Standard cover tile: **`ContentTileCard`** + **`ContentTileCard.css`**
 - Swimlane More rules: **`ContentSwimlane-category-rail-variant.md`**
-- Category rail tutorial: **`docs/Tutorials/ContentSwimlane-category-rail-tutorial.md`**
+- Category rail tutorial: **`docs/mobile/Tutorials/ContentSwimlane-category-rail-tutorial.md`**

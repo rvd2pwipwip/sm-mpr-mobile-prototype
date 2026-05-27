@@ -1,5 +1,5 @@
 /**
- * Copy for the dumb Cast prototype — `docs/Plans/Cast-prototype-implementation-plan.md`.
+ * Copy for the dumb Cast prototype — `docs/mobile/Plans/Cast-prototype-implementation-plan.md`.
  */
 
 export const CAST_DEVICE_OPTIONS = [

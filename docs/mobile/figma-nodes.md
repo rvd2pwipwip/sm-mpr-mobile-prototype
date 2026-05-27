@@ -34,7 +34,7 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 
 - [Stacked promo / account dialog shell](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=9585-70503) — `AppStackedDialog` (guest skip limit, audio quality upsell, …)
 - [Clear typed history confirmation (dialogsClear)](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19979-36464) — Music / Podcast / Radio **More** speed bumps; `MyLibraryHistoryMore`
-- **Cast prototype (UX-only):** [Network Access](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19973-35855), [Local Network](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19973-35892), [Cast to](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7511-78524), [thumbnail casting state](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19975-36144), [Casting on](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19976-36417) — `CastPrototypeProvider` / `docs/Plans/Cast-prototype-implementation-plan.md`
+- **Cast prototype (UX-only):** [Network Access](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19973-35855), [Local Network](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19973-35892), [Cast to](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=7511-78524), [thumbnail casting state](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19975-36144), [Casting on](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19976-36417) — `CastPrototypeProvider` / `docs/mobile/Plans/Cast-prototype-implementation-plan.md`
 - [Miniplayer](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19777-32024&t=4UaBQ5Cdiloes4Qb-4)
 - [Episode Card](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19586-136643&t=8NQn3KeizdhIWSrR-4)
 
@@ -66,13 +66,13 @@ Ads are going to be both audio (pre/post roll) and visual (banners). For the nee
 - [Log in](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=5638-214108&t=NvKDs20ElRoIwSUC-0)
 - [View More grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=23-17518&t=NvKDs20ElRoIwSUC-0)
 - [Subfilter grid](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=49-332563&t=NvKDs20ElRoIwSUC-0)
-- [Search results](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534&t=NvKDs20ElRoIwSUC-0) — **Note:** frame shows **Channels, Artists, Podcasts, Episodes, Radio** swimlanes only. Product adds a **Tags** swimlane (vibe tag matches); see **`docs/Stories/Search-story.md`** Integration notes and **`SearchTagsMore`** route.
+- [Search results](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=61-26534&t=NvKDs20ElRoIwSUC-0) — **Note:** frame shows **Channels, Artists, Podcasts, Episodes, Radio** swimlanes only. Product adds a **Tags** swimlane (vibe tag matches); see **`docs/mobile/Stories/Search-story.md`** Integration notes and **`SearchTagsMore`** route.
 
 **Continent artwork (in-car file — export reference):** [SM HTML InCar MPR — continent graphics](https://www.figma.com/design/sMhTukUlNNedadBSyRnOq5/SM-HTML-InCar-MPR?node-id=13515-37235&t=bqIo4nvDeI0FC2UX-4) (`13515:37235`). Use for SVG/PNG exports on **Browse Radio International** tiles if matching in-car; placeholders are OK for the prototype.
 
 ## Radio mock data — International
 
-**Implementation plan:** [`docs/Plans/Radio-Browse-implementation-plan.md`](Plans/Radio-Browse-implementation-plan.md).
+**Implementation plan:** [`docs/mobile/Plans/Radio-Browse-implementation-plan.md`](Plans/Radio-Browse-implementation-plan.md).
 
 Prototype catalog: `src/data/radioStations.js` (flat rows for Home / search today). **Browse** should add a small **geo tree** module — **v1 mock path only:** **International → North America → Canada → Alberta → cities** (see **Browse International Subregion** `19871:33556` and deep-drill reference frame `19871:33453`).
 

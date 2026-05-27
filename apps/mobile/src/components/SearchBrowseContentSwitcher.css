@@ -42,7 +42,7 @@
   width: 0;
   border-radius: 999px;
   background: var(--color-accent);
-  /* No transition until first paint — see `docs/Tutorials/SearchBrowseContentSwitcher-thumb-layout-tutorial.md`. */
+  /* No transition until first paint — see `docs/mobile/Tutorials/SearchBrowseContentSwitcher-thumb-layout-tutorial.md`. */
   transition: none;
   pointer-events: none;
 }

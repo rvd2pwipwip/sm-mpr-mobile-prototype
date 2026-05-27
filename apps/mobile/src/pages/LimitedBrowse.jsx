@@ -61,7 +61,7 @@ function LimitedBrowseHeaderIcons() {
 
 /**
  * Limited-catalog landing: header chrome + banner + Music|Podcasts|Radio switcher + taxonomy swimlanes.
- * `docs/Plans/catalog-scope-search-browse-refactor.md` Phase C.
+ * `docs/mobile/Plans/catalog-scope-search-browse-refactor.md` Phase C.
  */
 export default function LimitedBrowse() {
   const headerRef = useHomeHeaderOffset();

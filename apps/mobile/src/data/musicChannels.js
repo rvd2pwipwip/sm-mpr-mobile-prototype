@@ -437,7 +437,7 @@ export function getMusicChannelsWithTag(tagLabel) {
 
 /**
  * Sorted unique tag strings present on mock channels (`channel.tags`).
- * Mirrors **`docs/mock-data-music-tags.md`** (refresh that file when taxonomy or lineup changes materially).
+ * Mirrors **`docs/mobile/mock-data-music-tags.md`** (refresh that file when taxonomy or lineup changes materially).
  *
  * @returns {string[]}
  */

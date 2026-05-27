@@ -1,6 +1,6 @@
 # Music lineup (territory proxy) — tutorial
 
-Step-by-step guide to how **music lineup mode** works in the prototype: a stand-in for *“does this user get ~150 channels or ~1000+?”* without geo-IP or backend. Product background: **`docs/Stories/Search-story.md`** and **`docs/Plans/Search-Browse-implementation-plan.md`** (Phase 0).
+Step-by-step guide to how **music lineup mode** works in the prototype: a stand-in for *“does this user get ~150 channels or ~1000+?”* without geo-IP or backend. Product background: **`docs/mobile/Stories/Search-story.md`** and **`docs/mobile/Plans/Search-Browse-implementation-plan.md`** (Phase 0).
 
 **Important:** The **double-tap Music** control on the Search tab is a **prototype-only easter egg** for demos. It is **not** intended for a shipping app (real product would derive lineup from territory or account).
 
@@ -97,7 +97,7 @@ Not required today. If a future **Search-story** reset rule should also force **
 
 - In **`Search.jsx`**, on mount ( **`useEffect`** with **`[]`** ) or when the route becomes active (**`useLocation()`**), call **`setMusicLineupMode(MUSIC_LINEUP.limited)`** — or leave lineup sticky across visits for simpler demos.
 
-Document whichever behavior you choose in **`docs/Stories/Search-story.md`** Integration notes if it becomes product truth.
+Document whichever behavior you choose in **`docs/mobile/Stories/Search-story.md`** Integration notes if it becomes product truth.
 
 ---
 
