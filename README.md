@@ -1,16 +1,27 @@
-# React + Vite
+# sm-mpr-prototypes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Workspace for **Stingray Music** (music, podcasts, radio) clickable prototypes:
 
-Currently, two official plugins are available:
+- **`apps/mobile`** — phone-first React + Vite app (formerly the standalone mobile repo).
+- **`apps/tv`** — TV React + Vite app (D-pad / focus-first shell; port **5174**).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Prerequisites
 
-## React Compiler
+Node.js with npm.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Scripts (run from repo root)
 
-## Expanding the ESLint configuration
+| Command              | Purpose                          |
+|----------------------|----------------------------------|
+| `npm install`       | Install all workspace deps      |
+| `npm run dev`       | Same as `npm run dev:mobile`     |
+| `npm run dev:mobile`| Vite dev server for mobile       |
+| `npm run dev:tv`    | Vite dev server for TV (5174)    |
+| `npm run build`     | Production build (`apps/mobile`) |
+| `npm run build:tv`  | Production build (`apps/tv`)     |
+| `npm run lint`      | ESLint (`apps/mobile`)           |
+| `npm run lint:tv`   | ESLint (`apps/tv`)               |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Shared package
+
+**`packages/shared`** is a placeholder npm workspace (`@sm-mpr/shared`). Add modules there when mobile and TV should import the same fake data or constants.

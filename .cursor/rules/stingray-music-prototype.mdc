@@ -7,8 +7,9 @@ alwaysApply: true
 
 ## What this repo is
 
+- **Monorepo (`sm-mpr-prototypes`):** the **mobile** app lives under **`apps/mobile/`**. Paths like **`src/`** mean **`apps/mobile/src/`** for that app; a TV app will live under **`apps/tv/`** later. Shared modules may go in **`packages/shared`** (`@sm-mpr/shared`).
 - Clickable **UX prototype** for a **mobile-first** music, podcasts and radio streaming app; **not** a production ship.
-- **React + Vite** (`src/`), JavaScript + JSX. Prefer simple components; avoid advanced patterns unless needed.
+- **React + Vite** (`apps/mobile/src/`), JavaScript + JSX. Prefer simple components; avoid advanced patterns unless needed.
 - **Routing** — **React Router** (`react-router-dom`). Use `<BrowserRouter>`, `<Routes>`, `<Route>`, and navigation components (`<Link>`, `<NavLink>`, `useNavigate`) for screen changes. Keep route modules small; add new screens under `src/pages/` unless a feature folder makes more sense. **Primary bottom tabs** follow the **Bottom navigation** pattern below (`NavLink`, URL-driven active state).
 - **Fake data only** — static arrays/objects in `src/` (or a small `src/data/`). No real backends, auth, or persistence unless explicitly requested for flow stubs.
 

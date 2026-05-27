@@ -2,7 +2,7 @@
 
 Short **append-only** notes for concepts introduced while building this repo. The project rules (`.cursor/rules/stingray-music-prototype.mdc`) summarize patterns for implementation; this file is the **longer memory** when you need a refresher.
 
-**Design tokens (colors, spacing, card sizes)** — not React-specific, but the workflow for you and for UI passes lives in **`docs/design-tokens.md`**, with values in **`src/index.css`**.
+**Design tokens (colors, spacing, card sizes)** — not React-specific, but the workflow for you and for UI passes lives in **`docs/design-tokens.md`**, with values in **`apps/mobile/src/index.css`** (mobile app).
 
 **Context:** This prototype continues the same React learning journey as the sibling **karaoke** mobile prototype (layout, swimlanes, bottom nav). Company priorities moved work here; ideas you already practiced there still apply—this document records what we do **in this codebase** (music, podcasts, radio, Figma `UX-SM-MPR-Mobile-2604`).
 
@@ -242,6 +242,24 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 ## Restore purchases prototype (Tier A)
 
 - **Idea:** No App Store / Play Billing integration. **`useRestorePurchasePrototypeDialog()`** sets a short **Working...** state (~400ms), then opens **`RestorePurchasePrototypeDialog`**: one **`AppStackedDialog`** with honest copy + **Done** (scrim also closes). **`RESTORE_PURCHASE_PROTOTYPE_DIALOG`** copy lives in **`infoAccount.js`**. **`InfoAccountSection`** (**guest** + **freeStingray**) and **`Subscription`** mount the hook + dialog; prototype **`userType`** is unchanged.
+
+---
+
+## Monorepo (npm workspaces)
+
+- **Idea:** One Git repo (**`sm-mpr-prototypes`**) holds **multiple npm packages**. The root **`package.json`** lists **`"workspaces": ["apps/*", "packages/*"]`**. **`apps/mobile`** is the phone prototype (React + Vite); **`apps/tv`** is the TV prototype (same stack, port **5174**); **`packages/shared`** (**`@sm-mpr/shared`**) is a stub for fake data/constants both apps might import later.
+- **Commands from repo root:** **`npm install`** links everything once. **`npm run dev`** / **`npm run dev:mobile`** → mobile. **`npm run dev:tv`** → TV. **`npm run build -w tv`**, **`npm run lint -w tv`** target the **`tv`** workspace by its **`package.json`** **`name`**.
+- **Why:** Sister prototypes share product intent but not layout or focus model; workspaces keep apps separate without duplicate top-level tooling per app.
+- Older sections in this file may still write **`src/...`** — for the mobile app read that as **`apps/mobile/src/...`**.
+
+---
+
+## TV app shell (`apps/tv`)
+
+- **Idea:** Separate Vite app from mobile — **no** phone frame or **`BottomNav`**. **`TvShell`** wraps routes: left **`PrimaryNav`** (**`NavLink`**, URL-driven active state) for **Home**, **Search**, **My Library**; main column for page content.
+- **Prototype controls:** **`UserTypeContext`** (duplicate of mobile's four types for now) + a **Preview user type** `<select>` on **`Home`** until a real settings/subscription flow exists.
+- **D-pad baseline:** Native focus order + **`:focus-visible`** ring in **`apps/tv/src/index.css`**; overscan padding via **`--tv-overscan-*`**. Spatial nav libraries are optional later if tab order is not enough.
+- **Run:** from repo root, **`npm run dev:tv`** → **http://localhost:5174**.
 
 ---
 

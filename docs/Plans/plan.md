@@ -2,6 +2,8 @@
 
 This file is the **running plan**: what we intend to do, what we have done, and what is next. Use it to **onboard after a break** and to keep scope visible without digging through chat history.
 
+**Repo layout:** Root package **`sm-mpr-prototypes`** (npm workspaces). The **mobile** Vite app is **`apps/mobile/`**. Older bullets and links that mention **`src/...`** are relative to **`apps/mobile/src/`** unless noted otherwise. A **TV** app will live under **`apps/tv/`** later; shared modules may live in **`packages/shared`** (`@sm-mpr/shared`).
+
 **See also:** `docs/Stories/Home-screen-story.md` (product story for Home), `docs/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table; **Phases 0–8**, acceptance checklist under **Phase 8**), **`docs/Plans/Full-screen-player-layout-refactor.md`** (music / radio / podcast fullscreen shell: header + footer anchoring, thumbnail clamp, phased migration), **`docs/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/Plans/Cast-prototype-implementation-plan.md`** (dumb cast flow: dialogs, thumbnail scrim, three fullscreen players — **before / during implementation**), **`docs/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), **`docs/Plans/ContentSwimlane-category-rail-variant.md`** (`ContentSwimlane` reference + category rail variant plan/tutorial), `docs/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
@@ -17,6 +19,8 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## What we have done
 
+- [x] **Monorepo** — npm workspaces (`apps/*`, `packages/*`); **`apps/mobile`** contains the former root Vite app; **`packages/shared`** stub for shared code.
+- [x] **TV app scaffold** — **`apps/tv`** Vite + React workspace (dev port **5174**); routes **`/`**, **`/search`**, **`/my-library`**; **`TvShell`** + left **`PrimaryNav`**; **`UserTypeContext`** stub (same four user types as mobile); overscan + **`focus-visible`** tokens in **`apps/tv/src/index.css`**.
 - [x] Vite + React project scaffold.
 - [x] Cursor project rules: `.cursor/rules/stingray-music-prototype.mdc` (swimlanes, bottom nav, tokens, fake data).
 - [x] `docs/figma-nodes.md` — design file and screen node links.
@@ -164,6 +168,16 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ---
 
+## TV prototype — next steps
+
+1. **D-pad / focus** — validate tab + arrow flow on primary nav and first content rows; add scroll-into-view for focused tiles when horizontal rails ship.
+2. **Shared data** — hoist stable mock catalogs and user-type constants into **`packages/shared`** when TV screens need the same fixtures as mobile.
+3. **Home screen** — first TV swimlane row (structure only; TV-specific card components, not mobile **`ContentSwimlane`** copy-paste).
+4. **Business model forks** — keep TV overrides in **`apps/tv`** until stakeholder review; merge into shared config only when rules align.
+5. **Legacy TV code** — if reviving last year's prototype, park under **`archive/tv-prototype-YYYY`** or **`apps/tv-legacy`** (separate workspace package).
+
+---
+
 ## How to maintain this file
 
 - After **meaningful** work (a feature, a milestone, or a clear scope change): update **What we have done** and **Next steps**; adjust **Backlog** as needed.
@@ -172,7 +186,9 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 Path: **`docs/Plans/plan.md`** (implementation **plans** directory — separate from step-by-step **`docs/Tutorials/`**).
 
-_Last updated: 2026-05-26_ — **Broad Home**: no favorites / likes rail; document **My Library** + **`Home.jsx`** comment; backlog + Listen again layout note.
+_Last updated: 2026-05-26_ — **`apps/tv`** scaffold (shell, primary nav, user-type stub, plan TV next steps).
+
+_Prior (2026-05-26):_ **Broad Home**: no favorites / likes rail; document **My Library** + **`Home.jsx`** comment; backlog + Listen again layout note.
 
 _Prior (2026-05-25):_ **Restore purchases Tier A** (`AppStackedDialog` stub, **`useRestorePurchasePrototypeDialog`**, **`Subscription`** + **`InfoAccountSection`**).
 
