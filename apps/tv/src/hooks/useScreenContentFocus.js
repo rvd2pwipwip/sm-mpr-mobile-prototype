@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useFocusNavigation } from "../context/GroupFocusNavigationContext.jsx";
 import { useScreenMemory } from "../context/ScreenMemoryContext.jsx";
 import {
@@ -10,11 +10,14 @@ import { useContentFocusGroups } from "../hooks/useContentFocusGroups.js";
 
 /**
  * Shared content-area focus helpers for a screen (Phase 1 demo rows).
+ * Horizontal index is stored per screen so routes do not inherit each other's focus.
  */
 export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 } = {}) {
   useContentFocusGroups(groupCount);
 
   const {
+    memory,
+    setField,
     getFocusedGroupIndex,
     setFocusedGroupIndex,
   } = useScreenMemory(screenId);
@@ -22,8 +25,6 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
   const {
     moveFocusUp,
     moveFocusDown,
-    getGroupFocusMemory,
-    setGroupFocusMemory,
   } = useFocusNavigation();
 
   const {
@@ -33,9 +34,19 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
   } = useTvNavFocus();
 
   const focusedGroupIndex = getFocusedGroupIndex(0);
-  const { focusedIndex } = getGroupFocusMemory(focusedGroupIndex);
+  const focusedIndex = memory.groupItemIndexes?.[focusedGroupIndex] ?? 0;
 
   const itemRefs = useRef([]);
+
+  const setFocusedIndex = useCallback(
+    (groupIndex, index) => {
+      setField("groupItemIndexes", {
+        ...(memory.groupItemIndexes ?? {}),
+        [groupIndex]: index,
+      });
+    },
+    [memory.groupItemIndexes, setField],
+  );
 
   const focusItem = useCallback(
     (groupIndex, index) => {
@@ -45,9 +56,17 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
   );
 
   useEffect(() => {
+    const max = Math.max(0, itemCount - 1);
+    if (focusedIndex > max) {
+      setFocusedIndex(focusedGroupIndex, max);
+    }
+  }, [focusedIndex, focusedGroupIndex, itemCount, setFocusedIndex]);
+
+  useLayoutEffect(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
-    focusItem(focusedGroupIndex, focusedIndex);
-  }, [focusZone, focusedGroupIndex, focusedIndex, focusItem]);
+    const index = Math.min(focusedIndex, Math.max(0, itemCount - 1));
+    focusItem(focusedGroupIndex, index);
+  }, [focusZone, focusedGroupIndex, focusedIndex, itemCount, focusItem]);
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
@@ -75,36 +94,26 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
       enterNav();
       return;
     }
-    const next = focusedIndex - 1;
-    setGroupFocusMemory(focusedGroupIndex, {
-      ...getGroupFocusMemory(focusedGroupIndex),
-      focusedIndex: next,
-    });
+    setFocusedIndex(focusedGroupIndex, focusedIndex - 1);
   }, [
     focusZone,
     focusedIndex,
     focusedGroupIndex,
     enterNav,
-    setGroupFocusMemory,
-    getGroupFocusMemory,
+    setFocusedIndex,
   ]);
 
   const handleMoveRight = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
     const max = itemCount - 1;
     if (focusedIndex >= max) return;
-    const next = focusedIndex + 1;
-    setGroupFocusMemory(focusedGroupIndex, {
-      ...getGroupFocusMemory(focusedGroupIndex),
-      focusedIndex: next,
-    });
+    setFocusedIndex(focusedGroupIndex, focusedIndex + 1);
   }, [
     focusZone,
     focusedIndex,
     focusedGroupIndex,
     itemCount,
-    setGroupFocusMemory,
-    getGroupFocusMemory,
+    setFocusedIndex,
   ]);
 
   const registerItemRef = useCallback((groupIndex, index, node) => {

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import KeyboardWrapper from "./KeyboardWrapper.jsx";
 import FocusableButton from "./FocusableButton.jsx";
 
@@ -22,6 +23,7 @@ export default function DemoFocusRow({
   onSelectItem,
 }) {
   const navigate = useNavigate();
+  const { enterContent } = useTvNavFocus();
 
   return (
     <section className="demo-focus-row-block" aria-label="Focus demo row">
@@ -33,7 +35,10 @@ export default function DemoFocusRow({
             selectData={item}
             onSelect={() => {
               if (onSelectItem) onSelectItem(item);
-              else navigate("/focus-demo");
+              else {
+                enterContent();
+                navigate("/focus-demo");
+              }
             }}
             onUp={onMoveUp}
             onDown={onMoveDown}

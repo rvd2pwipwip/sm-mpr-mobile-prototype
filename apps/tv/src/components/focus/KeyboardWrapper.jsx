@@ -1,17 +1,21 @@
 import { forwardRef } from "react";
 
 /**
- * Wraps a focusable child so Enter/Space and vertical keys reach app navigation handlers.
- * Child must accept ref and onKeyDown (e.g. FocusableButton).
+ * Wraps a focusable child so Enter/Space, click, and arrow keys reach app handlers.
+ * Child must accept ref, onKeyDown, and onClick (e.g. FocusableButton).
  */
 const KeyboardWrapper = forwardRef(function KeyboardWrapper(
   { onSelect, children, selectData, onUp, onDown, onLeft, onRight },
   ref,
 ) {
+  const handleActivate = (event) => {
+    if (onSelect) onSelect(selectData, event);
+  };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      if (onSelect) onSelect(selectData, event);
+      handleActivate(event);
       return;
     }
     if (event.key === "ArrowUp") {
@@ -38,6 +42,7 @@ const KeyboardWrapper = forwardRef(function KeyboardWrapper(
   return children({
     ref,
     onKeyDown: handleKeyDown,
+    onClick: handleActivate,
   });
 });
 
