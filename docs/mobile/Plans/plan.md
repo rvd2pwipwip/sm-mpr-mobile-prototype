@@ -173,11 +173,14 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## TV prototype — next steps
 
-1. **D-pad / focus** — validate tab + arrow flow on primary nav and first content rows; add scroll-into-view for focused tiles when horizontal rails ship.
-2. **Shared data** — hoist stable mock catalogs and user-type constants into **`packages/shared`** when TV screens need the same fixtures as mobile.
-3. **Home screen** — first TV swimlane row (structure only; TV-specific card components, not mobile **`ContentSwimlane`** copy-paste).
-4. **Business model forks** — keep TV overrides in **`apps/tv`** until stakeholder review; merge into shared config only when rules align.
-5. **Legacy TV code** — if reviving last year's prototype, park under **`archive/tv-prototype-YYYY`** or **`apps/tv-legacy`** (separate workspace package).
+**TV living plan:** **`docs/tv/Plans/plan.md`**. **First build slice:** **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** (Phases 0–5: shared data, focus, cards, fixed swimlanes, two Home music rails, More + Channel Info stubs). **Figma:** **`docs/tv/figma-nodes.md`**.
+
+1. **Phase 0** — hoist **`musicChannels.js`** to **`@sm-mpr/shared`** — **done** (see **`docs/tv/Plans/plan.md`**).
+2. **Phases 1–3** — focus contexts + collapsible nav + **`ContentTileCard`** + **`FixedSwimlane`** (SMTV03 patterns, no third-party lib).
+3. **Phase 4** — Home: **Most popular music** + **Recommendations** swimlanes; Enter → Channel Info stub.
+4. **Phase 5** — More grid + fuller Channel Info (SMTV03 flow parity).
+5. **Later** — **`VariableSwimlane`**, limited catalog territory, user types, podcasts/radio.
+6. **SMTV03 workspace** — reference only; not a port. **`@smtv/tv-component-library`** not used in monorepo TV app.
 
 ---
 

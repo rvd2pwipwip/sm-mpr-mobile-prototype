@@ -1,31 +1,56 @@
 /**
  * Global design tokens and layout for the SM MPR TV prototype.
- * Overscan-safe shell, 10-foot typography, focus-visible for D-pad / keyboard.
+ * Figma: SM HTML TV MPR — Home `15515:41291` (see docs/tv/figma-nodes.md).
+ * Viewport: 1920 x 1080 (locked). Light theme for broad Home.
  */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --color-bg: #0f0f12;
-  --color-bg-elevated: #1a1a1f;
-  --color-text: rgba(250, 250, 252, 0.92);
-  --color-text-muted: rgba(250, 250, 252, 0.62);
+  --color-bg: #fafafa;
+  --color-bg-elevated: #ffffff;
+  --color-bg-muted: rgba(0, 0, 0, 0.3);
+  --color-on-bkg: #191919;
+  --color-text: #191919;
+  --color-text-muted: rgba(25, 25, 25, 0.62);
+  --color-text-on-muted: #ffffff;
   --color-accent: #0070e0;
   --color-on-accent: #ffffff;
-  --color-focus-ring: #902992;
+  --color-focus-ring: #191919;
 
-  /* TV safe area — overscan margin (tune from Figma when available). */
-  --tv-overscan-inline: 48px;
-  --tv-overscan-block: 40px;
+  --tv-viewport-width: 1920px;
+  --tv-viewport-height: 1080px;
+
+  /* Content insets (Figma homeMain body) */
+  --tv-content-inline-start: 140px;
+  --tv-content-inline-end: 100px;
+  --tv-header-inline-start: 130px;
+  --tv-header-inline-end: 100px;
+
+  --tv-space-screen-gap: 50px;
+  --tv-space-swimlane-header-gap: 20px;
+  --tv-space-card-gap: 30px;
+  --tv-space-image-title: 16px;
+
+  /* Card tokens (Phase 2+) */
+  --tv-card-size: 308px;
+  --tv-card-radius: 30px;
+  --tv-card-focus-ring-width: 10px;
+
+  /* Nav — collapsed rail width (expanded width set in Phase 1) */
+  --nav-width-collapsed: 48px;
+  --nav-width-expanded: 220px;
+  --nav-width: var(--nav-width-collapsed);
 
   --font-sans: "Roboto", system-ui, sans-serif;
-  --font-size-body: 1.25rem;
-  --font-size-title: 2rem;
+  --font-size-body: 1.125rem;
+  --font-size-swimlane-title: 1.75rem;
+  --font-size-card-title: 1.5rem;
   --font-size-nav: 1.125rem;
+  --font-size-banner: 3rem;
 
   --space-nav-gap: 0.75rem;
-  --radius-focus: 8px;
-  --nav-width: 220px;
+  --radius-banner: 20px;
 }
 
 *,
@@ -46,7 +71,7 @@ body {
   font-size: var(--font-size-body);
   line-height: 1.4;
   color: var(--color-text);
-  background: var(--color-bg);
+  background: #1a1a1f;
   overflow: hidden;
 }
 
@@ -54,34 +79,166 @@ body {
   outline: none;
 }
 
+/* D-pad focus uses component-managed rings in content (Phase 1+). Nav links keep focus-visible for now. */
 :focus-visible {
-  outline: 3px solid var(--color-focus-ring);
-  outline-offset: 3px;
-  border-radius: var(--radius-focus);
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
 }
+
+/* --- Fixed 1920 x 1080 frame --- */
+
+.tv-viewport-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 1rem;
+}
+
+.tv-viewport {
+  width: var(--tv-viewport-width);
+  height: var(--tv-viewport-height);
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .tv-viewport {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (min-aspect-ratio: 16/9) {
+  .tv-viewport {
+    height: 100%;
+    width: auto;
+  }
+}
+
+/* --- App shell --- */
 
 .tv-shell {
   display: flex;
   min-height: 100%;
-  padding: var(--tv-overscan-block) var(--tv-overscan-inline);
-  gap: 2rem;
+  height: 100%;
 }
 
 .tv-shell__main {
   flex: 1;
   min-width: 0;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+/* --- Home header --- */
+
+.tv-home-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 190px;
+  padding: 40px var(--tv-header-inline-end) 0 var(--tv-header-inline-start);
+  background: rgba(250, 250, 250, 0.8);
+  backdrop-filter: blur(7px);
+}
+
+.tv-home-header__wordmark {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.tv-home-header__wordmark:hover {
+  color: var(--color-accent);
+}
+
+.tv-home-header__territory-hint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* --- Home page --- */
+
+.tv-home {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tv-home__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px var(--tv-content-inline-end) 100px var(--tv-content-inline-start);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-screen-gap);
+}
+
+.tv-home__banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 308px;
+  border-radius: var(--radius-banner);
+  background: var(--color-bg-muted);
+  color: var(--color-text-on-muted);
+  font-size: var(--font-size-banner);
+  font-weight: 100;
+}
+
+.tv-home__phase-note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.tv-home__catalog-proof {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-banner);
+  border: 1px solid rgba(25, 25, 25, 0.08);
+}
+
+.tv-home__catalog-proof strong {
+  color: var(--color-text);
+}
+
+/* --- Generic page chrome (Search, My Library placeholders) --- */
+
 .tv-page {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: 2rem var(--tv-content-inline-end) 2rem var(--tv-content-inline-start);
 }
 
 .tv-page__title {
   margin: 0;
-  font-size: var(--font-size-title);
+  font-size: 2rem;
   font-weight: 600;
 }
 
@@ -89,31 +246,4 @@ body {
   margin: 0;
   color: var(--color-text-muted);
   max-width: 42rem;
-}
-
-.tv-prototype-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: var(--color-bg-elevated);
-  border-radius: var(--radius-focus);
-}
-
-.tv-prototype-controls label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--color-text-muted);
-}
-
-.tv-prototype-controls select {
-  font: inherit;
-  color: var(--color-text);
-  background: var(--color-bg);
-  border: 1px solid rgba(250, 250, 252, 0.2);
-  border-radius: var(--radius-focus);
-  padding: 0.5rem 0.75rem;
-  min-width: 12rem;
 }

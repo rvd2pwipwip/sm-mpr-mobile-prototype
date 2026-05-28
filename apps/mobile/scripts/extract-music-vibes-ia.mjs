@@ -1,6 +1,6 @@
 /**
  * Downloads the public “1000+ lineup” vibe spreadsheets and writes
- * `src/data/musicVibesIa.broad1000.json`.
+ * `packages/shared/data/musicVibesIa.broad1000.json`.
  *
  * Requires: `unzip` on PATH (macOS/Linux), network access.
  * Run: node scripts/extract-music-vibes-ia.mjs
@@ -13,7 +13,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const OUT = path.join(__dirname, "..", "src", "data", "musicVibesIa.broad1000.json");
+const OUT = path.join(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "packages",
+  "shared",
+  "data",
+  "musicVibesIa.broad1000.json",
+);
 
 const SOURCES = [
   {

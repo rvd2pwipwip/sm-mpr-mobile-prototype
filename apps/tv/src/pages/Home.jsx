@@ -1,31 +1,29 @@
-import { USER_TYPES, useUserType } from "../context/UserTypeContext.jsx";
+import { MUSIC_CHANNELS } from "@sm-mpr/shared/data/musicChannels.js";
+import { useTerritory } from "../context/TerritoryContext.jsx";
+import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
+import TvHomeHeader from "../components/TvHomeHeader.jsx";
 
 export default function Home() {
-  const { userType, setUserType } = useUserType();
+  const { catalogScope, musicLineupMode } = useTerritory();
 
   return (
-    <div className="tv-page">
-      <h1 className="tv-page__title">Home</h1>
-      <p className="tv-page__lede">
-        TV prototype shell. Use arrow keys or Tab to move focus between the
-        primary nav and controls below. Screen content and swimlanes come next.
-      </p>
-      <div className="tv-prototype-controls">
-        <label htmlFor="tv-user-type">
-          Preview user type
-          <select
-            id="tv-user-type"
-            value={userType}
-            onChange={(event) => setUserType(event.target.value)}
-          >
-            {USER_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
-        <span aria-live="polite">Current: {userType}</span>
+    <div className="tv-home">
+      <TvHomeHeader />
+      <div className="tv-home__scroll">
+        <div className="tv-home__banner" aria-hidden="true">
+          Promo Banner
+        </div>
+
+        <p className="tv-home__phase-note">
+          Phase 0 complete. Swimlanes and D-pad focus start in Phase 1.
+        </p>
+
+        <p className="tv-home__catalog-proof">
+          Shared catalog: <strong>{MUSIC_CHANNELS.length}</strong> music channels
+          loaded from <code>@sm-mpr/shared</code>. Territory:{" "}
+          <strong>{musicLineupLabel(musicLineupMode)}</strong> (
+          <code>{catalogScope}</code>). Click the wordmark to toggle limited / broad.
+        </p>
       </div>
     </div>
   );
