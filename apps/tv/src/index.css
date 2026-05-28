@@ -79,10 +79,9 @@ body {
   outline: none;
 }
 
-/* D-pad focus uses component-managed rings in content (Phase 1+). Nav links keep focus-visible for now. */
+/* D-pad focus uses component-managed rings (.focusable-button--focused). */
 :focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* --- Fixed 1920 x 1080 frame --- */
@@ -127,6 +126,11 @@ body {
   display: flex;
   min-height: 100%;
   height: 100%;
+  --nav-width: var(--nav-width-collapsed);
+}
+
+.tv-shell--nav-expanded {
+  --nav-width: var(--nav-width-expanded);
 }
 
 .tv-shell__main {

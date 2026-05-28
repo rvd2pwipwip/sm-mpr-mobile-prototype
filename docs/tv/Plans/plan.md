@@ -49,18 +49,18 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Overscan + focus tokens** — starter `index.css` (realigned to TV Figma light theme in Phase 0)
 - [x] **`docs/tv/`** — plan, cards-and-swimlanes plan, `figma-nodes.md`, `react-learning.md`
 - [x] **Phase 0 — shared data + TV shell** — `@sm-mpr/shared` (`musicChannels`, `musicBrowseTaxonomy`, `musicLineup`, `catalogScope`); mobile re-exports; TV 1920x1080 viewport, light tokens, `TerritoryProvider`, wordmark toggle, StrictMode off
+- [x] **Phase 1 — focus foundation** — focus contexts, `KeyboardWrapper`, collapsible `PrimaryNav`, demo focus rows, Esc back route (`/focus-demo`)
 
 ---
 
 ## Next steps (ordered)
 
-1. **Phase 1** — Focus foundation (contexts, keyboard wrapper, collapsible nav + memory)
-3. **Phase 2** — `ContentTileCard` + `MusicChannelCard` (308px square, focus ring)
-4. **Phase 3** — `FixedSwimlane` + `SwimlaneRow` shell (transform parking, 9 + More)
-5. **Phase 4** — Home: **two music swimlanes** + vertical group nav + `/music/:id` info stub
-6. **Phase 5** — More grid + fuller Channel Info stub (early parity with SMTV03 flows)
-7. **Phase 6** — `VariableSwimlane` + limited-catalog Home (deferred)
-8. **Later** — podcasts/radio cards, user types, player, Search & Browse, mini player
+1. **Phase 2** — `ContentTileCard` + `MusicChannelCard` (308px square, focus ring)
+2. **Phase 3** — `FixedSwimlane` + `SwimlaneRow` shell (transform parking, 9 + More)
+3. **Phase 4** — Home: **two music swimlanes** + vertical group nav + `/music/:id` info stub
+4. **Phase 5** — More grid + fuller Channel Info stub (early parity with SMTV03 flows)
+5. **Phase 6** — `VariableSwimlane` + limited-catalog Home (deferred)
+6. **Later** — podcasts/radio cards, user types, player, Search & Browse, mini player
 
 Detail, acceptance checks, and file paths: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 

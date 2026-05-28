@@ -2,9 +2,20 @@ import { MUSIC_CHANNELS } from "@sm-mpr/shared/data/musicChannels.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import TvHomeHeader from "../components/TvHomeHeader.jsx";
+import DemoFocusRow from "../components/focus/DemoFocusRow.jsx";
+import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 
 export default function Home() {
   const { catalogScope, musicLineupMode } = useTerritory();
+
+  const {
+    handleMoveUp,
+    handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
+    registerItemRef,
+    isItemFocused,
+  } = useScreenContentFocus("home", { groupCount: 1, itemCount: 3 });
 
   return (
     <div className="tv-home">
@@ -14,15 +25,22 @@ export default function Home() {
           Promo Banner
         </div>
 
-        <p className="tv-home__phase-note">
-          Phase 0 complete. Swimlanes and D-pad focus start in Phase 1.
-        </p>
+        <DemoFocusRow
+          groupIndex={0}
+          isItemFocused={isItemFocused}
+          registerItemRef={registerItemRef}
+          onMoveUp={handleMoveUp}
+          onMoveDown={handleMoveDown}
+          onMoveLeft={handleMoveLeft}
+          onMoveRight={handleMoveRight}
+        />
 
         <p className="tv-home__catalog-proof">
           Shared catalog: <strong>{MUSIC_CHANNELS.length}</strong> music channels
-          loaded from <code>@sm-mpr/shared</code>. Territory:{" "}
+          from <code>@sm-mpr/shared</code>. Territory:{" "}
           <strong>{musicLineupLabel(musicLineupMode)}</strong> (
-          <code>{catalogScope}</code>). Click the wordmark to toggle limited / broad.
+          <code>{catalogScope}</code>). Wordmark click toggles limited / broad
+          (mouse only).
         </p>
       </div>
     </div>

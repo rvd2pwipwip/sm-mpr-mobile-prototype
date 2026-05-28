@@ -31,3 +31,17 @@ The TV app renders inside a fixed **1920 x 1080** frame (`.tv-viewport`) centere
 ## 2026-05-27 — Territory toggle (wordmark click)
 
 **`TerritoryProvider`** defaults to **broad** catalog. Click **STINGRAY MUSIC** in the home header to toggle limited / broad (mouse only; `tabIndex={-1}` so D-pad will not land on it). Uses the same **`sessionStorage`** key as mobile.
+
+## 2026-05-27 — TV focus zones (nav vs content)
+
+D-pad focus splits into two **zones**: **`nav`** (collapsible primary nav) and **`content`** (the active screen). **`TvNavFocusContext`** tracks the zone; **`ScreenMemoryContext`** remembers each screen's vertical group index; **`GroupFocusNavigationContext`** remembers horizontal index per group.
+
+- **Up** from content (first group) or **Left** from the first demo button enters the nav (nav expands).
+- **Right** from nav, or **Down** on the last nav item, enters content (nav collapses) and restores the last focused button.
+- **Tab** is blocked globally (except text fields).
+
+Files: `context/TvNavFocusContext.jsx`, `hooks/useScreenContentFocus.js`, `components/nav/PrimaryNav.jsx`.
+
+## 2026-05-27 — KeyboardWrapper (render prop)
+
+**`KeyboardWrapper`** wraps **`FocusableButton`** with a **render prop** `(focusProps) => ...` so ref and `onKeyDown` reach the button. Handles **Enter**, **Space**, and arrow keys. Pattern adapted from SMTV03; see `components/focus/KeyboardWrapper.jsx`.

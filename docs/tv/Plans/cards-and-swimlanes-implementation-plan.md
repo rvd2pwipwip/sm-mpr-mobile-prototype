@@ -161,10 +161,10 @@ packages/shared/
 
 ### Acceptance
 
-- [ ] Arrow Up/Down moves between nav and a test button row on Home.
-- [ ] Left/Right boundary between nav and content restores last index.
-- [ ] Esc navigates back from a child route.
-- [ ] No Tab-dependent focus in TV content area.
+- [x] Arrow Up/Down moves between nav and a test button row on Home.
+- [x] Left/Right boundary between nav and content restores last index.
+- [x] Esc navigates back from a child route.
+- [x] No Tab-dependent focus in TV content area.
 
 ---
 

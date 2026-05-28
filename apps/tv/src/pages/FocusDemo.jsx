@@ -1,9 +1,11 @@
-import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
-import FocusableButton from "../components/focus/FocusableButton.jsx";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import DemoFocusRow from "../components/focus/DemoFocusRow.jsx";
+import FocusableButton from "../components/focus/FocusableButton.jsx";
+import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import "../components/focus/FocusableButton.css";
 
-export default function MyLibrary() {
+/** Child route to verify Esc navigates back (Phase 1 acceptance). */
+export default function FocusDemo() {
   const {
     handleMoveUp,
     handleMoveDown,
@@ -11,13 +13,14 @@ export default function MyLibrary() {
     handleMoveRight,
     registerItemRef,
     isItemFocused,
-  } = useScreenContentFocus("my-library", { groupCount: 1, itemCount: 1 });
+  } = useScreenContentFocus("focus-demo", { groupCount: 1, itemCount: 1 });
 
   return (
     <div className="tv-page">
-      <h1 className="tv-page__title">My Library</h1>
+      <h1 className="tv-page__title">Esc back-test</h1>
       <p className="tv-page__lede">
-        Placeholder route. Listen history and liked content rails will live here.
+        Press Esc to return to the previous screen. Focus the button below with
+        the D-pad if needed.
       </p>
       <KeyboardWrapper
         onUp={handleMoveUp}
@@ -28,7 +31,7 @@ export default function MyLibrary() {
       >
         {(focusProps) => (
           <FocusableButton {...focusProps} focused={isItemFocused(0, 0)}>
-            My Library placeholder focus
+            Focused placeholder
           </FocusableButton>
         )}
       </KeyboardWrapper>
