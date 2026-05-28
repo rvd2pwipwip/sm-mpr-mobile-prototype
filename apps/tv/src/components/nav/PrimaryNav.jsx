@@ -38,7 +38,15 @@ const NAV_ITEMS = [
   },
 ];
 
-function isNavItemActive(pathname, { to, end }) {
+function isNavItemActive(pathname, item) {
+  const { to, end, id } = item;
+  if (id === "home") {
+    return (
+      pathname === "/" ||
+      pathname.startsWith("/music/") ||
+      pathname.startsWith("/more/")
+    );
+  }
   if (end) return pathname === to;
   return pathname === to || pathname.startsWith(`${to}/`);
 }

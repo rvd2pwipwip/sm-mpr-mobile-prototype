@@ -181,9 +181,9 @@ packages/shared/
 
 ### Acceptance
 
-- [ ] Card matches Figma proportions within reasonable tolerance.
-- [ ] Focused card shows ring; unfocused does not.
-- [ ] `playing` prop adds a distinct visual (e.g. subtle overlay or icon — designer choice in implementation).
+- [x] Card matches Figma proportions within reasonable tolerance.
+- [x] Focused card shows ring; unfocused does not.
+- [x] `playing` prop adds a distinct visual (e.g. subtle overlay or icon — designer choice in implementation).
 
 ---
 
@@ -202,9 +202,9 @@ packages/shared/
 
 ### Acceptance
 
-- [ ] Left/Right moves focus across 9 cards + More; row scrolls to keep focus visible.
-- [ ] More tile appears when catalog count exceeds 9.
-- [ ] Component does not change vertical group on horizontal moves alone.
+- [x] Left/Right moves focus across 9 cards + More; row scrolls to keep focus visible.
+- [x] More tile appears when catalog count exceeds 9.
+- [x] Component does not change vertical group on horizontal moves alone.
 
 ---
 
@@ -223,9 +223,9 @@ packages/shared/
 
 ### Acceptance
 
-- [ ] D-pad: nav ↔ rail 1 ↔ rail 2; horizontal within each rail.
-- [ ] Enter opens stub info; Esc returns to Home with memory restored.
-- [ ] Two rails visible matching mobile **titles** and shared data.
+- [x] D-pad: nav ↔ rail 1 ↔ rail 2; horizontal within each rail.
+- [x] Enter opens stub info; Esc returns to Home with memory restored.
+- [x] Two rails visible matching mobile **titles** and shared data.
 
 ---
 

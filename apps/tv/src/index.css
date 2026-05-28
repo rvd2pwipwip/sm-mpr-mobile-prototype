@@ -36,6 +36,8 @@
   --tv-card-size: 308px;
   --tv-card-radius: 30px;
   --tv-card-focus-ring-width: 10px;
+  --tv-card-focus-ring-unfocused: transparent;
+  --tv-card-focus-ring-focused: var(--color-on-bkg);
 
   /* Nav — collapsed rail width (expanded width set in Phase 1) */
   --nav-width-collapsed: 48px;

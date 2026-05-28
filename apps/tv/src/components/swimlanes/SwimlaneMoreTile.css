@@ -1,0 +1,12 @@
+.swimlane-more-tile__thumbnail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-muted);
+}
+
+.swimlane-more-tile__label {
+  font-size: var(--font-size-card-title);
+  font-weight: 500;
+  color: var(--color-text-on-muted);
+}

@@ -176,7 +176,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 **TV living plan:** **`docs/tv/Plans/plan.md`**. **First build slice:** **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** (Phases 0–5: shared data, focus, cards, fixed swimlanes, two Home music rails, More + Channel Info stubs). **Figma:** **`docs/tv/figma-nodes.md`**.
 
 1. **Phase 0** — hoist **`musicChannels.js`** to **`@sm-mpr/shared`** — **done** (see **`docs/tv/Plans/plan.md`**).
-2. **Phases 1–3** — focus contexts + collapsible nav — **Phase 1 done**; next **`ContentTileCard`** + **`FixedSwimlane`** (SMTV03 patterns, no third-party lib).
+2. **Phases 1–3** — focus, cards, and **FixedSwimlane** done; next **Phase 4** (second Home rail + Channel Info stub).
 3. **Phase 4** — Home: **Most popular music** + **Recommendations** swimlanes; Enter → Channel Info stub.
 4. **Phase 5** — More grid + fuller Channel Info (SMTV03 flow parity).
 5. **Later** — **`VariableSwimlane`**, limited catalog territory, user types, podcasts/radio.

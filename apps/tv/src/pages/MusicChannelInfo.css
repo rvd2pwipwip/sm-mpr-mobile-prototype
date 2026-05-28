@@ -1,0 +1,21 @@
+.music-channel-info__hero {
+  width: 308px;
+  flex-shrink: 0;
+}
+
+.music-channel-info__thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-card, 8px);
+  object-fit: cover;
+  background: var(--color-bg-muted);
+}
+
+.music-channel-info__description {
+  margin: 0;
+  max-width: 48rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}

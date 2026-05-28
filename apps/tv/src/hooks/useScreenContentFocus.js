@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFocusNavigation } from "../context/GroupFocusNavigationContext.jsx";
 import { useScreenMemory } from "../context/ScreenMemoryContext.jsx";
 import {
@@ -12,8 +12,21 @@ import { useContentFocusGroups } from "../hooks/useContentFocusGroups.js";
  * Shared content-area focus helpers for a screen (Phase 1 demo rows).
  * Horizontal index is stored per screen so routes do not inherit each other's focus.
  */
-export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 } = {}) {
+export function useScreenContentFocus(
+  screenId,
+  { groupCount = 1, itemCount = 1, itemCounts, swimlaneGroups = [] } = {},
+) {
   useContentFocusGroups(groupCount);
+
+  const swimlaneGroupSet = useMemo(
+    () => new Set(swimlaneGroups),
+    [swimlaneGroups],
+  );
+
+  const getItemCount = useCallback(
+    (groupIndex) => itemCounts?.[groupIndex] ?? itemCount,
+    [itemCounts, itemCount],
+  );
 
   const {
     memory,
@@ -56,17 +69,18 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
   );
 
   useEffect(() => {
-    const max = Math.max(0, itemCount - 1);
+    const max = Math.max(0, getItemCount(focusedGroupIndex) - 1);
     if (focusedIndex > max) {
       setFocusedIndex(focusedGroupIndex, max);
     }
-  }, [focusedIndex, focusedGroupIndex, itemCount, setFocusedIndex]);
+  }, [focusedIndex, focusedGroupIndex, getItemCount, setFocusedIndex]);
 
   useLayoutEffect(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
-    const index = Math.min(focusedIndex, Math.max(0, itemCount - 1));
+    const max = Math.max(0, getItemCount(focusedGroupIndex) - 1);
+    const index = Math.min(focusedIndex, max);
     focusItem(focusedGroupIndex, index);
-  }, [focusZone, focusedGroupIndex, focusedIndex, itemCount, focusItem]);
+  }, [focusZone, focusedGroupIndex, focusedIndex, getItemCount, focusItem]);
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
@@ -90,6 +104,7 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
 
   const handleMoveLeft = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
+    if (swimlaneGroupSet.has(focusedGroupIndex)) return;
     if (focusedIndex === 0) {
       enterNav();
       return;
@@ -99,20 +114,23 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
     focusZone,
     focusedIndex,
     focusedGroupIndex,
+    swimlaneGroupSet,
     enterNav,
     setFocusedIndex,
   ]);
 
   const handleMoveRight = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
-    const max = itemCount - 1;
+    if (swimlaneGroupSet.has(focusedGroupIndex)) return;
+    const max = getItemCount(focusedGroupIndex) - 1;
     if (focusedIndex >= max) return;
     setFocusedIndex(focusedGroupIndex, focusedIndex + 1);
   }, [
     focusZone,
     focusedIndex,
     focusedGroupIndex,
-    itemCount,
+    swimlaneGroupSet,
+    getItemCount,
     setFocusedIndex,
   ]);
 
@@ -126,11 +144,19 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
   const isContentGroupActive = (groupIndex) =>
     focusZone === FOCUS_ZONE_CONTENT && focusedGroupIndex === groupIndex;
 
+  const getItemFocusIndex = useCallback(
+    (groupIndex) => memory.groupItemIndexes?.[groupIndex] ?? 0,
+    [memory.groupItemIndexes],
+  );
+
   return {
     focusZone,
     focusedGroupIndex,
     focusedIndex,
+    getItemFocusIndex,
     enterContent,
+    enterNav,
+    setFocusedIndex,
     handleMoveUp,
     handleMoveDown,
     handleMoveLeft,
@@ -138,6 +164,7 @@ export function useScreenContentFocus(screenId, { groupCount = 1, itemCount = 1 
     registerItemRef,
     isContentGroupActive,
     isItemFocused: (groupIndex, index) =>
-      isContentGroupActive(groupIndex) && focusedIndex === index,
+      isContentGroupActive(groupIndex) &&
+      getItemFocusIndex(groupIndex) === index,
   };
 }

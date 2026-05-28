@@ -1,21 +1,52 @@
-import { MUSIC_CHANNELS } from "@sm-mpr/shared/data/musicChannels.js";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getRecommendationsMusicChannels,
+  MUSIC_CHANNELS,
+} from "@sm-mpr/shared/data/musicChannels.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import TvHomeHeader from "../components/TvHomeHeader.jsx";
-import DemoFocusRow from "../components/focus/DemoFocusRow.jsx";
+import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
+import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 
+const POPULAR_GROUP = 0;
+const RECOMMENDATIONS_GROUP = 1;
+
 export default function Home() {
+  const navigate = useNavigate();
   const { catalogScope, musicLineupMode } = useTerritory();
+
+  const recommendations = useMemo(() => getRecommendationsMusicChannels(), []);
+
+  const popularSlotCount = getMusicSwimlaneSlotCount(MUSIC_CHANNELS.length);
+  const recommendationsSlotCount = getMusicSwimlaneSlotCount(
+    recommendations.length,
+  );
 
   const {
     handleMoveUp,
     handleMoveDown,
-    handleMoveLeft,
-    handleMoveRight,
     registerItemRef,
-    isItemFocused,
-  } = useScreenContentFocus("home", { groupCount: 1, itemCount: 3 });
+    isContentGroupActive,
+    getItemFocusIndex,
+    setFocusedIndex,
+    enterNav,
+  } = useScreenContentFocus("home", {
+    groupCount: 2,
+    itemCounts: {
+      [POPULAR_GROUP]: popularSlotCount,
+      [RECOMMENDATIONS_GROUP]: recommendationsSlotCount,
+    },
+    swimlaneGroups: [POPULAR_GROUP, RECOMMENDATIONS_GROUP],
+  });
+
+  const playingChannelId = MUSIC_CHANNELS[0]?.id ?? null;
+
+  const openChannelInfo = (channel) => {
+    navigate(`/music/${channel.id}`);
+  };
 
   return (
     <div className="tv-home">
@@ -25,14 +56,39 @@ export default function Home() {
           Promo Banner
         </div>
 
-        <DemoFocusRow
-          groupIndex={0}
-          isItemFocused={isItemFocused}
+        <MusicChannelSwimlane
+          title="Most popular music"
+          channels={MUSIC_CHANNELS}
+          sourceCount={MUSIC_CHANNELS.length}
+          groupIndex={POPULAR_GROUP}
+          playingChannelId={playingChannelId}
+          focused={isContentGroupActive(POPULAR_GROUP)}
+          focusedIndex={getItemFocusIndex(POPULAR_GROUP)}
+          onFocusChange={(index) => setFocusedIndex(POPULAR_GROUP, index)}
+          onBoundaryLeft={enterNav}
           registerItemRef={registerItemRef}
           onMoveUp={handleMoveUp}
           onMoveDown={handleMoveDown}
-          onMoveLeft={handleMoveLeft}
-          onMoveRight={handleMoveRight}
+          onSelectChannel={openChannelInfo}
+          onMore={() => navigate("/more/music")}
+        />
+
+        <MusicChannelSwimlane
+          title="Recommendations"
+          channels={recommendations}
+          sourceCount={recommendations.length}
+          groupIndex={RECOMMENDATIONS_GROUP}
+          focused={isContentGroupActive(RECOMMENDATIONS_GROUP)}
+          focusedIndex={getItemFocusIndex(RECOMMENDATIONS_GROUP)}
+          onFocusChange={(index) =>
+            setFocusedIndex(RECOMMENDATIONS_GROUP, index)
+          }
+          onBoundaryLeft={enterNav}
+          registerItemRef={registerItemRef}
+          onMoveUp={handleMoveUp}
+          onMoveDown={handleMoveDown}
+          onSelectChannel={openChannelInfo}
+          onMore={() => navigate("/more/recommendations")}
         />
 
         <p className="tv-home__catalog-proof">
