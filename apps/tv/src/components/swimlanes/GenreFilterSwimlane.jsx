@@ -1,10 +1,10 @@
-import FilterPill from "../focus/FilterPill.jsx";
+import FilterButton from "../focus/FilterButton.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import VariableSwimlane from "./VariableSwimlane.jsx";
 import "./SwimlaneRow.css";
 
 /**
- * Genre / filter pill row for limited-catalog TV Home (same stack pattern as SwimlaneRow).
+ * Genre / filter button row for limited-catalog TV Home (same stack pattern as SwimlaneRow).
  */
 export default function GenreFilterSwimlane({
   filters,
@@ -40,7 +40,7 @@ export default function GenreFilterSwimlane({
             onDown={onMoveDown}
           >
             {(focusProps) => (
-              <FilterPill
+              <FilterButton
                 {...focusProps}
                 label={filter.label}
                 active={filter.id === activeFilterId}

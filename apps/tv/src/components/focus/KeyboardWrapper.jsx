@@ -20,21 +20,25 @@ const KeyboardWrapper = forwardRef(function KeyboardWrapper(
     }
     if (event.key === "ArrowUp") {
       event.preventDefault();
+      event.stopPropagation();
       if (onUp) onUp(event);
       return;
     }
     if (event.key === "ArrowDown") {
       event.preventDefault();
+      event.stopPropagation();
       if (onDown) onDown(event);
       return;
     }
     if (event.key === "ArrowLeft") {
       event.preventDefault();
+      event.stopPropagation();
       if (onLeft) onLeft(event);
       return;
     }
     if (event.key === "ArrowRight") {
       event.preventDefault();
+      event.stopPropagation();
       if (onRight) onRight(event);
     }
   };

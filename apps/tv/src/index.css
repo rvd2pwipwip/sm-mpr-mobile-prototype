@@ -24,8 +24,18 @@
   /* Content insets (Figma homeMain body) */
   --tv-content-inline-start: 140px;
   --tv-content-inline-end: 100px;
+  --tv-content-inline-start-limited: 100px;
+  --tv-content-inline-end-limited: 100px;
   --tv-header-inline-start: 130px;
   --tv-header-inline-end: 100px;
+
+  /* Unified focus ring (Phase 3 applies; tokens defined here) */
+  --tv-focus-ring-width: 10px;
+  --tv-focus-ring-color: var(--color-on-bkg);
+  --tv-focus-ring-gap: 0;
+  --tv-slot-ring-gutter: 10px;
+
+  --z-primary-nav: 100;
 
   --tv-space-screen-gap: 50px;
   --tv-space-swimlane-header-gap: 20px;
@@ -40,10 +50,21 @@
   --tv-card-focus-ring-unfocused: transparent;
   --tv-card-focus-ring-focused: var(--color-on-bkg);
 
-  /* Nav — collapsed rail width (expanded width set in Phase 1) */
+  /* TV buttons (SMTV03 tv-component-library Button medium) */
+  --tv-button-radius: 8px;
+  --tv-button-height-medium: 48px;
+  --tv-button-padding-block: 16px;
+  --tv-button-padding-inline: 24px;
+  --tv-button-font-size: 1.125rem;
+  --tv-button-border-color: rgba(25, 25, 25, 0.24);
+  --tv-button-focus-outline-width: 10px;
+  --tv-button-focus-scale: 1.02;
+  --tv-button-transition-duration: 0.2s;
+
+  /* Nav overlay — visual width only; main content stays full viewport */
   --nav-width-collapsed: 48px;
-  --nav-width-expanded: 220px;
-  --nav-width: var(--nav-width-collapsed);
+  /* Figma mainMenuTV: 250px items + 20px pad; mini player row is 500px (future) */
+  --nav-width-expanded: 290px;
 
   --font-sans: "Roboto", system-ui, sans-serif;
   --font-size-body: 1.125rem;
@@ -54,6 +75,14 @@
 
   --space-nav-gap: 0.75rem;
   --radius-banner: 20px;
+}
+
+[data-catalog-scope="broad"] {
+  --tv-swimlane-inline-start: var(--tv-content-inline-start);
+}
+
+[data-catalog-scope="limited"] {
+  --tv-swimlane-inline-start: var(--tv-content-inline-start-limited);
 }
 
 *,
@@ -126,19 +155,17 @@ body {
 /* --- App shell --- */
 
 .tv-shell {
-  display: flex;
+  position: relative;
+  width: 100%;
   min-height: 100%;
   height: 100%;
-  --nav-width: var(--nav-width-collapsed);
-}
-
-.tv-shell--nav-expanded {
-  --nav-width: var(--nav-width-expanded);
 }
 
 .tv-shell__main {
-  flex: 1;
-  min-width: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;

@@ -31,7 +31,7 @@ export default function MusicChannelInfo() {
     isContentGroupActive,
     getItemFocusIndex,
     setFocusedIndex,
-    enterNav,
+    enterNavFromContent,
   } = useScreenContentFocus(`channel-info-${channelId}`, {
     groupCount: hasRelated ? 2 : 1,
     itemCounts: hasRelated
@@ -111,7 +111,7 @@ export default function MusicChannelInfo() {
           focused={isContentGroupActive(RELATED_GROUP)}
           focusedIndex={getItemFocusIndex(RELATED_GROUP)}
           onFocusChange={(index) => setFocusedIndex(RELATED_GROUP, index)}
-          onBoundaryLeft={enterNav}
+          onBoundaryLeft={enterNavFromContent}
           registerItemRef={registerItemRef}
           onMoveUp={handleMoveUp}
           onMoveDown={handleMoveDown}

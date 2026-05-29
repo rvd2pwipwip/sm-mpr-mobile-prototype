@@ -1,0 +1,46 @@
+/* SMTV03 @smtv/tv-component-library Button medium: 8px radius, 10px outline focus ring. */
+
+.filter-button.focusable-button {
+  margin: 0;
+  min-height: var(--tv-button-height-medium);
+  padding: var(--tv-button-padding-block) var(--tv-button-padding-inline);
+  font-size: var(--tv-button-font-size);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  color: var(--color-text);
+  background: var(--color-bg-elevated);
+  border: 2px solid var(--tv-button-border-color);
+  border-radius: var(--tv-button-radius);
+  outline: var(--tv-button-focus-outline-width) solid transparent;
+  outline-offset: 0;
+  box-shadow: none;
+  transition:
+    outline-color var(--tv-button-transition-duration) ease,
+    transform var(--tv-button-transition-duration) ease,
+    background-color var(--tv-button-transition-duration) ease,
+    border-color var(--tv-button-transition-duration) ease,
+    color var(--tv-button-transition-duration) ease;
+}
+
+.filter-button--active.focusable-button {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.filter-button.focusable-button--focused,
+.filter-button--focused.focusable-button {
+  outline-color: var(--color-focus-ring);
+  transform: scale(var(--tv-button-focus-scale));
+  box-shadow: none;
+}
+
+.filter-button--active.focusable-button--focused {
+  border-color: var(--color-accent);
+}
+
+.filter-button.focusable-button:active {
+  transform: scale(calc(var(--tv-button-focus-scale) - 0.02));
+}

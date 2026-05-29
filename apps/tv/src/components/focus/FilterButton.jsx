@@ -1,16 +1,16 @@
 import { forwardRef } from "react";
 import FocusableButton from "./FocusableButton.jsx";
-import "./FilterPill.css";
+import "./FilterButton.css";
 
-/** Variable-width genre / filter chip for TV limited Home. */
-const FilterPill = forwardRef(function FilterPill(
+/** TV genre / filter control — rounded rect (SMTV03 Button medium), not mobile pill shape. */
+const FilterButton = forwardRef(function FilterButton(
   { label, active = false, focused = false, onKeyDown, onClick, ...rest },
   ref,
 ) {
   const className = [
-    "filter-pill",
-    active ? "filter-pill--active" : "",
-    focused ? "filter-pill--focused" : "",
+    "filter-button",
+    active ? "filter-button--active" : "",
+    focused ? "filter-button--focused" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -29,4 +29,4 @@ const FilterPill = forwardRef(function FilterPill(
   );
 });
 
-export default FilterPill;
+export default FilterButton;

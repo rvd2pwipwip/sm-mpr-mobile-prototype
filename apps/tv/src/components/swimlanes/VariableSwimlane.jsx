@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import VariableSwimlaneItem from "./VariableSwimlaneItem.jsx";
 import "./VariableSwimlane.css";
 
@@ -32,6 +33,7 @@ export default function VariableSwimlane({
   activeIndex = null,
   className = "",
 }) {
+  const { focusZone } = useTvNavFocus();
   const viewportRef = useRef(null);
   const measureRefs = useRef([]);
   const [viewportWidth, setViewportWidth] = useState(0);
@@ -125,8 +127,11 @@ export default function VariableSwimlane({
     if (!focused) return undefined;
 
     const handleKeyDown = (event) => {
+      if (focusZone !== FOCUS_ZONE_CONTENT) return;
+
       if (event.key === "ArrowRight") {
         event.preventDefault();
+        event.stopPropagation();
         if (focusedIndex < items.length - 1) {
           onFocusChange?.(focusedIndex + 1);
         }
@@ -134,18 +139,19 @@ export default function VariableSwimlane({
       }
 
       if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        event.stopPropagation();
         if (focusedIndex === 0) {
           onBoundaryLeft?.(event);
           return;
         }
-        event.preventDefault();
         onFocusChange?.(focusedIndex - 1);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [focused, focusedIndex, items.length, onFocusChange, onBoundaryLeft]);
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [focused, focusZone, focusedIndex, items.length, onFocusChange, onBoundaryLeft]);
 
   const viewportClass = ["variable-swimlane__viewport", className]
     .filter(Boolean)

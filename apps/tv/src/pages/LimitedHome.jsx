@@ -44,7 +44,6 @@ export default function LimitedHome() {
     isContentGroupActive,
     getItemFocusIndex,
     setFocusedIndex,
-    enterNav,
   } = useScreenContentFocus("home-limited", {
     groupCount: 2,
     itemCounts: {
@@ -53,6 +52,7 @@ export default function LimitedHome() {
     },
     swimlaneGroups: [FILTERS_GROUP, SWIMLANE_GROUP],
     defaultGroupIndex: SWIMLANE_GROUP,
+    navEnterEnabled: false,
   });
 
   const handleSelectFilter = useCallback(
@@ -97,7 +97,6 @@ export default function LimitedHome() {
           focusedIndex={getItemFocusIndex(FILTERS_GROUP)}
           onFocusChange={(index) => setFocusedIndex(FILTERS_GROUP, index)}
           onSelectFilter={handleSelectFilter}
-          onBoundaryLeft={enterNav}
           registerItemRef={registerItemRef}
           onMoveUp={handleMoveUp}
           onMoveDown={handleMoveDown}
@@ -112,7 +111,6 @@ export default function LimitedHome() {
             focused={isContentGroupActive(SWIMLANE_GROUP)}
             focusedIndex={getItemFocusIndex(SWIMLANE_GROUP)}
             onFocusChange={(index) => setFocusedIndex(SWIMLANE_GROUP, index)}
-            onBoundaryLeft={enterNav}
             registerItemRef={registerItemRef}
             onMoveUp={handleMoveUp}
             onMoveDown={handleMoveDown}

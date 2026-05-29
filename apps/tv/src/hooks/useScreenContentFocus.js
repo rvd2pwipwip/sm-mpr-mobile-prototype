@@ -20,6 +20,7 @@ export function useScreenContentFocus(
     itemCounts,
     swimlaneGroups = [],
     defaultGroupIndex = 0,
+    navEnterEnabled = true,
   } = {},
 ) {
   useContentFocusGroups(groupCount);
@@ -50,6 +51,8 @@ export function useScreenContentFocus(
     focusZone,
     enterNav,
     enterContent,
+    rememberNavContentFocus,
+    consumeNavContentRestore,
   } = useTvNavFocus();
 
   const focusedGroupIndex = getFocusedGroupIndex(defaultGroupIndex);
@@ -88,23 +91,60 @@ export function useScreenContentFocus(
     }
   }, [focusedIndex, focusedGroupIndex, getItemCount, setFocusedIndex]);
 
+  const enterNavFromContent = useCallback(() => {
+    rememberNavContentFocus({
+      groupIndex: focusedGroupIndex,
+      itemIndex: memory.groupItemIndexes?.[focusedGroupIndex] ?? 0,
+    });
+    enterNav();
+  }, [
+    focusedGroupIndex,
+    memory.groupItemIndexes,
+    rememberNavContentFocus,
+    enterNav,
+  ]);
+
   useLayoutEffect(() => {
+    if (focusZone !== FOCUS_ZONE_CONTENT) return;
+
+    const snapshot = consumeNavContentRestore();
+    if (snapshot) {
+      setFocusedGroupIndex(snapshot.groupIndex);
+      setField("groupItemIndexes", {
+        ...(memory.groupItemIndexes ?? {}),
+        [snapshot.groupIndex]: snapshot.itemIndex,
+      });
+      focusItem(snapshot.groupIndex, snapshot.itemIndex);
+      return;
+    }
+
     syncDomFocus();
     const frameId = requestAnimationFrame(syncDomFocus);
     return () => cancelAnimationFrame(frameId);
-  }, [syncDomFocus]);
+  }, [
+    focusZone,
+    consumeNavContentRestore,
+    setFocusedGroupIndex,
+    memory.groupItemIndexes,
+    setField,
+    focusItem,
+    syncDomFocus,
+  ]);
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
     if (focusedGroupIndex === 0) {
-      enterNav();
+      if (navEnterEnabled) {
+        enterNavFromContent();
+      }
       return;
     }
     moveFocusUp(focusedGroupIndex, setFocusedGroupIndex);
   }, [
     focusZone,
     focusedGroupIndex,
-    enterNav,
+    navEnterEnabled,
+    enterNavFromContent,
     moveFocusUp,
     setFocusedGroupIndex,
   ]);
@@ -141,7 +181,9 @@ export function useScreenContentFocus(
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
     if (swimlaneGroupSet.has(focusedGroupIndex)) return;
     if (focusedIndex === 0) {
-      enterNav();
+      if (navEnterEnabled) {
+        enterNavFromContent();
+      }
       return;
     }
     setFocusedIndex(focusedGroupIndex, focusedIndex - 1);
@@ -150,7 +192,8 @@ export function useScreenContentFocus(
     focusedIndex,
     focusedGroupIndex,
     swimlaneGroupSet,
-    enterNav,
+    navEnterEnabled,
+    enterNavFromContent,
     setFocusedIndex,
   ]);
 
@@ -203,7 +246,7 @@ export function useScreenContentFocus(
     focusedIndex,
     getItemFocusIndex,
     enterContent,
-    enterNav,
+    enterNavFromContent,
     setFocusedIndex,
     handleMoveUp,
     handleMoveDown,

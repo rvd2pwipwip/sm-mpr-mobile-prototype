@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import { getTvCardGap, getTvCardSize } from "../../utils/tvLayout.js";
 import "./FixedSwimlane.css";
 
@@ -22,6 +23,7 @@ export default function FixedSwimlane({
   renderSlot,
   className = "",
 }) {
+  const { focusZone } = useTvNavFocus();
   const viewportRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(false);
@@ -73,8 +75,11 @@ export default function FixedSwimlane({
     if (!focused) return undefined;
 
     const handleKeyDown = (event) => {
+      if (focusZone !== FOCUS_ZONE_CONTENT) return;
+
       if (event.key === "ArrowRight") {
         event.preventDefault();
+        event.stopPropagation();
         if (focusedIndex < slotCount - 1) {
           onFocusChange?.(focusedIndex + 1);
         }
@@ -83,6 +88,7 @@ export default function FixedSwimlane({
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
+        event.stopPropagation();
         if (focusedIndex === 0) {
           onBoundaryLeft?.(event);
           return;
@@ -91,9 +97,9 @@ export default function FixedSwimlane({
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [focused, focusedIndex, slotCount, onFocusChange, onBoundaryLeft]);
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [focused, focusZone, focusedIndex, slotCount, onFocusChange, onBoundaryLeft]);
 
   const viewportClass = ["fixed-swimlane__viewport", className]
     .filter(Boolean)

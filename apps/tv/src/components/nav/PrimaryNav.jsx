@@ -61,6 +61,7 @@ export default function PrimaryNav() {
     navExpanded,
     navFocusedIndex,
     enterContent,
+    enterContentWithRestore,
     moveNavFocus,
   } = useTvNavFocus();
 
@@ -102,12 +103,12 @@ export default function PrimaryNav() {
                 onUp={() => moveNavFocus(-1)}
                 onDown={() => {
                   if (index === NAV_ITEMS.length - 1) {
-                    enterContent();
+                    enterContentWithRestore();
                     return;
                   }
                   moveNavFocus(1);
                 }}
-                onRight={() => enterContent()}
+                onRight={() => enterContentWithRestore()}
               >
                 {(focusProps) => (
                   <FocusableButton

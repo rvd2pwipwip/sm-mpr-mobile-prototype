@@ -32,7 +32,7 @@ export default function BroadHome() {
     isContentGroupActive,
     getItemFocusIndex,
     setFocusedIndex,
-    enterNav,
+    enterNavFromContent,
   } = useScreenContentFocus("home-broad", {
     groupCount: 2,
     itemCounts: {
@@ -65,7 +65,7 @@ export default function BroadHome() {
           focused={isContentGroupActive(POPULAR_GROUP)}
           focusedIndex={getItemFocusIndex(POPULAR_GROUP)}
           onFocusChange={(index) => setFocusedIndex(POPULAR_GROUP, index)}
-          onBoundaryLeft={enterNav}
+          onBoundaryLeft={enterNavFromContent}
           registerItemRef={registerItemRef}
           onMoveUp={handleMoveUp}
           onMoveDown={handleMoveDown}
@@ -83,7 +83,7 @@ export default function BroadHome() {
           onFocusChange={(index) =>
             setFocusedIndex(RECOMMENDATIONS_GROUP, index)
           }
-          onBoundaryLeft={enterNav}
+          onBoundaryLeft={enterNavFromContent}
           registerItemRef={registerItemRef}
           onMoveUp={handleMoveUp}
           onMoveDown={handleMoveDown}
