@@ -259,6 +259,12 @@ packages/shared/
 
 Defer until Phases 0–5 are stable.
 
+### Acceptance
+
+- [x] Wordmark toggle switches between broad Home (two rails) and limited Home (filters + rail).
+- [x] Genre filter row scrolls with measured pill widths; active filter stays visible without stealing focus.
+- [x] Enter on filter updates channel rail; D-pad moves nav ↔ filters ↔ channels.
+
 ---
 
 ## Phase 7+ — Backlog (not scheduled here)

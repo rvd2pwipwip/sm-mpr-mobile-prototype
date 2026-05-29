@@ -54,13 +54,13 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Phase 3 — fixed swimlane** — `FixedSwimlane`, `SwimlaneRow`, `SwimlaneMoreTile`, `MusicChannelSwimlane` on Home
 - [x] **Phase 4 — two Home swimlanes** — Most popular + Recommendations rails; `/music/:channelId` info stub; More routes for both rails; demo focus row removed from Home
 - [x] **Phase 5 — More grid and Channel Info** — `ContentGrid` (4 columns at default tokens), D-pad More screens, expanded info with Play stub and Related row
+- [x] **Phase 6 — Variable swimlane and limited catalog** — `VariableSwimlane`, `GenreFilterSwimlane`, `LimitedHome` vs `BroadHome` via territory toggle
 
 ---
 
 ## Next steps (ordered)
 
-1. **Phase 6** — `VariableSwimlane` + limited-catalog Home (deferred)
-2. **Later** — podcasts/radio cards, user types, player, Search & Browse, mini player
+1. **Phase 7+ backlog** — podcasts/radio cards, user types, player, Search & Browse, mini player
 
 Detail, acceptance checks, and file paths: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 

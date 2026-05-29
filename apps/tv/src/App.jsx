@@ -28,7 +28,7 @@ export default function App() {
                   <Route path="/my-library" element={<MyLibrary />} />
                   <Route path="/focus-demo" element={<FocusDemo />} />
                   <Route path="/music/:channelId" element={<MusicChannelInfo />} />
-                  <Route path="/more/music" element={<SwimlaneMore />} />
+                  <Route path="/more/music/:categoryId?" element={<SwimlaneMore />} />
                   <Route
                     path="/more/recommendations"
                     element={<SwimlaneMore />}

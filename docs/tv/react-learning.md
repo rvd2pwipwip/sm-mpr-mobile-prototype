@@ -67,3 +67,11 @@ Broad Home stacks **Most popular music** (group 0) and **Recommendations** (grou
 ## 2026-05-27 — Swimlane restore without scroll flash
 
 When Esc returns to Home with a **parked** swimlane index (e.g. **More** tile), **`FixedSwimlane`** must not animate the row into place. **`useLayoutEffect`** measures viewport width and applies the final **`translateX`** before paint; the row stays **`visibility: hidden`** until width is known. CSS **`transition`** is off on that first frame and turns on only after **`requestAnimationFrame`** so in-place Left/Right still animates.
+
+## 2026-05-27 — Vertical nav at screen level (`useScreenContentFocus`)
+
+Swimlanes handle **Left/Right** on `window` when their group is active, so those keys work without DOM focus on a card. **Up/Down** used to rely on **`KeyboardWrapper`** on the focused tile — after Esc back from a child route, DOM focus was often missing until Left/Right ran. **`useScreenContentFocus`** now registers a capture-phase **Up/Down** listener in the content zone, plus **`registerItemRef`** / **`requestAnimationFrame`** retries to restore DOM focus for Enter.
+
+## 2026-05-27 — Limited catalog Home (Phase 6)
+
+**`Home`** switches on **`TerritoryContext`**: **`BroadHome`** (two music rails, screen memory **`home-broad`**) vs **`LimitedHome`** (genre **`GenreFilterSwimlane`** + one **`MusicChannelSwimlane`**, memory **`home-limited`**). Filters come from shared **`MUSIC_GENRES`** (mobile LimitedBrowse IA). **`VariableSwimlane`** measures pill widths and parks with **`translateX`** like **`FixedSwimlane`**. While the filter group is focused, offset follows **`focusedIndex`** (row scrolls as you move Left/Right). When focus is on the channel rail, **`ensureActiveVisible`** scrolls to **`activeIndex`** without moving focus. **`GenreFilterSwimlane`** uses the same **`swimlane-row`** stack as **`MusicChannelSwimlane`** (no extra horizontal inset). More from a genre rail opens **`/more/music/:categoryId`**.

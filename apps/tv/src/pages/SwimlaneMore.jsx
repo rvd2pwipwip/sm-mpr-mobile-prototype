@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   getRecommendationsMusicChannels,
+  getMusicChannelsByCategory,
   MUSIC_CHANNELS,
 } from "@sm-mpr/shared/data/musicChannels.js";
 import ContentGrid from "../components/grid/ContentGrid.jsx";
@@ -13,30 +14,50 @@ import {
   FOCUS_ZONE_CONTENT,
   useTvNavFocus,
 } from "../context/TvNavFocusContext.jsx";
+import { getLimitedHomeFilterLabel } from "../utils/limitedHomeData.js";
 import { getTvGridColumnCount } from "../utils/tvLayout.js";
 import "../components/cards/ContentTileCard.css";
 import "./SwimlaneMore.css";
 
-const MORE_CONFIG = {
-  "/more/music": {
-    screenId: "more-music",
-    title: "Most popular music",
-    getChannels: () => MUSIC_CHANNELS,
-  },
-  "/more/recommendations": {
-    screenId: "more-recommendations",
-    title: "Recommendations",
-    getChannels: () => getRecommendationsMusicChannels(),
-  },
-};
-
 const GRID_GROUP = 0;
 const DEFAULT_GRID_POSITION = { row: 0, col: 0 };
 
+function resolveMoreConfig(pathname, categoryId) {
+  if (pathname === "/more/recommendations") {
+    return {
+      screenId: "more-recommendations",
+      title: "Recommendations",
+      getChannels: () => getRecommendationsMusicChannels(),
+    };
+  }
+
+  if (pathname.startsWith("/more/music")) {
+    if (categoryId) {
+      return {
+        screenId: `more-music-${categoryId}`,
+        title: getLimitedHomeFilterLabel(categoryId),
+        getChannels: () => getMusicChannelsByCategory(categoryId),
+      };
+    }
+
+    return {
+      screenId: "more-music",
+      title: "Most popular music",
+      getChannels: () => MUSIC_CHANNELS,
+    };
+  }
+
+  return null;
+}
+
 export default function SwimlaneMore() {
   const { pathname } = useLocation();
+  const { categoryId } = useParams();
   const navigate = useNavigate();
-  const config = MORE_CONFIG[pathname];
+  const config = useMemo(
+    () => resolveMoreConfig(pathname, categoryId),
+    [pathname, categoryId],
+  );
 
   const { enterNav, enterContent, focusZone } = useTvNavFocus();
   const { memory, setField, getFocusedGroupIndex } = useScreenMemory(

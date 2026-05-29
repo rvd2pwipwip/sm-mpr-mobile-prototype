@@ -14,7 +14,13 @@ import { useContentFocusGroups } from "../hooks/useContentFocusGroups.js";
  */
 export function useScreenContentFocus(
   screenId,
-  { groupCount = 1, itemCount = 1, itemCounts, swimlaneGroups = [] } = {},
+  {
+    groupCount = 1,
+    itemCount = 1,
+    itemCounts,
+    swimlaneGroups = [],
+    defaultGroupIndex = 0,
+  } = {},
 ) {
   useContentFocusGroups(groupCount);
 
@@ -46,7 +52,7 @@ export function useScreenContentFocus(
     enterContent,
   } = useTvNavFocus();
 
-  const focusedGroupIndex = getFocusedGroupIndex(0);
+  const focusedGroupIndex = getFocusedGroupIndex(defaultGroupIndex);
   const focusedIndex = memory.groupItemIndexes?.[focusedGroupIndex] ?? 0;
 
   const itemRefs = useRef([]);
@@ -63,10 +69,17 @@ export function useScreenContentFocus(
 
   const focusItem = useCallback(
     (groupIndex, index) => {
-      itemRefs.current[groupIndex]?.[index]?.focus();
+      itemRefs.current[groupIndex]?.[index]?.focus({ preventScroll: true });
     },
     [],
   );
+
+  const syncDomFocus = useCallback(() => {
+    if (focusZone !== FOCUS_ZONE_CONTENT) return;
+    const max = Math.max(0, getItemCount(focusedGroupIndex) - 1);
+    const index = Math.min(focusedIndex, max);
+    focusItem(focusedGroupIndex, index);
+  }, [focusZone, focusedGroupIndex, focusedIndex, getItemCount, focusItem]);
 
   useEffect(() => {
     const max = Math.max(0, getItemCount(focusedGroupIndex) - 1);
@@ -76,11 +89,10 @@ export function useScreenContentFocus(
   }, [focusedIndex, focusedGroupIndex, getItemCount, setFocusedIndex]);
 
   useLayoutEffect(() => {
-    if (focusZone !== FOCUS_ZONE_CONTENT) return;
-    const max = Math.max(0, getItemCount(focusedGroupIndex) - 1);
-    const index = Math.min(focusedIndex, max);
-    focusItem(focusedGroupIndex, index);
-  }, [focusZone, focusedGroupIndex, focusedIndex, getItemCount, focusItem]);
+    syncDomFocus();
+    const frameId = requestAnimationFrame(syncDomFocus);
+    return () => cancelAnimationFrame(frameId);
+  }, [syncDomFocus]);
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
@@ -101,6 +113,29 @@ export function useScreenContentFocus(
     if (focusZone === FOCUS_ZONE_NAV) return;
     moveFocusDown(focusedGroupIndex, setFocusedGroupIndex);
   }, [focusZone, focusedGroupIndex, moveFocusDown, setFocusedGroupIndex]);
+
+  // Vertical nav at window level so Up/Down work even when DOM focus was not restored
+  // (horizontal swimlane keys already use window listeners; L/R do not need a focused node).
+  useEffect(() => {
+    if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMoveUp();
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMoveDown();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [focusZone, handleMoveUp, handleMoveDown]);
 
   const handleMoveLeft = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
@@ -134,12 +169,25 @@ export function useScreenContentFocus(
     setFocusedIndex,
   ]);
 
-  const registerItemRef = useCallback((groupIndex, index, node) => {
-    if (!itemRefs.current[groupIndex]) {
-      itemRefs.current[groupIndex] = [];
-    }
-    itemRefs.current[groupIndex][index] = node;
-  }, []);
+  const registerItemRef = useCallback(
+    (groupIndex, index, node) => {
+      if (!itemRefs.current[groupIndex]) {
+        itemRefs.current[groupIndex] = [];
+      }
+      itemRefs.current[groupIndex][index] = node;
+
+      if (
+        focusZone === FOCUS_ZONE_CONTENT &&
+        groupIndex === focusedGroupIndex &&
+        index === focusedIndex &&
+        node &&
+        document.activeElement !== node
+      ) {
+        node.focus({ preventScroll: true });
+      }
+    },
+    [focusZone, focusedGroupIndex, focusedIndex],
+  );
 
   const isContentGroupActive = (groupIndex) =>
     focusZone === FOCUS_ZONE_CONTENT && focusedGroupIndex === groupIndex;
