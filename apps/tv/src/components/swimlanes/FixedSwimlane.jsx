@@ -24,6 +24,7 @@ export default function FixedSwimlane({
 }) {
   const viewportRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(0);
+  const [transitionEnabled, setTransitionEnabled] = useState(false);
 
   const cardSize = getTvCardSize();
   const cardGap = getTvCardGap();
@@ -33,19 +34,30 @@ export default function FixedSwimlane({
     const node = viewportRef.current;
     if (!node) return undefined;
 
-    const updateWidth = () => setViewportWidth(node.offsetWidth);
-    updateWidth();
+    setTransitionEnabled(false);
+    setViewportWidth(node.offsetWidth);
 
-    const observer = new ResizeObserver(updateWidth);
+    const observer = new ResizeObserver(() => {
+      setViewportWidth(node.offsetWidth);
+    });
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [slotCount]);
+
+  useEffect(() => {
+    if (viewportWidth <= 0) return undefined;
+
+    const frameId = requestAnimationFrame(() => {
+      setTransitionEnabled(true);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [viewportWidth]);
 
   const totalContentWidth =
     slotCount > 0 ? slotCount * cardSize + (slotCount - 1) * cardGap : 0;
 
   const offset = useMemo(() => {
-    if (slotCount === 0) return 0;
+    if (slotCount === 0 || viewportWidth <= 0) return 0;
     const left = focusedIndex * cardFullWidth;
     const maxOffset = Math.max(0, totalContentWidth - viewportWidth);
     return Math.min(left, maxOffset);
@@ -87,10 +99,18 @@ export default function FixedSwimlane({
     .filter(Boolean)
     .join(" ");
 
+  const rowClass = [
+    "fixed-swimlane__row",
+    transitionEnabled ? "fixed-swimlane__row--animated" : "",
+    viewportWidth > 0 ? "fixed-swimlane__row--ready" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div ref={viewportRef} className={viewportClass} aria-label="Swimlane">
       <div
-        className="fixed-swimlane__row"
+        className={rowClass}
         style={{ transform: `translateX(-${offset}px)` }}
         role="list"
       >

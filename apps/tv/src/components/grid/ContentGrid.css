@@ -1,0 +1,17 @@
+.content-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-grid-gap, var(--tv-space-card-gap));
+  width: 100%;
+}
+
+.content-grid__row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--content-grid-gap, var(--tv-space-card-gap));
+}
+
+.content-grid__cell {
+  width: var(--content-grid-card-size, var(--tv-card-size));
+  flex-shrink: 0;
+}

@@ -59,3 +59,11 @@ Files: `context/TvNavFocusContext.jsx`, `hooks/useScreenContentFocus.js`, `compo
 ## 2026-05-27 — Home: two music swimlanes (Phase 4)
 
 Broad Home stacks **Most popular music** (group 0) and **Recommendations** (group 1) — same titles and shared data as mobile. **`useScreenContentFocus("home")`** sets **`groupCount: 2`** and **`swimlaneGroups: [0, 1]`** so both rows own horizontal scroll; **Up** from rail 1 enters nav; **Down** moves between rails. **Enter** on a channel opens **`/music/:channelId`** (`MusicChannelInfo.jsx` stub). **More** tiles route to **`/more/music`** or **`/more/recommendations`**. Screen memory keeps each rail's horizontal index when you Esc back from info or More stubs.
+
+## 2026-05-27 — ContentGrid and More screens (Phase 5)
+
+**`ContentGrid`** is the 2D card grid for More routes (adapted from SMTV03 `ChannelGrid`). Column count comes from **`getTvGridColumnCount()`** in **`tvLayout.js`**: viewport minus nav rail minus content insets, floored to fit **308px** cards with **30px** gaps (**4 columns** at default tokens). Arrow keys move **`{ row, col }`**; **Up** or **Left** on the first row/column escapes to nav. **`ScreenMemoryContext`** stores **`gridFocusedPosition`** per More screen (`more-music`, `more-recommendations`). **`MusicChannelInfo`** adds a focusable **Play** stub, description, tags, and a **Related** swimlane from shared **`relatedChannels`**.
+
+## 2026-05-27 — Swimlane restore without scroll flash
+
+When Esc returns to Home with a **parked** swimlane index (e.g. **More** tile), **`FixedSwimlane`** must not animate the row into place. **`useLayoutEffect`** measures viewport width and applies the final **`translateX`** before paint; the row stays **`visibility: hidden`** until width is known. CSS **`transition`** is off on that first frame and turns on only after **`requestAnimationFrame`** so in-place Left/Right still animates.

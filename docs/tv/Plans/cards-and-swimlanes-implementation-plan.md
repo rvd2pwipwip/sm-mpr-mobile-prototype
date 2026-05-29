@@ -241,9 +241,9 @@ packages/shared/
 
 ### Acceptance
 
-- [ ] More from Home opens grid; Esc back restores Home focus.
-- [ ] Info stub shows channel fields from shared data.
-- [ ] Grid D-pad works for at least 3 columns (column count from content width math, document chosen value).
+- [x] More from Home opens grid; Esc back restores Home focus.
+- [x] Info stub shows channel fields from shared data.
+- [x] Grid D-pad works for at least 3 columns (column count from content width math, document chosen value).
 
 ---
 
