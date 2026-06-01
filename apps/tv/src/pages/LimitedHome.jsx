@@ -166,6 +166,7 @@ export default function LimitedHome() {
             ref={(node) => registerGroupRef(FILTERS_GROUP, node)}
           >
             <GenreFilterSwimlane
+              showTitle={false}
               filters={filters}
               activeFilterId={activeFilterId}
               groupIndex={FILTERS_GROUP}
@@ -185,6 +186,7 @@ export default function LimitedHome() {
               ref={(node) => registerGroupRef(SWIMLANE_GROUP, node)}
             >
               <MusicChannelSwimlane
+                showTitle={false}
                 title={laneTitle}
                 channels={channels}
                 sourceCount={channels.length}

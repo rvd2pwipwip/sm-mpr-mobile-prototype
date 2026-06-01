@@ -18,12 +18,16 @@ export default function GenreFilterSwimlane({
   registerItemRef,
   onMoveUp,
   onMoveDown,
+  showTitle = true,
+  ariaLabel = "Browse by genre",
 }) {
   const activeIndex = filters.findIndex((filter) => filter.id === activeFilterId);
 
   return (
-    <section className="swimlane-row" aria-label="Browse by genre">
-      <h2 className="swimlane-row__title">Browse by genre</h2>
+    <section className="swimlane-row" aria-label={ariaLabel}>
+      {showTitle ? (
+        <h2 className="swimlane-row__title">Browse by genre</h2>
+      ) : null}
       <VariableSwimlane
         items={filters}
         focused={focused}

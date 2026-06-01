@@ -27,6 +27,7 @@ export default function MusicChannelSwimlane({
   onSelectChannel,
   onMore,
   hint,
+  showTitle = true,
 }) {
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
@@ -94,7 +95,8 @@ export default function MusicChannelSwimlane({
 
   return (
     <SwimlaneRow
-      title={title}
+      title={showTitle ? title : undefined}
+      ariaLabel={title}
       hint={hint}
       swimlaneProps={{
         slotCount,
