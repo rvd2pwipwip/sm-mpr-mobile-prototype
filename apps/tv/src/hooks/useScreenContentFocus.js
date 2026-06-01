@@ -20,7 +20,9 @@ export function useScreenContentFocus(
     itemCounts,
     swimlaneGroups = [],
     defaultGroupIndex = 0,
+    defaultItemIndex = 0,
     navEnterEnabled = true,
+    enterNavOnUpAtTopGroup = true,
   } = {},
 ) {
   useContentFocusGroups(groupCount);
@@ -56,9 +58,11 @@ export function useScreenContentFocus(
   } = useTvNavFocus();
 
   const focusedGroupIndex = getFocusedGroupIndex(defaultGroupIndex);
-  const focusedIndex = memory.groupItemIndexes?.[focusedGroupIndex] ?? 0;
+  const focusedIndex =
+    memory.groupItemIndexes?.[focusedGroupIndex] ?? defaultItemIndex;
 
   const itemRefs = useRef([]);
+  const landingSeededRef = useRef(false);
 
   const setFocusedIndex = useCallback(
     (groupIndex, index) => {
@@ -91,6 +95,28 @@ export function useScreenContentFocus(
     }
   }, [focusedIndex, focusedGroupIndex, getItemCount, setFocusedIndex]);
 
+  // First visit to this screen: persist landing group + item (first card, first row).
+  useLayoutEffect(() => {
+    if (landingSeededRef.current) return;
+    if (memory.focusedGroupIndex !== undefined) {
+      landingSeededRef.current = true;
+      return;
+    }
+    landingSeededRef.current = true;
+    setFocusedGroupIndex(defaultGroupIndex);
+    setField("groupItemIndexes", {
+      ...(memory.groupItemIndexes ?? {}),
+      [defaultGroupIndex]: defaultItemIndex,
+    });
+  }, [
+    memory.focusedGroupIndex,
+    memory.groupItemIndexes,
+    defaultGroupIndex,
+    defaultItemIndex,
+    setFocusedGroupIndex,
+    setField,
+  ]);
+
   const enterNavFromContent = useCallback(() => {
     rememberNavContentFocus({
       groupIndex: focusedGroupIndex,
@@ -119,7 +145,10 @@ export function useScreenContentFocus(
     }
 
     syncDomFocus();
-    const frameId = requestAnimationFrame(syncDomFocus);
+    const frameId = requestAnimationFrame(() => {
+      syncDomFocus();
+      requestAnimationFrame(syncDomFocus);
+    });
     return () => cancelAnimationFrame(frameId);
   }, [
     focusZone,
@@ -129,12 +158,14 @@ export function useScreenContentFocus(
     setField,
     focusItem,
     syncDomFocus,
+    focusedGroupIndex,
+    focusedIndex,
   ]);
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
     if (focusedGroupIndex === 0) {
-      if (navEnterEnabled) {
+      if (enterNavOnUpAtTopGroup && navEnterEnabled) {
         enterNavFromContent();
       }
       return;
@@ -143,6 +174,7 @@ export function useScreenContentFocus(
   }, [
     focusZone,
     focusedGroupIndex,
+    enterNavOnUpAtTopGroup,
     navEnterEnabled,
     enterNavFromContent,
     moveFocusUp,

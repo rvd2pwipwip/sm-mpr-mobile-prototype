@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
-import { getTvCardGap, getTvCardSize } from "../../utils/tvLayout.js";
+import { getTvCardGap, getTvCardSize, getTvSwimlaneInlineEnd, getTvSwimlaneInlineStart } from "../../utils/tvLayout.js";
 import "./FixedSwimlane.css";
 
 /**
@@ -60,8 +60,13 @@ export default function FixedSwimlane({
 
   const offset = useMemo(() => {
     if (slotCount === 0 || viewportWidth <= 0) return 0;
+    const inlineStart = getTvSwimlaneInlineStart();
+    const inlineEnd = getTvSwimlaneInlineEnd();
     const left = focusedIndex * cardFullWidth;
-    const maxOffset = Math.max(0, totalContentWidth - viewportWidth);
+    const maxOffset = Math.max(
+      0,
+      totalContentWidth - viewportWidth + inlineStart + inlineEnd,
+    );
     return Math.min(left, maxOffset);
   }, [
     focusedIndex,

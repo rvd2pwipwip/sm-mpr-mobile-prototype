@@ -1,0 +1,55 @@
+/* Figma TV `.button_lg` — stingray/500 fill; focus ring matches card / FilterButton (10px outline). */
+
+.tv-upgrade-button.focusable-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tv-header-button-gap);
+  min-height: var(--tv-header-button-height);
+  padding: 20px var(--tv-header-button-padding-inline-end) 20px
+    var(--tv-header-button-padding-inline-start);
+  font-size: var(--tv-header-button-font-size);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--tv-header-button-radius);
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  box-shadow: none;
+  transition:
+    outline-color var(--tv-button-transition-duration) ease,
+    transform var(--tv-button-transition-duration) ease;
+}
+
+.tv-upgrade-button.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+  transform: scale(var(--tv-button-focus-scale));
+}
+
+.tv-upgrade-button.focusable-button:active {
+  transform: scale(calc(var(--tv-button-focus-scale) - 0.02));
+}
+
+.tv-upgrade-button__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--tv-header-button-icon-size);
+  height: var(--tv-header-button-icon-size);
+  line-height: 0;
+}
+
+.tv-upgrade-button__icon-asset {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tv-upgrade-button__label {
+  white-space: nowrap;
+}

@@ -9,11 +9,15 @@
   border: 3px solid transparent;
   border-radius: 12px;
   cursor: pointer;
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition: outline-color var(--tv-button-transition-duration) ease;
 }
 
 .focusable-button--focused {
-  border-color: var(--color-on-bkg);
-  box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
+  outline-color: var(--tv-focus-ring-color);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .focusable-button:active {

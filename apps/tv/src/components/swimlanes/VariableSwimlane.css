@@ -1,23 +1,7 @@
-.variable-swimlane__viewport {
-  width: 100%;
-  overflow: hidden;
-  outline: none;
-}
-
 .variable-swimlane__row {
   display: flex;
   flex-direction: row;
   gap: var(--tv-space-filter-gap, 20px);
-  will-change: transform;
-  visibility: hidden;
-}
-
-.variable-swimlane__row--ready {
-  visibility: visible;
-}
-
-.variable-swimlane__row--animated {
-  transition: transform 0.3s cubic-bezier(0.4, 1.3, 0.6, 1);
 }
 
 .variable-swimlane__item {

@@ -14,7 +14,7 @@
   border: 2px solid var(--tv-button-border-color);
   border-radius: var(--tv-button-radius);
   outline: var(--tv-button-focus-outline-width) solid transparent;
-  outline-offset: 0;
+  outline-offset: var(--tv-focus-ring-gap);
   box-shadow: none;
   transition:
     outline-color var(--tv-button-transition-duration) ease,

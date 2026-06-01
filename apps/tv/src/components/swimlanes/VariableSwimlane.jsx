@@ -8,6 +8,7 @@ import {
 } from "react";
 import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import VariableSwimlaneItem from "./VariableSwimlaneItem.jsx";
+import { getTvSwimlaneInlineEnd, getTvSwimlaneInlineStart } from "../../utils/tvLayout.js";
 import "./VariableSwimlane.css";
 
 function sumWidthsBeforeIndex(widths, gap, index) {
@@ -96,8 +97,13 @@ export default function VariableSwimlane({
   const calcOffsetForIndex = useCallback(
     (index) => {
       if (viewportWidth <= 0 || itemWidths.length === 0) return 0;
+      const inlineStart = getTvSwimlaneInlineStart();
+      const inlineEnd = getTvSwimlaneInlineEnd();
       const left = sumWidthsBeforeIndex(itemWidths, gap, index);
-      const maxOffset = Math.max(0, totalContentWidth - viewportWidth);
+      const maxOffset = Math.max(
+        0,
+        totalContentWidth - viewportWidth + inlineStart + inlineEnd + gap / 2,
+      );
       return Math.min(left, maxOffset);
     },
     [gap, itemWidths, totalContentWidth, viewportWidth],

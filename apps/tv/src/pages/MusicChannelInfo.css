@@ -40,8 +40,7 @@
 }
 
 .music-channel-info__play.focusable-button--cta.focusable-button--focused {
-  border-color: var(--color-on-bkg);
-  box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-on-bkg);
+  outline-color: var(--tv-focus-ring-color);
 }
 
 .music-channel-info__play-note {

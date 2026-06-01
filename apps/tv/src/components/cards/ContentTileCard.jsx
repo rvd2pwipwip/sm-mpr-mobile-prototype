@@ -24,9 +24,15 @@ const ContentTileCard = forwardRef(function ContentTileCard(
   },
   ref,
 ) {
+  const thumbWrapClass = [
+    "tv-content-tile__thumb-wrap",
+    focused ? "tv-content-tile__thumb-wrap--focused" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   const thumbnailClass = [
     "tv-content-tile__thumbnail",
-    focused ? "tv-content-tile__thumbnail--focused" : "",
     playing ? "tv-content-tile__thumbnail--playing" : "",
   ]
     .filter(Boolean)
@@ -41,7 +47,8 @@ const ContentTileCard = forwardRef(function ContentTileCard(
       onClick={onClick}
       role="button"
     >
-      <div className={thumbnailClass}>
+      <div className={thumbWrapClass}>
+        <div className={thumbnailClass}>
         <img
           className="tv-content-tile__img"
           src={imageUrl}
@@ -60,6 +67,7 @@ const ContentTileCard = forwardRef(function ContentTileCard(
             </span>
           </span>
         ) : null}
+        </div>
       </div>
       <p className="tv-content-tile__title">{title}</p>
     </div>

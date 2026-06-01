@@ -9,19 +9,27 @@
   cursor: pointer;
 }
 
-.tv-content-tile__thumbnail {
-  position: relative;
+/* Outline ring on wrap only — thumbnail stays unchanged (SMTV03 / plan thumb-wrap pattern). */
+.tv-content-tile__thumb-wrap {
   width: var(--tv-card-size);
   height: var(--tv-card-size);
   border-radius: var(--tv-card-radius);
-  box-sizing: border-box;
-  border: var(--tv-card-focus-ring-width) solid var(--tv-card-focus-ring-unfocused);
-  overflow: hidden;
-  background: transparent;
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition: outline-color var(--tv-button-transition-duration) ease;
 }
 
-.tv-content-tile__thumbnail--focused {
-  border-color: var(--tv-card-focus-ring-focused);
+.tv-content-tile__thumb-wrap--focused {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.tv-content-tile__thumbnail {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--tv-card-radius);
+  overflow: hidden;
+  background: transparent;
 }
 
 .tv-content-tile__thumbnail--playing::after {

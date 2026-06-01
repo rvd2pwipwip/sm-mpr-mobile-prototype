@@ -18,6 +18,16 @@ export function getTvCardGap() {
   return Number.isNaN(parsed) ? 30 : parsed;
 }
 
+/** Leading gutter for full-bleed swimlane tracks (teritory-aware). */
+export function getTvSwimlaneInlineStart() {
+  return readCssPx("--tv-swimlane-inline-start", 140);
+}
+
+/** Trailing gutter for swimlane bleed / parking math (teritory-aware). */
+export function getTvSwimlaneInlineEnd() {
+  return readCssPx("--tv-swimlane-inline-end", 100);
+}
+
 function readCssPx(token, fallback) {
   if (typeof window === "undefined") return fallback;
   const raw = getComputedStyle(document.documentElement).getPropertyValue(token);

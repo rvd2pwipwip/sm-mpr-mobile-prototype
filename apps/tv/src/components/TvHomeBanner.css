@@ -1,0 +1,26 @@
+.tv-home__banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 308px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-banner);
+  background: var(--color-bg-muted);
+  color: var(--color-text-on-muted);
+  font-size: var(--font-size-banner);
+  font-weight: 100;
+  cursor: pointer;
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition:
+    outline-color var(--tv-button-transition-duration) ease,
+    transform var(--tv-button-transition-duration) ease;
+}
+
+.tv-home__banner--focused {
+  outline-color: var(--tv-focus-ring-color);
+  transform: scale(var(--tv-button-focus-scale));
+}

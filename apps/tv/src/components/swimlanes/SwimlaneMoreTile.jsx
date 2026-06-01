@@ -9,10 +9,9 @@ const SwimlaneMoreTile = forwardRef(function SwimlaneMoreTile(
   { focused = false, onKeyDown, onClick },
   ref,
 ) {
-  const thumbnailClass = [
-    "tv-content-tile__thumbnail",
-    "swimlane-more-tile__thumbnail",
-    focused ? "tv-content-tile__thumbnail--focused" : "",
+  const thumbWrapClass = [
+    "tv-content-tile__thumb-wrap",
+    focused ? "tv-content-tile__thumb-wrap--focused" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -26,8 +25,10 @@ const SwimlaneMoreTile = forwardRef(function SwimlaneMoreTile(
       onKeyDown={onKeyDown}
       onClick={onClick}
     >
-      <div className={thumbnailClass}>
-        <span className="swimlane-more-tile__label">More</span>
+      <div className={thumbWrapClass}>
+        <div className="tv-content-tile__thumbnail swimlane-more-tile__thumbnail">
+          <span className="swimlane-more-tile__label">More</span>
+        </div>
       </div>
     </div>
   );

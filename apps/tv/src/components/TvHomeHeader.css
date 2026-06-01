@@ -1,0 +1,63 @@
+/* Figma `broadHomeHeader` — `15515:41291` / `15752:36012`. */
+
+.tv-home-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 190px;
+  padding: 40px var(--tv-header-inline-end) 0 var(--tv-header-inline-start);
+  background: rgba(250, 250, 250, 0.8);
+  backdrop-filter: blur(7px);
+}
+
+.tv-home-header__brand {
+  flex: 1;
+  min-width: 0;
+  line-height: 0;
+}
+
+.tv-home-header__wordmark-toggle {
+  display: block;
+  margin: 0;
+  padding: var(--tv-focus-ring-gap);
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+  text-align: left;
+  border-radius: 8px;
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition: outline-color var(--tv-button-transition-duration) ease;
+}
+
+.tv-home-header__wordmark-toggle:focus-visible {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.tv-home-header__wordmark {
+  display: block;
+  height: 50px;
+  width: auto;
+  max-width: min(220px, 100%);
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* TV prototype uses light theme; keep dark asset swap for future theme toggle. */
+.tv-home-header__wordmark--light {
+  display: block;
+}
+
+.tv-home-header__wordmark--dark {
+  display: none;
+}
+
+.tv-home-header__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
