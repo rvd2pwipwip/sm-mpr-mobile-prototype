@@ -45,6 +45,8 @@
   --z-primary-nav: 100;
 
   --tv-space-screen-gap: 50px;
+  /* Tighter stack between header and banner; scroll mode uses negative margin on banner row */
+  --tv-space-header-banner-gap: 20px;
   --tv-space-swimlane-header-gap: 20px;
   --tv-space-card-gap: 30px;
   --tv-space-filter-gap: 20px;
@@ -254,6 +256,18 @@ body {
 
 .tv-home__scroll-group {
   flex-shrink: 0;
+}
+
+/* Header + banner: 20px seam; other scroll groups keep --tv-space-screen-gap (50px). */
+.tv-home__scroll-group:has(.tv-home-header)
+  + .tv-home__scroll-group.tv-home__content-inset {
+  margin-top: calc(
+    var(--tv-space-header-banner-gap) - var(--tv-space-screen-gap)
+  );
+}
+
+.tv-home--header-sticky .tv-home-header {
+  padding-bottom: var(--tv-space-header-banner-gap);
 }
 
 /* Swimlane rows: inset title + full-bleed scrollport (mobile geometry, SMTV03 parking). */
