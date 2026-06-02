@@ -1,3 +1,11 @@
+/*
+ * Reveal model (Figma mainMenuTV / TabletVerticalMainMenu):
+ * - __panel width 80px collapsed -> 250px expanded; labels clip via narrow link
+ * - Focus rings: icon column when collapsed, full row when expanded (not clipped)
+ * - __canvas inside is always full row width; labels stay in DOM, clipped when narrow
+ * - Icons do not reflow — row is always icon + label from the left (px 20)
+ */
+
 .primary-nav {
   position: fixed;
   left: 0;
@@ -5,114 +13,256 @@
   z-index: var(--z-primary-nav);
   width: var(--nav-width-collapsed);
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 75px 0 1.5rem 20px;
+  padding: 75px 0 1.5rem var(--nav-inline-offset);
   pointer-events: auto;
-  transition: width 0.2s ease;
+  overflow: visible;
   border: none;
   background: transparent;
+  transition: width var(--nav-reveal-duration) ease;
 }
 
-/* Figma mainMenuTV `15757:36079` — opaque left, fade right (mask approximated) */
+/* Figma `15757:36079` — opaque left, --color-bg fading to transparent right */
 .primary-nav::before {
   content: "";
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: var(--nav-expanded-scrim-width);
+  height: 100%;
   pointer-events: none;
-  background: linear-gradient(
-    to right,
-    var(--color-bg) 0%,
-    var(--color-bg) 18%,
-    rgba(250, 250, 250, 0.92) 28%,
-    rgba(250, 250, 250, 0.55) 42%,
-    transparent 68%
-  );
-}
-
-.primary-nav--collapsed {
-  align-items: center;
-  padding-inline: 0.35rem;
-  padding-top: 75px;
-  padding-left: 0.35rem;
+  opacity: 0;
+  background: var(--nav-expanded-scrim);
+  transition: opacity var(--nav-reveal-duration) ease;
 }
 
 .primary-nav--expanded {
   width: var(--nav-width-expanded);
-  align-items: stretch;
-  padding-inline: 20px 0.75rem;
-  padding-top: 75px;
 }
 
-.primary-nav__brand {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-align: center;
-  color: var(--color-text-muted);
-  overflow: hidden;
-  white-space: nowrap;
+.primary-nav--expanded::before {
+  opacity: 1;
+}
+
+/* Clip viewport — only this width changes on expand/collapse */
+.primary-nav__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: var(--nav-items-width-collapsed);
+  overflow: visible;
+  transition: width var(--nav-reveal-duration) ease;
+}
+
+.primary-nav--expanded .primary-nav__panel {
+  width: var(--nav-items-width-expanded);
+}
+
+/* Full-width canvas clipped by __panel (Figma rows are w 250px inside w 80px clip) */
+.primary-nav__mini-player-slot,
+.primary-nav__menu-spacer,
+.primary-nav__list {
+  width: var(--nav-items-width-expanded);
+  flex-shrink: 0;
+}
+
+/*
+ * Mini player slot + gap (Figma `15516:26821` / `15521:27316`).
+ * Hide UI with visibility on slot contents, not display:none, so menu Y stays fixed.
+ */
+.primary-nav__mini-player-slot {
+  min-height: var(--nav-mini-player-slot-height);
+  padding-block: 10px;
+  box-sizing: content-box;
+}
+
+.primary-nav__menu-spacer {
+  height: var(--nav-mini-player-menu-gap);
 }
 
 .primary-nav__list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: var(--nav-focus-ring-buffer) 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-nav-gap);
+}
+
+.primary-nav__item {
   width: 100%;
+  padding-inline: var(--nav-focus-ring-buffer);
+  margin-inline: calc(-1 * var(--nav-focus-ring-buffer));
+  box-sizing: border-box;
 }
 
 .primary-nav__link {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
+  justify-content: flex-start;
+  gap: 20px;
   width: 100%;
-  max-width: 250px;
-  min-height: 90px;
-  padding: 0.9375rem 1.25rem;
+  /* min-height: 90px; */
+  height: 80px;
+  padding: 15px 20px;
+  box-sizing: border-box;
   font-size: var(--font-size-nav);
   font-weight: 500;
-  color: var(--color-text-muted);
+  color: color-mix(in srgb, var(--color-text) 30%, transparent);
   text-align: left;
 }
 
+.primary-nav__link.focusable-button {
+  background: transparent;
+  border: none;
+  border-radius: var(--tv-button-radius);
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition:
+    outline-color var(--tv-button-transition-duration) ease,
+    width var(--nav-reveal-duration) ease;
+}
+
+/* Collapsed: narrow hit target; ring on icon column so it is not clipped */
+.primary-nav--collapsed .primary-nav__link {
+  width: var(--nav-items-width-collapsed);
+  max-width: var(--nav-items-width-collapsed);
+  overflow: visible;
+}
+
+.primary-nav--collapsed .primary-nav__item {
+  overflow: visible;
+}
+
+.primary-nav--collapsed .primary-nav__label {
+  flex: 0;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.primary-nav--collapsed .primary-nav__link.focusable-button--focused {
+  outline-color: transparent;
+}
+
+.primary-nav--collapsed
+  .primary-nav__link.focusable-button--focused
+  .primary-nav__icon-stack {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring-color);
+  outline-offset: var(--tv-focus-ring-gap);
+}
+
 .primary-nav--expanded .primary-nav__link {
-  justify-content: flex-start;
+  width: 100%;
+  max-width: none;
 }
 
-.primary-nav__link--active {
-  color: var(--color-accent);
+.primary-nav--expanded .primary-nav__link.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
 }
 
-.primary-nav__link--active .primary-nav__icon {
-  color: var(--color-accent);
+.primary-nav--expanded
+  .primary-nav__link.focusable-button--focused
+  .primary-nav__icon-stack {
+  outline: none;
+}
+
+.primary-nav__link--active,
+.primary-nav__link--active.focusable-button {
+  color: var(--color-text);
+}
+
+.primary-nav__icon-stack {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 2.5rem;
+  border-radius: var(--tv-button-radius);
 }
 
 .primary-nav__icon {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
-.primary-nav--expanded .primary-nav__link--active {
-  box-shadow: inset 3px 0 0 var(--color-accent);
+.primary-nav__active-bar {
+  position: relative;
+  z-index: 2;
+  height: 4px;
+  flex-shrink: 0;
+  background-color: transparent;
 }
 
-.primary-nav--collapsed .primary-nav__link--active {
-  box-shadow: inset 0 -3px 0 var(--color-accent);
+.primary-nav__link--active .primary-nav__active-bar {
+  background-color: var(--color-accent2);
+}
+
+.primary-nav--collapsed .primary-nav__icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: var(--nav-collapsed-icon-halo-size);
+  height: var(--nav-collapsed-icon-halo-size);
+  border-radius: 50%;
+  background: var(--nav-collapsed-icon-halo-color);
+  filter: blur(var(--nav-collapsed-icon-halo-blur));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.primary-nav__icon-mask {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.primary-nav__icon-mask--home {
+  mask-image: url("/home.svg");
+  -webkit-mask-image: url("/home.svg");
+}
+
+.primary-nav__icon-mask--search {
+  mask-image: url("/search.svg");
+  -webkit-mask-image: url("/search.svg");
+}
+
+.primary-nav__icon-mask--my-library {
+  mask-image: url("/my-library.svg");
+  -webkit-mask-image: url("/my-library.svg");
 }
 
 .primary-nav__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 146px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .demo-focus-row-block {

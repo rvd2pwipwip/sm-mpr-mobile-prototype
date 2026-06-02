@@ -8,8 +8,9 @@
   gap: 1rem;
   min-height: 190px;
   padding: 40px var(--tv-header-inline-end) 0 var(--tv-header-inline-start);
-  background: rgba(250, 250, 250, 0.8);
-  backdrop-filter: blur(7px);
+  background-color: var(--color-header-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
 }
 
 .tv-home-header__brand {
@@ -46,13 +47,39 @@
   object-position: left center;
 }
 
-/* TV prototype uses light theme; keep dark asset swap for future theme toggle. */
+/* Light / dark wordmarks — same rules as mobile `HomeHeader.css` */
 .tv-home-header__wordmark--light {
   display: block;
 }
 
 .tv-home-header__wordmark--dark {
   display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .tv-home-header__wordmark--light {
+    display: none;
+  }
+
+  :root:not([data-theme]) .tv-home-header__wordmark--dark {
+    display: block;
+  }
+}
+
+html[data-theme="light"] .tv-home-header__wordmark--light {
+  display: block;
+}
+
+html[data-theme="light"] .tv-home-header__wordmark--dark {
+  display: none;
+}
+
+html[data-theme="dark"] .tv-home-header__wordmark--light {
+  display: none;
+}
+
+html[data-theme="dark"] .tv-home-header__wordmark--dark {
+  display: block;
 }
 
 .tv-home-header__actions {
