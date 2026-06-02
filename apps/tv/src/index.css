@@ -40,7 +40,7 @@
   --tv-focus-ring-width: 10px;
   --tv-focus-ring-color: var(--color-on-bkg);
   /* Gap between ring and focused surface (outline-offset on buttons, banner, cards, nav). */
-  --tv-focus-ring-gap: 0px;
+  --tv-focus-ring-gap: 4px;
 
   --z-primary-nav: 100;
 

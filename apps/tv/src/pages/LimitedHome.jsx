@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
@@ -82,6 +82,8 @@ export default function LimitedHome() {
     landingGroupIndex: SWIMLANE_GROUP,
   });
 
+  const prevFocusedGroupRef = useRef(focusedGroupIndex);
+
   const handleSelectFilter = useCallback(
     (filterId, index) => {
       setField("activeFilterId", filterId);
@@ -91,14 +93,31 @@ export default function LimitedHome() {
     [setField, setFocusedIndex],
   );
 
+  // Entering the filter row: focus the active catalog pill (not last browsed index).
   useLayoutEffect(() => {
+    const enteredFilters =
+      focusedGroupIndex === FILTERS_GROUP &&
+      prevFocusedGroupRef.current !== FILTERS_GROUP;
+
     if (
+      enteredFilters &&
+      activeFilterIndex >= 0
+    ) {
+      setFocusedIndex(FILTERS_GROUP, activeFilterIndex);
+    } else if (
       activeFilterIndex >= 0 &&
       memory.groupItemIndexes?.[FILTERS_GROUP] === undefined
     ) {
       setFocusedIndex(FILTERS_GROUP, activeFilterIndex);
     }
-  }, [activeFilterIndex, memory.groupItemIndexes, setFocusedIndex]);
+
+    prevFocusedGroupRef.current = focusedGroupIndex;
+  }, [
+    focusedGroupIndex,
+    activeFilterIndex,
+    memory.groupItemIndexes,
+    setFocusedIndex,
+  ]);
 
   const openChannelInfo = (channel) => {
     navigate(`/music/${channel.id}`);
