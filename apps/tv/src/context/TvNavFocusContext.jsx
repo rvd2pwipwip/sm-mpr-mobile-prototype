@@ -1,11 +1,14 @@
+import { isBroadCatalogScope } from "@sm-mpr/shared/constants/catalogScope.js";
 import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { useTerritory } from "./TerritoryContext.jsx";
 
 export const FOCUS_ZONE_NAV = "nav";
 export const FOCUS_ZONE_CONTENT = "content";
@@ -13,20 +16,30 @@ export const FOCUS_ZONE_CONTENT = "content";
 const TvNavFocusContext = createContext(null);
 
 export function TvNavFocusProvider({ children }) {
+  const { catalogScope } = useTerritory();
+  const canEnterNavFromContent = isBroadCatalogScope(catalogScope);
+
   const [focusZone, setFocusZone] = useState(FOCUS_ZONE_CONTENT);
   const [navFocusedIndex, setNavFocusedIndex] = useState(0);
   const navContentRestoreRef = useRef(null);
   const restorePendingRef = useRef(false);
 
-  const navExpanded = focusZone === FOCUS_ZONE_NAV;
+  const navExpanded = focusZone === FOCUS_ZONE_NAV && canEnterNavFromContent;
+
+  useEffect(() => {
+    if (!canEnterNavFromContent && focusZone === FOCUS_ZONE_NAV) {
+      setFocusZone(FOCUS_ZONE_CONTENT);
+    }
+  }, [canEnterNavFromContent, focusZone]);
 
   const rememberNavContentFocus = useCallback((snapshot) => {
     navContentRestoreRef.current = snapshot;
   }, []);
 
   const enterNav = useCallback(() => {
+    if (!canEnterNavFromContent) return;
     setFocusZone(FOCUS_ZONE_NAV);
-  }, []);
+  }, [canEnterNavFromContent]);
 
   /** Leave nav via route select — do not restore prior content focus. */
   const enterContent = useCallback(() => {
@@ -60,6 +73,7 @@ export function TvNavFocusProvider({ children }) {
     () => ({
       focusZone,
       navExpanded,
+      canEnterNavFromContent,
       navFocusedIndex,
       setNavFocusedIndex,
       rememberNavContentFocus,
@@ -72,6 +86,7 @@ export function TvNavFocusProvider({ children }) {
     [
       focusZone,
       navExpanded,
+      canEnterNavFromContent,
       navFocusedIndex,
       rememberNavContentFocus,
       enterNav,

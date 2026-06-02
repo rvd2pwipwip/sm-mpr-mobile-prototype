@@ -57,7 +57,6 @@ export default function BroadHome() {
     swimlaneGroups: [POPULAR_GROUP, RECOMMENDATIONS_GROUP],
     defaultGroupIndex: POPULAR_GROUP,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
-    enterNavOnUpAtTopGroup: false,
   });
 
   const {

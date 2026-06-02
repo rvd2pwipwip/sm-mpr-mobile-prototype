@@ -32,23 +32,30 @@ export default function VariableSwimlane({
   onBoundaryLeft,
   ensureActiveVisible = false,
   activeIndex = null,
+  itemGap,
+  inlineGutterStart,
+  inlineGutterEnd,
   className = "",
 }) {
-  const { focusZone } = useTvNavFocus();
+  const { focusZone, canEnterNavFromContent } = useTvNavFocus();
   const viewportRef = useRef(null);
   const measureRefs = useRef([]);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [itemWidths, setItemWidths] = useState([]);
   const [transitionEnabled, setTransitionEnabled] = useState(false);
   const gap =
-    typeof window !== "undefined"
+    itemGap ??
+    (typeof window !== "undefined"
       ? parseInt(
           getComputedStyle(document.documentElement).getPropertyValue(
             "--tv-space-filter-gap",
           ),
           10,
         ) || 20
-      : 20;
+      : 20);
+
+  const gutterStart = inlineGutterStart ?? getTvSwimlaneInlineStart();
+  const gutterEnd = inlineGutterEnd ?? getTvSwimlaneInlineEnd();
 
   const measureItems = useCallback(() => {
     const widths = items.map(
@@ -75,7 +82,7 @@ export default function VariableSwimlane({
 
   useLayoutEffect(() => {
     measureItems();
-  }, [activeIndex, measureItems]);
+  }, [activeIndex, focusedIndex, focused, measureItems]);
 
   useEffect(() => {
     if (viewportWidth <= 0) return undefined;
@@ -97,16 +104,29 @@ export default function VariableSwimlane({
   const calcOffsetForIndex = useCallback(
     (index) => {
       if (viewportWidth <= 0 || itemWidths.length === 0) return 0;
-      const inlineStart = getTvSwimlaneInlineStart();
-      const inlineEnd = getTvSwimlaneInlineEnd();
-      const left = sumWidthsBeforeIndex(itemWidths, gap, index);
+
+      const focusLeft = sumWidthsBeforeIndex(itemWidths, gap, index);
+      const focusWidth = itemWidths[index] ?? 0;
+      const lastIndex = itemWidths.length - 1;
+
       const maxOffset = Math.max(
         0,
-        totalContentWidth - viewportWidth + inlineStart + inlineEnd + gap / 2,
+        totalContentWidth - viewportWidth + gutterStart + gutterEnd,
       );
-      return Math.min(left, maxOffset);
+
+      // Leading-edge park: focused pill's left stays on the park line (row padding = gutterStart).
+      let offset = focusLeft;
+
+      // Last item: scroll until fully visible at the trailing edge of the viewport.
+      if (index === lastIndex) {
+        const offsetForFullLast =
+          focusLeft + focusWidth - (viewportWidth - gutterEnd - gutterStart);
+        offset = Math.max(offset, offsetForFullLast);
+      }
+
+      return Math.min(Math.max(0, offset), maxOffset);
     },
-    [gap, itemWidths, totalContentWidth, viewportWidth],
+    [gap, gutterStart, gutterEnd, itemWidths, totalContentWidth, viewportWidth],
   );
 
   const scrollIndex = useMemo(() => {
@@ -148,7 +168,9 @@ export default function VariableSwimlane({
         event.preventDefault();
         event.stopPropagation();
         if (focusedIndex === 0) {
-          onBoundaryLeft?.(event);
+          if (canEnterNavFromContent) {
+            onBoundaryLeft?.(event);
+          }
           return;
         }
         onFocusChange?.(focusedIndex - 1);
@@ -157,7 +179,15 @@ export default function VariableSwimlane({
 
     window.addEventListener("keydown", handleKeyDown, true);
     return () => window.removeEventListener("keydown", handleKeyDown, true);
-  }, [focused, focusZone, focusedIndex, items.length, onFocusChange, onBoundaryLeft]);
+  }, [
+    focused,
+    focusZone,
+    focusedIndex,
+    items.length,
+    canEnterNavFromContent,
+    onFocusChange,
+    onBoundaryLeft,
+  ]);
 
   const viewportClass = ["variable-swimlane__viewport", className]
     .filter(Boolean)
@@ -177,7 +207,7 @@ export default function VariableSwimlane({
     <div ref={viewportRef} className={viewportClass} aria-label="Filter row">
       <div
         className={rowClass}
-        style={{ transform: `translateX(-${offset}px)` }}
+        style={{ transform: `translateX(-${offset}px)`, gap: `${gap}px` }}
         role="list"
       >
         {items.map((item, index) => (

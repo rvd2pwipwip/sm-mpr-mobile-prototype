@@ -100,10 +100,7 @@ export default function PrimaryNav() {
                   }}
                   onUp={() => moveNavFocus(-1)}
                   onDown={() => {
-                    if (index === NAV_ITEMS.length - 1) {
-                      enterContentWithRestore();
-                      return;
-                    }
+                    if (index === NAV_ITEMS.length - 1) return;
                     moveNavFocus(1);
                   }}
                   onRight={() => enterContentWithRestore()}

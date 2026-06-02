@@ -10,8 +10,8 @@
   letter-spacing: 0.03em;
   white-space: nowrap;
   color: var(--color-text);
-  background: var(--color-bg-elevated);
-  border: 2px solid var(--tv-button-border-color);
+  background: transparent;
+  border: 2px solid var(--tv-button-secondary-border);
   border-radius: var(--tv-button-radius);
   outline: var(--tv-button-focus-outline-width) solid transparent;
   outline-offset: var(--tv-focus-ring-gap);

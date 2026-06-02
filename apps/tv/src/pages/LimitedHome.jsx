@@ -69,7 +69,6 @@ export default function LimitedHome() {
     defaultGroupIndex: SWIMLANE_GROUP,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
     navEnterEnabled: false,
-    enterNavOnUpAtTopGroup: false,
   });
 
   const {

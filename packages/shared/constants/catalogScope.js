@@ -17,6 +17,11 @@ export function catalogScopeFromMusicLineup(musicLineupMode) {
   return musicLineupMode === MUSIC_LINEUP.broad ? CATALOG_SCOPE.broad : CATALOG_SCOPE.limited;
 }
 
+/** True when the primary side nav is part of the layout (broad catalog). */
+export function isBroadCatalogScope(catalogScope) {
+  return catalogScope === CATALOG_SCOPE.broad;
+}
+
 /** Prototype only: persist lineup / catalog scope across refresh (session tab). */
 export const PROTOTYPE_MUSIC_LINEUP_STORAGE_KEY = "sm-mpr-prototype-music-lineup-mode";
 

@@ -23,7 +23,7 @@ export default function FixedSwimlane({
   renderSlot,
   className = "",
 }) {
-  const { focusZone } = useTvNavFocus();
+  const { focusZone, canEnterNavFromContent } = useTvNavFocus();
   const viewportRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(false);
@@ -95,7 +95,9 @@ export default function FixedSwimlane({
         event.preventDefault();
         event.stopPropagation();
         if (focusedIndex === 0) {
-          onBoundaryLeft?.(event);
+          if (canEnterNavFromContent) {
+            onBoundaryLeft?.(event);
+          }
           return;
         }
         onFocusChange?.(focusedIndex - 1);
@@ -104,7 +106,15 @@ export default function FixedSwimlane({
 
     window.addEventListener("keydown", handleKeyDown, true);
     return () => window.removeEventListener("keydown", handleKeyDown, true);
-  }, [focused, focusZone, focusedIndex, slotCount, onFocusChange, onBoundaryLeft]);
+  }, [
+    focused,
+    focusZone,
+    focusedIndex,
+    slotCount,
+    canEnterNavFromContent,
+    onFocusChange,
+    onBoundaryLeft,
+  ]);
 
   const viewportClass = ["fixed-swimlane__viewport", className]
     .filter(Boolean)

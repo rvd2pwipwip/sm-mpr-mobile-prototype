@@ -73,6 +73,11 @@
   --tv-button-padding-inline: 24px;
   --tv-button-font-size: 1.125rem;
   --tv-button-border-color: rgba(25, 25, 25, 0.24);
+  --tv-button-secondary-border: color-mix(
+    in srgb,
+    var(--color-text) 30%,
+    transparent
+  );
   --tv-button-focus-outline-width: 10px;
   --tv-button-focus-scale: 1.02;
   --tv-button-transition-duration: 0.2s;

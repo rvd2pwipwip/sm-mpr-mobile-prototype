@@ -6,6 +6,8 @@ import {
   FOCUS_ZONE_NAV,
   useTvNavFocus,
 } from "../context/TvNavFocusContext.jsx";
+import { isBroadCatalogScope } from "@sm-mpr/shared/constants/catalogScope.js";
+import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useContentFocusGroups } from "../hooks/useContentFocusGroups.js";
 
 /**
@@ -22,9 +24,11 @@ export function useScreenContentFocus(
     defaultGroupIndex = 0,
     defaultItemIndex = 0,
     navEnterEnabled = true,
-    enterNavOnUpAtTopGroup = true,
   } = {},
 ) {
+  const { catalogScope } = useTerritory();
+  const navActive = navEnterEnabled && isBroadCatalogScope(catalogScope);
+
   useContentFocusGroups(groupCount);
 
   const swimlaneGroupSet = useMemo(
@@ -118,12 +122,14 @@ export function useScreenContentFocus(
   ]);
 
   const enterNavFromContent = useCallback(() => {
+    if (!navActive) return;
     rememberNavContentFocus({
       groupIndex: focusedGroupIndex,
       itemIndex: memory.groupItemIndexes?.[focusedGroupIndex] ?? 0,
     });
     enterNav();
   }, [
+    navActive,
     focusedGroupIndex,
     memory.groupItemIndexes,
     rememberNavContentFocus,
@@ -164,56 +170,20 @@ export function useScreenContentFocus(
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
-    if (focusedGroupIndex === 0) {
-      if (enterNavOnUpAtTopGroup && navEnterEnabled) {
-        enterNavFromContent();
-      }
-      return;
-    }
+    if (focusedGroupIndex === 0) return;
     moveFocusUp(focusedGroupIndex, setFocusedGroupIndex);
-  }, [
-    focusZone,
-    focusedGroupIndex,
-    enterNavOnUpAtTopGroup,
-    navEnterEnabled,
-    enterNavFromContent,
-    moveFocusUp,
-    setFocusedGroupIndex,
-  ]);
+  }, [focusZone, focusedGroupIndex, moveFocusUp, setFocusedGroupIndex]);
 
   const handleMoveDown = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
     moveFocusDown(focusedGroupIndex, setFocusedGroupIndex);
   }, [focusZone, focusedGroupIndex, moveFocusDown, setFocusedGroupIndex]);
 
-  // Vertical nav at window level so Up/Down work even when DOM focus was not restored
-  // (horizontal swimlane keys already use window listeners; L/R do not need a focused node).
-  useEffect(() => {
-    if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
-
-    const handleKeyDown = (event) => {
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        event.stopPropagation();
-        handleMoveUp();
-        return;
-      }
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        event.stopPropagation();
-        handleMoveDown();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => window.removeEventListener("keydown", handleKeyDown, true);
-  }, [focusZone, handleMoveUp, handleMoveDown]);
-
   const handleMoveLeft = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
     if (swimlaneGroupSet.has(focusedGroupIndex)) return;
     if (focusedIndex === 0) {
-      if (navEnterEnabled) {
+      if (navActive) {
         enterNavFromContent();
       }
       return;
@@ -224,7 +194,7 @@ export function useScreenContentFocus(
     focusedIndex,
     focusedGroupIndex,
     swimlaneGroupSet,
-    navEnterEnabled,
+    navActive,
     enterNavFromContent,
     setFocusedIndex,
   ]);
@@ -242,6 +212,51 @@ export function useScreenContentFocus(
     swimlaneGroupSet,
     getItemCount,
     setFocusedIndex,
+  ]);
+
+  // Vertical nav at window level so Up/Down work even when DOM focus was not restored.
+  // Horizontal L/R for non-swimlane rows (e.g. Channel Info related grid): move focus, no parking.
+  // Swimlane groups keep their own window listeners (Fixed/VariableSwimlane).
+  useEffect(() => {
+    if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMoveUp();
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMoveDown();
+        return;
+      }
+      if (swimlaneGroupSet.has(focusedGroupIndex)) return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMoveLeft();
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMoveRight();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [
+    focusZone,
+    focusedGroupIndex,
+    swimlaneGroupSet,
+    handleMoveUp,
+    handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
   ]);
 
   const registerItemRef = useCallback(
