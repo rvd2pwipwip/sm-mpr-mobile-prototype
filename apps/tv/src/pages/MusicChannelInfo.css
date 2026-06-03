@@ -71,15 +71,6 @@
   color: var(--color-text-muted);
 }
 
-.music-channel-info__description {
-  margin: 0;
-  max-width: 62.5rem;
-  font-size: var(--font-size-card-title);
-  font-weight: 400;
-  line-height: 1.35;
-  color: color-mix(in srgb, var(--color-text) 80%, transparent);
-}
-
 /* Tag row: metadata-aligned start, scroll bleeds right; focus rings not clipped. */
 .music-channel-info__tags {
   position: relative;

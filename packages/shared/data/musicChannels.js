@@ -155,11 +155,15 @@ function tagsFor(categoryId, name) {
 
 function descriptionFor(categoryId, name) {
   const g = genreLabel(categoryId);
-  return (
+  const base =
     `${name} is a curated Stingray music channel in the ${g} collection—always-on streaming with a steady mood, no hosts, and tracks refreshed on a regular cadence. ` +
     `Use it when you want the station to stay in its lane: familiar hooks, consistent energy, and programming that fits everyday listening. ` +
-    `If you like this lane, the Related row surfaces more channels that sit nearby in tone.`
-  );
+    `If you like this lane, the Related row surfaces more channels that sit nearby in tone.`;
+  // Prototype: extra copy for dialog scroll testing on Channel Info.
+  if (name === "Adult Alternative US") {
+    return `${base} ${base}`;
+  }
+  return base;
 }
 
 /**

@@ -1,0 +1,45 @@
+.channel-info-description {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: var(--tv-space-card-gap);
+  max-width: 62.5rem;
+  min-width: 0;
+}
+
+.channel-info-description__text {
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 0;
+  font-size: var(--font-size-card-title);
+  font-weight: 400;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+}
+
+.channel-info-description__text--clamped {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+}
+
+/* Text-style More — outline focus only (no scale). */
+.channel-info-description__more.focusable-button {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0px 10px;
+  font-size: var(--font-size-card-title);
+  font-weight: 900;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+  background: none;
+  border: none;
+  border-radius: 4px;
+  transition: outline-color var(--tv-button-transition-duration) ease;
+}
+
+.channel-info-description__more.focusable-button:active {
+  transform: none;
+}

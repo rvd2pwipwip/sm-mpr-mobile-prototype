@@ -24,6 +24,8 @@ export function useScreenContentFocus(
     defaultGroupIndex = 0,
     defaultItemIndex = 0,
     navEnterEnabled = true,
+    contentKeysEnabled = true,
+    suspendDomFocus = false,
   } = {},
 ) {
   const { catalogScope } = useTerritory();
@@ -137,6 +139,7 @@ export function useScreenContentFocus(
   ]);
 
   useLayoutEffect(() => {
+    if (suspendDomFocus) return;
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
 
     const snapshot = consumeNavContentRestore();
@@ -157,6 +160,7 @@ export function useScreenContentFocus(
     });
     return () => cancelAnimationFrame(frameId);
   }, [
+    suspendDomFocus,
     focusZone,
     consumeNavContentRestore,
     setFocusedGroupIndex,
@@ -218,6 +222,7 @@ export function useScreenContentFocus(
   // Horizontal L/R for non-swimlane rows (e.g. Channel Info related grid): move focus, no parking.
   // Swimlane groups keep their own window listeners (Fixed/VariableSwimlane).
   useEffect(() => {
+    if (!contentKeysEnabled) return undefined;
     if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
 
     const handleKeyDown = (event) => {
@@ -250,6 +255,7 @@ export function useScreenContentFocus(
     window.addEventListener("keydown", handleKeyDown, true);
     return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [
+    contentKeysEnabled,
     focusZone,
     focusedGroupIndex,
     swimlaneGroupSet,

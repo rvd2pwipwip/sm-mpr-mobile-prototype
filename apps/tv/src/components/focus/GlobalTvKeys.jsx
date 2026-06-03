@@ -8,6 +8,9 @@ export default function GlobalTvKeys() {
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === "Escape") {
+        if (document.querySelector('[aria-modal="true"]')) {
+          return;
+        }
         event.preventDefault();
         navigate(-1);
         return;

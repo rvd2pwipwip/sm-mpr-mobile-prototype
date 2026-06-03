@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { getMusicChannelById } from "@sm-mpr/shared/data/musicChannels.js";
+import ChannelInfoDescription from "../components/channel-info/ChannelInfoDescription.jsx";
+import ChannelInfoDescriptionDialog from "../components/channel-info/ChannelInfoDescriptionDialog.jsx";
 import ChannelInfoRelatedRow from "../components/channel-info/ChannelInfoRelatedRow.jsx";
 import ChannelInfoTagsSwimlane from "../components/channel-info/ChannelInfoTagsSwimlane.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
@@ -9,6 +11,7 @@ import {
   CHANNEL_INFO_RELATED_MAX,
   withChannelInfoTagScrollTest,
 } from "../constants/channelInfo.js";
+import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import "./MusicChannelInfo.css";
@@ -21,8 +24,13 @@ export default function MusicChannelInfo() {
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
   const [playPressed, setPlayPressed] = useState(false);
+  const [descriptionDialogOpen, setDescriptionDialogOpen] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
+  const descriptionText = channel?.description ?? "";
+  const hasDescription = Boolean(descriptionText);
+  const { ref: descriptionRef, overflows: descriptionOverflows } =
+    useDescriptionClampOverflow(descriptionText, hasDescription);
 
   const tags = useMemo(() => {
     if (!channel) return [];
@@ -37,22 +45,39 @@ export default function MusicChannelInfo() {
   const relatedCount = relatedChannels.length;
   const hasRelated = relatedCount > 0;
 
-  const { tagsGroup, relatedGroup, groupCount, itemCounts, swimlaneGroups } =
-    useMemo(() => {
-      let next = 1;
-      const tagsG = hasTags ? next++ : null;
-      const relatedG = hasRelated ? next++ : null;
-      const counts = { [ACTIONS_GROUP]: 1 };
-      if (tagsG != null) counts[tagsG] = tags.length;
-      if (relatedG != null) counts[relatedG] = relatedCount;
-      return {
-        tagsGroup: tagsG,
-        relatedGroup: relatedG,
-        groupCount: next,
-        itemCounts: counts,
-        swimlaneGroups: tagsG != null ? [tagsG] : [],
-      };
-    }, [hasTags, hasRelated, tags.length, relatedCount]);
+  const {
+    descriptionGroup,
+    tagsGroup,
+    relatedGroup,
+    groupCount,
+    itemCounts,
+    swimlaneGroups,
+  } = useMemo(() => {
+    let next = 1;
+    const descG =
+      hasDescription && descriptionOverflows ? next++ : null;
+    const tagsG = hasTags ? next++ : null;
+    const relatedG = hasRelated ? next++ : null;
+    const counts = { [ACTIONS_GROUP]: 1 };
+    if (descG != null) counts[descG] = 1;
+    if (tagsG != null) counts[tagsG] = tags.length;
+    if (relatedG != null) counts[relatedG] = relatedCount;
+    return {
+      descriptionGroup: descG,
+      tagsGroup: tagsG,
+      relatedGroup: relatedG,
+      groupCount: next,
+      itemCounts: counts,
+      swimlaneGroups: tagsG != null ? [tagsG] : [],
+    };
+  }, [
+    hasDescription,
+    descriptionOverflows,
+    hasTags,
+    hasRelated,
+    tags.length,
+    relatedCount,
+  ]);
 
   const {
     handleMoveUp,
@@ -69,6 +94,8 @@ export default function MusicChannelInfo() {
     groupCount,
     itemCounts,
     swimlaneGroups,
+    contentKeysEnabled: !descriptionDialogOpen,
+    suspendDomFocus: descriptionDialogOpen,
   });
 
   if (!channel) {
@@ -80,7 +107,9 @@ export default function MusicChannelInfo() {
     navigate(`/music/${targetChannel.id}`);
   };
 
-  const playDownTarget = tagsGroup ?? relatedGroup;
+  const playDownTarget =
+    descriptionGroup ?? tagsGroup ?? relatedGroup;
+  const descriptionDownTarget = tagsGroup ?? relatedGroup;
 
   return (
     <div className="tv-page music-channel-info">
@@ -121,10 +150,23 @@ export default function MusicChannelInfo() {
               ) : null}
             </div>
 
-            {channel.description ? (
-              <p className="music-channel-info__description">
-                {channel.description}
-              </p>
+            {hasDescription ? (
+              <ChannelInfoDescription
+                text={descriptionText}
+                descriptionRef={descriptionRef}
+                overflows={descriptionOverflows}
+                groupIndex={descriptionGroup}
+                focused={
+                  descriptionGroup != null &&
+                  isItemFocused(descriptionGroup, 0)
+                }
+                registerItemRef={registerItemRef}
+                onMoveUp={handleMoveUp}
+                onMoveDown={
+                  descriptionDownTarget != null ? handleMoveDown : undefined
+                }
+                onSelect={() => setDescriptionDialogOpen(true)}
+              />
             ) : null}
 
             {hasTags && tagsGroup != null ? (
@@ -160,6 +202,13 @@ export default function MusicChannelInfo() {
           />
         ) : null}
       </div>
+
+      <ChannelInfoDescriptionDialog
+        open={descriptionDialogOpen}
+        channelName={channel.name}
+        description={descriptionText}
+        onClose={() => setDescriptionDialogOpen(false)}
+      />
 
       <p className="tv-page__lede">Press Esc to go back.</p>
     </div>
