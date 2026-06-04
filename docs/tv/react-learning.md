@@ -27,7 +27,7 @@ Same product data; **different** presentation components. Do not copy mobile `Co
 - **Preroll:** `TvPlayerPrerollAd` — 15s + Skip; grace from `GuestPrerollGraceContext`.
 - **Focus groups on player:** meta (info, like) → transport (play/pause, skip); `navEnterEnabled: false`; default focus **play/pause** after preroll. Primary nav hidden on play route (`TvShell`).
 - **Preview types (Phase 6):** `/settings/user-type` — pick a tier (stays on page, like mobile Subscription), status line shows preroll yes/no, **Open music player** runs QA on first catalog channel. `GuestPrerollGraceProvider` uses `key={userType}` so switching guest ↔ subscribed shows preroll again without a full reload.
-- **Mini player (Phase 7):** `TvMiniPlayer` in `PrimaryNav` slot — collapsed 80px thumb vs expanded 100px row + title/artist; **no transport controls**. Focus uses `--tv-focus-ring-*` (collapsed: ring on thumb wrap; expanded: ring on row), not Figma container border. Nav index **0** = mini when `miniPlayerVisible`; **Enter** opens full player with `expandFromMiniPlayer` state. Home `playingChannelId` from `session.channelId`.
+- **Mini player (Phase 7):** `TvMiniPlayer` in `PrimaryNav` slot — collapsed 80px thumb vs expanded **500px** row + title/artist; **no transport controls**. Focus uses `--tv-focus-ring-*` (collapsed: ring on thumb wrap; expanded: ring on row), not Figma container border. Nav index **0** = mini when `miniPlayerVisible` (same roster as Home / Search / Library). **`PrimaryNav`** listens for **Up/Down/Right** at `window` capture while `focusZone === nav` so D-pad always moves `navFocusedIndex`, not only the focused button. **Enter** on mini opens full player with `expandFromMiniPlayer` state.
 
 ## 2026-06-03 — Home vertical parked focus (ring top)
 

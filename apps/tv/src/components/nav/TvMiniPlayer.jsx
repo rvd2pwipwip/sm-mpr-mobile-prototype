@@ -8,6 +8,7 @@ import "./TvMiniPlayer.css";
 export default function TvMiniPlayer({
   expanded = false,
   focused = false,
+  playing = true,
   thumbnail,
   title,
   subtitle,
@@ -22,6 +23,15 @@ export default function TvMiniPlayer({
     .join(" ");
 
   const label = [title, subtitle].filter(Boolean).join(", ");
+  const showPlayingOnThumb = !expanded && playing;
+
+  const thumbClass = [
+    "tv-mini-player__thumb",
+    thumbnail ? "" : "tv-mini-player__thumb--placeholder",
+    showPlayingOnThumb ? "tv-mini-player__thumb--playing" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <FocusableButton
@@ -35,18 +45,27 @@ export default function TvMiniPlayer({
     >
       <span className="tv-mini-player__inner">
         <span className="tv-mini-player__thumb-wrap">
-          {thumbnail ? (
-            <img
-              className="tv-mini-player__thumb"
-              src={thumbnail}
-              alt=""
-              width={60}
-              height={60}
-              decoding="async"
-            />
-          ) : (
-            <span className="tv-mini-player__thumb tv-mini-player__thumb--placeholder" />
-          )}
+          <span className={thumbClass}>
+            {thumbnail ? (
+              <img
+                className="tv-mini-player__thumb-img"
+                src={thumbnail}
+                alt=""
+                width={60}
+                height={60}
+                decoding="async"
+              />
+            ) : null}
+            {showPlayingOnThumb ? (
+              <span className="tv-mini-player__playing" aria-hidden={true}>
+                <span className="tv-mini-player__playing-bars">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </span>
+            ) : null}
+          </span>
         </span>
         <span className="tv-mini-player__text" aria-hidden={!expanded}>
           <span className="tv-mini-player__title">{title}</span>

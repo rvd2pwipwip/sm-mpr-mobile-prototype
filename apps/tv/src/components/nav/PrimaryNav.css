@@ -60,11 +60,16 @@
   width: var(--nav-items-width-expanded);
 }
 
-/* Full-width canvas clipped by __panel (Figma rows are w 250px inside w 80px clip) */
-.primary-nav__mini-player-slot,
+/* Menu rows: 250px canvas; mini player: 500px (Figma menuMiniPlayer `15521:27316`) */
 .primary-nav__menu-spacer,
 .primary-nav__list {
   width: var(--nav-items-width-expanded);
+  flex-shrink: 0;
+}
+
+/* Always full mini row width; collapse clips the button (same model as menu list at 250px) */
+.primary-nav__mini-player-slot {
+  width: var(--tv-mini-player-width-expanded);
   flex-shrink: 0;
 }
 

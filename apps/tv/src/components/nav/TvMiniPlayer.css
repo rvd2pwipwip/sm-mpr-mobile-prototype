@@ -1,26 +1,34 @@
 /* Figma menuMiniPlayer `15521:27316` — focus ring via .focusable-button--focused */
 
 .tv-mini-player.focusable-button {
+  position: relative;
   display: block;
   width: 100%;
+  height: var(--tv-mini-player-row-height);
   margin: 0;
   padding: 0;
   border: none;
   border-radius: var(--tv-mini-player-radius-expanded);
-  background: var(--tv-mini-player-gradient);
   color: var(--color-on-accent);
   text-align: left;
   cursor: pointer;
   outline: var(--tv-focus-ring-width) solid transparent;
   outline-offset: var(--tv-focus-ring-gap);
-  transition: outline-color var(--tv-button-transition-duration) ease;
+  overflow: hidden;
+  background: none;
+  transition:
+    outline-color var(--tv-button-transition-duration) ease,
+    width var(--nav-reveal-duration) ease;
 }
 
+/* Full-width canvas; button width clips on collapse. Thumb pins to .focusable-button. */
 .tv-mini-player__inner {
   display: flex;
-  align-items: center;
-  gap: var(--tv-mini-player-text-gap);
-  min-width: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: var(--tv-mini-player-width-expanded);
+  max-width: var(--tv-mini-player-width-expanded);
+  height: 100%;
   box-sizing: border-box;
 }
 
@@ -30,44 +38,119 @@
   border-radius: var(--tv-mini-player-radius-collapsed);
 }
 
-.tv-mini-player--collapsed .tv-mini-player__inner {
-  justify-content: center;
-  padding: var(--tv-mini-player-padding-collapsed);
-}
-
 .tv-mini-player--expanded {
-  min-height: var(--tv-mini-player-height-expanded);
+  width: var(--tv-mini-player-width-expanded);
+  max-width: var(--tv-mini-player-width-expanded);
 }
 
 .tv-mini-player--expanded .tv-mini-player__inner {
-  padding: 10px 10px 10px 20px;
+  padding-block: var(--tv-mini-player-thumb-inset);
+  padding-inline-start: calc(
+    var(--tv-mini-player-thumb-inset) + var(--tv-mini-player-thumb) +
+      var(--tv-mini-player-text-gap)
+  );
+  padding-inline-end: var(--tv-mini-player-thumb-inset);
 }
 
 .tv-mini-player__thumb-wrap {
+  position: absolute;
+  left: var(--tv-mini-player-thumb-inset);
+  top: var(--tv-mini-player-thumb-inset);
+  z-index: 1;
   flex-shrink: 0;
   border-radius: 4px;
   line-height: 0;
 }
 
 .tv-mini-player__thumb {
+  position: relative;
   display: block;
   width: var(--tv-mini-player-thumb);
   height: var(--tv-mini-player-thumb);
-  object-fit: cover;
   border-radius: 4px;
+  overflow: hidden;
 }
 
 .tv-mini-player__thumb--placeholder {
   background: color-mix(in srgb, var(--color-on-accent) 25%, transparent);
 }
 
+.tv-mini-player__thumb-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Same scrim + eq as ContentTileCard, scaled for 60px thumb (collapsed nav only). */
+.tv-mini-player__thumb--playing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.tv-mini-player__playing {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.tv-mini-player__playing-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 24px;
+}
+
+.tv-mini-player__playing-bars span {
+  display: block;
+  width: 4px;
+  background: var(--color-on-accent);
+  border-radius: 1px;
+  animation: tv-playing-bar 0.9s ease-in-out infinite;
+}
+
+.tv-mini-player__playing-bars span:nth-child(1) {
+  height: 11px;
+  animation-delay: 0s;
+}
+
+.tv-mini-player__playing-bars span:nth-child(2) {
+  height: 20px;
+  animation-delay: 0.15s;
+}
+
+.tv-mini-player__playing-bars span:nth-child(3) {
+  height: 15px;
+  animation-delay: 0.3s;
+}
+
+@keyframes tv-playing-bar {
+  0%,
+  100% {
+    transform: scaleY(0.55);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
 .tv-mini-player__text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2px;
   min-width: 0;
+  max-height: var(--tv-mini-player-thumb);
   flex: 1 1 auto;
+  overflow: hidden;
 }
 
 .tv-mini-player__title,
@@ -76,19 +159,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 146px;
+  max-width: calc(
+    var(--tv-mini-player-width-expanded) - var(--tv-mini-player-thumb) -
+      var(--tv-mini-player-text-gap) - (3 * var(--tv-mini-player-thumb-inset))
+  );
 }
 
 .tv-mini-player__title {
-  font-size: var(--font-size-nav);
+  flex-shrink: 0;
+  font-size: var(--tv-mini-player-title-font-size);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .tv-mini-player__artist {
-  font-size: var(--font-size-nav);
+  flex-shrink: 1;
+  min-height: 0;
+  font-size: var(--tv-mini-player-artist-font-size);
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.15;
   color: color-mix(in srgb, var(--color-on-accent) 80%, transparent);
 }
 

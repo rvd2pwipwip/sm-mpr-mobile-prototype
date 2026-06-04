@@ -1,13 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import FocusableButton from "../focus/FocusableButton.jsx";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
-import {
-  FOCUS_ZONE_NAV,
-  NAV_TAB_COUNT,
-  useTvNavFocus,
-} from "../../context/TvNavFocusContext.jsx";
+import { FOCUS_ZONE_NAV, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import TvMiniPlayer from "./TvMiniPlayer.jsx";
 import "./PrimaryNav.css";
 
@@ -59,7 +55,6 @@ export default function PrimaryNav() {
     focusZone,
     navExpanded,
     navFocusedIndex,
-    isNavMiniPlayerIndex,
     enterContent,
     enterContentWithRestore,
     moveNavFocus,
@@ -71,17 +66,75 @@ export default function PrimaryNav() {
     session.variant === "music" &&
     session.fullPlayerPath;
 
-  useEffect(() => {
-    if (focusZone !== FOCUS_ZONE_NAV) return;
-    navRefs.current[navFocusedIndex]?.focus();
-  }, [focusZone, navFocusedIndex]);
-
-  const openFullPlayer = () => {
+  const openFullPlayer = useCallback(() => {
     if (!session.fullPlayerPath) return;
     navigate(session.fullPlayerPath, {
       state: { expandFromMiniPlayer: true },
     });
-  };
+  }, [navigate, session.fullPlayerPath]);
+
+  const activateNavIndex = useCallback(
+    (index) => {
+      if (showMini && index === 0) {
+        openFullPlayer();
+        return;
+      }
+      const tabIndex = showMini ? index - 1 : index;
+      const item = NAV_ITEMS[tabIndex];
+      if (!item) return;
+      navigate(item.to);
+      enterContent();
+    },
+    [showMini, openFullPlayer, navigate, enterContent],
+  );
+
+  const miniFocused =
+    showMini && focusZone === FOCUS_ZONE_NAV && navFocusedIndex === 0;
+
+  useLayoutEffect(() => {
+    if (focusZone !== FOCUS_ZONE_NAV) return;
+    navRefs.current[navFocusedIndex]?.focus({ preventScroll: true });
+  }, [focusZone, navFocusedIndex, showMini]);
+
+  /* Nav D-pad at window level — roster index is source of truth, not DOM focus target. */
+  useEffect(() => {
+    if (focusZone !== FOCUS_ZONE_NAV) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        event.stopPropagation();
+        activateNavIndex(navFocusedIndex);
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        event.stopPropagation();
+        moveNavFocus(-1);
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        event.stopPropagation();
+        moveNavFocus(1);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        event.stopPropagation();
+        enterContentWithRestore();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, [
+    focusZone,
+    navFocusedIndex,
+    activateNavIndex,
+    moveNavFocus,
+    enterContentWithRestore,
+  ]);
 
   const navClassName = [
     "primary-nav",
@@ -110,14 +163,13 @@ export default function PrimaryNav() {
                   navRefs.current[0] = node;
                 }}
                 onSelect={openFullPlayer}
-                onDown={() => moveNavFocus(1)}
-                onRight={() => enterContentWithRestore()}
               >
                 {(focusProps) => (
                   <TvMiniPlayer
                     {...focusProps}
                     expanded={navExpanded}
-                    focused={isNavMiniPlayerIndex}
+                    focused={miniFocused}
+                    playing={!session.isPaused}
                     thumbnail={session.thumbnail}
                     title={session.title}
                     subtitle={session.subtitle}
@@ -132,7 +184,7 @@ export default function PrimaryNav() {
           {NAV_ITEMS.map((item, tabIndex) => {
             const navIndex = showMini ? tabIndex + 1 : tabIndex;
             const active = isNavItemActive(location.pathname, item);
-            const focused =
+            const tabFocused =
               focusZone === FOCUS_ZONE_NAV && navFocusedIndex === navIndex;
             return (
               <li key={item.id} className="primary-nav__item">
@@ -144,20 +196,11 @@ export default function PrimaryNav() {
                     navigate(item.to);
                     enterContent();
                   }}
-                  onUp={() => {
-                    if (navIndex > 0) moveNavFocus(-1);
-                  }}
-                  onDown={() => {
-                    if (navIndex < (showMini ? NAV_TAB_COUNT : NAV_TAB_COUNT - 1)) {
-                      moveNavFocus(1);
-                    }
-                  }}
-                  onRight={() => enterContentWithRestore()}
                 >
                   {(focusProps) => (
                     <FocusableButton
                       {...focusProps}
-                      focused={focused}
+                      focused={tabFocused}
                       className={[
                         "primary-nav__link",
                         active ? "primary-nav__link--active" : "",

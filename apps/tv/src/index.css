@@ -122,18 +122,21 @@
   );
   /* menuMiniPlayer — Figma `15521:27316` */
   --tv-mini-player-size-collapsed: 80px;
-  --tv-mini-player-height-expanded: 100px;
+  --tv-mini-player-width-expanded: 500px;
   --tv-mini-player-thumb: 60px;
-  --tv-mini-player-padding-collapsed: 10px;
+  /* Thumb inset from button edges; collapsed square and expanded row use the same top/left */
+  --tv-mini-player-thumb-inset: 10px;
+  --tv-mini-player-row-height: calc(
+    2 * var(--tv-mini-player-thumb-inset) + var(--tv-mini-player-thumb)
+  );
+  --tv-mini-player-title-font-size: 1.5rem;
+  --tv-mini-player-artist-font-size: 1.25rem;
   --tv-mini-player-radius-collapsed: 10px;
   --tv-mini-player-radius-expanded: 20px;
   --tv-mini-player-text-gap: 16px;
-  --tv-mini-player-gradient: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-accent2) 85%, #8c29ff) 4%,
-    var(--color-accent) 100%
-  );
-  --nav-mini-player-slot-height: var(--tv-mini-player-height-expanded);
+  --tv-mini-player-bg: none;
+  --tv-mini-player-bg-expanded: none;
+  --nav-mini-player-slot-height: var(--tv-mini-player-row-height);
   --nav-mini-player-menu-gap: 20px;
   /* Expanded menu scrim — Figma `15757:36079` (mask ~1300 x 262); fades into content */
   --nav-expanded-scrim-width: 1300px;
