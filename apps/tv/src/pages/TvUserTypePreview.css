@@ -47,3 +47,46 @@
   outline: 3px solid var(--color-accent);
   outline-offset: 4px;
 }
+
+.tv-user-type-preview__code {
+  font-size: 0.95em;
+  font-family: ui-monospace, monospace;
+}
+
+.tv-user-type-preview__status {
+  margin: 0 0 32px;
+  max-width: 56rem;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--color-on-bkg);
+}
+
+.tv-user-type-preview__test {
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid color-mix(in srgb, var(--color-on-bkg) 20%, transparent);
+  max-width: 56rem;
+}
+
+.tv-user-type-preview__test-title {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-on-bkg);
+}
+
+.tv-user-type-preview__test-lead {
+  margin: 0 0 24px;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--color-on-bkg) 75%, transparent);
+}
+
+.tv-user-type-preview__test-channel {
+  font-weight: 600;
+  color: var(--color-on-bkg);
+}
+
+.tv-user-type-preview__test-btn {
+  min-width: 18rem;
+}

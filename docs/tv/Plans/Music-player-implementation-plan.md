@@ -1,8 +1,10 @@
 # TV music player — implementation plan
 
+> **New agent?** Start with **[`Music-player-agent-handoff.md`](./Music-player-agent-handoff.md)** — consolidated brief, accurate repo inventory, and phased checklist. This file remains the detailed reference; the handoff is the clean-slate entry point.
+
 Living plan for the **full-screen music player** in **`apps/tv/`**, with **the same user types and ad/preroll business rules as mobile**, and **maximum shared logic** in **`@sm-mpr/shared`** (plus thin mobile re-exports where they already exist). **TV-only code** should be layout, focus, and chrome — not duplicate tier rules or catalog lookups.
 
-**Do this doc first**, then implement phase by phase. **Do not** treat SMTV03 (`PlayerOverlay.jsx`) as a port source; use it only for D-pad group ideas if stuck.
+**Do the handoff doc first**, then implement phase by phase (content below matches handoff phases). **Do not** treat SMTV03 (`PlayerOverlay.jsx`) as a port source; use it only for D-pad group ideas if stuck.
 
 **Product references (mobile, authoritative for tiers):**
 
@@ -81,18 +83,19 @@ Living plan for the **full-screen music player** in **`apps/tv/`**, with **the s
 
 ## Current state (inventory)
 
+See **[`Music-player-agent-handoff.md` — Repo inventory](./Music-player-agent-handoff.md#repo-inventory-accurate-before-player-work)** for the latest checklist. Summary:
+
 | Piece | Mobile | TV |
 |-------|--------|-----|
 | `musicChannels` / `getMusicChannelById` | Shared | Shared |
-| `UserTypeContext` | Mounted in `App.jsx` | Mounted; preview at **`/settings/user-type`** |
-| `showVisualAds.js` | Re-export from `@sm-mpr/shared` | TV imports **`userTierRules`** |
+| `userTierRules` / `USER_TYPES` | Shared + re-exports | Shared imports; preview at **`/settings/user-type`** |
+| `userContentGates` | Mobile `constants/` | **Not hoisted** — Phase 1 |
 | `PlaybackContext` | Full | Missing |
 | `PlayerPrerollAd` | Full | Missing |
 | `GuestPrerollGraceContext` | Full | Missing |
 | `GuestMusicSkipContext` | Full | Missing |
 | `MusicPlayer` page | Full | Missing |
 | Channel Info → Play | Navigates to play | **Stub message** only |
-| User type preview UI | `/upgrade` **`Subscription.jsx`** | **None** |
 
 ---
 

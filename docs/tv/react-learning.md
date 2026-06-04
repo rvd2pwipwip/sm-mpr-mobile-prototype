@@ -18,6 +18,16 @@ Same product data; **different** presentation components. Do not copy mobile `Co
 
 ## Entries
 
+## 2026-06-04 — TV music player + preroll
+
+- **Route:** `/music/:channelId/play` — `MusicPlayerRoute` remounts with `key={channelId-userType}` (same as mobile).
+- **Entry:** Channel Info **Play** → `navigate(.../play)`; **Esc** → `GlobalTvKeys` `navigate(-1)` (preroll / account / skip dialogs use `aria-modal="true"` so Esc dismisses the dialog first).
+- **Tier rules:** `@sm-mpr/shared/utils/userTierRules.js` (`showPlayerPreroll`) and `userContentGates.js` (`userMayLikeMusicRadio`) — no duplicate strings in player files.
+- **Providers:** `GuestPrerollGraceProvider`, `PlaybackProvider` (no `--mini-player-offset` yet), `GuestMusicSkipProvider`, `LikesProvider`, `AccountRequiredDialogProvider` in `App.jsx`.
+- **Preroll:** `TvPlayerPrerollAd` — 15s + Skip; grace from `GuestPrerollGraceContext`.
+- **Focus groups on player:** meta (info, like) → transport (play/pause, skip); `navEnterEnabled: false`; default focus **play/pause** after preroll. Primary nav hidden on play route (`TvShell`).
+- **Preview types (Phase 6):** `/settings/user-type` — pick a tier (stays on page, like mobile Subscription), status line shows preroll yes/no, **Open music player** runs QA on first catalog channel. `GuestPrerollGraceProvider` uses `key={userType}` so switching guest ↔ subscribed shows preroll again without a full reload.
+
 ## 2026-06-03 — Home vertical parked focus (ring top)
 
 `useTvVerticalGroupScroll` (alias **`useTvVerticalParkedScroll`**) keeps the **focus ring top** on a fixed **`parkY`** line (measured once per Home visit from the landing control). Content scrolls via **`translateY`** while the ring stays visually still — same idea as **`VariableSwimlane`** / Channel Info tags, on the Y axis. Geometry lives in **`tvFocusGeometry.js`**. **Down:** scroll until bottom + **`--tv-scroll-park-down-bias`** is visible, then the ring unparks toward the last focusable group. **Up:** reverse at bottom, then parked scroll until **`offsetY === 0`**, then unpark toward the top. Pass **`getFocusedElement`**, **`lastFocusableGroupIndex`** (skip ad-only rows), and **`landingGroupIndex`**. Plan: **`docs/tv/Plans/vertical-parked-navigation-plan.md`**.

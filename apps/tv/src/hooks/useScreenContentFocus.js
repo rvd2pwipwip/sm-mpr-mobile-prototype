@@ -272,6 +272,8 @@ export function useScreenContentFocus(
       }
       itemRefs.current[groupIndex][index] = node;
 
+      if (suspendDomFocus) return;
+
       if (
         focusZone === FOCUS_ZONE_CONTENT &&
         groupIndex === focusedGroupIndex &&
@@ -282,7 +284,7 @@ export function useScreenContentFocus(
         node.focus({ preventScroll: true });
       }
     },
-    [focusZone, focusedGroupIndex, focusedIndex],
+    [focusZone, focusedGroupIndex, focusedIndex, suspendDomFocus],
   );
 
   const isContentGroupActive = (groupIndex) =>

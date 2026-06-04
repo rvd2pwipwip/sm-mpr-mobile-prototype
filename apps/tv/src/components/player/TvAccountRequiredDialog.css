@@ -1,0 +1,42 @@
+.tv-account-required-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-tv-stacked-dialog);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv-account-required-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.55);
+}
+
+.tv-account-required-dialog__panel {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 90%);
+  padding: 48px;
+  border-radius: 16px;
+  background: var(--color-bg2);
+  box-shadow: 0 12px 48px rgb(0 0 0 / 0.25);
+}
+
+.tv-account-required-dialog__title {
+  margin: 0 0 16px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.tv-account-required-dialog__body {
+  margin: 0 0 32px;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.tv-account-required-dialog__btn {
+  min-height: var(--tv-button-height-medium);
+  padding: var(--tv-button-padding-block) var(--tv-button-padding-inline);
+}

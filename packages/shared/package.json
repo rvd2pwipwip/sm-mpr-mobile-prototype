@@ -12,6 +12,7 @@
     "./constants/catalogScope.js": "./constants/catalogScope.js",
     "./constants/userTypes.js": "./constants/userTypes.js",
     "./constants/externalLinks.js": "./constants/externalLinks.js",
-    "./utils/userTierRules.js": "./utils/userTierRules.js"
+    "./utils/userTierRules.js": "./utils/userTierRules.js",
+    "./utils/userContentGates.js": "./utils/userContentGates.js"
   }
 }

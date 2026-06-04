@@ -53,6 +53,23 @@
   --tv-focus-ring-gap: 4px;
 
   --z-primary-nav: 100;
+  --z-tv-player-preroll: 250;
+  --z-tv-stacked-dialog: 300;
+
+  /* Full-screen music player — Figma `23:20013` */
+  --tv-player-column-max-width: 1000px;
+  --tv-player-column-gap: 50px;
+  --tv-player-padding-top: 100px;
+  --tv-player-channel-actions-gap: 10px;
+  --tv-player-channel-title-size: 2.125rem;
+  --tv-player-meta-actions-gap: 24px;
+  --tv-player-meta-btn-size: 60px;
+  --tv-player-cover-size: 360px;
+  --tv-player-cover-tta-gap: 30px;
+  --tv-player-tta-line-gap: 5px;
+  --tv-player-controls-gap: 30px;
+  --tv-player-transport-gap: 40px;
+  --tv-player-progress-height: 4px;
 
   /* Footer ad (SMTV03 `--ad-banner-height`; mobile strip ~86px). */
   --tv-footer-ad-height: 150px;

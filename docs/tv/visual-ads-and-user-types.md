@@ -10,6 +10,7 @@ Route **`/settings/user-type`** — four toggles (`guest`, `freeStingray`, `free
 
 | Placement | Component | When |
 |-----------|-----------|------|
+| **Player preroll** | `TvPlayerPrerollAd` on `/music/:channelId/play` | `showPlayerPreroll(userType)` — **guest** and **freeStingray** only; 15s countdown + Skip |
 | **Footer band** | `TvFooterAdBanner` in `TvShell` | **Limited catalog** only; `showVisualAds(userType)` |
 | **Home in-feed banner** | `TvSwimlaneBannerAd` on broad + limited Home | `showVisualAds(userType)`; between **Popular podcasts** and **Top radio** on broad Home |
 | **Scroll reserve** | `TvVisualAdsHtmlSync` + `--tv-scroll-ad-reserve` | Limited catalog footer slot only (`html[data-visual-ads]`) |

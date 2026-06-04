@@ -118,16 +118,13 @@ export default function TvHomeHeader({
           {showUpgrade ? (
             <KeyboardWrapper
               ref={(node) => registerItemRef?.(groupIndex, 0, node)}
+              onSelect={handleUpgradeClick}
               onUp={onMoveUp}
               onDown={onMoveDown}
               onLeft={() => onBoundaryLeft?.()}
             >
               {(focusProps) => (
-                <TvUpgradeButton
-                  {...focusProps}
-                  focused={focused}
-                  onClick={handleUpgradeClick}
-                />
+                <TvUpgradeButton {...focusProps} focused={focused} />
               )}
             </KeyboardWrapper>
           ) : (

@@ -39,13 +39,61 @@ Use as starting tokens in `apps/tv/src/index.css`; tune during build.
 
 ---
 
+## Full-screen player
+
+| Screen | Node | Notes |
+|--------|------|--------|
+| Music player | [23:20013](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=23-20013) | Centered column: channel title, info + like, cover 360px, TTA, progress, play/pause + skip. No smart tuner v1. |
+
+### Measurements from `23:20013` (implementation hints)
+
+| Element | Value |
+|---------|--------|
+| Outer column gap | `50px` |
+| Top padding | `100px` |
+| Max content width | `1000px` |
+| Channel title + actions gap | `10px` |
+| Title typography | Roboto Black 34px |
+| Meta actions (info, like) | ~60px targets |
+| Cover size | `360px`, rounded |
+| Cover + track text gap | `30px` |
+| Track text lines gap | `5px` |
+| Controls block gap | `30px` (progress to transport) |
+| Transport row gap | `40px` |
+| Progress bar height | `4px` |
+
+---
+
+## Primary nav — mini player
+
+| Item | Node | Notes |
+|------|------|--------|
+| **menuMiniPlayer** (collapsed / expanded variants) | [15521:27316](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15521-27316) | Collapsed: 80px square, 60px thumb, gradient fill. Expanded: 100px row, title + artist, no controls. |
+| Expanded nav — **mini focused** | [15757:36079](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15757-36079) | 10px focus ring on mini; menu labels visible. |
+| Expanded nav — **menu focused** (mini unfocused) | [15516:26917](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15516-26917) | Mini shows metadata; Home row has focus ring. |
+
+**Implementation plan:** `docs/tv/Plans/Tv-miniplayer-implementation-plan.md`
+
+### Measurements from `15521:27316` (implementation hints)
+
+| Element | Collapsed | Expanded |
+|---------|-----------|----------|
+| Outer size | ~80×80 (60 thumb + 10 padding) | height 100px; width = nav panel 250px |
+| Outer radius | 10px | 20px |
+| Thumbnail | 60×60, radius 4px | same |
+| Thumb to text gap | — | 16px |
+| Title | — | Roboto Bold 24px, on-accent |
+| Artist | — | Roboto Regular 24px, 80% white |
+| Focus ring (mini focused) | per nav icon rules | 10px solid on-bkg |
+| Controls | none | none |
+
+---
+
 ## To index (add when implementing)
 
 - Channel Info screen
 - More grid (music channels)
 - Search & Browse
-- Full-screen player
-- Collapsed vs expanded primary nav states
 
 ---
 

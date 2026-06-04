@@ -1,0 +1,51 @@
+.tv-guest-skip-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-tv-stacked-dialog);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv-guest-skip-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.55);
+}
+
+.tv-guest-skip-dialog__panel {
+  position: relative;
+  z-index: 1;
+  width: min(800px, 90%);
+  padding: 48px;
+  border-radius: 16px;
+  background: var(--color-bg2);
+}
+
+.tv-guest-skip-dialog__title {
+  margin: 0 0 16px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.tv-guest-skip-dialog__body {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.tv-guest-skip-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.tv-guest-skip-dialog__btn {
+  min-height: var(--tv-button-height-medium);
+  padding: var(--tv-button-padding-block) var(--tv-button-padding-inline);
+}
+
+.tv-guest-skip-dialog__btn--primary {
+  font-weight: 600;
+}

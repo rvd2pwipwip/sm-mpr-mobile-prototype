@@ -23,7 +23,6 @@ export default function MusicChannelInfo() {
   const { channelId } = useParams();
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
-  const [playPressed, setPlayPressed] = useState(false);
   const [descriptionDialogOpen, setDescriptionDialogOpen] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
@@ -129,7 +128,7 @@ export default function MusicChannelInfo() {
             <div className="music-channel-info__actions-row">
               <KeyboardWrapper
                 ref={(node) => registerItemRef(ACTIONS_GROUP, 0, node)}
-                onSelect={() => setPlayPressed(true)}
+                onSelect={() => navigate(`/music/${channel.id}/play`)}
                 onMoveUp={handleMoveUp}
                 onMoveDown={playDownTarget != null ? handleMoveDown : undefined}
               >
@@ -143,11 +142,6 @@ export default function MusicChannelInfo() {
                 )}
               </KeyboardWrapper>
 
-              {playPressed ? (
-                <p className="music-channel-info__play-note" role="status">
-                  Play prototype — full-screen player ships later.
-                </p>
-              ) : null}
             </div>
 
             {hasDescription ? (
