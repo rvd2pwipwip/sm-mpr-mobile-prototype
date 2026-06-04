@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { getMusicChannelById } from "@sm-mpr/shared/data/musicChannels.js";
 import { showPlayerPreroll } from "@sm-mpr/shared/utils/userTierRules.js";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
@@ -46,6 +46,7 @@ function PlayerPlayPauseIcon({ playing }) {
 /** Full-screen music player — Figma `23:20013`; primary nav hidden on this route. */
 export default function MusicPlayer() {
   const { channelId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
   const { session, upsertMusicSession } = usePlayback();
@@ -53,7 +54,8 @@ export default function MusicPlayer() {
   const { userType } = useUserType();
 
   const needsPreroll = showPlayerPreroll(userType);
-  const skipPrerollGate = !needsPreroll || graceActive;
+  const expandFromMini = location.state?.expandFromMiniPlayer === true;
+  const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
 

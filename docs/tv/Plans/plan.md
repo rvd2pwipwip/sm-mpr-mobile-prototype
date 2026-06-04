@@ -68,13 +68,13 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Home harmonization** — broad Home swimlanes match mobile order (music, podcasts, in-feed ad, radio, recommendations); **`@sm-mpr/shared`** tier rules + podcasts/radio data; SMTV03-style **`TvFooterAdBanner`**; **`/settings/user-type`** preview — see **`docs/tv/visual-ads-and-user-types.md`**
 - [x] **Music player v1** — Phases 0–5 per **`Music-player-agent-handoff.md`**: shared `userContentGates`, TV providers, `/music/:channelId/play`, `TvPlayerPrerollAd`, Figma `23:20013` layout, Channel Info Play wired; mini player deferred (Phase 7)
 - [x] **Music player Phase 6** — `/settings/user-type` tier QA UI + handoff QA table; preroll grace resets on `userType` change (matches skip cap)
+- [x] **TV mini player (Phase 7)** — `TvMiniPlayer` in `PrimaryNav`, nav focus index 0, shortcut to full player; see [`Tv-miniplayer-implementation-plan.md`](./Tv-miniplayer-implementation-plan.md)
 
 ---
 
 ## Next steps (ordered)
 
-1. **Mini player** — [`Tv-miniplayer-implementation-plan.md`](./Tv-miniplayer-implementation-plan.md) (handoff Phase 7; Figma nav mini `15521:27316`)
-2. **Phase 7+ backlog** — podcasts/radio cards, Search & Browse, TV in-player visual ads (if design adds frames)
+1. **Phase 7+ backlog** — podcasts/radio cards, Search & Browse, TV in-player visual ads (if design adds frames)
 
 Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 

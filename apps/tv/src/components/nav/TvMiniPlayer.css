@@ -1,0 +1,124 @@
+/* Figma menuMiniPlayer `15521:27316` — focus ring via .focusable-button--focused */
+
+.tv-mini-player.focusable-button {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--tv-mini-player-radius-expanded);
+  background: var(--tv-mini-player-gradient);
+  color: var(--color-on-accent);
+  text-align: left;
+  cursor: pointer;
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition: outline-color var(--tv-button-transition-duration) ease;
+}
+
+.tv-mini-player__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-mini-player-text-gap);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.tv-mini-player--collapsed {
+  width: var(--tv-mini-player-size-collapsed);
+  max-width: var(--tv-mini-player-size-collapsed);
+  border-radius: var(--tv-mini-player-radius-collapsed);
+}
+
+.tv-mini-player--collapsed .tv-mini-player__inner {
+  justify-content: center;
+  padding: var(--tv-mini-player-padding-collapsed);
+}
+
+.tv-mini-player--expanded {
+  min-height: var(--tv-mini-player-height-expanded);
+}
+
+.tv-mini-player--expanded .tv-mini-player__inner {
+  padding: 10px 10px 10px 20px;
+}
+
+.tv-mini-player__thumb-wrap {
+  flex-shrink: 0;
+  border-radius: 4px;
+  line-height: 0;
+}
+
+.tv-mini-player__thumb {
+  display: block;
+  width: var(--tv-mini-player-thumb);
+  height: var(--tv-mini-player-thumb);
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.tv-mini-player__thumb--placeholder {
+  background: color-mix(in srgb, var(--color-on-accent) 25%, transparent);
+}
+
+.tv-mini-player__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.tv-mini-player__title,
+.tv-mini-player__artist {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 146px;
+}
+
+.tv-mini-player__title {
+  font-size: var(--font-size-nav);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tv-mini-player__artist {
+  font-size: var(--font-size-nav);
+  font-weight: 400;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--color-on-accent) 80%, transparent);
+}
+
+/* Collapsed nav: clip labels; ring on thumb (same idea as nav icon-stack) */
+.primary-nav--collapsed .tv-mini-player--collapsed .tv-mini-player__text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.primary-nav--collapsed .tv-mini-player--collapsed.focusable-button--focused {
+  outline-color: transparent;
+}
+
+.primary-nav--collapsed
+  .tv-mini-player--collapsed.focusable-button--focused
+  .tv-mini-player__thumb-wrap {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring-color);
+  outline-offset: var(--tv-focus-ring-gap);
+}
+
+/* Expanded nav: ring on full mini row */
+.primary-nav--expanded .tv-mini-player--expanded.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.primary-nav--expanded
+  .tv-mini-player--expanded.focusable-button--focused
+  .tv-mini-player__thumb-wrap {
+  outline: none;
+}

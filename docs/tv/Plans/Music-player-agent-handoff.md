@@ -262,9 +262,9 @@ Run TV: repo root `npm run dev:tv` (default **http://localhost:5174**).
 
 **Detailed plan:** [`Tv-miniplayer-implementation-plan.md`](./Tv-miniplayer-implementation-plan.md) (Figma `15521:27316`, `15757:36079`, `15516:26917`).
 
-- [ ] Wire `PlaybackContext` to `PrimaryNav` slot; Home `playingChannelId` from session
-- [ ] Hide mini on `…/play`
-- [ ] `TvMiniPlayer` collapsed/expanded + nav focus index 0 + shortcut to full player
+- [x] Wire `PlaybackContext` to `PrimaryNav` slot; Home `playingChannelId` from session
+- [x] Hide mini on `…/play`
+- [x] `TvMiniPlayer` collapsed/expanded + nav focus index 0 + shortcut to full player
 
 ---
 

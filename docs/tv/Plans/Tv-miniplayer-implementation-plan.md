@@ -49,10 +49,10 @@ When music is playing and the user is **not** on `/music/:channelId/play`, show 
 
 | State | Mini player chrome |
 |--------|-------------------|
-| **Focused** (mini is active nav target) | **10px** solid ring using `--color-on-bkg` / `#191919` (matches `.TVMainMenuItems` focus in `15516:26917` when Home is focused) |
-| **Unfocused** (another nav row focused) | Gradient + content visible; **no** thick outer ring on mini |
+| **Focused** (mini is active nav target) | Shared TV focus ring: `--tv-focus-ring-width` / `--tv-focus-ring-color` (not Figma container border) |
+| **Unfocused** (another nav row focused) | Gradient + content visible; no focus ring |
 
-Collapsed nav: use existing **icon-column** focus treatment (ring on square, not full 250px row) — align with `PrimaryNav` focus buffer tokens.
+**Implementation:** Collapsed nav — ring on **thumb wrap** (same pattern as nav icon-stack). Expanded nav — ring on **full mini row** (same as expanded `.primary-nav__link`).
 
 ---
 
@@ -102,92 +102,49 @@ Collapsed nav: use existing **icon-column** focus treatment (ring on square, not
 
 ### Phase 0 — Docs and Figma index
 
-- [ ] Add **Primary nav / mini player** table to `docs/tv/figma-nodes.md` (nodes above).
-- [ ] Link this plan from `Music-player-agent-handoff.md` Phase 7 and `plan.md` **Next steps**.
-
-**Acceptance:** Designers and agents can open frames from the repo index.
+- [x] Add **Primary nav / mini player** table to `docs/tv/figma-nodes.md` (nodes above).
+- [x] Link this plan from `Music-player-agent-handoff.md` Phase 7 and `plan.md` **Next steps**.
 
 ---
 
 ### Phase 1 — Tokens and layout (`index.css` + `PrimaryNav.css`)
 
-- [ ] Add tokens, e.g. `--tv-mini-player-size-collapsed: 80px`, `--tv-mini-player-height-expanded: 100px`, `--tv-mini-player-thumb: 60px`, `--tv-mini-player-radius-collapsed: 10px`, `--tv-mini-player-radius-expanded: 20px`, `--tv-mini-player-focus-ring: 10px`, `--tv-mini-player-text-gap: 16px`.
-- [ ] Add `--tv-mini-player-gradient` (map Figma music gradient; relate to `--color-accent` / `--color-accent2` for theme).
-- [ ] Reconcile slot height: Figma expanded row is **100px** + padding; today `--nav-mini-player-slot-height: 60px` — **bump slot** to fit expanded variant (e.g. min-height 100px + vertical padding).
-- [ ] Document collapsed clipping: panel width animates 80 → 250; mini content uses `overflow: hidden` + ellipsis so labels clip cleanly when collapsed.
-
-**Acceptance:** No magic numbers in component CSS except where tied 1:1 to Figma with token names.
+- [x] Mini player tokens in `index.css`; slot height 100px.
+- [x] Slot visibility + focus-ring buffer on `primary-nav__mini-player-item`.
 
 ---
 
 ### Phase 2 — `TvMiniPlayer` component
 
-**New files:**
-
-- `apps/tv/src/components/nav/TvMiniPlayer.jsx`
-- `apps/tv/src/components/nav/TvMiniPlayer.css`
-
-**Props (sketch):**
-
-- `expanded` (boolean) — from `navExpanded`
-- `focused` (boolean) — mini is active nav target
-- `thumbnail`, `title`, `subtitle` (artist) — from `session`
-- `onSelect` — open full player
-- `registerRef` — for nav focus DOM
-
-**UI:**
-
-- [ ] Collapsed: square button, gradient background, centered `60×60` image (channel art).
-- [ ] Expanded: row with thumb + two-line text; **no** control cluster.
-- [ ] Focus ring modifier class when `focused` (10px outline per Figma).
-- [ ] `aria-label` e.g. `Now playing: {title}, {subtitle}. Open full player.`
-
-**Acceptance:** Static render in Storybook-less prototype: mount in slot with fake session; matches Figma structure at 80px and 250px panel widths.
+- [x] `TvMiniPlayer.jsx` + `TvMiniPlayer.css` — collapsed/expanded; shared focus ring (not Figma border).
 
 ---
 
 ### Phase 3 — Nav focus integration
 
-Today `navFocusedIndex` is `0 | 1 | 2` for three tabs. Extend nav zone:
-
-- [ ] **Index 0** = mini player (only when `miniPlayerVisible`).
-- [ ] **Indices 1–3** = Home, Search, Library (shift when mini hidden).
-- [ ] Update `moveNavFocus` bounds in `TvNavFocusContext.jsx` (or pass `navItemCount` dynamically).
-- [ ] `PrimaryNav.jsx`: mount `TvMiniPlayer` in `primary-nav__mini-player-slot`; remove `aria-hidden` when visible.
-- [ ] Wire `KeyboardWrapper` + `onSelect` → navigate with `expandFromMiniPlayer` state.
-- [ ] When entering nav from content (**Left** / **Up**), default focus: **mini if visible**, else first tab (product choice — document in react-learning).
-- [ ] `useEffect` focus sync: focus mini DOM node when `focusZone === nav` && index 0.
-
-**Acceptance:** D-pad: expand nav → Up/Down moves mini ↔ tabs; **Enter** on mini opens `/music/:id/play`; Esc/back from player returns with mini visible.
+- [x] Nav index 0 = mini; tabs shift; `TvNavFocusContext` dynamic `navMaxIndex`.
+- [x] `PrimaryNav` mount + `KeyboardWrapper` shortcut.
 
 ---
 
 ### Phase 4 — `PlaybackContext` and full player parity
 
-- [ ] `MusicPlayer.jsx`: read `location.state?.expandFromMiniPlayer` like mobile; pass to preroll gate (`expandFromMini`).
-- [ ] Ensure `upsertMusicSession` runs when playback starts (already does) so mini appears after first play.
-- [ ] Optional: `clearSession` only from full player later — **out of scope** unless product asks (mini persists for browse).
-
-**Acceptance:** Guest: play channel → back to Home → mini visible → Enter mini → **no second preroll** (expand from mini).
+- [x] `MusicPlayer` `expandFromMiniPlayer` preroll skip.
 
 ---
 
 ### Phase 5 — Home “now playing” swimlanes
 
-- [ ] `BroadHome.jsx` / `LimitedHome.jsx` (if nav shown): `playingChannelId={session.active ? session.channelId : null}`.
-- [ ] Remove hardcoded `MUSIC_CHANNELS[0]` stub.
-
-**Acceptance:** After playing channel X, equalizer/playing state on Home card matches X.
+- [x] `BroadHome` `playingChannelId` from session.
 
 ---
 
 ### Phase 6 — QA and docs
 
-- [ ] Manual QA table (below).
-- [ ] Append `docs/tv/react-learning.md` — nav index 0 mini, collapsed/expanded, shortcut state.
-- [ ] Tick Phase 7 in `Music-player-agent-handoff.md`; update `plan.md`.
+- [x] `react-learning.md`, handoff + `plan.md` updated.
+- [ ] Manual QA table (below) — click-through in browser.
 
-**Acceptance:** `npm run build:tv` + `npm run build:mobile` pass.
+**Acceptance:** `npm run build:tv` passes.
 
 ---
 

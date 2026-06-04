@@ -2,10 +2,13 @@ import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import FocusableButton from "../focus/FocusableButton.jsx";
+import { usePlayback } from "../../context/PlaybackContext.jsx";
 import {
   FOCUS_ZONE_NAV,
+  NAV_TAB_COUNT,
   useTvNavFocus,
 } from "../../context/TvNavFocusContext.jsx";
+import TvMiniPlayer from "./TvMiniPlayer.jsx";
 import "./PrimaryNav.css";
 
 const NAV_ITEMS = [
@@ -50,20 +53,35 @@ export default function PrimaryNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const navRefs = useRef([]);
+  const { session, miniPlayerVisible } = usePlayback();
 
   const {
     focusZone,
     navExpanded,
     navFocusedIndex,
+    isNavMiniPlayerIndex,
     enterContent,
     enterContentWithRestore,
     moveNavFocus,
   } = useTvNavFocus();
 
+  const showMini =
+    miniPlayerVisible &&
+    session.active &&
+    session.variant === "music" &&
+    session.fullPlayerPath;
+
   useEffect(() => {
     if (focusZone !== FOCUS_ZONE_NAV) return;
     navRefs.current[navFocusedIndex]?.focus();
   }, [focusZone, navFocusedIndex]);
+
+  const openFullPlayer = () => {
+    if (!session.fullPlayerPath) return;
+    navigate(session.fullPlayerPath, {
+      state: { expandFromMiniPlayer: true },
+    });
+  };
 
   const navClassName = [
     "primary-nav",
@@ -75,33 +93,64 @@ export default function PrimaryNav() {
 
   return (
     <nav className={navClassName} aria-label="Primary">
-      {/*
-        Clip/reveal panel (Figma TabletVerticalMainMenu): fixed 250px canvas, viewport
-        width animates 80px -> 250px. Icons stay put; labels clip in/out.
-        Mini-player mounts in __mini-player-slot; gap reserved per Figma.
-      */}
       <div className="primary-nav__panel">
-        <div className="primary-nav__mini-player-slot" aria-hidden="true" />
+        <div
+          className={[
+            "primary-nav__mini-player-slot",
+            showMini ? "" : "primary-nav__mini-player-slot--hidden",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-hidden={!showMini}
+        >
+          {showMini ? (
+            <div className="primary-nav__mini-player-item">
+              <KeyboardWrapper
+                ref={(node) => {
+                  navRefs.current[0] = node;
+                }}
+                onSelect={openFullPlayer}
+                onDown={() => moveNavFocus(1)}
+                onRight={() => enterContentWithRestore()}
+              >
+                {(focusProps) => (
+                  <TvMiniPlayer
+                    {...focusProps}
+                    expanded={navExpanded}
+                    focused={isNavMiniPlayerIndex}
+                    thumbnail={session.thumbnail}
+                    title={session.title}
+                    subtitle={session.subtitle}
+                  />
+                )}
+              </KeyboardWrapper>
+            </div>
+          ) : null}
+        </div>
         <div className="primary-nav__menu-spacer" aria-hidden="true" />
         <ul className="primary-nav__list">
-          {NAV_ITEMS.map((item, index) => {
+          {NAV_ITEMS.map((item, tabIndex) => {
+            const navIndex = showMini ? tabIndex + 1 : tabIndex;
             const active = isNavItemActive(location.pathname, item);
             const focused =
-              focusZone === FOCUS_ZONE_NAV && navFocusedIndex === index;
+              focusZone === FOCUS_ZONE_NAV && navFocusedIndex === navIndex;
             return (
               <li key={item.id} className="primary-nav__item">
                 <KeyboardWrapper
                   ref={(node) => {
-                    navRefs.current[index] = node;
+                    navRefs.current[navIndex] = node;
                   }}
                   onSelect={() => {
                     navigate(item.to);
                     enterContent();
                   }}
-                  onUp={() => moveNavFocus(-1)}
+                  onUp={() => {
+                    if (navIndex > 0) moveNavFocus(-1);
+                  }}
                   onDown={() => {
-                    if (index === NAV_ITEMS.length - 1) return;
-                    moveNavFocus(1);
+                    if (navIndex < (showMini ? NAV_TAB_COUNT : NAV_TAB_COUNT - 1)) {
+                      moveNavFocus(1);
+                    }
                   }}
                   onRight={() => enterContentWithRestore()}
                 >
@@ -118,15 +167,15 @@ export default function PrimaryNav() {
                       aria-current={active ? "page" : undefined}
                     >
                       <span className="primary-nav__icon-stack">
-                      <span className="primary-nav__icon">
-                        <span
-                          className={[
-                            "primary-nav__icon-mask",
-                            item.maskClass,
-                          ].join(" ")}
-                          aria-hidden={true}
-                        />
-                      </span>
+                        <span className="primary-nav__icon">
+                          <span
+                            className={[
+                              "primary-nav__icon-mask",
+                              item.maskClass,
+                            ].join(" ")}
+                            aria-hidden={true}
+                          />
+                        </span>
                         <span className="primary-nav__active-bar" aria-hidden />
                       </span>
                       <span

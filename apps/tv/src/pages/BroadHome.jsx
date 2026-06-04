@@ -12,6 +12,7 @@ import TvHomeBanner from "../components/TvHomeBanner.jsx";
 import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
 import ContentTileSwimlane from "../components/swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
+import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import {
   HOME_BANNER_GROUP,
@@ -35,6 +36,7 @@ const HOME_GROUP_COUNT = RECOMMENDATIONS_GROUP + 1;
 
 export default function BroadHome() {
   const navigate = useNavigate();
+  const { session } = usePlayback();
   const { userType } = useUserType();
   const showBannerAd = showVisualAds(userType);
 
@@ -115,7 +117,8 @@ export default function BroadHome() {
     getFocusedElement,
   });
 
-  const playingChannelId = MUSIC_CHANNELS[0]?.id ?? null;
+  const playingChannelId =
+    session.active && session.channelId ? session.channelId : null;
 
   const openChannelInfo = (channel) => {
     navigate(`/music/${channel.id}`);

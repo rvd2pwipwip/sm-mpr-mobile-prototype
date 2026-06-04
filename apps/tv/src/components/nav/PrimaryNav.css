@@ -78,6 +78,16 @@
   box-sizing: content-box;
 }
 
+.primary-nav__mini-player-slot--hidden {
+  visibility: hidden;
+}
+
+.primary-nav__mini-player-item {
+  padding-inline: var(--nav-focus-ring-buffer);
+  margin-inline: calc(-1 * var(--nav-focus-ring-buffer));
+  box-sizing: border-box;
+}
+
 .primary-nav__menu-spacer {
   height: var(--nav-mini-player-menu-gap);
 }
