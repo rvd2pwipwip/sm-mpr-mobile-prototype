@@ -293,11 +293,17 @@ export function useScreenContentFocus(
     [memory.groupItemIndexes],
   );
 
+  const getItemElement = useCallback(
+    (groupIndex, index) => itemRefs.current[groupIndex]?.[index] ?? null,
+    [],
+  );
+
   return {
     focusZone,
     focusedGroupIndex,
     focusedIndex,
     getItemFocusIndex,
+    getItemElement,
     enterContent,
     enterNavFromContent,
     setFocusedIndex,
@@ -306,6 +312,7 @@ export function useScreenContentFocus(
     handleMoveLeft,
     handleMoveRight,
     registerItemRef,
+    syncDomFocus,
     isContentGroupActive,
     isItemFocused: (groupIndex, index) =>
       isContentGroupActive(groupIndex) &&

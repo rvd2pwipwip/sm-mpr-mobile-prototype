@@ -1,57 +1,40 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  calcParkedScrollOffsetY,
+  clampScrollOffsetY,
+  getFocusRingTopInContent,
+  getFocusRingTopInScrollport,
+  getVerticalScrollMetrics,
+  measureParkLineY,
+} from "../utils/tvFocusGeometry.js";
 
-/**
- * Valid translateY range where `groupEl` is fully inside the vertical scrollport.
- * @returns {{ min: number, max: number } | null}
- */
-function getFullyVisibleOffsetRange(groupEl, viewportHeight) {
-  if (!groupEl || viewportHeight <= 0) return null;
+const PARK_LINE_EPSILON_PX = 1;
 
-  const groupTop = groupEl.offsetTop;
-  const groupHeight = groupEl.offsetHeight;
-  const groupBottom = groupTop + groupHeight;
-
-  const min = Math.max(0, groupBottom - viewportHeight);
-  const max = groupTop;
-
-  if (groupHeight > viewportHeight) {
-    return { min, max: min };
-  }
-
-  if (min > max) {
-    return { min, max: min };
-  }
-
-  return { min, max };
-}
-
-function isOffsetFullyVisible(offsetY, range) {
-  return offsetY >= range.min && offsetY <= range.max;
-}
-
-/** Nudge offset into range with the smallest change possible. */
-function reclampOffset(currentOffset, range, maxOffset) {
-  if (isOffsetFullyVisible(currentOffset, range)) {
-    return currentOffset;
-  }
-  if (currentOffset < range.min) {
-    return Math.min(range.min, maxOffset);
-  }
-  if (currentOffset > range.max) {
-    return Math.max(range.max, 0);
-  }
-  return currentOffset;
+function isElementInScrollInner(focusEl, innerEl) {
+  return Boolean(focusEl && innerEl && innerEl.contains(focusEl));
 }
 
 /**
- * Vertical parking for TV Home — scroll only when the focused row is not fully visible.
+ * Vertical parked-focus scroll (VariableSwimlane pattern on Y).
+ * Keeps the focused control's ring top on a fixed park line while content scrolls,
+ * until top/bottom end conditions release the ring.
  *
  * @param {number} focusedGroupIndex
- * @param {{ landingGroupIndex?: number }} [options]
+ * @param {{
+ *   landingGroupIndex?: number,
+ *   lastFocusableGroupIndex?: number,
+ *   firstFocusableGroupIndex?: number,
+ *   getFocusedElement?: () => HTMLElement | null,
+ * }} [options]
  */
 export function useTvVerticalGroupScroll(
   focusedGroupIndex,
-  { landingGroupIndex } = {},
+  {
+    landingGroupIndex,
+    lastFocusableGroupIndex,
+    firstFocusableGroupIndex = 0,
+    getFocusedElement,
+  } = {},
 ) {
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
@@ -59,8 +42,13 @@ export function useTvVerticalGroupScroll(
   const offsetYRef = useRef(0);
   const prevGroupRef = useRef(focusedGroupIndex);
   const isLaunchRef = useRef(true);
+  const parkLineYRef = useRef(null);
+  const getFocusedElementRef = useRef(getFocusedElement);
+
   const [offsetY, setOffsetY] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(false);
+
+  getFocusedElementRef.current = getFocusedElement;
 
   useEffect(() => {
     offsetYRef.current = offsetY;
@@ -76,61 +64,131 @@ export function useTvVerticalGroupScroll(
     }
   }, []);
 
+  const captureParkLineIfNeeded = useCallback((focusEl, viewport) => {
+    if (parkLineYRef.current != null) return true;
+    const parkY = measureParkLineY(focusEl, viewport);
+    if (parkY == null) return false;
+    parkLineYRef.current = parkY;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setTransitionEnabled(true);
+      });
+    });
+    return true;
+  }, []);
+
   const measureAndPark = useCallback(
     (options = {}) => {
       const { focusChanged = false } = options;
       const viewport = viewportRef.current;
       const inner = innerRef.current;
-      const groupEl = groupRefs.current[focusedGroupIndex];
+      const focusEl = getFocusedElementRef.current?.() ?? null;
 
       if (!viewport || !inner) return;
 
-      const viewportHeight = viewport.clientHeight;
-      if (viewportHeight <= 0) return;
-
-      const maxOffset = Math.max(0, inner.scrollHeight - viewportHeight);
-
-      if (
-        isLaunchRef.current &&
-        landingGroupIndex != null &&
-        focusedGroupIndex === landingGroupIndex
-      ) {
-        applyOffset(0);
-        return;
-      }
-
-      if (!groupEl) {
-        return;
-      }
-
-      const range = getFullyVisibleOffsetRange(groupEl, viewportHeight);
-      if (!range) return;
-
       const currentOffset = offsetYRef.current;
+      const metrics = getVerticalScrollMetrics(viewport, inner, currentOffset);
+      const { maxOffsetY, minOffsetForBottomEnd } = metrics;
+      const atBottomEnd = currentOffset >= minOffsetForBottomEnd - PARK_LINE_EPSILON_PX;
+      const atTopEnd = currentOffset <= 0;
+
+      const onLanding =
+        landingGroupIndex != null &&
+        focusedGroupIndex === landingGroupIndex &&
+        isLaunchRef.current;
+
+      if (onLanding) {
+        applyOffset(0);
+        if (isElementInScrollInner(focusEl, inner)) {
+          captureParkLineIfNeeded(focusEl, viewport);
+        }
+        return;
+      }
+
+      if (!isElementInScrollInner(focusEl, inner)) {
+        return;
+      }
+
+      if (!captureParkLineIfNeeded(focusEl, viewport)) {
+        return;
+      }
+
+      const parkLineY = parkLineYRef.current;
+      const ringTopContent = getFocusRingTopInContent(
+        focusEl,
+        viewport,
+        currentOffset,
+      );
+      const parkedOffset = clampScrollOffsetY(
+        calcParkedScrollOffsetY(ringTopContent, parkLineY),
+        maxOffsetY,
+      );
+      const ringTopScrollport = getFocusRingTopInScrollport(focusEl, viewport);
+      const isLastGroup =
+        lastFocusableGroupIndex != null &&
+        focusedGroupIndex >= lastFocusableGroupIndex;
+      const isFirstGroup = focusedGroupIndex <= firstFocusableGroupIndex;
 
       if (!focusChanged) {
-        applyOffset(reclampOffset(currentOffset, range, maxOffset));
-        return;
-      }
-
-      if (isOffsetFullyVisible(currentOffset, range)) {
+        let nextOffset = clampScrollOffsetY(currentOffset, maxOffsetY);
+        if (atBottomEnd) {
+          nextOffset = Math.max(
+            nextOffset,
+            Math.min(minOffsetForBottomEnd, maxOffsetY),
+          );
+        }
+        applyOffset(nextOffset);
         return;
       }
 
       const movingDown = focusedGroupIndex > prevGroupRef.current;
-      let nextOffset = currentOffset;
+      const movingUp = focusedGroupIndex < prevGroupRef.current;
 
       if (movingDown) {
-        nextOffset = Math.max(currentOffset, range.min);
-        nextOffset = Math.min(nextOffset, range.max, maxOffset);
-      } else {
-        nextOffset = range.min;
-        nextOffset = Math.min(nextOffset, maxOffset);
+        if (atBottomEnd) {
+          return;
+        }
+
+        let nextOffset = Math.max(currentOffset, parkedOffset);
+
+        if (isLastGroup) {
+          nextOffset = Math.max(nextOffset, minOffsetForBottomEnd);
+        } else {
+          nextOffset = Math.min(nextOffset, minOffsetForBottomEnd);
+        }
+
+        applyOffset(clampScrollOffsetY(nextOffset, maxOffsetY));
+        return;
       }
 
-      applyOffset(nextOffset);
+      if (movingUp) {
+        if (atTopEnd && isFirstGroup) {
+          return;
+        }
+
+        if (
+          atBottomEnd &&
+          ringTopScrollport > parkLineY + PARK_LINE_EPSILON_PX
+        ) {
+          return;
+        }
+
+        let nextOffset = Math.min(currentOffset, parkedOffset);
+        if (atTopEnd) {
+          nextOffset = 0;
+        }
+
+        applyOffset(clampScrollOffsetY(nextOffset, maxOffsetY));
+      }
     },
-    [applyOffset, focusedGroupIndex, landingGroupIndex],
+    [
+      applyOffset,
+      captureParkLineIfNeeded,
+      firstFocusableGroupIndex,
+      focusedGroupIndex,
+      landingGroupIndex,
+      lastFocusableGroupIndex,
+    ],
   );
 
   useLayoutEffect(() => {
@@ -140,6 +198,18 @@ export function useTvVerticalGroupScroll(
     }
     measureAndPark({ focusChanged });
     prevGroupRef.current = focusedGroupIndex;
+
+    let frameId2;
+    const frameId = requestAnimationFrame(() => {
+      measureAndPark({ focusChanged: false });
+      frameId2 = requestAnimationFrame(() => {
+        measureAndPark({ focusChanged: false });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(frameId);
+      if (frameId2 != null) cancelAnimationFrame(frameId2);
+    };
   }, [measureAndPark, focusedGroupIndex]);
 
   useLayoutEffect(() => {
@@ -160,13 +230,6 @@ export function useTvVerticalGroupScroll(
     return () => observer.disconnect();
   }, [measureAndPark]);
 
-  useEffect(() => {
-    const frameId = requestAnimationFrame(() => {
-      setTransitionEnabled(true);
-    });
-    return () => cancelAnimationFrame(frameId);
-  }, []);
-
   const innerClassName = [
     "tv-home__scroll-inner",
     transitionEnabled ? "tv-home__scroll-inner--animated" : "",
@@ -182,3 +245,6 @@ export function useTvVerticalGroupScroll(
     innerClassName,
   };
 }
+
+/** Alias for the parked-focus contract (same hook). */
+export { useTvVerticalGroupScroll as useTvVerticalParkedScroll };

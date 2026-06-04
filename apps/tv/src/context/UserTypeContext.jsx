@@ -1,12 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
+import { USER_TYPES } from "@sm-mpr/shared/constants/userTypes.js";
 
-/** Matches mobile prototype user types until shared package hoists constants. */
-export const USER_TYPES = [
-  "guest",
-  "freeStingray",
-  "freeProvided",
-  "subscribed",
-];
+export { USER_TYPES };
 
 const UserTypeContext = createContext(null);
 

@@ -1,11 +1,18 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getRecommendationsMusicChannels,
   MUSIC_CHANNELS,
 } from "@sm-mpr/shared/data/musicChannels.js";
-import { useTerritory } from "../context/TerritoryContext.jsx";
-import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
+import { PODCASTS } from "@sm-mpr/shared/data/podcasts.js";
+import { RADIO_STATIONS } from "@sm-mpr/shared/data/radioStations.js";
+import { showVisualAds } from "@sm-mpr/shared/utils/userTierRules.js";
+import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
+import TvHomeBanner from "../components/TvHomeBanner.jsx";
+import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
+import ContentTileSwimlane from "../components/swimlanes/ContentTileSwimlane.jsx";
+import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
+import { useUserType } from "../context/UserTypeContext.jsx";
 import {
   HOME_BANNER_GROUP,
   HOME_FIRST_SWIMLANE_GROUP,
@@ -16,23 +23,46 @@ import {
   HOME_HEADER_LAYOUT,
   useHomeHeaderLayout,
 } from "../constants/homeHeaderLayout.js";
-import TvHomeBanner from "../components/TvHomeBanner.jsx";
-import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
-import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
-import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
+import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 
 const POPULAR_GROUP = HOME_FIRST_SWIMLANE_GROUP;
-const RECOMMENDATIONS_GROUP = HOME_FIRST_SWIMLANE_GROUP + 1;
+const PODCASTS_GROUP = POPULAR_GROUP + 1;
+const RADIO_GROUP = PODCASTS_GROUP + 1;
+const RECOMMENDATIONS_GROUP = RADIO_GROUP + 1;
+const HOME_GROUP_COUNT = RECOMMENDATIONS_GROUP + 1;
 
 export default function BroadHome() {
   const navigate = useNavigate();
-  const { catalogScope, musicLineupMode } = useTerritory();
+  const { userType } = useUserType();
+  const showBannerAd = showVisualAds(userType);
 
   const recommendations = useMemo(() => getRecommendationsMusicChannels(), []);
 
+  const podcastTiles = useMemo(
+    () =>
+      PODCASTS.map((podcast) => ({
+        id: podcast.id,
+        thumbnail: podcast.thumbnail,
+        title: podcast.title,
+      })),
+    [],
+  );
+
+  const radioTiles = useMemo(
+    () =>
+      RADIO_STATIONS.map((station) => ({
+        id: station.id,
+        thumbnail: station.thumbnail,
+        title: station.name,
+      })),
+    [],
+  );
+
   const popularSlotCount = getMusicSwimlaneSlotCount(MUSIC_CHANNELS.length);
+  const podcastsSlotCount = getMusicSwimlaneSlotCount(PODCASTS.length);
+  const radioSlotCount = getMusicSwimlaneSlotCount(RADIO_STATIONS.length);
   const recommendationsSlotCount = getMusicSwimlaneSlotCount(
     recommendations.length,
   );
@@ -46,18 +76,32 @@ export default function BroadHome() {
     setFocusedIndex,
     enterNavFromContent,
     focusedGroupIndex,
+    focusedIndex,
+    getItemElement,
   } = useScreenContentFocus("home-broad", {
-    groupCount: 4,
+    groupCount: HOME_GROUP_COUNT,
     itemCounts: {
       [HOME_HEADER_GROUP]: 1,
       [HOME_BANNER_GROUP]: 1,
       [POPULAR_GROUP]: popularSlotCount,
+      [PODCASTS_GROUP]: podcastsSlotCount,
+      [RADIO_GROUP]: radioSlotCount,
       [RECOMMENDATIONS_GROUP]: recommendationsSlotCount,
     },
-    swimlaneGroups: [POPULAR_GROUP, RECOMMENDATIONS_GROUP],
+    swimlaneGroups: [
+      POPULAR_GROUP,
+      PODCASTS_GROUP,
+      RADIO_GROUP,
+      RECOMMENDATIONS_GROUP,
+    ],
     defaultGroupIndex: POPULAR_GROUP,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
   });
+
+  const getFocusedElement = useCallback(
+    () => getItemElement(focusedGroupIndex, focusedIndex),
+    [getItemElement, focusedGroupIndex, focusedIndex],
+  );
 
   const {
     viewportRef,
@@ -67,6 +111,8 @@ export default function BroadHome() {
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
     landingGroupIndex: POPULAR_GROUP,
+    lastFocusableGroupIndex: RECOMMENDATIONS_GROUP,
+    getFocusedElement,
   });
 
   const playingChannelId = MUSIC_CHANNELS[0]?.id ?? null;
@@ -81,6 +127,13 @@ export default function BroadHome() {
   const headerProps = {
     groupIndex: HOME_HEADER_GROUP,
     focused: isContentGroupActive(HOME_HEADER_GROUP),
+    registerItemRef,
+    onMoveUp: handleMoveUp,
+    onMoveDown: handleMoveDown,
+    onBoundaryLeft: enterNavFromContent,
+  };
+
+  const swimlaneNav = {
     registerItemRef,
     onMoveUp: handleMoveUp,
     onMoveDown: handleMoveDown,
@@ -142,12 +195,51 @@ export default function BroadHome() {
               focused={isContentGroupActive(POPULAR_GROUP)}
               focusedIndex={getItemFocusIndex(POPULAR_GROUP)}
               onFocusChange={(index) => setFocusedIndex(POPULAR_GROUP, index)}
-              onBoundaryLeft={enterNavFromContent}
-              registerItemRef={registerItemRef}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
               onSelectChannel={openChannelInfo}
               onMore={() => navigate("/more/music")}
+              {...swimlaneNav}
+            />
+          </div>
+
+          <div
+            className="tv-home__scroll-group"
+            ref={(node) => registerGroupRef(PODCASTS_GROUP, node)}
+          >
+            <ContentTileSwimlane
+              title="Popular podcasts in your area"
+              items={podcastTiles}
+              sourceCount={PODCASTS.length}
+              groupIndex={PODCASTS_GROUP}
+              focused={isContentGroupActive(PODCASTS_GROUP)}
+              focusedIndex={getItemFocusIndex(PODCASTS_GROUP)}
+              onFocusChange={(index) => setFocusedIndex(PODCASTS_GROUP, index)}
+              onSelectItem={() => navigate("/search")}
+              onMore={() => navigate("/search")}
+              {...swimlaneNav}
+            />
+          </div>
+
+          {showBannerAd ? (
+            <div className="tv-home__scroll-group tv-home__content-inset">
+              <TvSwimlaneBannerAd />
+            </div>
+          ) : null}
+
+          <div
+            className="tv-home__scroll-group"
+            ref={(node) => registerGroupRef(RADIO_GROUP, node)}
+          >
+            <ContentTileSwimlane
+              title="Top radio stations"
+              items={radioTiles}
+              sourceCount={RADIO_STATIONS.length}
+              groupIndex={RADIO_GROUP}
+              focused={isContentGroupActive(RADIO_GROUP)}
+              focusedIndex={getItemFocusIndex(RADIO_GROUP)}
+              onFocusChange={(index) => setFocusedIndex(RADIO_GROUP, index)}
+              onSelectItem={() => navigate("/search")}
+              onMore={() => navigate("/search")}
+              {...swimlaneNav}
             />
           </div>
 
@@ -160,31 +252,17 @@ export default function BroadHome() {
               channels={recommendations}
               sourceCount={recommendations.length}
               groupIndex={RECOMMENDATIONS_GROUP}
+              playingChannelId={playingChannelId}
               focused={isContentGroupActive(RECOMMENDATIONS_GROUP)}
               focusedIndex={getItemFocusIndex(RECOMMENDATIONS_GROUP)}
               onFocusChange={(index) =>
                 setFocusedIndex(RECOMMENDATIONS_GROUP, index)
               }
-              onBoundaryLeft={enterNavFromContent}
-              registerItemRef={registerItemRef}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
               onSelectChannel={openChannelInfo}
               onMore={() => navigate("/more/recommendations")}
+              {...swimlaneNav}
             />
           </div>
-
-          <p className="tv-home__catalog-proof tv-home__content-inset">
-            Shared catalog: <strong>{MUSIC_CHANNELS.length}</strong> music channels
-            from <code>@sm-mpr/shared</code>. Territory:{" "}
-            <strong>{musicLineupLabel(musicLineupMode)}</strong> (
-            <code>{catalogScope}</code>). Wordmark click toggles limited / broad
-            (mouse only). Header AB: <strong>{headerLayout}</strong> — compare{" "}
-            <code>?homeHeader=sticky</code> vs <code>?homeHeader=scroll</code>{" "}
-            (plain <code>/</code> uses localStorage; run{" "}
-            <code>localStorage.removeItem(&quot;tv-home-header-layout&quot;)</code>{" "}
-            to reset).
-          </p>
         </div>
       </div>
     </div>

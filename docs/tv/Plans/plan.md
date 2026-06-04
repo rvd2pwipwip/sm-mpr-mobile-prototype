@@ -8,6 +8,8 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 
 **See also:**
 
+- **`docs/tv/Plans/Music-player-implementation-plan.md`** — full-screen music player, shared user types / preroll rules with mobile, `@sm-mpr/shared` hoist
+- **`docs/tv/Plans/vertical-parked-navigation-plan.md`** — vertical parked focus ring (tag-row pattern on Y); Phase A geometry in `tvFocusGeometry.js`
 - **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** — phased build plan for focus, cards, swimlanes (start here for implementation)
 - **`docs/tv/figma-nodes.md`** — TV Figma index ([SM HTML TV MPR](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=0-1))
 - **`docs/mobile/Stories/Home-screen-story.md`** — broad Home content ordering (mobile; TV adapts layout)
@@ -22,7 +24,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - **Figma TV file** as layout reference; structure and hierarchy over pixel perfection unless called out.
 - **D-pad navigation** — no third-party spatial-nav library; patterns adapted from SMTV03 where they worked.
 - **Broad catalog territory first**; limited catalog (filter rows, SMTV03-style Home) later.
-- **User types** deferred until cards and rails are stable.
+- **User types** — same four tiers as mobile; **player + preroll** implemented per **`Music-player-implementation-plan.md`** (preview UI deferred to that plan Phase 6).
 
 ---
 
@@ -58,11 +60,20 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 
 ---
 
+## What we have done (recent)
+
+- [x] **Vertical parked navigation — Phase D+E** — double rAF polish, limited footer ad + scroll reserve, QA on parked up/down
+- [x] **Vertical parked navigation — Phase B+C** — `useTvVerticalGroupScroll` ring-top parking + `BroadHome` / `LimitedHome` wiring; see **`vertical-parked-navigation-plan.md`**
+- [x] **Home harmonization** — broad Home swimlanes match mobile order (music, podcasts, in-feed ad, radio, recommendations); **`@sm-mpr/shared`** tier rules + podcasts/radio data; SMTV03-style **`TvFooterAdBanner`**; **`/settings/user-type`** preview — see **`docs/tv/visual-ads-and-user-types.md`**
+
+---
+
 ## Next steps (ordered)
 
-1. **Phase 7+ backlog** — podcasts/radio cards, user types, player, Search & Browse, mini player
+1. **Music player** — follow **`docs/tv/Plans/Music-player-implementation-plan.md`** (shared tier rules partially hoisted; `/music/:channelId/play`, preroll, Figma `23:20013`)
+2. **Phase 7+ backlog** — podcasts/radio cards, Search & Browse, mini player, TV visual ads (if design adds frames)
 
-Detail, acceptance checks, and file paths: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
+Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 
 ---
 
@@ -72,4 +83,4 @@ Detail, acceptance checks, and file paths: **`docs/tv/Plans/cards-and-swimlanes-
 - Do not replace **`figma-nodes.md`** or mobile product stories; this file **coordinates** implementation.
 - Append TV lessons to **`docs/tv/react-learning.md`** as patterns land in code.
 
-_Last updated: 2026-05-27_
+_Last updated: 2026-06-03_

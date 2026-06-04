@@ -54,6 +54,12 @@
 
   --z-primary-nav: 100;
 
+  /* Footer ad (SMTV03 `--ad-banner-height`; mobile strip ~86px). */
+  --tv-footer-ad-height: 150px;
+  --tv-scroll-ad-reserve: 0px;
+  /* Extra gap below focused row when moving Down (Home vertical scroll). */
+  --tv-scroll-park-down-bias: 60px;
+
   --tv-space-screen-gap: 40px;
   /* Tighter stack between header and banner; scroll mode uses negative margin on banner row */
   --tv-space-header-banner-gap: 20px;
@@ -128,6 +134,10 @@
 
   --tv-swimlane-inline-start: var(--tv-content-inline-start);
   --tv-swimlane-inline-end: var(--tv-content-inline-end);
+}
+
+html[data-visual-ads] {
+  --tv-scroll-ad-reserve: var(--tv-footer-ad-height);
 }
 
 /* System dark when no manual theme is set (same as mobile) */
@@ -330,7 +340,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--tv-space-screen-gap);
-  padding-bottom: 100px;
+  padding-bottom: calc(var(--tv-scroll-ad-reserve) + 100px);
   will-change: transform;
 }
 

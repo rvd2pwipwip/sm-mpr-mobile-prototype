@@ -1,5 +1,8 @@
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { showVisualAds } from "@sm-mpr/shared/utils/userTierRules.js";
+import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
+import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
@@ -32,6 +35,8 @@ const SWIMLANE_GROUP = HOME_FIRST_SWIMLANE_GROUP + 1;
 
 export default function LimitedHome() {
   const navigate = useNavigate();
+  const { userType } = useUserType();
+  const showBannerAd = showVisualAds(userType);
   const { catalogScope, musicLineupMode } = useTerritory();
   const filters = useMemo(() => getLimitedHomeFilters(), []);
 
@@ -57,6 +62,8 @@ export default function LimitedHome() {
     getItemFocusIndex,
     setFocusedIndex,
     focusedGroupIndex,
+    focusedIndex,
+    getItemElement,
   } = useScreenContentFocus("home-limited", {
     groupCount: 4,
     itemCounts: {
@@ -71,6 +78,11 @@ export default function LimitedHome() {
     navEnterEnabled: false,
   });
 
+  const getFocusedElement = useCallback(
+    () => getItemElement(focusedGroupIndex, focusedIndex),
+    [getItemElement, focusedGroupIndex, focusedIndex],
+  );
+
   const {
     viewportRef,
     innerRef,
@@ -79,6 +91,8 @@ export default function LimitedHome() {
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
     landingGroupIndex: SWIMLANE_GROUP,
+    lastFocusableGroupIndex: SWIMLANE_GROUP,
+    getFocusedElement,
   });
 
   const prevFocusedGroupRef = useRef(focusedGroupIndex);
@@ -218,6 +232,12 @@ export default function LimitedHome() {
                 onSelectChannel={openChannelInfo}
                 onMore={() => navigate(`/more/music/${activeFilterId}`)}
               />
+            </div>
+          ) : null}
+
+          {showBannerAd ? (
+            <div className="tv-home__scroll-group tv-home__content-inset">
+              <TvSwimlaneBannerAd />
             </div>
           ) : null}
 

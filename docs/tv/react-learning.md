@@ -18,6 +18,21 @@ Same product data; **different** presentation components. Do not copy mobile `Co
 
 ## Entries
 
+## 2026-06-03 — Home vertical parked focus (ring top)
+
+`useTvVerticalGroupScroll` (alias **`useTvVerticalParkedScroll`**) keeps the **focus ring top** on a fixed **`parkY`** line (measured once per Home visit from the landing control). Content scrolls via **`translateY`** while the ring stays visually still — same idea as **`VariableSwimlane`** / Channel Info tags, on the Y axis. Geometry lives in **`tvFocusGeometry.js`**. **Down:** scroll until bottom + **`--tv-scroll-park-down-bias`** is visible, then the ring unparks toward the last focusable group. **Up:** reverse at bottom, then parked scroll until **`offsetY === 0`**, then unpark toward the top. Pass **`getFocusedElement`**, **`lastFocusableGroupIndex`** (skip ad-only rows), and **`landingGroupIndex`**. Plan: **`docs/tv/Plans/vertical-parked-navigation-plan.md`**.
+
+## 2026-06-03 — Home vertical scroll parking (row fit) — superseded
+
+Previous row-fit scroll in `useTvVerticalGroupScroll` replaced by parked ring-top behavior (entry above).
+
+## 2026-06-03 — Home ads + user types (mobile parity)
+
+- **Tier rules:** `@sm-mpr/shared/utils/userTierRules.js` (`showVisualAds`, `showPlayerPreroll`, etc.) — same as mobile.
+- **In-feed ad:** `TvSwimlaneBannerAd` on broad Home between podcasts and radio rails (matches mobile `Home.jsx`).
+- **Footer ad:** `TvFooterAdBanner` + `TvVisualAdsHtmlSync` mount on **limited catalog** only (`TvShell`); sets `html[data-visual-ads]` and `--tv-scroll-ad-reserve` padding on scroll inners. Broad Home uses in-feed `TvSwimlaneBannerAd` only.
+- **Preview types:** `/settings/user-type` — use Home **Upgrade** or navigate directly; pick **Subscribed** to hide the in-feed banner.
+
 ## 2026-05-27 — Monorepo shared mock data (`@sm-mpr/shared`)
 
 Music catalog modules live in **`packages/shared/data/`** (`musicChannels.js`, `musicBrowseTaxonomy.js`, plus IA JSON). Territory helpers live in **`packages/shared/constants/`**. Mobile keeps thin **re-export** shims under `apps/mobile/src/data/` so existing imports keep working; TV imports from **`@sm-mpr/shared`** directly.
