@@ -1,3 +1,7 @@
+import { radioStationThumbnailUrl } from "./mediaUrls.js";
+
+export { radioStationThumbnailUrl };
+
 /**
  * Mock radio stations for the SM MPR mobile prototype.
  *
@@ -58,10 +62,6 @@ const MOCK_RADIO_LOCATIONS = [
   { locationCity: "London", locationCountry: "United Kingdom" },
   { locationCity: "Berlin", locationCountry: "Germany" },
 ];
-
-export function radioStationThumbnailUrl(stationId) {
-  return `https://picsum.photos/seed/${encodeURIComponent(`radio-${stationId}`)}/512/512`;
-}
 
 function descriptionFor(categoryLabel, name) {
   return (

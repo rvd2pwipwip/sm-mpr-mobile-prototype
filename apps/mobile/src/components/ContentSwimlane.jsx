@@ -22,6 +22,9 @@ import "./ContentSwimlane.css";
  * **More predicate:** If `sourceCount` is set, More shows when `sourceCount > maxVisible` unless
  * `alwaysShowMore` is true. If `sourceCount` is omitted, `showMore` is used (default true).
  *
+ * **Title tap:** When the More affordance is visible and `onMore` is set, the header title uses the
+ * same handler (header More button or trailing More tile).
+ *
  * **Category rail (variant):** When `categoryRail` is set, a horizontally scrolling pill row
  * renders between the header and the card scroller (`ContentSwimlane-category-rail-variant.md` Step A).
  *
@@ -80,12 +83,26 @@ export default function ContentSwimlane({
   const showTrailingMore =
     showMoreAffordance && hasCategoryRail && !alwaysShowMore;
 
+  const titleOpensMore = showMoreAffordance && typeof onMore === "function";
+
   return (
     <section className="content-swimlane" aria-labelledby={titleId}>
       <div className="content-swimlane__header">
-        <h2 id={titleId} className="content-swimlane__title">
-          {title}
-        </h2>
+        {titleOpensMore ? (
+          <button
+            type="button"
+            id={titleId}
+            className="content-swimlane__title content-swimlane__title--action"
+            onClick={onMore}
+            aria-label={`More in ${title}`}
+          >
+            {title}
+          </button>
+        ) : (
+          <h2 id={titleId} className="content-swimlane__title">
+            {title}
+          </h2>
+        )}
         {showHeaderMore ? (
           <button
             type="button"

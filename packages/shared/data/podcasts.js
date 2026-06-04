@@ -1,3 +1,10 @@
+import {
+  episodeThumbnailUrl,
+  podcastThumbnailUrl,
+} from "./mediaUrls.js";
+
+export { episodeThumbnailUrl, podcastThumbnailUrl };
+
 /**
  * Mock podcasts for the SM MPR mobile prototype.
  *
@@ -487,16 +494,6 @@ function hashString(s) {
     h = (h * 31 + s.charCodeAt(i)) | 0;
   }
   return Math.abs(h);
-}
-
-/** Large square show art */
-export function podcastThumbnailUrl(podcastId) {
-  return `https://picsum.photos/seed/${encodeURIComponent(`pod-${podcastId}`)}/600/600`;
-}
-
-/** Small square episode art */
-export function episodeThumbnailUrl(podcastId, episodeId) {
-  return `https://picsum.photos/seed/${encodeURIComponent(`ep-${podcastId}-${episodeId}`)}/128/128`;
 }
 
 const EP_HOOKS = [

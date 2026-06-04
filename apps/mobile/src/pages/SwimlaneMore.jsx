@@ -26,7 +26,7 @@ const CATEGORIES = {
       )),
   },
   music: {
-    title: "Music",
+    title: "Most popular music",
     render: (navigate) =>
       MUSIC_CHANNELS.map((channel) => (
         <li key={channel.id} className="swimlane-more__cell">
@@ -38,7 +38,7 @@ const CATEGORIES = {
       )),
   },
   podcasts: {
-    title: "Podcasts",
+    title: "Popular podcasts in your area",
     render: (navigate) =>
       PODCASTS.map((podcast) => (
         <li key={podcast.id} className="swimlane-more__cell">
@@ -50,7 +50,7 @@ const CATEGORIES = {
       )),
   },
   radio: {
-    title: "Radio",
+    title: "Top radio stations",
     render: (navigate) =>
       RADIO_STATIONS.map((station) => (
         <li key={station.id} className="swimlane-more__cell">

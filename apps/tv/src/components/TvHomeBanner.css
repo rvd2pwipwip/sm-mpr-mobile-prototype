@@ -8,8 +8,12 @@
   padding: 0;
   border: none;
   border-radius: var(--radius-banner);
-  background: var(--color-bg-muted);
-  color: var(--color-text-on-muted);
+  background-color: var(--color-bg-muted);
+  background-image: url("/photo-1547826074-8501cde26ebf.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: var(--color-on-accent);
   font-size: var(--font-size-banner);
   font-weight: 100;
   cursor: pointer;

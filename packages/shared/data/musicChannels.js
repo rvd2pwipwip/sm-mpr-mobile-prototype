@@ -17,6 +17,9 @@ import {
   flattenVibeTagLabels,
   getPrototypeCategoryTagGroups,
 } from "./musicBrowseTaxonomy.js";
+import { channelThumbnailUrl } from "./mediaUrls.js";
+
+export { channelThumbnailUrl };
 
 /** @typedef {{ id: string, name: string, thumbnail: string }} RelatedMusicChannel */
 
@@ -49,11 +52,6 @@ export const MUSIC_GENRES = [
 
 const genreLabel = (categoryId) =>
   MUSIC_GENRES.find((g) => g.id === categoryId)?.label ?? categoryId;
-
-/** Deterministic placeholder art (square). Swap for real CDN URLs later. */
-export function channelThumbnailUrl(channelId) {
-  return `https://picsum.photos/seed/${encodeURIComponent(channelId)}/512/512`;
-}
 
 function slugify(text) {
   return text

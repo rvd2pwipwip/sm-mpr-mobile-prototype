@@ -17,6 +17,11 @@
     "lint:mobile": "npm run lint -w mobile",
     "lint:tv": "npm run lint -w tv",
     "preview": "npm run preview -w mobile",
-    "extract:vibes-ia": "npm run extract:vibes-ia -w mobile"
+    "extract:vibes-ia": "npm run extract:vibes-ia -w mobile",
+    "media:sync": "node scripts/sync-prototype-media.mjs",
+    "dev:online": "npm run dev:online -w mobile",
+    "dev:online:tv": "npm run dev:online -w tv",
+    "build:online": "npm run build:online -w mobile",
+    "build:online:tv": "npm run build:online -w tv"
   }
 }

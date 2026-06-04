@@ -6,7 +6,7 @@
  * See `docs/mobile/Stories/Search-story.md` Integration notes.
  */
 
-import broadIa from "./musicVibesIa.broad1000.json";
+import broadIa from "./musicVibesIa.broad1000.json" with { type: "json" };
 
 /** Broad-lineup top-level browse tiles (five vibes). */
 export const BROAD_VIBES = [

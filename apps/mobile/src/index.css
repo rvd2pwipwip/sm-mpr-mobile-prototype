@@ -76,7 +76,7 @@
   --card-tile-width-compact: 108px;
   --card-tile-gap: var(--space-3);
 
-  /* —— Typography — (`Roboto` loaded in index.html — matches Figma) — */
+  /* —— Typography — (`Roboto` via @fontsource-variable/roboto — offline-safe) — */
   --font-sans: "Roboto", system-ui, -apple-system, sans-serif;
   --font-size-card-title: 0.875rem;
   --font-weight-card-title: 600;
