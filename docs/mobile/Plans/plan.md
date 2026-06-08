@@ -173,7 +173,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## Music-only MVP (next product slice)
 
-**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Music-only default with **Full MPR** demo toggle on **`/upgrade`**; **Phases 0–3** + **TV Broad Home** shipped; **next:** limited Browse (Phase 4), TV Limited Home (Phase TV-2).
+**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Music-only default with **Full MPR** demo toggle on **`/upgrade`**; **Phases 0–4** + **TV Broad Home** shipped; **next:** Phase 5 docs/acceptance, TV Limited Home (Phase TV-2).
 
 ---
 

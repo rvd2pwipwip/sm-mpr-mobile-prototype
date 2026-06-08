@@ -15,6 +15,8 @@ import SwimlaneBannerAd from "./SwimlaneBannerAd";
 import { LISTEN_AGAIN_RAIL_SLOT_CAP } from "../constants/listenHistory";
 import { RADIO_BROWSE_PATH } from "../constants/radioBrowsePaths";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
+import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useUserType } from "../context/UserTypeContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import {
@@ -242,13 +244,19 @@ function LimitedRadioTaxonomySwimlanes({ navigate, showBannerAd }) {
 export default function LimitedBrowseTaxonomyRails({ activeBrowseTab }) {
   const navigate = useNavigate();
   const { userType } = useUserType();
+  const { isContentTypeEnabled, filterListenHistory } = useContentProfile();
+  const showMusic = isContentTypeEnabled(CONTENT_TYPE.music);
+  const showPodcasts = isContentTypeEnabled(CONTENT_TYPE.podcasts);
+  const showRadio = isContentTypeEnabled(CONTENT_TYPE.radio);
   const showBannerAd = showVisualAds(userType);
   const { items: listenAgainItems } = useListenHistory();
 
   const tabListenItems = useMemo(() => {
     const kind = HISTORY_KIND_FOR_BROWSE_TAB[activeBrowseTab];
-    return listenAgainItems.filter((item) => item.kind === kind);
-  }, [listenAgainItems, activeBrowseTab]);
+    return filterListenHistory(
+      listenAgainItems.filter((item) => item.kind === kind),
+    );
+  }, [listenAgainItems, activeBrowseTab, filterListenHistory]);
 
   const listenGhostCount =
     tabListenItems.length >= LISTEN_AGAIN_RAIL_SLOT_CAP
@@ -283,29 +291,35 @@ export default function LimitedBrowseTaxonomyRails({ activeBrowseTab }) {
         </ContentSwimlane>
       ) : null}
 
-      {activeBrowseTab === "music" && userType === "freeProvided" ? (
+      {activeBrowseTab === "music" && showMusic && userType === "freeProvided" ? (
         <ProviderLineupMusicSwimlane />
       ) : null}
 
-      {activeBrowseTab === "music" ? <LibraryLikedMusicSwimlane /> : null}
-      {activeBrowseTab === "podcasts" ? <LibraryPodcastUserSwimlanes /> : null}
-      {activeBrowseTab === "radio" ? <LibraryLikedRadioSwimlane /> : null}
+      {activeBrowseTab === "music" && showMusic ? (
+        <LibraryLikedMusicSwimlane />
+      ) : null}
+      {activeBrowseTab === "podcasts" && showPodcasts ? (
+        <LibraryPodcastUserSwimlanes />
+      ) : null}
+      {activeBrowseTab === "radio" && showRadio ? (
+        <LibraryLikedRadioSwimlane />
+      ) : null}
 
-      {activeBrowseTab === "music" ? (
+      {activeBrowseTab === "music" && showMusic ? (
         <LimitedMusicTaxonomySwimlanes
           navigate={navigate}
           showBannerAd={showBannerAd}
         />
       ) : null}
 
-      {activeBrowseTab === "podcasts" ? (
+      {activeBrowseTab === "podcasts" && showPodcasts ? (
         <LimitedPodcastsTaxonomySwimlanes
           navigate={navigate}
           showBannerAd={showBannerAd}
         />
       ) : null}
 
-      {activeBrowseTab === "radio" ? (
+      {activeBrowseTab === "radio" && showRadio ? (
         <LimitedRadioTaxonomySwimlanes
           navigate={navigate}
           showBannerAd={showBannerAd}

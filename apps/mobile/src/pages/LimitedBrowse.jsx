@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import HomeBanner from "../components/HomeBanner.jsx";
 import LimitedBrowseTaxonomyRails from "../components/LimitedBrowseTaxonomyRails.jsx";
@@ -10,10 +10,11 @@ import {
   WordmarkPair,
 } from "../components/HomeHeader.jsx";
 import {
-  BROWSE_TABS,
-  readStoredLimitedBrowseTab,
+  getBrowseTabsForProfile,
+  resolveLimitedBrowseTab,
   writeStoredLimitedBrowseTab,
 } from "../constants/searchBrowsePaths.js";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useUserType } from "../context/UserTypeContext";
 import { useGoUpgrade } from "../hooks/useGoUpgrade";
@@ -21,12 +22,6 @@ import { showUpgradeCallToAction } from "../utils/showVisualAds";
 import "../components/HomeHeader.css";
 import "../components/BottomNav.css";
 import "./LimitedBrowse.css";
-
-/** Local-only segments (no URLs; limited Browse is not on `/search/*`). */
-const LIMITED_BROWSE_SWITCHER_SEGMENTS = BROWSE_TABS.map((t) => ({
-  id: t.id,
-  label: t.label,
-}));
 
 function LimitedBrowseHeaderIcons() {
   return (
@@ -65,20 +60,58 @@ function LimitedBrowseHeaderIcons() {
  */
 export default function LimitedBrowse() {
   const headerRef = useHomeHeaderOffset();
+  const { enabledContentTypes, shouldShowBrowseContentSwitcher } =
+    useContentProfile();
+
+  const limitedBrowseSegments = useMemo(
+    () =>
+      getBrowseTabsForProfile(enabledContentTypes).map((t) => ({
+        id: t.id,
+        label: t.label,
+      })),
+    [enabledContentTypes],
+  );
+
   /**
    * Broad Search browse derives the active strip from URL on every render (no flash).
    * Limited Browse has no path segment: restore from **sessionStorage** in the initializer so the
    * first commit already matches saved category; **`SearchBrowseContentSwitcher`** relies on matching
    * `activeIndex` plus its **`useLayoutEffect`** thumb measurement before paint (same combo as `/search/music` etc.).
    */
-  const [browseTab, setBrowseTab] = useState(
-    () => readStoredLimitedBrowseTab() ?? "music",
+  const [browseTab, setBrowseTab] = useState(() =>
+    resolveLimitedBrowseTab(enabledContentTypes),
   );
+
+  const effectiveBrowseTab = useMemo(() => {
+    const allowed = getBrowseTabsForProfile(enabledContentTypes);
+    if (!shouldShowBrowseContentSwitcher) {
+      return allowed[0]?.id ?? "music";
+    }
+    return allowed.some((t) => t.id === browseTab)
+      ? browseTab
+      : (allowed[0]?.id ?? "music");
+  }, [
+    enabledContentTypes,
+    shouldShowBrowseContentSwitcher,
+    browseTab,
+  ]);
+
+  /** When profile disables the active tab (e.g. music-only), snap to first enabled tab. */
+  useLayoutEffect(() => {
+    const resolved = resolveLimitedBrowseTab(enabledContentTypes);
+    if (browseTab !== resolved) {
+      const allowed = getBrowseTabsForProfile(enabledContentTypes);
+      if (!allowed.some((t) => t.id === browseTab)) {
+        setBrowseTab(resolved);
+      }
+    }
+  }, [enabledContentTypes, browseTab]);
 
   /** Persist synchronously before paint whenever the user changes tab (mirror layout-phase sync). */
   useLayoutEffect(() => {
-    writeStoredLimitedBrowseTab(browseTab);
-  }, [browseTab]);
+    writeStoredLimitedBrowseTab(effectiveBrowseTab);
+  }, [effectiveBrowseTab]);
+
   const { toggleMusicLineupMode } = useTerritory();
   const goUpgrade = useGoUpgrade();
   const { userType } = useUserType();
@@ -149,16 +182,18 @@ export default function LimitedBrowse() {
             <HomeBanner />
           </div>
 
-          <div className="content-inset limited-browse__switcher-wrap">
-            <SearchBrowseContentSwitcher
-              mode="local"
-              segments={LIMITED_BROWSE_SWITCHER_SEGMENTS}
-              activeId={browseTab}
-              onActiveIdChange={(id) => setBrowseTab(id)}
-            />
-          </div>
+          {shouldShowBrowseContentSwitcher ? (
+            <div className="content-inset limited-browse__switcher-wrap">
+              <SearchBrowseContentSwitcher
+                mode="local"
+                segments={limitedBrowseSegments}
+                activeId={effectiveBrowseTab}
+                onActiveIdChange={(id) => setBrowseTab(id)}
+              />
+            </div>
+          ) : null}
 
-          <LimitedBrowseTaxonomyRails activeBrowseTab={browseTab} />
+          <LimitedBrowseTaxonomyRails activeBrowseTab={effectiveBrowseTab} />
         </div>
       </div>
     </main>

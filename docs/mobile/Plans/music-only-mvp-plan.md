@@ -243,10 +243,10 @@ Prefer **A** for readability.
 
 **Goal:** Music-only limited Home/Browse.
 
-- [ ] Hide **Music | Podcasts | Radio** switcher when `!shouldShowBrowseSwitcher()` (`LimitedBrowse.jsx`)
-- [ ] Force effective browse tab to **`music`** when only one type enabled (ignore stored podcasts/radio tab in session)
-- [ ] `LimitedBrowseTaxonomyRails.jsx` — only music taxonomy + music user rails (`LibraryLikedMusicSwimlane`, music **Listen again** / history)
-- [ ] Remove podcast/radio taxonomy swimlanes and user prepends from render when disabled (registry or `activeBrowseTab === 'music'` + profile gate)
+- [x] Hide **Music | Podcasts | Radio** switcher when `!shouldShowBrowseContentSwitcher()` (`LimitedBrowse.jsx`)
+- [x] Force effective browse tab to **`music`** when only one type enabled (`resolveLimitedBrowseTab` in `searchBrowsePaths.js`)
+- [x] `LimitedBrowseTaxonomyRails.jsx` — only music taxonomy + music user rails (`LibraryLikedMusicSwimlane`, music **Listen again** / history)
+- [x] Remove podcast/radio taxonomy swimlanes and user prepends from render when disabled (`isContentTypeEnabled` + `activeBrowseTab`)
 
 **Files:** `LimitedBrowse.jsx`, `LimitedBrowseTaxonomyRails.jsx`, `searchBrowsePaths.js` (read stored tab through profile filter)
 

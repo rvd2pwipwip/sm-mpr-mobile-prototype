@@ -72,6 +72,17 @@ export function writeStoredBroadSearchBrowseTab(tabId) {
 export const PROTOTYPE_LIMITED_BROWSE_TAB_STORAGE_KEY =
   "sm-mpr-prototype-limited-browse-tab";
 
+/**
+ * Limited Browse tab: last stored tab when still enabled, else first enabled tab.
+ * @param {readonly string[]} enabledContentTypes
+ */
+export function resolveLimitedBrowseTab(enabledContentTypes) {
+  const allowed = getBrowseTabsForProfile(enabledContentTypes);
+  const stored = readStoredLimitedBrowseTab();
+  if (stored && allowed.some((t) => t.id === stored)) return stored;
+  return allowed[0]?.id ?? "music";
+}
+
 /** @returns {typeof BROWSE_TABS[number]["id"] | null} */
 export function readStoredLimitedBrowseTab() {
   if (typeof sessionStorage === "undefined") return null;
