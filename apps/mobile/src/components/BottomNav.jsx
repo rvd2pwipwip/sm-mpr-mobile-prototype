@@ -1,9 +1,10 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { CATALOG_SCOPE } from "../constants/catalogScope.js";
 import {
-  readStoredBroadSearchBrowseTab,
+  resolveBroadSearchBrowseTab,
   writeStoredBroadSearchBrowseTab,
 } from "../constants/searchBrowsePaths.js";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useUserType } from "../context/UserTypeContext";
 import { showVisualAds } from "../utils/showVisualAds";
@@ -47,7 +48,9 @@ export default function BottomNav({ className = "" }) {
   const navigate = useNavigate();
   const { userType } = useUserType();
   const { catalogScope } = useTerritory();
+  const { enabledContentTypes } = useContentProfile();
   const adsOn = showVisualAds(userType);
+  const broadSearchTab = resolveBroadSearchBrowseTab(enabledContentTypes);
 
   const fourthTab = catalogScope === CATALOG_SCOPE.broad ? LIBRARY_TAB : INFO_TAB;
   const navItems = [...NAV_ITEMS_BASE, fourthTab];
@@ -78,9 +81,7 @@ export default function BottomNav({ className = "" }) {
             id === fourthTab.id && onInfoOrLibraryPath;
 
           const searchNavTo =
-            id === "search"
-              ? `/search/${readStoredBroadSearchBrowseTab() ?? "music"}`
-              : to;
+            id === "search" ? `/search/${broadSearchTab}` : to;
 
           const onSearchShell =
             id === "search" && location.pathname.startsWith("/search");
@@ -95,7 +96,10 @@ export default function BottomNav({ className = "" }) {
                   ? (e) => {
                       e.preventDefault();
                       writeStoredBroadSearchBrowseTab("music");
-                      navigate({ pathname: "/search/music", search: "" });
+                      navigate({
+                        pathname: `/search/${broadSearchTab}`,
+                        search: "",
+                      });
                     }
                   : undefined
               }

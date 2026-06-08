@@ -64,6 +64,14 @@ export default function App() {
                                 path="/more/recommendations"
                                 element={<SwimlaneMore />}
                               />
+                              <Route
+                                path="/more/new-releases"
+                                element={<SwimlaneMore />}
+                              />
+                              <Route
+                                path="/more/country-essentials"
+                                element={<SwimlaneMore />}
+                              />
                               <Route path="/settings/user-type" element={<TvUserTypePreview />} />
                               <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>

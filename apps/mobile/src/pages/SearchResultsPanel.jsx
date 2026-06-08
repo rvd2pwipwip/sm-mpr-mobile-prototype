@@ -13,7 +13,9 @@ import {
   userMayBookmarkEpisodes,
   userMayDownloadEpisodesOffline,
 } from "../constants/userContentGates";
+import { SEARCH_RESULT_LANE } from "@sm-mpr/shared/constants/productProfile.js";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
 import {
@@ -31,6 +33,24 @@ import {
  */
 export default function SearchResultsPanel({ debouncedQuery }) {
   const navigate = useNavigate();
+  const { enabledSearchResultLanes, isMusicOnlyProfile } = useContentProfile();
+  const showChannels = enabledSearchResultLanes.includes(
+    SEARCH_RESULT_LANE.channels,
+  );
+  const showArtists = enabledSearchResultLanes.includes(
+    SEARCH_RESULT_LANE.artists,
+  );
+  const showTags = enabledSearchResultLanes.includes(SEARCH_RESULT_LANE.tags);
+  const showPodcasts = enabledSearchResultLanes.includes(
+    SEARCH_RESULT_LANE.podcasts,
+  );
+  const showEpisodes = enabledSearchResultLanes.includes(
+    SEARCH_RESULT_LANE.episodes,
+  );
+  const showRadio = enabledSearchResultLanes.includes(
+    SEARCH_RESULT_LANE.radio,
+  );
+
   const needle = useMemo(
     () => normalizeSearchNeedle(debouncedQuery),
     [debouncedQuery],
@@ -47,15 +67,30 @@ export default function SearchResultsPanel({ debouncedQuery }) {
     isDownloaded,
   } = usePodcastUserState();
 
-  const channels = useMemo(() => searchMusicChannels(needle), [needle]);
-  const matchingTagLabels = useMemo(
-    () => searchMatchingMusicTagLabels(needle),
-    [needle],
+  const channels = useMemo(
+    () => (showChannels ? searchMusicChannels(needle) : []),
+    [needle, showChannels],
   );
-  const artists = useMemo(() => searchMusicArtists(needle), [needle]);
-  const podcasts = useMemo(() => searchPodcasts(needle), [needle]);
-  const episodeRows = useMemo(() => searchEpisodeRows(needle), [needle]);
-  const radioStations = useMemo(() => searchRadioStations(needle), [needle]);
+  const matchingTagLabels = useMemo(
+    () => (showTags ? searchMatchingMusicTagLabels(needle) : []),
+    [needle, showTags],
+  );
+  const artists = useMemo(
+    () => (showArtists ? searchMusicArtists(needle) : []),
+    [needle, showArtists],
+  );
+  const podcasts = useMemo(
+    () => (showPodcasts ? searchPodcasts(needle) : []),
+    [needle, showPodcasts],
+  );
+  const episodeRows = useMemo(
+    () => (showEpisodes ? searchEpisodeRows(needle) : []),
+    [needle, showEpisodes],
+  );
+  const radioStations = useMemo(
+    () => (showRadio ? searchRadioStations(needle) : []),
+    [needle, showRadio],
+  );
 
   const episodeHandlers = (podcast, episode) => ({
     isBookmarked: isBookmarked(episode.id),
@@ -95,19 +130,23 @@ export default function SearchResultsPanel({ debouncedQuery }) {
   };
 
   const anyHits =
-    channels.length > 0 ||
-    matchingTagLabels.length > 0 ||
-    artists.length > 0 ||
-    podcasts.length > 0 ||
-    episodeRows.length > 0 ||
-    radioStations.length > 0;
+    (showChannels && channels.length > 0) ||
+    (showTags && matchingTagLabels.length > 0) ||
+    (showArtists && artists.length > 0) ||
+    (showPodcasts && podcasts.length > 0) ||
+    (showEpisodes && episodeRows.length > 0) ||
+    (showRadio && radioStations.length > 0);
+
+  const emptyHint = isMusicOnlyProfile
+    ? "Type to search channels, artists, or tags."
+    : "Type to search channels, artists, tags, podcasts, episodes, and radio.";
 
   return (
     <div className="home-screen search-results-panel">
       {!needle ? (
         <div className="content-inset search-page__body">
           <p className="text-muted" style={{ margin: 0 }}>
-            Type to search channels, artists, tags, podcasts, episodes, and radio.
+            {emptyHint}
           </p>
         </div>
       ) : !anyHits ? (
@@ -118,7 +157,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         </div>
       ) : null}
 
-      {channels.length > 0 ? (
+      {showChannels && channels.length > 0 ? (
         <ContentSwimlane
           title="Channels"
           sourceCount={channels.length}
@@ -135,7 +174,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         </ContentSwimlane>
       ) : null}
 
-      {artists.length > 0 ? (
+      {showArtists && artists.length > 0 ? (
         <ContentSwimlane
           title="Artists"
           sourceCount={artists.length}
@@ -154,7 +193,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         </ContentSwimlane>
       ) : null}
 
-      {matchingTagLabels.length > 0 ? (
+      {showTags && matchingTagLabels.length > 0 ? (
         <ContentSwimlane
           title="Tags"
           sourceCount={matchingTagLabels.length}
@@ -173,7 +212,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         </ContentSwimlane>
       ) : null}
 
-      {podcasts.length > 0 ? (
+      {showPodcasts && podcasts.length > 0 ? (
         <ContentSwimlane
           title="Podcasts"
           sourceCount={podcasts.length}
@@ -190,7 +229,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         </ContentSwimlane>
       ) : null}
 
-      {episodeRows.length > 0 ? (
+      {showEpisodes && episodeRows.length > 0 ? (
         <ContentSwimlane
           title="Episodes"
           sourceCount={episodeRows.length}
@@ -208,7 +247,7 @@ export default function SearchResultsPanel({ debouncedQuery }) {
         </ContentSwimlane>
       ) : null}
 
-      {radioStations.length > 0 ? (
+      {showRadio && radioStations.length > 0 ? (
         <ContentSwimlane
           title="Radio"
           sourceCount={radioStations.length}

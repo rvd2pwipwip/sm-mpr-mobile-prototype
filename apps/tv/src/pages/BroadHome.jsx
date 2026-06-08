@@ -6,12 +6,22 @@ import {
 } from "@sm-mpr/shared/data/musicChannels.js";
 import { PODCASTS } from "@sm-mpr/shared/data/podcasts.js";
 import { RADIO_STATIONS } from "@sm-mpr/shared/data/radioStations.js";
+import {
+  BROAD_HOME_SWIMLANE_ID,
+  getVisibleBroadHomeTvSwimlanes,
+  HOME_MUSIC_MORE_CATEGORY,
+} from "@sm-mpr/shared/constants/homeSwimlanes.js";
+import {
+  getHomeMusicSwimlaneChannels,
+  getHomeMusicSwimlaneTitle,
+} from "@sm-mpr/shared/data/homeMusicSwimlanes.js";
 import { showVisualAds } from "@sm-mpr/shared/utils/userTierRules.js";
 import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
 import TvHomeBanner from "../components/TvHomeBanner.jsx";
 import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
 import ContentTileSwimlane from "../components/swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import {
@@ -28,19 +38,36 @@ import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 
-const POPULAR_GROUP = HOME_FIRST_SWIMLANE_GROUP;
-const PODCASTS_GROUP = POPULAR_GROUP + 1;
-const RADIO_GROUP = PODCASTS_GROUP + 1;
-const RECOMMENDATIONS_GROUP = RADIO_GROUP + 1;
-const HOME_GROUP_COUNT = RECOMMENDATIONS_GROUP + 1;
+function bannerAfterSwimlaneId(visibleIds, showBannerAd) {
+  if (!showBannerAd) return null;
+  if (visibleIds.includes(BROAD_HOME_SWIMLANE_ID.popularPodcasts)) {
+    return BROAD_HOME_SWIMLANE_ID.popularPodcasts;
+  }
+  if (visibleIds.includes(BROAD_HOME_SWIMLANE_ID.countryEssentials)) {
+    return BROAD_HOME_SWIMLANE_ID.countryEssentials;
+  }
+  if (visibleIds.includes(BROAD_HOME_SWIMLANE_ID.mostPopularMusic)) {
+    return BROAD_HOME_SWIMLANE_ID.mostPopularMusic;
+  }
+  return null;
+}
 
 export default function BroadHome() {
   const navigate = useNavigate();
   const { session } = usePlayback();
   const { userType } = useUserType();
+  const { enabledContentTypes, isMusicOnlyProfile } = useContentProfile();
   const showBannerAd = showVisualAds(userType);
 
   const recommendations = useMemo(() => getRecommendationsMusicChannels(), []);
+  const newReleaseChannels = useMemo(
+    () => getHomeMusicSwimlaneChannels("newReleases"),
+    [],
+  );
+  const countryEssentialChannels = useMemo(
+    () => getHomeMusicSwimlaneChannels("countryEssentials"),
+    [],
+  );
 
   const podcastTiles = useMemo(
     () =>
@@ -62,11 +89,87 @@ export default function BroadHome() {
     [],
   );
 
-  const popularSlotCount = getMusicSwimlaneSlotCount(MUSIC_CHANNELS.length);
-  const podcastsSlotCount = getMusicSwimlaneSlotCount(PODCASTS.length);
-  const radioSlotCount = getMusicSwimlaneSlotCount(RADIO_STATIONS.length);
-  const recommendationsSlotCount = getMusicSwimlaneSlotCount(
-    recommendations.length,
+  const visibleTvSwimlanes = useMemo(
+    () =>
+      getVisibleBroadHomeTvSwimlanes(
+        enabledContentTypes,
+        userType,
+        isMusicOnlyProfile,
+      ),
+    [enabledContentTypes, userType, isMusicOnlyProfile],
+  );
+
+  const slotCountById = useMemo(
+    () => ({
+      [BROAD_HOME_SWIMLANE_ID.mostPopularMusic]: getMusicSwimlaneSlotCount(
+        MUSIC_CHANNELS.length,
+      ),
+      [BROAD_HOME_SWIMLANE_ID.newReleases]: getMusicSwimlaneSlotCount(
+        newReleaseChannels.length,
+      ),
+      [BROAD_HOME_SWIMLANE_ID.countryEssentials]: getMusicSwimlaneSlotCount(
+        countryEssentialChannels.length,
+      ),
+      [BROAD_HOME_SWIMLANE_ID.popularPodcasts]: getMusicSwimlaneSlotCount(
+        PODCASTS.length,
+      ),
+      [BROAD_HOME_SWIMLANE_ID.topRadio]: getMusicSwimlaneSlotCount(
+        RADIO_STATIONS.length,
+      ),
+      [BROAD_HOME_SWIMLANE_ID.recommendations]: getMusicSwimlaneSlotCount(
+        recommendations.length,
+      ),
+    }),
+    [
+      newReleaseChannels.length,
+      countryEssentialChannels.length,
+      recommendations.length,
+    ],
+  );
+
+  const { swimlaneLayout, focusConfig } = useMemo(() => {
+    /** @type {{ id: string, groupIndex: number, slotCount: number }[]} */
+    const lanes = [];
+    let groupIndex = HOME_FIRST_SWIMLANE_GROUP;
+
+    for (const swimlane of visibleTvSwimlanes) {
+      lanes.push({
+        id: swimlane.id,
+        groupIndex,
+        slotCount: slotCountById[swimlane.id] ?? 1,
+      });
+      groupIndex += 1;
+    }
+
+    const itemCounts = {
+      [HOME_HEADER_GROUP]: 1,
+      [HOME_BANNER_GROUP]: 1,
+    };
+    const swimlaneGroups = [];
+
+    for (const lane of lanes) {
+      itemCounts[lane.groupIndex] = lane.slotCount;
+      swimlaneGroups.push(lane.groupIndex);
+    }
+
+    return {
+      swimlaneLayout: lanes,
+      focusConfig: {
+        groupCount: groupIndex,
+        itemCounts,
+        swimlaneGroups,
+        firstSwimlaneGroup:
+          swimlaneGroups[0] ?? HOME_FIRST_SWIMLANE_GROUP,
+        lastSwimlaneGroup:
+          swimlaneGroups[swimlaneGroups.length - 1] ??
+          HOME_FIRST_SWIMLANE_GROUP,
+      },
+    };
+  }, [visibleTvSwimlanes, slotCountById]);
+
+  const bannerAfterLaneId = bannerAfterSwimlaneId(
+    visibleTvSwimlanes.map((s) => s.id),
+    showBannerAd,
   );
 
   const {
@@ -81,22 +184,10 @@ export default function BroadHome() {
     focusedIndex,
     getItemElement,
   } = useScreenContentFocus("home-broad", {
-    groupCount: HOME_GROUP_COUNT,
-    itemCounts: {
-      [HOME_HEADER_GROUP]: 1,
-      [HOME_BANNER_GROUP]: 1,
-      [POPULAR_GROUP]: popularSlotCount,
-      [PODCASTS_GROUP]: podcastsSlotCount,
-      [RADIO_GROUP]: radioSlotCount,
-      [RECOMMENDATIONS_GROUP]: recommendationsSlotCount,
-    },
-    swimlaneGroups: [
-      POPULAR_GROUP,
-      PODCASTS_GROUP,
-      RADIO_GROUP,
-      RECOMMENDATIONS_GROUP,
-    ],
-    defaultGroupIndex: POPULAR_GROUP,
+    groupCount: focusConfig.groupCount,
+    itemCounts: focusConfig.itemCounts,
+    swimlaneGroups: focusConfig.swimlaneGroups,
+    defaultGroupIndex: focusConfig.firstSwimlaneGroup,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
   });
 
@@ -112,8 +203,8 @@ export default function BroadHome() {
     offsetY,
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
-    landingGroupIndex: POPULAR_GROUP,
-    lastFocusableGroupIndex: RECOMMENDATIONS_GROUP,
+    landingGroupIndex: focusConfig.firstSwimlaneGroup,
+    lastFocusableGroupIndex: focusConfig.lastSwimlaneGroup,
     getFocusedElement,
   });
 
@@ -142,6 +233,113 @@ export default function BroadHome() {
     onMoveDown: handleMoveDown,
     onBoundaryLeft: enterNavFromContent,
   };
+
+  function renderSwimlane(lane) {
+    switch (lane.id) {
+      case BROAD_HOME_SWIMLANE_ID.mostPopularMusic:
+        return (
+          <MusicChannelSwimlane
+            title="Most popular music"
+            channels={MUSIC_CHANNELS}
+            sourceCount={MUSIC_CHANNELS.length}
+            groupIndex={lane.groupIndex}
+            playingChannelId={playingChannelId}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
+            onSelectChannel={openChannelInfo}
+            onMore={() => navigate("/more/music")}
+            {...swimlaneNav}
+          />
+        );
+      case BROAD_HOME_SWIMLANE_ID.newReleases:
+        return (
+          <MusicChannelSwimlane
+            title={getHomeMusicSwimlaneTitle("newReleases")}
+            channels={newReleaseChannels}
+            sourceCount={newReleaseChannels.length}
+            groupIndex={lane.groupIndex}
+            playingChannelId={playingChannelId}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
+            onSelectChannel={openChannelInfo}
+            onMore={() =>
+              navigate(`/more/${HOME_MUSIC_MORE_CATEGORY.newReleases}`)
+            }
+            {...swimlaneNav}
+          />
+        );
+      case BROAD_HOME_SWIMLANE_ID.countryEssentials:
+        return (
+          <MusicChannelSwimlane
+            title={getHomeMusicSwimlaneTitle("countryEssentials")}
+            channels={countryEssentialChannels}
+            sourceCount={countryEssentialChannels.length}
+            groupIndex={lane.groupIndex}
+            playingChannelId={playingChannelId}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
+            onSelectChannel={openChannelInfo}
+            onMore={() =>
+              navigate(`/more/${HOME_MUSIC_MORE_CATEGORY.countryEssentials}`)
+            }
+            {...swimlaneNav}
+          />
+        );
+      case BROAD_HOME_SWIMLANE_ID.popularPodcasts:
+        return (
+          <ContentTileSwimlane
+            title="Popular podcasts in your area"
+            items={podcastTiles}
+            sourceCount={PODCASTS.length}
+            groupIndex={lane.groupIndex}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
+            onSelectItem={() => navigate("/search")}
+            onMore={() => navigate("/search")}
+            {...swimlaneNav}
+          />
+        );
+      case BROAD_HOME_SWIMLANE_ID.topRadio:
+        return (
+          <ContentTileSwimlane
+            title="Top radio stations"
+            items={radioTiles}
+            sourceCount={RADIO_STATIONS.length}
+            groupIndex={lane.groupIndex}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
+            onSelectItem={() => navigate("/search")}
+            onMore={() => navigate("/search")}
+            {...swimlaneNav}
+          />
+        );
+      case BROAD_HOME_SWIMLANE_ID.recommendations:
+        return (
+          <MusicChannelSwimlane
+            title="Recommendations"
+            channels={recommendations}
+            sourceCount={recommendations.length}
+            groupIndex={lane.groupIndex}
+            playingChannelId={playingChannelId}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) =>
+              setFocusedIndex(lane.groupIndex, index)
+            }
+            onSelectChannel={openChannelInfo}
+            onMore={() => navigate("/more/recommendations")}
+            {...swimlaneNav}
+          />
+        );
+      default:
+        return null;
+    }
+  }
 
   return (
     <div
@@ -185,87 +383,21 @@ export default function BroadHome() {
             />
           </div>
 
-          <div
-            className="tv-home__scroll-group"
-            ref={(node) => registerGroupRef(POPULAR_GROUP, node)}
-          >
-            <MusicChannelSwimlane
-              title="Most popular music"
-              channels={MUSIC_CHANNELS}
-              sourceCount={MUSIC_CHANNELS.length}
-              groupIndex={POPULAR_GROUP}
-              playingChannelId={playingChannelId}
-              focused={isContentGroupActive(POPULAR_GROUP)}
-              focusedIndex={getItemFocusIndex(POPULAR_GROUP)}
-              onFocusChange={(index) => setFocusedIndex(POPULAR_GROUP, index)}
-              onSelectChannel={openChannelInfo}
-              onMore={() => navigate("/more/music")}
-              {...swimlaneNav}
-            />
-          </div>
-
-          <div
-            className="tv-home__scroll-group"
-            ref={(node) => registerGroupRef(PODCASTS_GROUP, node)}
-          >
-            <ContentTileSwimlane
-              title="Popular podcasts in your area"
-              items={podcastTiles}
-              sourceCount={PODCASTS.length}
-              groupIndex={PODCASTS_GROUP}
-              focused={isContentGroupActive(PODCASTS_GROUP)}
-              focusedIndex={getItemFocusIndex(PODCASTS_GROUP)}
-              onFocusChange={(index) => setFocusedIndex(PODCASTS_GROUP, index)}
-              onSelectItem={() => navigate("/search")}
-              onMore={() => navigate("/search")}
-              {...swimlaneNav}
-            />
-          </div>
-
-          {showBannerAd ? (
-            <div className="tv-home__scroll-group tv-home__content-inset">
-              <TvSwimlaneBannerAd />
+          {swimlaneLayout.map((lane) => (
+            <div key={lane.id}>
+              <div
+                className="tv-home__scroll-group"
+                ref={(node) => registerGroupRef(lane.groupIndex, node)}
+              >
+                {renderSwimlane(lane)}
+              </div>
+              {bannerAfterLaneId === lane.id ? (
+                <div className="tv-home__scroll-group tv-home__content-inset">
+                  <TvSwimlaneBannerAd />
+                </div>
+              ) : null}
             </div>
-          ) : null}
-
-          <div
-            className="tv-home__scroll-group"
-            ref={(node) => registerGroupRef(RADIO_GROUP, node)}
-          >
-            <ContentTileSwimlane
-              title="Top radio stations"
-              items={radioTiles}
-              sourceCount={RADIO_STATIONS.length}
-              groupIndex={RADIO_GROUP}
-              focused={isContentGroupActive(RADIO_GROUP)}
-              focusedIndex={getItemFocusIndex(RADIO_GROUP)}
-              onFocusChange={(index) => setFocusedIndex(RADIO_GROUP, index)}
-              onSelectItem={() => navigate("/search")}
-              onMore={() => navigate("/search")}
-              {...swimlaneNav}
-            />
-          </div>
-
-          <div
-            className="tv-home__scroll-group"
-            ref={(node) => registerGroupRef(RECOMMENDATIONS_GROUP, node)}
-          >
-            <MusicChannelSwimlane
-              title="Recommendations"
-              channels={recommendations}
-              sourceCount={recommendations.length}
-              groupIndex={RECOMMENDATIONS_GROUP}
-              playingChannelId={playingChannelId}
-              focused={isContentGroupActive(RECOMMENDATIONS_GROUP)}
-              focusedIndex={getItemFocusIndex(RECOMMENDATIONS_GROUP)}
-              onFocusChange={(index) =>
-                setFocusedIndex(RECOMMENDATIONS_GROUP, index)
-              }
-              onSelectChannel={openChannelInfo}
-              onMore={() => navigate("/more/recommendations")}
-              {...swimlaneNav}
-            />
-          </div>
+          ))}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 Living implementation plan for a **music-only** prototype variant while **keeping podcasts and radio restorable** without rewriting UI. Applies to **mobile** (`apps/mobile/`) and **TV** (`apps/tv/`) with the same product rules. Complements **catalog scope** (broad vs limited) — do not merge those axes.
 
-**Status:** Phase 0 shipped; Phases 1–5 and TV rail gating pending.
+**Status:** Phases 0–1 shipped (mobile broad Home); Phases 2–5 and TV rail gating pending.
 
 **See also:**
 
@@ -192,15 +192,15 @@ Prefer **A** for readability.
 
 ### Phase 1 — Broad Home swimlanes
 
-**Goal:** Music-only Home layout + two new lanes.
+**Goal:** Music-only Home layout via registry gating (original swimlanes only).
 
-- [ ] Introduce `homeSwimlanes.js` registry (broad scope)
-- [ ] Refactor `Home.jsx` to map registry → components (keep existing components)
-- [ ] **Remove** from default profile: Popular podcasts, Top radio (registry entries with `types: ['podcasts'|'radio']`)
-- [ ] **Add** swimlanes (music): **New releases**, **Country essentials** using `homeMusicSwimlanes.js` lists from design
-- [ ] Wire **More** + title tap → new `/more/:categoryId` entries in `SwimlaneMore.jsx` (or dedicated More pages) with matching titles
-- [ ] **Listen again:** `filterListenHistoryByProfile` before render; hide rail if empty after filter
-- [ ] Keep **Most popular music**, **Recommendations**, **Provider lineup** (`freeProvided`), banner ad placement unchanged unless design says otherwise
+- [x] Introduce `homeSwimlanes.js` registry (broad scope)
+- [x] Refactor `Home.jsx` to map registry → components (keep existing components)
+- [x] **Remove** from music-only profile: Popular podcasts, Top radio (registry `contentTypes` gating)
+- [x] **Music-only only:** **New releases**, **Country essentials** (`musicOnlyOnly` in registry; hidden on full MPR Home)
+- [x] **Listen again:** `filterListenHistoryByProfile` on Home + `ListenAgainMore.jsx`; hide rail if empty after filter
+- [x] Keep **Most popular music**, **Recommendations** (unchanged for both profiles), **Provider lineup** (`freeProvided`), mid-stack banner ad
+- [x] **Full MPR:** one music → one podcast → one radio swimlane stack (original Home order)
 
 **Data dependency:** Designer delivers two arrays of channel ids + swimlane titles (confirm exact copy for “New releases” / “Country essentials”).
 
@@ -212,14 +212,14 @@ Prefer **A** for readability.
 
 **Goal:** Music-only search UX on broad catalog.
 
-- [ ] `enabledBrowseTabs()` — music only → **hide** `SearchBrowseContentSwitcher` in `SearchBrowseHeader` when `!shouldShowBrowseSwitcher()`
-- [ ] Default `/search` redirect stays **music** tab
-- [ ] `Search.jsx` — do not mount `SearchPodcastsBrowse` / `SearchRadioBrowse` when types disabled
-- [ ] `SearchResultsPanel` — use `enabledSearchResultLanes()` (channels, artists, tags only)
-- [ ] `SearchCatalogMore` — same lane filter
-- [ ] `searchCatalog.js` — optional: skip podcast/radio queries when disabled (micro-optimization)
-- [ ] Placeholder copy in `SearchBrowseHeader.jsx`: **Search channels, artists or tags**
-- [ ] Limited `/search` unchanged structurally (already no browse strip); results panel respects lane filter
+- [x] `enabledBrowseTabs()` — music only → **hide** `SearchBrowseContentSwitcher` in `SearchBrowseHeader` when `!shouldShowBrowseContentSwitcher()`
+- [x] Default `/search` redirect stays **music** tab (`resolveBroadSearchBrowseTab` in `searchBrowsePaths.js`; BottomNav + `SearchEntryRoute`)
+- [x] `Search.jsx` — do not mount `SearchPodcastsBrowse` / `SearchRadioBrowse` when types disabled
+- [x] `SearchResultsPanel` — use `enabledSearchResultLanes()` (channels, artists, tags only)
+- [x] `SearchCatalogMore` — same lane filter (redirect disabled lanes)
+- [ ] `searchCatalog.js` — optional: skip podcast/radio queries when disabled (deferred; skipped at panel/more layer)
+- [x] Placeholder copy in `SearchBrowseHeader.jsx`: **Search channels, artists or tags**
+- [x] Limited `/search` unchanged structurally (already no browse strip); results panel + empty copy respect lane filter
 
 **Files:** `Search.jsx`, `SearchBrowseHeader.jsx`, `SearchResultsPanel.jsx`, `SearchCatalogMore.jsx`, `searchBrowsePaths.js`, `searchResultLanes.js`
 
@@ -274,10 +274,10 @@ TV does not reuse `ContentSwimlane`; it uses **focus groups** per swimlane. Same
 
 ### Phase TV-1 — Broad Home (`BroadHome.jsx`)
 
-- [ ] Remove or gate **Popular podcasts**, **Top radio** swimlanes when music-only
-- [ ] Add **New releases**, **Country essentials** (same channel lists as mobile; shared `homeMusicSwimlanes.js`)
-- [ ] Recompute `HOME_GROUP_COUNT`, `itemCounts`, `swimlaneGroups` from **enabled** rails only (critical for focus)
-- [ ] Update `homeFocusGroups.js` constants or derive counts dynamically
+- [x] Gate **Popular podcasts**, **Top radio** swimlanes when music-only (`useContentProfile`)
+- [x] **New releases**, **Country essentials** (music-only; shared registry + `getVisibleBroadHomeTvSwimlanes`)
+- [x] Recompute `groupCount`, `itemCounts`, `swimlaneGroups` from **enabled** rails only (dynamic layout in `BroadHome.jsx`)
+- [x] Focus landing / scroll bounds follow first and last enabled swimlane group
 
 ### Phase TV-2 — Limited Home (`LimitedHome.jsx`)
 
@@ -342,7 +342,7 @@ Run with **default profile (music only)** and again with **Full MPR** toggle on 
 
 ### Broad + music only
 
-- [ ] Home shows: Listen again (music only), Most popular music, New releases, Country essentials, Recommendations — **no** podcast/radio lanes
+- [ ] Home shows: Listen again (music only), Most popular music, **New releases**, **Country essentials**, Recommendations — **no** podcast/radio lanes
 - [ ] Home does **not** show podcast/radio tiles in Listen again
 - [ ] Search: **no** Music/Podcasts/Radio strip; placeholder **Search channels, artists or tags**
 - [ ] Search results: **Channels**, **Artists**, **Tags** only

@@ -63,7 +63,7 @@ import MyLibraryLikesMore from "./pages/MyLibraryLikesMore";
 import Subscription from "./pages/Subscription";
 import UpgradeStoreMock from "./pages/UpgradeStoreMock";
 import SwimlaneMore from "./pages/SwimlaneMore";
-import { readStoredBroadSearchBrowseTab } from "./constants/searchBrowsePaths.js";
+import { resolveBroadSearchBrowseTab } from "./constants/searchBrowsePaths.js";
 import { hideFooterChromeForPath } from "./utils/hideFooterChromeForPath";
 import CastPrototypeDialogs from "./components/CastPrototypeDialogs";
 import SharePrototypeOverlays from "./components/SharePrototypeOverlays";
@@ -108,17 +108,11 @@ function HomeOrLimitedBrowse() {
 /** **Broad:** `/search` redirects to last Music \| Podcasts \| Radio (session) or `/search/music`. **Limited:** `Search` at canonical `/search`. */
 function SearchEntryRoute() {
   const { catalogScope } = useTerritory();
-  const { isContentTypeEnabled } = useContentProfile();
+  const { enabledContentTypes } = useContentProfile();
   if (catalogScope === CATALOG_SCOPE.limited) {
     return <Search />;
   }
-  let tab = readStoredBroadSearchBrowseTab() ?? "music";
-  if (tab === "podcasts" && !isContentTypeEnabled(CONTENT_TYPE.podcasts)) {
-    tab = "music";
-  }
-  if (tab === "radio" && !isContentTypeEnabled(CONTENT_TYPE.radio)) {
-    tab = "music";
-  }
+  const tab = resolveBroadSearchBrowseTab(enabledContentTypes);
   return <Navigate to={`/search/${tab}`} replace />;
 }
 

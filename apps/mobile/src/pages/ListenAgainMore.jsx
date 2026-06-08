@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppStackedDialog from "../components/AppStackedDialog";
 import { renderListenAgainTile } from "../components/ListenAgainCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { LISTEN_AGAIN_CLEAR_CONFIRM } from "../constants/listenHistory";
+import { useContentProfile } from "../context/ContentProfileContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import "./ListenAgainMore.css";
 import "./SwimlaneMore.css";
@@ -12,6 +13,11 @@ import "./SwimlaneMore.css";
 export default function ListenAgainMore() {
   const navigate = useNavigate();
   const { items, clearListenHistory } = useListenHistory();
+  const { filterListenHistory } = useContentProfile();
+  const visibleItems = useMemo(
+    () => filterListenHistory(items),
+    [filterListenHistory, items],
+  );
   const goBack = () => navigate(-1);
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
@@ -41,7 +47,7 @@ export default function ListenAgainMore() {
           <button
             type="button"
             className="screen-header__text-btn"
-            disabled={items.length === 0}
+            disabled={visibleItems.length === 0}
             onClick={() => setClearDialogOpen(true)}
             aria-label="Clear listening history"
           >
@@ -51,11 +57,11 @@ export default function ListenAgainMore() {
       />
 
       <div className="swimlane-more__scroll">
-        {items.length === 0 ? (
+        {visibleItems.length === 0 ? (
           <p className="listen-again-more__empty">No listening history yet.</p>
         ) : (
           <ul className="swimlane-more__grid" role="list">
-            {items.map((item) => {
+            {visibleItems.map((item) => {
               const tile = renderListenAgainTile(item, navigate, false);
               if (!tile) return null;
               return (

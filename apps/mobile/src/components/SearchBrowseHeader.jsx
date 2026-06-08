@@ -1,11 +1,13 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SearchBrowseContentSwitcher from "./SearchBrowseContentSwitcher.jsx";
 import {
   BROWSE_TABS,
   SEARCH_BROWSE,
+  getBrowseTabsForProfile,
   getSearchBrowseTabFromPathname,
 } from "../constants/searchBrowsePaths.js";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import "./SearchBrowseHeader.css";
 
 /** Pixel height of `ScreenHeader` bar — matches `--screen-header-height` in `index.css` (stack offset math). */
@@ -16,7 +18,7 @@ export const USE_LEGACY_BROWSE_TAB_PILLS = false;
 
 export { BROWSE_TABS };
 
-function SearchBrowseLegacyTabPills() {
+function SearchBrowseLegacyTabPills({ browseTabs }) {
   const location = useLocation();
   const browseTab = getSearchBrowseTabFromPathname(location.pathname);
 
@@ -26,7 +28,7 @@ function SearchBrowseLegacyTabPills() {
       role="tablist"
       aria-label="Browse content type"
     >
-      {BROWSE_TABS.map((tab) => {
+      {browseTabs.map((tab) => {
         const active = browseTab === tab.id;
         const to = SEARCH_BROWSE[tab.id];
         if (tab.id === "music") {
@@ -119,9 +121,26 @@ export default function SearchBrowseHeader({
   underScreenHeader = false,
   stackOffsetPrependPx = 0,
 }) {
+  const { enabledContentTypes, isMusicOnlyProfile } = useContentProfile();
+  const browseTabs = useMemo(
+    () => getBrowseTabsForProfile(enabledContentTypes),
+    [enabledContentTypes],
+  );
+  const browseSwitcherSegments = useMemo(
+    () =>
+      browseTabs.map((t) => ({
+        id: t.id,
+        label: t.label,
+        to: SEARCH_BROWSE[t.id],
+      })),
+    [browseTabs],
+  );
   const headerRef = useSearchBrowseHeaderOffset(stackOffsetPrependPx);
   const hasQuery = query.length > 0;
   const showClear = hasQuery;
+  const searchPlaceholder = isMusicOnlyProfile
+    ? "Search channels, artists or tags"
+    : "Search music, podcasts or radio";
 
   return (
     <header
@@ -142,7 +161,7 @@ export default function SearchBrowseHeader({
           enterKeyHint="search"
           autoComplete="off"
           className="search-browse-header__input"
-          placeholder="Search music, podcasts or radio"
+          placeholder={searchPlaceholder}
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           aria-label="Search catalog"
@@ -166,9 +185,9 @@ export default function SearchBrowseHeader({
 
       {showBrowseTabs ? (
         USE_LEGACY_BROWSE_TAB_PILLS ? (
-          <SearchBrowseLegacyTabPills />
+          <SearchBrowseLegacyTabPills browseTabs={browseTabs} />
         ) : (
-          <SearchBrowseContentSwitcher />
+          <SearchBrowseContentSwitcher segments={browseSwitcherSegments} />
         )
       ) : null}
     </header>

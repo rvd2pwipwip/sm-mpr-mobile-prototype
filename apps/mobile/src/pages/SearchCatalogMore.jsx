@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { SEARCH_RESULT_LANE } from "@sm-mpr/shared/constants/productProfile.js";
 import EpisodeCard from "../components/EpisodeCard";
 import MusicArtistCard from "../components/MusicArtistCard";
 import MusicChannelCard from "../components/MusicChannelCard";
@@ -13,6 +14,7 @@ import {
   userMayDownloadEpisodesOffline,
 } from "../constants/userContentGates";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
 import {
@@ -53,11 +55,16 @@ const VALID_LANES = [
 export default function SearchCatalogMore() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const { enabledSearchResultLanes } = useContentProfile();
   const rawLane = params.get("lane") ?? "channels";
   const lane =
     rawLane !== null && VALID_LANES.includes(/** @type {any} */ (rawLane))
       ? rawLane
       : "channels";
+  const laneAllowed = enabledSearchResultLanes.includes(lane);
+  const activeLane = laneAllowed
+    ? lane
+    : (enabledSearchResultLanes[0] ?? SEARCH_RESULT_LANE.channels);
 
   const rawQ = params.get("q") ?? "";
   const needle = useMemo(() => normalizeSearchNeedle(rawQ), [rawQ]);
@@ -73,31 +80,31 @@ export default function SearchCatalogMore() {
     isDownloaded,
   } = usePodcastUserState();
 
-  const title = LANE_LABELS[lane];
+  const title = LANE_LABELS[activeLane];
 
   const channels = useMemo(
-    () => (lane === "channels" ? searchMusicChannels(needle) : []),
-    [lane, needle],
+    () => (activeLane === "channels" ? searchMusicChannels(needle) : []),
+    [activeLane, needle],
   );
   const tagLabels = useMemo(
-    () => (lane === "tags" ? searchMatchingMusicTagLabels(needle) : []),
-    [lane, needle],
+    () => (activeLane === "tags" ? searchMatchingMusicTagLabels(needle) : []),
+    [activeLane, needle],
   );
   const artists = useMemo(
-    () => (lane === "artists" ? searchMusicArtists(needle) : []),
-    [lane, needle],
+    () => (activeLane === "artists" ? searchMusicArtists(needle) : []),
+    [activeLane, needle],
   );
   const podcasts = useMemo(
-    () => (lane === "podcasts" ? searchPodcasts(needle) : []),
-    [lane, needle],
+    () => (activeLane === "podcasts" ? searchPodcasts(needle) : []),
+    [activeLane, needle],
   );
   const episodeRows = useMemo(
-    () => (lane === "episodes" ? searchEpisodeRows(needle) : []),
-    [lane, needle],
+    () => (activeLane === "episodes" ? searchEpisodeRows(needle) : []),
+    [activeLane, needle],
   );
   const radioStations = useMemo(
-    () => (lane === "radio" ? searchRadioStations(needle) : []),
-    [lane, needle],
+    () => (activeLane === "radio" ? searchRadioStations(needle) : []),
+    [activeLane, needle],
   );
 
   const goBack = () => navigate(-1);
@@ -134,17 +141,25 @@ export default function SearchCatalogMore() {
   });
 
   const listForLane =
-    lane === "channels"
+    activeLane === "channels"
       ? channels
-      : lane === "tags"
+      : activeLane === "tags"
         ? tagLabels
-        : lane === "artists"
+        : activeLane === "artists"
           ? artists
-          : lane === "podcasts"
+          : activeLane === "podcasts"
             ? podcasts
-            : lane === "episodes"
+            : activeLane === "episodes"
               ? episodeRows
               : radioStations;
+
+  if (!laneAllowed) {
+    const q = params.get("q");
+    const search = q
+      ? `?lane=${activeLane}&q=${encodeURIComponent(q)}`
+      : `?lane=${activeLane}`;
+    return <Navigate to={`/search/more/catalog${search}`} replace />;
+  }
 
   const emptyCopy = !needle
     ? "Enter a search to see results."
@@ -173,7 +188,7 @@ export default function SearchCatalogMore() {
           <p className="text-muted" style={{ padding: "0 var(--swimlane-more-inline, 40px)" }}>
             {emptyCopy}
           </p>
-        ) : lane === "episodes" ? (
+        ) : activeLane === "episodes" ? (
           <div className="search-catalog-more__episode-stack">
             {episodeRows.map(({ podcast, episode }) => (
               <EpisodeCard
@@ -185,7 +200,7 @@ export default function SearchCatalogMore() {
           </div>
         ) : (
           <ul className="swimlane-more__grid" role="list">
-            {lane === "channels" &&
+            {activeLane === "channels" &&
               channels.map((channel) => (
                 <li key={channel.id} className="swimlane-more__cell">
                   <MusicChannelCard
@@ -194,7 +209,7 @@ export default function SearchCatalogMore() {
                   />
                 </li>
               ))}
-            {lane === "tags" &&
+            {activeLane === "tags" &&
               tagLabels.map((label) => (
                 <li key={label} className="swimlane-more__cell">
                   <MusicTagCard
@@ -205,7 +220,7 @@ export default function SearchCatalogMore() {
                   />
                 </li>
               ))}
-            {lane === "artists" &&
+            {activeLane === "artists" &&
               artists.map((artist) => (
                 <li key={artist.id} className="swimlane-more__cell">
                   <MusicArtistCard
@@ -216,7 +231,7 @@ export default function SearchCatalogMore() {
                   />
                 </li>
               ))}
-            {lane === "podcasts" &&
+            {activeLane === "podcasts" &&
               podcasts.map((podcast) => (
                 <li key={podcast.id} className="swimlane-more__cell">
                   <PodcastCard
@@ -225,7 +240,7 @@ export default function SearchCatalogMore() {
                   />
                 </li>
               ))}
-            {lane === "radio" &&
+            {activeLane === "radio" &&
               radioStations.map((station) => (
                 <li key={station.id} className="swimlane-more__cell">
                   <RadioStationCard

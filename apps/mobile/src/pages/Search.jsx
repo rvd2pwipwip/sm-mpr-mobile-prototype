@@ -12,6 +12,8 @@ import {
   getSearchBrowseTabFromPathname,
   writeStoredBroadSearchBrowseTab,
 } from "../constants/searchBrowsePaths.js";
+import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { BROAD_VIBES } from "../data/musicBrowseTaxonomy.js";
 import SearchMusicVibeBrowseRail from "../components/SearchMusicVibeBrowseRail.jsx";
@@ -49,6 +51,11 @@ export default function Search() {
   const navigate = useNavigate();
   const location = useLocation();
   const { musicLineupMode, catalogScope } = useTerritory();
+  const {
+    shouldShowBrowseContentSwitcher,
+    isContentTypeEnabled,
+    isMusicOnlyProfile,
+  } = useContentProfile();
   const browseTab = getSearchBrowseTabFromPathname(location.pathname);
 
   const [query, setQuery] = useState(() =>
@@ -64,7 +71,9 @@ export default function Search() {
   const isSearchActive = query.trim().length > 0;
   /** Limited catalog never shows Music/Podcasts/Radio strip on Search. */
   const showHeaderBrowseTabs =
-    catalogScope === CATALOG_SCOPE.broad && showBrowseTabs;
+    catalogScope === CATALOG_SCOPE.broad &&
+    showBrowseTabs &&
+    shouldShowBrowseContentSwitcher;
 
   const isLimitedSearchRoot =
     catalogScope === CATALOG_SCOPE.limited && location.pathname === "/search";
@@ -167,7 +176,9 @@ export default function Search() {
         ) : isLimitedSearchRoot ? (
           <div className="content-inset search-page__body">
             <p className="text-muted search-page__limited-empty">
-              Type to search music, podcasts, or radio.
+              {isMusicOnlyProfile
+                ? "Type to search channels, artists, or tags."
+                : "Type to search music, podcasts, or radio."}
             </p>
           </div>
         ) : browseTab === "music" ? (
@@ -184,15 +195,17 @@ export default function Search() {
                 ))
               : null}
           </div>
-        ) : browseTab === "podcasts" ? (
+        ) : browseTab === "podcasts" &&
+          isContentTypeEnabled(CONTENT_TYPE.podcasts) ? (
           <div className="home-screen">
             <SearchPodcastsBrowse />
           </div>
-        ) : (
+        ) : browseTab === "radio" &&
+          isContentTypeEnabled(CONTENT_TYPE.radio) ? (
           <div className="home-screen">
             <SearchRadioBrowse />
           </div>
-        )}
+        ) : null}
       </div>
     </main>
   );

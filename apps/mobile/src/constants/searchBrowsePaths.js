@@ -1,3 +1,5 @@
+import { filterBrowseTabsByProfile } from "@sm-mpr/shared/constants/productProfile.js";
+
 /** Browse tab URLs for Search — URL is the source of truth for the content-type strip. */
 export const SEARCH_BROWSE = {
   music: "/search/music",
@@ -11,6 +13,25 @@ export const BROWSE_TABS = [
   { id: "podcasts", label: "Podcasts" },
   { id: "radio", label: "Radio" },
 ];
+
+/**
+ * Music / Podcasts / Radio tabs visible for the active content profile.
+ * @param {readonly string[]} enabledContentTypes
+ */
+export function getBrowseTabsForProfile(enabledContentTypes) {
+  return filterBrowseTabsByProfile(BROWSE_TABS, enabledContentTypes);
+}
+
+/**
+ * Broad Search entry tab: last stored tab when still enabled, else first enabled tab.
+ * @param {readonly string[]} enabledContentTypes
+ */
+export function resolveBroadSearchBrowseTab(enabledContentTypes) {
+  const allowed = getBrowseTabsForProfile(enabledContentTypes);
+  const stored = readStoredBroadSearchBrowseTab();
+  if (stored && allowed.some((t) => t.id === stored)) return stored;
+  return allowed[0]?.id ?? "music";
+}
 
 /** Derive tab id from the pathname (only `/search` tree; defaults to music). */
 export function getSearchBrowseTabFromPathname(pathname) {

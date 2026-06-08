@@ -14,6 +14,11 @@ import {
   FOCUS_ZONE_CONTENT,
   useTvNavFocus,
 } from "../context/TvNavFocusContext.jsx";
+import { HOME_MUSIC_MORE_CATEGORY } from "@sm-mpr/shared/constants/homeSwimlanes.js";
+import {
+  getHomeMusicSwimlaneChannels,
+  getHomeMusicSwimlaneTitle,
+} from "@sm-mpr/shared/data/homeMusicSwimlanes.js";
 import { getLimitedHomeFilterLabel } from "../utils/limitedHomeData.js";
 import { getTvGridColumnCount } from "../utils/tvLayout.js";
 import "../components/cards/ContentTileCard.css";
@@ -28,6 +33,22 @@ function resolveMoreConfig(pathname, categoryId) {
       screenId: "more-recommendations",
       title: "Recommendations",
       getChannels: () => getRecommendationsMusicChannels(),
+    };
+  }
+
+  if (pathname === `/more/${HOME_MUSIC_MORE_CATEGORY.newReleases}`) {
+    return {
+      screenId: "more-new-releases",
+      title: getHomeMusicSwimlaneTitle("newReleases"),
+      getChannels: () => getHomeMusicSwimlaneChannels("newReleases"),
+    };
+  }
+
+  if (pathname === `/more/${HOME_MUSIC_MORE_CATEGORY.countryEssentials}`) {
+    return {
+      screenId: "more-country-essentials",
+      title: getHomeMusicSwimlaneTitle("countryEssentials"),
+      getChannels: () => getHomeMusicSwimlaneChannels("countryEssentials"),
     };
   }
 

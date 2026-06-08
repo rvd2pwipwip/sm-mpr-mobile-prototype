@@ -173,7 +173,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ## Music-only MVP (next product slice)
 
-**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Music-only default with **Full MPR** demo toggle on **`/upgrade`**; broad + limited catalog scope unchanged; podcasts/radio **gated** (stub routes, filtered Listen again, registry-driven Home/Library/Search). TV follows same **`@sm-mpr/shared`** content profile. **Blocked on design:** channel id lists for **New releases** and **Country essentials** swimlanes.
+**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Music-only default with **Full MPR** demo toggle on **`/upgrade`**; **Phases 0–2** + **TV Broad Home gating** shipped; original Home swimlanes only (New releases / Country essentials deferred); **next:** My Library (Phase 3), limited Browse (Phase 4), TV Limited Home (Phase TV-2).
 
 ---
 

@@ -10,7 +10,7 @@ Download cover art into the repo:
 npm run media:sync
 ```
 
-Writes JPEGs under `packages/shared/media/` (~1,300 files: music, home radio, international geo radio, podcast shows). Episode rows reuse show art. Re-run after pulling changes that add new mock catalog rows.
+Writes JPEGs under `packages/shared/media/` (~1,300+ files: music, home radio, international geo radio, podcast shows). Episode rows reuse show art. **Re-run after adding new music channels** (e.g. MVP Home swimlanes) — sync skips files already on disk.
 
 Optional: commit `packages/shared/media/` so you never re-sync before a trip (~28 MB).
 

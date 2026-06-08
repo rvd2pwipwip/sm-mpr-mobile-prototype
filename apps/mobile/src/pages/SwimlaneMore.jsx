@@ -7,6 +7,10 @@ import {
   getRecommendationsMusicChannels,
   MUSIC_CHANNELS,
 } from "../data/musicChannels";
+import {
+  getHomeMusicSwimlaneChannels,
+  getHomeMusicSwimlaneTitle,
+} from "@sm-mpr/shared/data/homeMusicSwimlanes.js";
 import { PODCASTS } from "../data/podcasts";
 import { RADIO_STATIONS } from "../data/radioStations";
 import "./SwimlaneMore.css";
@@ -17,6 +21,30 @@ const CATEGORIES = {
     title: "Recommendations",
     render: (navigate) =>
       getRecommendationsMusicChannels().map((channel) => (
+        <li key={channel.id} className="swimlane-more__cell">
+          <MusicChannelCard
+            channel={channel}
+            onSelect={() => navigate(`/music/${channel.id}`)}
+          />
+        </li>
+      )),
+  },
+  "new-releases": {
+    title: getHomeMusicSwimlaneTitle("newReleases"),
+    render: (navigate) =>
+      getHomeMusicSwimlaneChannels("newReleases").map((channel) => (
+        <li key={channel.id} className="swimlane-more__cell">
+          <MusicChannelCard
+            channel={channel}
+            onSelect={() => navigate(`/music/${channel.id}`)}
+          />
+        </li>
+      )),
+  },
+  "country-essentials": {
+    title: getHomeMusicSwimlaneTitle("countryEssentials"),
+    render: (navigate) =>
+      getHomeMusicSwimlaneChannels("countryEssentials").map((channel) => (
         <li key={channel.id} className="swimlane-more__cell">
           <MusicChannelCard
             channel={channel}
