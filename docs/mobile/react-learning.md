@@ -263,6 +263,16 @@ Short **append-only** notes for concepts introduced while building this repo. Th
 
 ---
 
+## Content profile vs catalog scope (music-only MVP)
+
+- **Two independent axes** in the prototype — do not confuse them:
+  - **`catalogScope`** (`TerritoryContext`) — **broad** vs **limited** music lineup size; wordmark tap on Home / limited Browse toggles it. Changes **where** Home lives (`Home.jsx` vs `LimitedBrowse.jsx`) and bottom nav (tabs vs header icons).
+  - **`contentProfile`** (`ContentProfileProvider`) — **music-only** vs **full MPR**; default is music-only. Hides or shows **podcasts** and **radio** across Home, Search, My Library, and limited Browse. Toggle on **`/upgrade`** (mobile) or **Settings → user type preview** (TV).
+- **Shared helpers** live in **`@sm-mpr/shared/constants/productProfile.js`** (`enabledContentTypesForMode`, `shouldShowBrowseContentSwitcher`, `enabledSearchResultLanes`, `filterListenHistoryByProfile`). **Registries:** **`homeSwimlanes.js`**, **`myLibrarySections.js`** filter visible rails by enabled types.
+- **Restore full product:** flip **`DEFAULT_CONTENT_PROFILE_MODE`** in **`productProfile.js`** or use the demo toggle — podcast/radio components stay in the repo; routes use **`RequireContentType`** stubs when disabled.
+
+---
+
 ## How to use this file
 
 - When you learn something new with the AI or in docs, ask to **append a short section** here (or add it yourself).

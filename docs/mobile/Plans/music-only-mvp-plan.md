@@ -2,15 +2,15 @@
 
 Living implementation plan for a **music-only** prototype variant while **keeping podcasts and radio restorable** without rewriting UI. Applies to **mobile** (`apps/mobile/`) and **TV** (`apps/tv/`) with the same product rules. Complements **catalog scope** (broad vs limited) — do not merge those axes.
 
-**Status:** Phases 0–1 shipped (mobile broad Home); Phases 2–5 and TV rail gating pending.
+**Status:** Mobile Phases 0–5 shipped (docs + acceptance matrix below). TV: **TV-0** profile toggle + **TV-1** Broad Home gating shipped; **TV-2** limited Home pending.
 
 **See also:**
 
 - `docs/mobile/Plans/catalog-scope-search-browse-refactor.md` — broad vs limited IA (unchanged)
 - `docs/mobile/Plans/plan.md` — living mobile history
 - `docs/tv/Plans/plan.md` — living TV history
-- `docs/mobile/Stories/Home-screen-story.md` — update after MVP ships
-- `docs/mobile/Stories/Search-story.md` — search lanes and browse behavior
+- `docs/mobile/Stories/Home-screen-story.md` — MVP variant notes (shipped)
+- `docs/mobile/Stories/Search-story.md` — MVP variant + integration notes
 
 ---
 
@@ -254,11 +254,11 @@ Prefer **A** for readability.
 
 ### Phase 5 — Polish, docs, acceptance
 
-- [ ] Update `Home-screen-story.md`, `Search-story.md` with MVP variant notes
-- [ ] `docs/mobile/react-learning.md` — short entry on content profile vs catalog scope
-- [ ] `docs/mobile/Plans/plan.md` — checklist when shipped
-- [ ] Design-review guide — mention **Full MPR** toggle on Upgrade for internal demos
-- [ ] Manual acceptance matrix (below)
+- [x] Update `Home-screen-story.md`, `Search-story.md` with MVP variant notes
+- [x] `docs/mobile/react-learning.md` — short entry on content profile vs catalog scope
+- [x] `docs/mobile/Plans/plan.md` — checklist when shipped
+- [x] Design-review guide — mention **Full MPR** toggle on Upgrade for internal demos
+- [x] Manual acceptance matrix (below) — runnable QA checklist before stakeholder demos
 
 ---
 
@@ -268,9 +268,9 @@ TV does not reuse `ContentSwimlane`; it uses **focus groups** per swimlane. Same
 
 ### Phase TV-0 — Shared profile + demo toggle
 
-- [ ] `ContentProfileProvider` in `apps/tv/src/App.jsx`
-- [ ] Content profile toggle on `TvUserTypePreview.jsx` (or dedicated screen)
-- [ ] `ContentTypeUnavailable` TV page + route guards for any podcast/radio routes if they exist
+- [x] `ContentProfileProvider` in `apps/tv/src/App.jsx`
+- [x] Content profile toggle on `TvUserTypePreview.jsx` (or dedicated screen)
+- [ ] `ContentTypeUnavailable` TV page + route guards for any podcast/radio routes if they exist (no podcast/radio routes on TV yet)
 
 ### Phase TV-1 — Broad Home (`BroadHome.jsx`)
 
@@ -338,7 +338,9 @@ Helper: `getHomeSwimlaneChannels(key)` resolves ids → `MusicChannel` objects f
 
 ## 10. Acceptance checklist
 
-Run with **default profile (music only)** and again with **Full MPR** toggle on `/upgrade`.
+**Manual QA** — run before design reviews or stakeholder demos. Implementation for mobile Phases 0–4 is complete; check boxes as you verify in the browser.
+
+Run with **default profile (music only)** and again with **Full MPR** toggle on `/upgrade` (mobile) or **Settings → user type preview** (TV).
 
 ### Broad + music only
 
@@ -390,8 +392,9 @@ When product ships full MPR again:
 3. **Phase 2** — Search copy + lane filtering
 4. **Phase 3** — My Library registry
 5. **Phase 4** — Limited Browse
-6. **Phase TV-1+** — TV Home focus-safe rail gating (can parallelize after Phase 0)
-7. **Phase 5** — Docs + acceptance
+6. **Phase TV-1** — TV Broad Home rail gating (shipped)
+7. **Phase 5** — Docs + acceptance (shipped)
+8. **Phase TV-2** — TV limited Home (pending)
 
 **Phase 1 data:** channel name lists in `packages/shared/data/homeMusicSwimlanes.js` (resolved to catalog ids).
 

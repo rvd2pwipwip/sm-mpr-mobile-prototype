@@ -17,6 +17,7 @@
 | Dev server | From repo root: `npm run dev` (mobile). Use **mobile frame** width (~460px) or a phone-sized browser window. Cover art is **local by default** — run `npm run media:sync` once on Wi-Fi if images are missing (`docs/mobile/offline-demo.md`). |
 | Default demo mode | **Broad catalog** + **`guest`** unless you intentionally open with **subscribed** (cleanest chrome). |
 | Demo controls | **`/upgrade`** (Subscription screen) → **Preview as** toggles `guest` \| `freeStingray` \| `freeProvided` \| `subscribed`. |
+| Content profile | Same screen → **Content profile** toggles **Music only** (default) vs **Full MPR**. Use **Full MPR** when stakeholders need podcasts/radio on Home, Search, and My Library; switch back to **Music only** for the MVP slice. Persists per browser tab (`sessionStorage`). |
 | Catalog scope | Tap **wordmark** on **Home** (broad) or **limited Browse** landing to toggle **broad** vs **limited** lineup (persisted in session). |
 | Theme (optional) | System light/dark, or `data-theme` on `<html>` if you need a fixed mode. |
 | Reset history | Refresh page clears in-memory **Listen again** / likes unless you’ve added persistence — plan a quick “listen once” beat before Journey 2 if needed. |
@@ -95,7 +96,7 @@
 
 **Principles to cite:** `Home - UX Principles` §1 Welcome, §2 Reflect user, §9 Linear + on-demand equally, §10 Trust/monetization.
 
-**Setup:** `guest`, **broad** catalog, fresh session (no history).
+**Setup:** `guest`, **broad** catalog, **Music only** content profile (default), fresh session (no history). Switch to **Full MPR** on **`/upgrade`** only if the room needs the three-type Home sampler in Journey 1.
 
 | Step | Where to click | What to call out |
 |------|----------------|------------------|

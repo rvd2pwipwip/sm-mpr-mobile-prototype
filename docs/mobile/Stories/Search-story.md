@@ -44,6 +44,12 @@ To conclude, I will say that even if our friend Home has the privilege to be our
 
 ---
 
+## Music-only MVP variant (prototype)
+
+Default demo profile is **music-only**. **Broad Search** hides the **Music / Podcasts / Radio** browse strip when only music is enabled; placeholder copy is **Search channels, artists or tags**. Live search shows **Channels**, **Artists**, and **Tags** only (no podcast, episode, or radio lanes). **Limited** **`/search`** uses the same lane filter; no browse strip (unchanged IA). Toggle **Full MPR** on **`/upgrade`** to restore browse tabs, placeholder, and all result lanes. Podcast/radio browse URLs and players show **Not available in this build** when types are disabled. Detail: **`../Plans/music-only-mvp-plan.md`**.
+
+---
+
 ## Integration notes (locked decisions)
 
 These bullets complement the story above for **design, product, and engineering**. They record decisions for how Search & Browse **integrates** with the rest of the app.

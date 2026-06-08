@@ -32,6 +32,8 @@ My footer also features the miniplayer, anchored at the top of the main menu, wh
 
 I’ve also been mandated to display visual ads for unsubscribed and unprovided users.
 
+**Music-only MVP variant (prototype):** Default demo profile is **music-only** (podcasts and radio hidden from Home swimlanes, Listen again, and related surfaces). **Broad Home** shows **Most popular music**, **New releases**, **Country essentials**, and **Recommendations** — no podcast or radio sampler rows. Toggle **Full MPR** on **`/upgrade`** (Subscription screen) to restore the classic **music → podcasts → radio** sampler stack and mixed Listen again. This is independent of **catalog scope** (broad vs limited wordmark toggle). Detail: **`../Plans/music-only-mvp-plan.md`**.
+
 **Prototype mapping (code):** see **`../visual-ads-and-user-types.md`** — `guest`, `freeStingray`, and `freeProvided` show the footer ad placeholder under the tab bar and on the music player; `subscribed` does not.
 
 **Prototype note (broad catalog Home):** the clickable **`Home.jsx`** route under **broad** catalog intentionally **does not** render a **Favorites** swimlane above **Listen again**; **likes** appear on **My Library** (`LibraryLikedMusicSwimlane` / `LibraryLikedRadioSwimlane`). The narrative above still describes ideal product order if we bring Favorites onto Home later. **Limited Browse** (narrow catalog) shows tab-scoped liked rails separately.

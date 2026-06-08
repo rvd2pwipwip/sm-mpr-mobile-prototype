@@ -8,7 +8,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 
 **See also:**
 
-- **`docs/mobile/Plans/music-only-mvp-plan.md`** — **next product slice:** music-only content profile (mobile + TV), registries, demo toggle, §7 TV phases
+- **`docs/mobile/Plans/music-only-mvp-plan.md`** — music-only content profile: mobile Phases 0–5 shipped; TV **Broad Home** gating + profile toggle (§7 **TV-0**, **TV-1**); **TV-2** limited Home pending
 - **`docs/tv/Plans/Music-player-agent-handoff.md`** — **start here** for music player implementation (clean-slate agent brief)
 - **`docs/tv/Plans/Music-player-implementation-plan.md`** — detailed player plan (reference)
 - **`docs/tv/Plans/vertical-parked-navigation-plan.md`** — vertical parked focus ring (tag-row pattern on Y); Phase A geometry in `tvFocusGeometry.js`

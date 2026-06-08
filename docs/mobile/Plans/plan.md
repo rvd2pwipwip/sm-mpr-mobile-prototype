@@ -6,7 +6,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 **Docs layout:** All **mobile** product docs live under **`docs/mobile/`** — **`Plans/`**, **`Stories/`**, **`Tutorials/`**, **`UX/`**, plus root files (**`react-learning.md`**, **`figma-nodes.md`**, **`design-tokens.md`**, etc.). **TV** docs go under **`docs/tv/`** when added.
 
-**See also:** `docs/mobile/Stories/Home-screen-story.md` (product story for Home), `docs/mobile/Stories/Search-story.md` (Search & Browse story + **Integration notes**), **`docs/mobile/Plans/music-only-mvp-plan.md`** (**next:** music-only content profile, registries, mobile + TV; podcasts/radio gated not deleted), `docs/mobile/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table; **Phases 0–8**, acceptance checklist under **Phase 8**), **`docs/mobile/Plans/Full-screen-player-layout-refactor.md`** (music / radio / podcast fullscreen shell: header + footer anchoring, thumbnail clamp, phased migration), **`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/mobile/Plans/Cast-prototype-implementation-plan.md`** (dumb cast flow: dialogs, thumbnail scrim, three fullscreen players — **before / during implementation**), **`docs/mobile/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/mobile/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), **`docs/mobile/Plans/ContentSwimlane-category-rail-variant.md`** (`ContentSwimlane` reference + category rail variant plan/tutorial), `docs/mobile/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/mobile/Stories/Home-screen-story.md` (product story for Home), `docs/mobile/Stories/Search-story.md` (Search & Browse story + **Integration notes**), **`docs/mobile/Plans/music-only-mvp-plan.md`** (music-only MVP: mobile Phases 0–5 shipped; TV Broad Home gating; §10 acceptance checklist), `docs/mobile/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table; **Phases 0–8**, acceptance checklist under **Phase 8**), **`docs/mobile/Plans/Full-screen-player-layout-refactor.md`** (music / radio / podcast fullscreen shell: header + footer anchoring, thumbnail clamp, phased migration), **`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/mobile/Plans/Cast-prototype-implementation-plan.md`** (dumb cast flow: dialogs, thumbnail scrim, three fullscreen players — **before / during implementation**), **`docs/mobile/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/mobile/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), **`docs/mobile/Plans/ContentSwimlane-category-rail-variant.md`** (`ContentSwimlane` reference + category rail variant plan/tutorial), `docs/mobile/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -171,9 +171,22 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ---
 
-## Music-only MVP (next product slice)
+## Music-only MVP (shipped — mobile Phases 0–5)
 
-**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Music-only default with **Full MPR** demo toggle on **`/upgrade`**; **Phases 0–4** + **TV Broad Home** shipped; **next:** Phase 5 docs/acceptance, TV Limited Home (Phase TV-2).
+**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Default **music-only** content profile; **Full MPR** demo toggle on **`/upgrade`** (and TV user-type preview).
+
+**Shipped (mobile):**
+
+- [x] Phase 0 — `ContentProfileProvider`, route stubs, demo toggle
+- [x] Phase 1 — broad Home registry; music-only **New releases** / **Country essentials**; MPR music → podcast → radio stack
+- [x] Phase 2 — Search browse strip, lanes, placeholder copy
+- [x] Phase 3 — My Library section registry
+- [x] Phase 4 — limited Browse switcher + taxonomy gating
+- [x] Phase 5 — stories, react-learning, design-review guide, acceptance matrix in plan doc
+
+**TV:** Broad Home gating (Phase TV-1) shipped; **TV-0** profile toggle shipped; **TV-2** limited Home + route stubs still pending.
+
+**Manual QA:** run §10 acceptance checklist in **`music-only-mvp-plan.md`** before stakeholder demos.
 
 ---
 
