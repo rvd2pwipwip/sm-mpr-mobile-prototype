@@ -324,6 +324,22 @@ const RAW_LINEUP = [
   { categoryId: "variety", name: "Family Friendly Pop" },
   { categoryId: "variety", name: "Relaxing Lullabies" },
   { categoryId: "variety", name: "Para Peques" },
+
+  // Music-only MVP Home swimlanes (New releases / Country essentials)
+  { categoryId: "pop", name: "Loud and Proud" },
+  { categoryId: "pop", name: "Hit List: Best of 2025" },
+  { categoryId: "country-roots", name: "Country: Best of 2025" },
+  { categoryId: "rock", name: "Rock: Best of 2025" },
+  { categoryId: "hip-hop", name: "Hip-Hop and R&B: Best of 2025" },
+  { categoryId: "rock", name: "Indie: Best of 2025" },
+  { categoryId: "rock", name: "Alternative: Best of 2025" },
+  { categoryId: "jazz-blues", name: "Jazz: Best of 2025" },
+  { categoryId: "rock", name: "Metal: Best of 2025" },
+  { categoryId: "country-roots", name: "Franco Country" },
+  { categoryId: "country-roots", name: "Today's Country" },
+  { categoryId: "country-roots", name: "Hot Pop & Country" },
+  { categoryId: "country-roots", name: "Country Road Trip" },
+  { categoryId: "country-roots", name: "Soft Country" },
 ];
 
 const MAX_RELATED = 6;
@@ -419,8 +435,19 @@ export const MUSIC_CHANNELS = buildChannels();
 /** @type {Map<string, MusicChannel>} */
 const byId = new Map(MUSIC_CHANNELS.map((c) => [c.id, c]));
 
+/** @type {Map<string, MusicChannel>} */
+const byNameLower = new Map(
+  MUSIC_CHANNELS.map((c) => [c.name.trim().toLowerCase(), c]),
+);
+
 export function getMusicChannelById(id) {
   return byId.get(id) ?? null;
+}
+
+/** Exact display-name lookup (case-insensitive). */
+export function getMusicChannelByName(name) {
+  if (!name || typeof name !== "string") return null;
+  return byNameLower.get(name.trim().toLowerCase()) ?? null;
 }
 
 export function getMusicChannelsByCategory(categoryId) {

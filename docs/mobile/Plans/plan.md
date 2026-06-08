@@ -6,7 +6,7 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 **Docs layout:** All **mobile** product docs live under **`docs/mobile/`** — **`Plans/`**, **`Stories/`**, **`Tutorials/`**, **`UX/`**, plus root files (**`react-learning.md`**, **`figma-nodes.md`**, **`design-tokens.md`**, etc.). **TV** docs go under **`docs/tv/`** when added.
 
-**See also:** `docs/mobile/Stories/Home-screen-story.md` (product story for Home), `docs/mobile/Stories/Search-story.md` (Search & Browse story + **Integration notes**), `docs/mobile/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table; **Phases 0–8**, acceptance checklist under **Phase 8**), **`docs/mobile/Plans/Full-screen-player-layout-refactor.md`** (music / radio / podcast fullscreen shell: header + footer anchoring, thumbnail clamp, phased migration), **`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/mobile/Plans/Cast-prototype-implementation-plan.md`** (dumb cast flow: dialogs, thumbnail scrim, three fullscreen players — **before / during implementation**), **`docs/mobile/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/mobile/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), **`docs/mobile/Plans/ContentSwimlane-category-rail-variant.md`** (`ContentSwimlane` reference + category rail variant plan/tutorial), `docs/mobile/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
+**See also:** `docs/mobile/Stories/Home-screen-story.md` (product story for Home), `docs/mobile/Stories/Search-story.md` (Search & Browse story + **Integration notes**), **`docs/mobile/Plans/music-only-mvp-plan.md`** (**next:** music-only content profile, registries, mobile + TV; podcasts/radio gated not deleted), `docs/mobile/Plans/Search-Browse-implementation-plan.md` (ordered build plan + Figma table; **Phases 0–8**, acceptance checklist under **Phase 8**), **`docs/mobile/Plans/Full-screen-player-layout-refactor.md`** (music / radio / podcast fullscreen shell: header + footer anchoring, thumbnail clamp, phased migration), **`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`** (limited vs broad IA: Browse landing, Search fork, no tab bar when limited), **`docs/mobile/Plans/Cast-prototype-implementation-plan.md`** (dumb cast flow: dialogs, thumbnail scrim, three fullscreen players — **before / during implementation**), **`docs/mobile/Plans/Info-screen-implementation-plan.md`** (Info tab + Contact/About + audio quality — **before implementation**), **`docs/mobile/Plans/My-Library-implementation-plan.md`** (bottom tab My Library hub, App Info swimlane, unified listen history vs Home Listen again), **`docs/mobile/Plans/ContentSwimlane-category-rail-variant.md`** (`ContentSwimlane` reference + category rail variant plan/tutorial), `docs/mobile/figma-nodes.md` (Figma links), `src/data/*` (mock catalogs).
 
 ---
 
@@ -171,9 +171,15 @@ This file is the **running plan**: what we intend to do, what we have done, and 
 
 ---
 
+## Music-only MVP (next product slice)
+
+**Plan:** **`docs/mobile/Plans/music-only-mvp-plan.md`**. Music-only default with **Full MPR** demo toggle on **`/upgrade`**; broad + limited catalog scope unchanged; podcasts/radio **gated** (stub routes, filtered Listen again, registry-driven Home/Library/Search). TV follows same **`@sm-mpr/shared`** content profile. **Blocked on design:** channel id lists for **New releases** and **Country essentials** swimlanes.
+
+---
+
 ## TV prototype — next steps
 
-**TV living plan:** **`docs/tv/Plans/plan.md`**. **First build slice:** **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** (Phases 0–5: shared data, focus, cards, fixed swimlanes, two Home music rails, More + Channel Info stubs). **Figma:** **`docs/tv/figma-nodes.md`**.
+**TV living plan:** **`docs/tv/Plans/plan.md`**. **Music-only MVP (TV):** **`docs/mobile/Plans/music-only-mvp-plan.md`** §7. **First build slice:** **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** (Phases 0–5: shared data, focus, cards, fixed swimlanes, two Home music rails, More + Channel Info stubs). **Figma:** **`docs/tv/figma-nodes.md`**.
 
 1. **Phase 0** — hoist **`musicChannels.js`** to **`@sm-mpr/shared`** — **done** (see **`docs/tv/Plans/plan.md`**).
 2. **Phases 1–3** — focus, cards, and **FixedSwimlane** done; next **Phase 4** (second Home rail + Channel Info stub).

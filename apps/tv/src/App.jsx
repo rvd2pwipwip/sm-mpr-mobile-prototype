@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { GroupFocusNavigationProvider } from "./context/GroupFocusNavigationContext.jsx";
 import { ScreenMemoryProvider } from "./context/ScreenMemoryContext.jsx";
 import { TerritoryProvider } from "./context/TerritoryContext.jsx";
+import { ContentProfileProvider } from "./context/ContentProfileContext.jsx";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext.jsx";
 import { AccountRequiredDialogProvider } from "./context/AccountRequiredDialogContext.jsx";
 import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext.jsx";
@@ -34,6 +35,7 @@ export default function App() {
   return (
     <TvViewport>
       <UserTypeProvider>
+        <ContentProfileProvider>
         <AccountRequiredDialogProvider>
           <GuestMusicSkipProvider>
             <GuestPrerollGraceProvider>
@@ -75,6 +77,7 @@ export default function App() {
             </GuestPrerollGraceProvider>
           </GuestMusicSkipProvider>
         </AccountRequiredDialogProvider>
+        </ContentProfileProvider>
         {/*
           Footer ad + scroll reserve: limited catalog only (TvShell mounts
           TvFooterAdBanner + TvVisualAdsHtmlSync). Broad Home uses in-feed banner.

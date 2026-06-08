@@ -23,7 +23,15 @@ import { PlaybackProvider } from "./context/PlaybackContext";
 import { PodcastUserStateProvider } from "./context/PodcastUserStateContext";
 import { CATALOG_SCOPE } from "./constants/catalogScope.js";
 import { TerritoryProvider, useTerritory } from "./context/TerritoryContext.jsx";
+import {
+  ContentProfileProvider,
+  useContentProfile,
+} from "./context/ContentProfileContext.jsx";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext";
+import RequireContentType from "./components/RequireContentType.jsx";
+import RequireLibraryHistorySegment from "./components/RequireLibraryHistorySegment.jsx";
+import RequireLibraryLikeKind from "./components/RequireLibraryLikeKind.jsx";
+import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
 import Home from "./pages/Home";
 import LimitedBrowse from "./pages/LimitedBrowse";
 import ListenAgainMore from "./pages/ListenAgainMore";
@@ -100,10 +108,17 @@ function HomeOrLimitedBrowse() {
 /** **Broad:** `/search` redirects to last Music \| Podcasts \| Radio (session) or `/search/music`. **Limited:** `Search` at canonical `/search`. */
 function SearchEntryRoute() {
   const { catalogScope } = useTerritory();
+  const { isContentTypeEnabled } = useContentProfile();
   if (catalogScope === CATALOG_SCOPE.limited) {
     return <Search />;
   }
-  const tab = readStoredBroadSearchBrowseTab() ?? "music";
+  let tab = readStoredBroadSearchBrowseTab() ?? "music";
+  if (tab === "podcasts" && !isContentTypeEnabled(CONTENT_TYPE.podcasts)) {
+    tab = "music";
+  }
+  if (tab === "radio" && !isContentTypeEnabled(CONTENT_TYPE.radio)) {
+    tab = "music";
+  }
   return <Navigate to={`/search/${tab}`} replace />;
 }
 
@@ -137,26 +152,110 @@ function AppRoutes() {
         <Route path="/more/:categoryId" element={<SwimlaneMore />} />
         <Route path="/music/:channelId" element={<MusicChannelInfo />} />
         <Route path="/music/:channelId/play" element={<MusicPlayerRoute />} />
-        <Route path="/podcast/:podcastId/play/:episodeId" element={<PodcastPlayerRoute />} />
-        <Route path="/podcast/:podcastId" element={<PodcastInfo />} />
+        <Route
+          path="/podcast/:podcastId/play/:episodeId"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+              <PodcastPlayerRoute />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/podcast/:podcastId"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+              <PodcastInfo />
+            </RequireContentType>
+          }
+        />
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug/sub/:subSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId/tag/:tagSlug" element={<SearchMusicBroadTagChannels />} />
         <Route path="/search/browse/music/vibe/:vibeId" element={<SearchMusicVibe />} />
         <Route path="/search/browse/music/category/:categoryId" element={<SearchMusicCategory />} />
         <Route path="/search/browse/music/artist/:artistId" element={<SearchMusicArtistChannels />} />
-        <Route path="/radio/:stationId/play" element={<RadioPlayerRoute />} />
-        <Route path="/radio/:stationId" element={<RadioStationInfo />} />
-        <Route path="/search/browse/radio/international/*" element={<SearchRadioInternationalStack />} />
-        <Route path="/search/browse/radio/near-you" element={<SearchRadioStationGrid />} />
-        <Route path="/search/browse/radio/format/:formatId" element={<SearchRadioStationGrid />} />
-        <Route path="/search/browse/podcasts/library/:librarySection" element={<SearchPodcastsLibrary />} />
-        <Route path="/search/browse/podcasts/category/:categoryId" element={<SearchPodcastsCategory />} />
-        <Route path="/search/more/radio-geo/*" element={<SearchRadioGeoMore />} />
+        <Route
+          path="/radio/:stationId/play"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <RadioPlayerRoute />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/radio/:stationId"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <RadioStationInfo />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/browse/radio/international/*"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <SearchRadioInternationalStack />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/browse/radio/near-you"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <SearchRadioStationGrid />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/browse/radio/format/:formatId"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <SearchRadioStationGrid />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/browse/podcasts/library/:librarySection"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+              <SearchPodcastsLibrary />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/browse/podcasts/category/:categoryId"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+              <SearchPodcastsCategory />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/more/radio-geo/*"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <SearchRadioGeoMore />
+            </RequireContentType>
+          }
+        />
         <Route path="/search/more/catalog" element={<SearchCatalogMore />} />
         <Route path="/search/more/tags" element={<SearchTagsMore />} />
         <Route path="/search/music" element={<SearchTabRoute />} />
-        <Route path="/search/podcasts" element={<SearchTabRoute />} />
-        <Route path="/search/radio" element={<SearchTabRoute />} />
+        <Route
+          path="/search/podcasts"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+              <SearchTabRoute />
+            </RequireContentType>
+          }
+        />
+        <Route
+          path="/search/radio"
+          element={
+            <RequireContentType contentType={CONTENT_TYPE.radio}>
+              <SearchTabRoute />
+            </RequireContentType>
+          }
+        />
         <Route path="/search" element={<SearchEntryRoute />} />
         <Route path="/info/contact" element={<InfoContact />} />
         <Route path="/info/about" element={<InfoAbout />} />
@@ -164,9 +263,20 @@ function AppRoutes() {
         <Route path="/my-library/account-settings" element={<MyLibraryAccountSettings />} />
         <Route
           path="/my-library/history/:historySegment"
-          element={<MyLibraryHistoryMore />}
+          element={
+            <RequireLibraryHistorySegment>
+              <MyLibraryHistoryMore />
+            </RequireLibraryHistorySegment>
+          }
         />
-        <Route path="/my-library/likes/:likeKind" element={<MyLibraryLikesMore />} />
+        <Route
+          path="/my-library/likes/:likeKind"
+          element={
+            <RequireLibraryLikeKind>
+              <MyLibraryLikesMore />
+            </RequireLibraryLikeKind>
+          }
+        />
         <Route path="/my-library" element={<MyLibrary />} />
       </Routes>
       {hideBottomNav ? null : (
@@ -184,6 +294,7 @@ function App() {
   return (
     <UserTypeProvider>
       <AccountRequiredDialogProvider>
+        <ContentProfileProvider>
         <TerritoryProvider>
           <GuestMusicSkipProvider>
           <GuestPrerollGraceProvider>
@@ -209,6 +320,7 @@ function App() {
           </GuestPrerollGraceProvider>
         </GuestMusicSkipProvider>
         </TerritoryProvider>
+        </ContentProfileProvider>
       </AccountRequiredDialogProvider>
     </UserTypeProvider>
   );

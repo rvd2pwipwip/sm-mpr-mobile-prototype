@@ -7,6 +7,10 @@ import ScreenHeader, {
 import { PROVIDER_SSO_URL, STINGRAY_SIGNUP_EMAIL_URL } from "../constants/externalLinks";
 import { LEGAL_LINKS } from "../constants/legalLinks";
 import { RESTORE_PURCHASE_PROTOTYPE_DIALOG } from "../constants/infoAccount";
+import {
+  CONTENT_PROFILE_MODE,
+  useContentProfile,
+} from "../context/ContentProfileContext";
 import { useUserType } from "../context/UserTypeContext";
 import { useRestorePurchasePrototypeDialog } from "../hooks/useRestorePurchasePrototypeDialog";
 import RestorePurchasePrototypeDialog from "../components/RestorePurchasePrototypeDialog";
@@ -26,10 +30,16 @@ const USER_TYPE_OPTIONS = [
   { value: "subscribed", label: "Subscribed" },
 ];
 
+const CONTENT_PROFILE_OPTIONS = [
+  { value: CONTENT_PROFILE_MODE.musicOnly, label: "Music only" },
+  { value: CONTENT_PROFILE_MODE.fullMpr, label: "Full MPR" },
+];
+
 /** Subscription (Upgrade) — Figma `220:40551`; "Upgrade now" opens Stingray signup then `/upgrade/store` mock (`9548:86399`). */
 export default function Subscription() {
   const navigate = useNavigate();
   const { userType, setUserType } = useUserType();
+  const { contentProfileMode, setContentProfileMode } = useContentProfile();
   const {
     dialogOpen: restoreDialogOpen,
     working: restoreWorking,
@@ -165,6 +175,32 @@ export default function Subscription() {
                       : "subscription-screen__prototype-btn"
                   }
                   onClick={() => setUserType(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div
+            className="subscription-screen__prototype"
+            role="group"
+            aria-label="Prototype: content profile"
+          >
+            <p className="subscription-screen__prototype-label">
+              Content profile
+            </p>
+            <div className="subscription-screen__prototype-toggles">
+              {CONTENT_PROFILE_OPTIONS.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={
+                    contentProfileMode === value
+                      ? "subscription-screen__prototype-btn subscription-screen__prototype-btn--on"
+                      : "subscription-screen__prototype-btn"
+                  }
+                  onClick={() => setContentProfileMode(value)}
                 >
                   {label}
                 </button>
