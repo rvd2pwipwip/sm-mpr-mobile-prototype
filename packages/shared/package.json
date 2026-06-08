@@ -14,6 +14,7 @@
     "./constants/contentProfileStorage.js": "./constants/contentProfileStorage.js",
     "./constants/productProfile.js": "./constants/productProfile.js",
     "./constants/homeSwimlanes.js": "./constants/homeSwimlanes.js",
+    "./constants/myLibrarySections.js": "./constants/myLibrarySections.js",
     "./data/homeMusicSwimlanes.js": "./data/homeMusicSwimlanes.js",
     "./constants/userTypes.js": "./constants/userTypes.js",
     "./constants/externalLinks.js": "./constants/externalLinks.js",

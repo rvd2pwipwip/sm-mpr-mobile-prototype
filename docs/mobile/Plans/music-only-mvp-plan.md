@@ -229,11 +229,11 @@ Prefer **A** for readability.
 
 **Goal:** Music-only library hub.
 
-- [ ] `myLibrarySections.js` registry
-- [ ] Refactor `MyLibrary.jsx` to map registry
-- [ ] Default profile sections: **Music history**, **Liked music** (and App Info swimlane if present)
-- [ ] Hide: podcast history, `LibraryPodcastUserSwimlanes`, radio history, `LibraryLikedRadioSwimlane`
-- [ ] Guard `/my-library/history/podcasts`, `/my-library/likes/radio`, podcast library routes with stub
+- [x] `myLibrarySections.js` registry
+- [x] Refactor `MyLibrary.jsx` to map registry
+- [x] Default profile sections: **Music history**, **Liked music** (and App Info swimlane if present)
+- [x] Hide: podcast history, `LibraryPodcastUserSwimlanes`, radio history, `LibraryLikedRadioSwimlane`
+- [x] Guard `/my-library/history/podcasts`, `/my-library/likes/radio`, podcast library routes with stub (`RequireLibrary*` + `RequireContentType` on podcast/radio routes)
 
 **Files:** `MyLibrary.jsx`, `myLibrarySections.js`, `myLibraryHistory.js` (segment metadata may stay; gating at UI)
 
