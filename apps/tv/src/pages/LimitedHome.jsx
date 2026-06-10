@@ -93,6 +93,7 @@ export default function LimitedHome() {
     landingGroupIndex: SWIMLANE_GROUP,
     lastFocusableGroupIndex: SWIMLANE_GROUP,
     getFocusedElement,
+    screenId: "home-limited",
   });
 
   const prevFocusedGroupRef = useRef(focusedGroupIndex);

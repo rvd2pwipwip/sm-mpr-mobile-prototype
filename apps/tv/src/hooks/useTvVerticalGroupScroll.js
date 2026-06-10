@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useOptionalScreenMemory } from "../context/ScreenMemoryContext.jsx";
 import {
   calcParkedScrollOffsetY,
   clampScrollOffsetY,
@@ -25,6 +26,7 @@ function isElementInScrollInner(focusEl, innerEl) {
  *   lastFocusableGroupIndex?: number,
  *   firstFocusableGroupIndex?: number,
  *   getFocusedElement?: () => HTMLElement | null,
+ *   screenId?: string,
  * }} [options]
  */
 export function useTvVerticalGroupScroll(
@@ -34,21 +36,43 @@ export function useTvVerticalGroupScroll(
     lastFocusableGroupIndex,
     firstFocusableGroupIndex = 0,
     getFocusedElement,
+    screenId,
   } = {},
 ) {
+  const { memory, persistField } = useOptionalScreenMemory(screenId);
+  const initialOffsetY = memory.scrollOffsetY ?? 0;
+  const initialParkLineY = memory.parkLineY ?? null;
+  const hasPersistedVisit =
+    initialOffsetY > 0 ||
+    (initialParkLineY != null &&
+      landingGroupIndex != null &&
+      focusedGroupIndex !== landingGroupIndex);
+
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
   const groupRefs = useRef([]);
-  const offsetYRef = useRef(0);
+  const offsetYRef = useRef(initialOffsetY);
   const prevGroupRef = useRef(focusedGroupIndex);
-  const isLaunchRef = useRef(true);
-  const parkLineYRef = useRef(null);
+  const isLaunchRef = useRef(!hasPersistedVisit);
+  const needsRestoreParkRef = useRef(hasPersistedVisit);
+  const parkLineYRef = useRef(initialParkLineY);
   const getFocusedElementRef = useRef(getFocusedElement);
 
-  const [offsetY, setOffsetY] = useState(0);
+  const [offsetY, setOffsetY] = useState(initialOffsetY);
   const [transitionEnabled, setTransitionEnabled] = useState(false);
+  const transitionScheduledRef = useRef(false);
 
   getFocusedElementRef.current = getFocusedElement;
+
+  const scheduleScrollTransition = useCallback(() => {
+    if (transitionScheduledRef.current) return;
+    transitionScheduledRef.current = true;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setTransitionEnabled(true);
+      });
+    });
+  }, []);
 
   useEffect(() => {
     offsetYRef.current = offsetY;
@@ -58,28 +82,39 @@ export function useTvVerticalGroupScroll(
     groupRefs.current[groupIndex] = node;
   }, []);
 
-  const applyOffset = useCallback((nextOffset) => {
-    if (nextOffset !== offsetYRef.current) {
-      setOffsetY(nextOffset);
-    }
-  }, []);
+  const applyOffset = useCallback(
+    (nextOffset) => {
+      if (nextOffset !== offsetYRef.current) {
+        setOffsetY(nextOffset);
+        if (screenId) {
+          persistField("scrollOffsetY", nextOffset);
+        }
+      }
+    },
+    [screenId, persistField],
+  );
 
-  const captureParkLineIfNeeded = useCallback((focusEl, viewport) => {
-    if (parkLineYRef.current != null) return true;
-    const parkY = measureParkLineY(focusEl, viewport);
-    if (parkY == null) return false;
-    parkLineYRef.current = parkY;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setTransitionEnabled(true);
-      });
-    });
-    return true;
-  }, []);
+  const captureParkLineIfNeeded = useCallback(
+    (focusEl, viewport) => {
+      if (parkLineYRef.current != null) {
+        scheduleScrollTransition();
+        return true;
+      }
+      const parkY = measureParkLineY(focusEl, viewport);
+      if (parkY == null) return false;
+      parkLineYRef.current = parkY;
+      if (screenId) {
+        persistField("parkLineY", parkY);
+      }
+      scheduleScrollTransition();
+      return true;
+    },
+    [screenId, persistField, scheduleScrollTransition],
+  );
 
   const measureAndPark = useCallback(
     (options = {}) => {
-      const { focusChanged = false } = options;
+      const { focusChanged = false, restoreVisit = false } = options;
       const viewport = viewportRef.current;
       const inner = innerRef.current;
       const focusEl = getFocusedElementRef.current?.() ?? null;
@@ -114,6 +149,24 @@ export function useTvVerticalGroupScroll(
       }
 
       const parkLineY = parkLineYRef.current;
+
+      if (restoreVisit) {
+        const ringTopContent = getFocusRingTopInContent(
+          focusEl,
+          viewport,
+          currentOffset,
+        );
+        const parkedOffset = clampScrollOffsetY(
+          calcParkedScrollOffsetY(ringTopContent, parkLineY),
+          maxOffsetY,
+        );
+        const nextOffset =
+          currentOffset > 0
+            ? clampScrollOffsetY(currentOffset, maxOffsetY)
+            : parkedOffset;
+        applyOffset(nextOffset);
+        return;
+      }
       const ringTopContent = getFocusRingTopInContent(
         focusEl,
         viewport,
@@ -193,10 +246,14 @@ export function useTvVerticalGroupScroll(
 
   useLayoutEffect(() => {
     const focusChanged = prevGroupRef.current !== focusedGroupIndex;
+    const restoreVisit = needsRestoreParkRef.current;
     if (focusChanged) {
       isLaunchRef.current = false;
     }
-    measureAndPark({ focusChanged });
+    measureAndPark({ focusChanged, restoreVisit });
+    if (restoreVisit) {
+      needsRestoreParkRef.current = false;
+    }
     prevGroupRef.current = focusedGroupIndex;
 
     let frameId2;

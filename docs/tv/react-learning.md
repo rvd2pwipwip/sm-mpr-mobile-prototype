@@ -110,3 +110,9 @@ Swimlanes handle **Left/Right** on `window` when their group is active, so those
 - **Search mode:** first non-whitespace character hides tabs; body swaps to results placeholder (Phase 5). **`?q=`** on URL (debounced) so Back restores the query.
 - **Keyboard stub:** `TvOnScreenKeyboardStub` overlay when the field is focused; PC keyboard types into the input. **Enter** or **Esc** dismisses stub only (`data-tv-keyboard-stub` on `<html>` so **`GlobalTvKeys`** Esc does not navigate back while stub is open).
 - **PrimaryNav Search:** `to` uses **`resolveBroadSearchBrowseTab`**; re-tap while on `/search/*` resets to **Music** + empty query (limited: `/search`).
+
+## 2026-06-09 — Home vertical scroll survives tab switches
+
+- **Problem:** `ScreenMemoryContext` kept **focus group + card index** (`home-broad`) but **`useTvVerticalGroupScroll`** reset **`offsetY`** on unmount (Home → Search → Home).
+- **Fix:** Optional **`screenId`** on the hook persists **`scrollOffsetY`** and **`parkLineY`** in the same screen memory bucket. On remount, initial transform uses saved offset; **`restoreVisit`** re-parks before paint if needed. **`BroadHome`** / **`LimitedHome`** pass **`home-broad`** / **`home-limited`**.
+- **Transitions after return:** Restored **`parkLineY`** skipped the path that adds **`tv-home__scroll-inner--animated`**. **`scheduleScrollTransition()`** runs when park line already exists (restored or remeasured), after the first paint — same double **`rAF`** as first visit.

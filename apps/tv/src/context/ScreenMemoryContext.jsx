@@ -62,3 +62,27 @@ export function useScreenMemory(screenId) {
       ctx.setScreenFocusedGroupIndex(screenId, groupIndex),
   };
 }
+
+/**
+ * Optional screen memory for hooks that may run with or without persistence.
+ * @param {string | undefined} screenId
+ */
+export function useOptionalScreenMemory(screenId) {
+  const ctx = useContext(ScreenMemoryContext);
+  if (!ctx) {
+    throw new Error(
+      "useOptionalScreenMemory must be used within ScreenMemoryProvider",
+    );
+  }
+
+  const memory = screenId ? (ctx.screenMemory[screenId] ?? {}) : {};
+
+  const persistField = useCallback(
+    (field, value) => {
+      if (screenId) ctx.setScreenField(screenId, field, value);
+    },
+    [screenId, ctx],
+  );
+
+  return { memory, persistField };
+}

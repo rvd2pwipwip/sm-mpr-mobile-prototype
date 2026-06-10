@@ -206,6 +206,7 @@ export default function BroadHome() {
     landingGroupIndex: focusConfig.firstSwimlaneGroup,
     lastFocusableGroupIndex: focusConfig.lastSwimlaneGroup,
     getFocusedElement,
+    screenId: "home-broad",
   });
 
   const playingChannelId =
