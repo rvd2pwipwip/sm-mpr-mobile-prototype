@@ -166,6 +166,10 @@
 
   --tv-swimlane-inline-start: var(--tv-content-inline-start);
   --tv-swimlane-inline-end: var(--tv-content-inline-end);
+
+  /* Search & Browse — Figma `15822:35859`; measured header publishes offset on <html> */
+  --tv-search-header-offset: 200px;
+  --tv-search-header-gap: 50px;
 }
 
 html[data-visual-ads] {

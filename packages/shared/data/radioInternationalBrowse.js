@@ -1,0 +1,390 @@
+/**
+ * International radio browse tree (prototype).
+ * Pill labels for North America / Canada / Alberta match Figma `19871:33453`.
+ * **North America** country/region cards are ordered by great-circle distance from a mock listener in **Montreal, Canada** (45.5017 N, 73.5673 W), nearest first.
+ * Every geo node gets **20** generated `RadioStation` rows (IDs `geo-{nodeSlug}-00` … `19`).
+ * Browse Radio swimlanes without mocked country lists use generic placeholder rows (see {@link getInternationalBrowseLaneRows}).
+ */
+
+import {
+  INTERNATIONAL_CONTINENTS_PLANNED,
+  getRadioStationById,
+  radioStationThumbnailUrl,
+} from "@sm-mpr/shared/data/radioStations.js";
+
+/** Prototype cap for placeholder country rows (mobile Home uses 12; TV uses 9). */
+const SWIMLANE_CARD_MAX = 12;
+
+export { INTERNATIONAL_CONTINENTS_PLANNED };
+
+/** @typedef {import("./radioStations.js").RadioStation} RadioStation */
+
+const STATIONS_PER_GEO_NODE = 20;
+
+const GEO_NAME_HINTS = [
+  "FM",
+  "Radio",
+  "Audio",
+  "Live",
+  "Sound",
+  "Wave",
+  "Public",
+  "Community",
+  "Talk",
+  "News",
+];
+
+function geoDescription(regionLabel, name) {
+  return `${name} is mock international radio in ${regionLabel} for Search → Radio browse prototypes.`;
+}
+
+function slugFromNodeId(nodeId) {
+  return nodeId.replace(/[^a-z0-9]+/gi, "-");
+}
+
+/** @type {Map<string, RadioStation[]>} */
+const stationsByGeoNodeId = new Map();
+
+/** @type {Map<string, RadioStation>} */
+const geoStationById = new Map();
+
+/** Leaf / stub geo row: no children, same 20 generated stations as other nodes. */
+function leafGeo(id, label, parentId, type = "country") {
+  return { id, label, type, parentId, childIds: [] };
+}
+
+/**
+ * Geo hierarchy nodes. Pill order matches Figma `19871:33453` where applicable.
+ * @type {Record<string, { id: string, label: string, type: 'continent'|'country'|'subdivision'|'city', parentId: string | null, childIds: string[] }>}
+ */
+export const GEO_BROWSE_NODES = {
+  "north-america": {
+    id: "north-america",
+    label: "North America",
+    type: "continent",
+    parentId: null,
+    // Order: proximity to mock listener (Montreal). Canada, US, French Atlantic archipelago, Atlantic islands, Caribbean (Bahamas-weighted), Arctic, then Mexico.
+    childIds: [
+      "canada",
+      "united-states",
+      "st-pierre-miquelon",
+      "bermuda",
+      "caribbean-islands",
+      "greenland",
+      "mexico",
+    ],
+  },
+  bermuda: leafGeo("bermuda", "Bermuda", "north-america"),
+  canada: {
+    id: "canada",
+    label: "Canada",
+    type: "country",
+    parentId: "north-america",
+    childIds: [
+      "alberta",
+      "british-columbia",
+      "manitoba",
+      "new-brunswick",
+      "newfoundland-and-labrador",
+      "northwest-territories",
+      "nova-scotia",
+      "nunavut",
+      "ontario",
+      "prince-edward-island",
+      "quebec",
+      "saskatchewan",
+      "yukon",
+    ],
+  },
+  "caribbean-islands": leafGeo("caribbean-islands", "Caribbean Islands", "north-america"),
+  greenland: leafGeo("greenland", "Greenland", "north-america"),
+  mexico: leafGeo("mexico", "Mexico", "north-america"),
+  "st-pierre-miquelon": leafGeo(
+    "st-pierre-miquelon",
+    "St. Pierre-Miquelon",
+    "north-america",
+  ),
+  "united-states": leafGeo("united-states", "United States", "north-america"),
+
+  alberta: {
+    id: "alberta",
+    label: "Alberta",
+    type: "subdivision",
+    parentId: "canada",
+    childIds: [
+      "calgary",
+      "edmonton",
+      "lethbridge",
+      "lloydminster",
+      "medicine-hat",
+      "red-deer",
+    ],
+  },
+  "british-columbia": leafGeo("british-columbia", "British Columbia", "canada", "subdivision"),
+  manitoba: leafGeo("manitoba", "Manitoba", "canada", "subdivision"),
+  "new-brunswick": leafGeo("new-brunswick", "New Brunswick", "canada", "subdivision"),
+  "newfoundland-and-labrador": leafGeo(
+    "newfoundland-and-labrador",
+    "Newfoundland and Labrador",
+    "canada",
+    "subdivision",
+  ),
+  "northwest-territories": leafGeo(
+    "northwest-territories",
+    "Northwest Territories",
+    "canada",
+    "subdivision",
+  ),
+  "nova-scotia": leafGeo("nova-scotia", "Nova Scotia", "canada", "subdivision"),
+  nunavut: leafGeo("nunavut", "Nunavut", "canada", "subdivision"),
+  ontario: leafGeo("ontario", "Ontario", "canada", "subdivision"),
+  "prince-edward-island": leafGeo(
+    "prince-edward-island",
+    "Prince Edward Island",
+    "canada",
+    "subdivision",
+  ),
+  quebec: leafGeo("quebec", "Quebec", "canada", "subdivision"),
+  saskatchewan: leafGeo("saskatchewan", "Saskatchewan", "canada", "subdivision"),
+  yukon: leafGeo("yukon", "Yukon", "canada", "subdivision"),
+
+  calgary: leafGeo("calgary", "Calgary", "alberta", "city"),
+  edmonton: leafGeo("edmonton", "Edmonton", "alberta", "city"),
+  lethbridge: leafGeo("lethbridge", "Lethbridge", "alberta", "city"),
+  lloydminster: leafGeo("lloydminster", "Lloydminster", "alberta", "city"),
+  "medicine-hat": leafGeo("medicine-hat", "Medicine Hat", "alberta", "city"),
+  "red-deer": leafGeo("red-deer", "Red Deer", "alberta", "city"),
+};
+
+/**
+ * North America Browse swimlane cards: SVG in `public/flags/{code}.svg` (ISO 3166-1 alpha-2).
+ * Omit aggregate regions without a single flag (e.g. Caribbean Islands).
+ * @type {Record<string, string>}
+ */
+export const NORTH_AMERICA_INTERNATIONAL_FLAG_ISO2 = {
+  bermuda: "bm",
+  canada: "ca",
+  greenland: "gl",
+  mexico: "mx",
+  "st-pierre-miquelon": "pm",
+  "united-states": "us",
+};
+
+/**
+ * @param {string} geoId child id under continent `north-america`
+ * @returns {string | undefined} alpha-2 when a flag SVG exists under `public/flags/`
+ */
+export function getNorthAmericaInternationalFlagIso2(geoId) {
+  return NORTH_AMERICA_INTERNATIONAL_FLAG_ISO2[geoId];
+}
+
+/**
+ * Mock city / country for Radio Info Location row; uses geo hierarchy when available.
+ * @param {string} nodeId
+ * @returns {{ locationCity: string, locationCountry: string }}
+ */
+function geoMockLocationForNode(nodeId) {
+  const node = GEO_BROWSE_NODES[nodeId];
+  if (!node) {
+    return { locationCity: "Montreal", locationCountry: "Canada" };
+  }
+
+  let countryLabel = "Canada";
+  let cur = node;
+  while (cur) {
+    if (cur.type === "country") {
+      countryLabel = cur.label;
+      break;
+    }
+    cur = cur.parentId ? GEO_BROWSE_NODES[cur.parentId] : null;
+  }
+
+  if (node.type === "city") {
+    return { locationCity: node.label, locationCountry: countryLabel };
+  }
+
+  if (node.type === "subdivision") {
+    const firstCityId = node.childIds?.find((id) => GEO_BROWSE_NODES[id]?.type === "city");
+    const cityLabel = firstCityId
+      ? GEO_BROWSE_NODES[firstCityId].label
+      : node.label;
+    return { locationCity: cityLabel, locationCountry: countryLabel };
+  }
+
+  if (node.type === "country") {
+    const mockCapitals = {
+      canada: "Ottawa",
+      mexico: "Mexico City",
+      "united-states": "Chicago",
+      bermuda: "Hamilton",
+      greenland: "Nuuk",
+      "st-pierre-miquelon": "Saint-Pierre",
+      "caribbean-islands": "Nassau",
+    };
+    const city = mockCapitals[node.id] ?? "Regional center";
+    return { locationCity: city, locationCountry: node.label };
+  }
+
+  return { locationCity: "Toronto", locationCountry: "Canada" };
+}
+
+/**
+ * @param {string} nodeId
+ * @param {string} nodeLabel
+ * @returns {RadioStation[]}
+ */
+function makeStationBlock(nodeId, nodeLabel) {
+  const { locationCity, locationCountry } = geoMockLocationForNode(nodeId);
+  const slug = slugFromNodeId(nodeId);
+  const list = [];
+  for (let i = 0; i < STATIONS_PER_GEO_NODE; i += 1) {
+    const id = `geo-${slug}-${String(i).padStart(2, "0")}`;
+    const hint = GEO_NAME_HINTS[i % GEO_NAME_HINTS.length];
+    const name = `${nodeLabel} ${hint} ${i + 1}`;
+    const fm = 88 + ((i * 3 + slug.length * 7) % 21);
+    const point = i % 10;
+    list.push({
+      id,
+      name,
+      categoryId: "international",
+      categoryLabel: "International",
+      frequencyLabel: `FM ${fm}.${point}`,
+      description: geoDescription(nodeLabel, name),
+      tags: [nodeLabel.slice(0, 40)],
+      thumbnail: radioStationThumbnailUrl(id),
+      locationCity,
+      locationCountry,
+    });
+  }
+  return list;
+}
+
+function ensureStationsForNode(nodeId, nodeLabel) {
+  if (stationsByGeoNodeId.has(nodeId)) return;
+  const block = makeStationBlock(nodeId, nodeLabel);
+  stationsByGeoNodeId.set(nodeId, block);
+  for (const s of block) geoStationById.set(s.id, s);
+}
+
+for (const node of Object.values(GEO_BROWSE_NODES)) {
+  ensureStationsForNode(node.id, node.label);
+}
+
+for (const c of INTERNATIONAL_CONTINENTS_PLANNED) {
+  if (!GEO_BROWSE_NODES[c.id]) {
+    ensureStationsForNode(c.id, c.label);
+  }
+}
+
+/** Flat catalog of all international geo mock stations (Search / export). */
+export const RADIO_GEO_MOCK_STATIONS = Array.from(geoStationById.values());
+
+export function getGeoMockStationById(id) {
+  return geoStationById.get(id) ?? null;
+}
+
+/** Home catalog + geo mock rows (for `/radio/:id` detail). */
+export function resolveRadioStationForStub(id) {
+  return getGeoMockStationById(id) ?? getRadioStationById(id);
+}
+
+/**
+ * @param {string} continentId
+ */
+export function syntheticContinentNode(continentId) {
+  const meta = INTERNATIONAL_CONTINENTS_PLANNED.find((c) => c.id === continentId);
+  if (!meta) return null;
+  if (GEO_BROWSE_NODES[continentId]) return null;
+  return {
+    id: continentId,
+    label: meta.label,
+    type: "continent",
+    parentId: null,
+    childIds: [],
+  };
+}
+
+/**
+ * @param {string[]} segments e.g. `['north-america','canada']`
+ * @returns {{ node: object } | { invalid: true }}
+ */
+export function resolveGeoNodeFromSegments(segments) {
+  if (segments.length === 0) return { invalid: true };
+  let first = GEO_BROWSE_NODES[segments[0]];
+  if (!first) {
+    first = syntheticContinentNode(segments[0]);
+  }
+  if (!first) return { invalid: true };
+  let current = first;
+  for (let i = 1; i < segments.length; i += 1) {
+    const seg = segments[i];
+    if (!current.childIds?.includes(seg)) return { invalid: true };
+    const next = GEO_BROWSE_NODES[seg];
+    if (!next) return { invalid: true };
+    current = next;
+  }
+  return { node: current };
+}
+
+export function getChildGeoNodes(parentNode) {
+  if (!parentNode?.childIds?.length) return [];
+  return parentNode.childIds
+    .map((id) => GEO_BROWSE_NODES[id])
+    .filter(Boolean)
+    .map((n) => ({ id: n.id, label: n.label, type: n.type }));
+}
+
+/**
+ * Countries / regions directly under a continent (Browse Radio International swimlane).
+ * Continents only stubbed in {@link GEO_BROWSE_NODES} return children; others empty until API data.
+ *
+ * @param {string} continentId
+ * @returns {{ id: string, label: string, type: string }[]}
+ */
+export function getGeoChildrenForContinent(continentId) {
+  const node = GEO_BROWSE_NODES[continentId];
+  if (node?.type === "continent") {
+    return getChildGeoNodes(node);
+  }
+  const synthetic = syntheticContinentNode(continentId);
+  if (synthetic) {
+    return getChildGeoNodes(synthetic);
+  }
+  return [];
+}
+
+/**
+ * Swimlane rows under a continent pill: real geo children when mocked; otherwise generic
+ * country placeholders so every continent shows cards until API-backed markets exist.
+ *
+ * @param {string} continentId
+ * @returns {{ rows: { id: string, label: string, type: string }[], usesPlaceholderCountries: boolean }}
+ */
+export function getInternationalBrowseLaneRows(continentId) {
+  const real = getGeoChildrenForContinent(continentId);
+  if (real.length > 0) {
+    return { rows: real, usesPlaceholderCountries: false };
+  }
+  const rows = Array.from({ length: SWIMLANE_CARD_MAX }, (_, i) => ({
+    id: `__placeholder-${continentId}-${i + 1}`,
+    label: `Country ${i + 1}`,
+    type: "country",
+  }));
+  return { rows, usesPlaceholderCountries: true };
+}
+
+export function getPopularStationsForGeoNode(nodeId) {
+  const existing = stationsByGeoNodeId.get(nodeId);
+  if (existing) return existing.map((s) => ({ ...s }));
+  const node = GEO_BROWSE_NODES[nodeId];
+  if (node) {
+    ensureStationsForNode(node.id, node.label);
+    return (stationsByGeoNodeId.get(nodeId) ?? []).map((s) => ({ ...s }));
+  }
+  const meta = INTERNATIONAL_CONTINENTS_PLANNED.find((c) => c.id === nodeId);
+  if (meta) {
+    ensureStationsForNode(meta.id, meta.label);
+    return (stationsByGeoNodeId.get(nodeId) ?? []).map((s) => ({ ...s }));
+  }
+  return [];
+}

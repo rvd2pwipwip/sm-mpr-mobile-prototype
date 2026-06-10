@@ -1,0 +1,55 @@
+.tv-os-keyboard-stub {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px var(--tv-content-inline-end) 40px var(--tv-content-inline-start);
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid color-mix(in srgb, var(--color-on-bkg) 12%, transparent);
+  pointer-events: none;
+}
+
+.tv-os-keyboard-stub__hint {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.tv-os-keyboard-stub__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 960px);
+}
+
+.tv-os-keyboard-stub__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tv-os-keyboard-stub__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  height: 48px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-on-bkg) 10%, transparent);
+  color: var(--color-on-bkg);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.tv-os-keyboard-stub__key--space {
+  min-width: 320px;
+}

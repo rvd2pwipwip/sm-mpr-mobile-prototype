@@ -101,3 +101,12 @@ Swimlanes handle **Left/Right** on `window` when their group is active, so those
 ## 2026-05-27 — Limited catalog Home (Phase 6)
 
 **`Home`** switches on **`TerritoryContext`**: **`BroadHome`** (two music rails, screen memory **`home-broad`**) vs **`LimitedHome`** (genre **`GenreFilterSwimlane`** + one **`MusicChannelSwimlane`**, memory **`home-limited`**). Filters come from shared **`MUSIC_GENRES`** (mobile LimitedBrowse IA). **`VariableSwimlane`** measures filter button widths and parks with **`translateX`** like **`FixedSwimlane`**. While the filter group is focused, offset follows **`focusedIndex`**; when focus is on the channel rail, **`ensureActiveVisible`** scrolls to **`activeIndex`** without moving focus. **`FilterButton`** uses SMTV03-style rounded rects (**8px** radius, **10px** outline focus ring) — not mobile pill chips. More from a genre rail opens **`/more/music/:categoryId`**.
+
+## 2026-06-09 — Search shell (Phases 0–1)
+
+- **Shared search:** `searchBrowsePaths`, `searchCatalog`, `musicArtists`, `radioInternationalBrowse` live in **`@sm-mpr/shared`**; mobile re-exports. TV and mobile share query matching and browse-tab session keys.
+- **Routes:** `/search` → redirect (broad) or limited shell; `/search/music` | `podcasts` | `radio`; drill stubs under `/search/browse/*` and `/search/more/*`.
+- **`TvSearchBrowseHeader`:** fixed frosted bar; **`ResizeObserver`** sets **`--tv-search-header-offset`** on `<html>`. Focus group **0**: search `<input>` (index 0), **Clear** (1 when non-empty), content-type tabs (browse only). Left from field → primary nav.
+- **Search mode:** first non-whitespace character hides tabs; body swaps to results placeholder (Phase 5). **`?q=`** on URL (debounced) so Back restores the query.
+- **Keyboard stub:** `TvOnScreenKeyboardStub` overlay when the field is focused; PC keyboard types into the input. **Enter** or **Esc** dismisses stub only (`data-tv-keyboard-stub` on `<html>` so **`GlobalTvKeys`** Esc does not navigate back while stub is open).
+- **PrimaryNav Search:** `to` uses **`resolveBroadSearchBrowseTab`**; re-tap while on `/search/*` resets to **Music** + empty query (limited: `/search`).

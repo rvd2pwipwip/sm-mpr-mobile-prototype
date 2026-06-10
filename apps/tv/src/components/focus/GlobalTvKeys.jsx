@@ -11,6 +11,9 @@ export default function GlobalTvKeys() {
         if (document.querySelector('[aria-modal="true"]')) {
           return;
         }
+        if (document.documentElement.hasAttribute("data-tv-keyboard-stub")) {
+          return;
+        }
         event.preventDefault();
         navigate(-1);
         return;

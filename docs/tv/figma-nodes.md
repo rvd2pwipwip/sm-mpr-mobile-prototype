@@ -89,11 +89,37 @@ Use as starting tokens in `apps/tv/src/index.css`; tune during build.
 
 ---
 
+## Search & Browse (broad catalog)
+
+| Screen | Node | Notes |
+|--------|------|--------|
+| Search & Browse — layout reference | [15822:35859](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15822-35859) | Fixed header (field + Clear), Music/Podcasts/Radio tabs, stacked vibe rows (Genre pills + sub-tiles, Activity, …). **Not** exhaustive for search-results mode. |
+
+**Implementation plan:** `docs/tv/Plans/Search-Browse-implementation-plan.md`
+
+### Measurements from `15822:35859` (implementation hints)
+
+| Element | Value |
+|---------|--------|
+| Header padding | `pl 140px`, `pr 100px`, `pt 75px`, `pb 30px`; frosted `bckg90%` + `backdrop-blur 4px` |
+| Field + Clear row gap | `20px` |
+| Search field height | `80px`, radius `20px`, inner padding `20px`; placeholder Roboto Regular `28px` |
+| Clear button | `80px` height, border `2px`, radius `20px`, icon + label Medium `28px` |
+| Body top padding (below fixed header) | `pt 230px` on content stack (tune with measured header + gap token) |
+| Content-type tabs | `80px` height pills; active fill `--color-accent` / stingray 500 |
+| Vibe section gap | `50px` between major blocks |
+| Vibe title to pills | `20px` |
+| Pill height | `80px`, radius `20px`, gap `10px` |
+| Sub-tile (genre card) | `308px` square, radius `30px`, label centered Roboto Regular `34px` |
+| Card row gap | `30px` |
+
+---
+
 ## To index (add when implementing)
 
-- Channel Info screen
-- More grid (music channels)
-- Search & Browse
+- Channel Info screen (indexed elsewhere when expanded)
+- Search results mode (TV frame TBD)
+- Podcasts / Radio browse (TV frames TBD — use mobile IA)
 
 ---
 

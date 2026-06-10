@@ -1,8 +1,15 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
+import {
+  resolveBroadSearchBrowseTab,
+  writeStoredBroadSearchBrowseTab,
+} from "@sm-mpr/shared/constants/searchBrowsePaths.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import FocusableButton from "../focus/FocusableButton.jsx";
+import { useContentProfile } from "../../context/ContentProfileContext.jsx";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
+import { useTerritory } from "../../context/TerritoryContext.jsx";
 import { FOCUS_ZONE_NAV, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import TvMiniPlayer from "./TvMiniPlayer.jsx";
 import "./PrimaryNav.css";
@@ -18,7 +25,7 @@ const NAV_ITEMS = [
   },
   {
     id: "search",
-    to: "/search",
+    to: "/search/music",
     label: "Search",
     screenId: "search",
     maskClass: "primary-nav__icon-mask--search",
@@ -41,6 +48,9 @@ function isNavItemActive(pathname, item) {
       pathname.startsWith("/more/")
     );
   }
+  if (id === "search") {
+    return pathname.startsWith("/search");
+  }
   if (end) return pathname === to;
   return pathname === to || pathname.startsWith(`${to}/`);
 }
@@ -49,7 +59,15 @@ export default function PrimaryNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const navRefs = useRef([]);
+  const { catalogScope } = useTerritory();
+  const { enabledContentTypes } = useContentProfile();
   const { session, miniPlayerVisible } = usePlayback();
+  const broadSearchTab = resolveBroadSearchBrowseTab(enabledContentTypes);
+  const searchNavTo =
+    catalogScope === CATALOG_SCOPE.limited
+      ? "/search"
+      : `/search/${broadSearchTab}`;
+  const onSearchShell = location.pathname.startsWith("/search");
 
   const {
     focusZone,
@@ -82,10 +100,30 @@ export default function PrimaryNav() {
       const tabIndex = showMini ? index - 1 : index;
       const item = NAV_ITEMS[tabIndex];
       if (!item) return;
-      navigate(item.to);
+      if (item.id === "search" && onSearchShell) {
+        writeStoredBroadSearchBrowseTab("music");
+        navigate({
+          pathname:
+            catalogScope === CATALOG_SCOPE.limited
+              ? "/search"
+              : "/search/music",
+          search: "",
+        });
+        enterContent();
+        return;
+      }
+      navigate(item.id === "search" ? searchNavTo : item.to);
       enterContent();
     },
-    [showMini, openFullPlayer, navigate, enterContent],
+    [
+      showMini,
+      openFullPlayer,
+      navigate,
+      enterContent,
+      onSearchShell,
+      catalogScope,
+      searchNavTo,
+    ],
   );
 
   const miniFocused =
@@ -193,7 +231,19 @@ export default function PrimaryNav() {
                     navRefs.current[navIndex] = node;
                   }}
                   onSelect={() => {
-                    navigate(item.to);
+                    if (item.id === "search" && onSearchShell) {
+                      writeStoredBroadSearchBrowseTab("music");
+                      navigate({
+                        pathname:
+                          catalogScope === CATALOG_SCOPE.limited
+                            ? "/search"
+                            : "/search/music",
+                        search: "",
+                      });
+                      enterContent();
+                      return;
+                    }
+                    navigate(item.id === "search" ? searchNavTo : item.to);
                     enterContent();
                   }}
                 >

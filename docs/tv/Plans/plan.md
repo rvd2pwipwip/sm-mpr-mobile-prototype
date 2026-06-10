@@ -13,6 +13,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - **`docs/tv/Plans/Music-player-implementation-plan.md`** — detailed player plan (reference)
 - **`docs/tv/Plans/vertical-parked-navigation-plan.md`** — vertical parked focus ring (tag-row pattern on Y); Phase A geometry in `tvFocusGeometry.js`
 - **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** — phased build plan for focus, cards, swimlanes (start here for implementation)
+- **`docs/tv/Plans/Search-Browse-implementation-plan.md`** — Search & Browse TV slice (broad + limited, full content profile, keyboard stub)
 - **`docs/tv/figma-nodes.md`** — TV Figma index ([SM HTML TV MPR](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=0-1))
 - **`docs/mobile/Stories/Home-screen-story.md`** — broad Home content ordering (mobile; TV adapts layout)
 - **SMTV03 workspace** — prior-year TV prototype; reference for focus/swimlane patterns only (not a port source)
@@ -70,12 +71,15 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Music player v1** — Phases 0–5 per **`Music-player-agent-handoff.md`**: shared `userContentGates`, TV providers, `/music/:channelId/play`, `TvPlayerPrerollAd`, Figma `23:20013` layout, Channel Info Play wired; mini player deferred (Phase 7)
 - [x] **Music player Phase 6** — `/settings/user-type` tier QA UI + handoff QA table; preroll grace resets on `userType` change (matches skip cap)
 - [x] **TV mini player (Phase 7)** — `TvMiniPlayer` in `PrimaryNav`, nav focus index 0, shortcut to full player; see [`Tv-miniplayer-implementation-plan.md`](./Tv-miniplayer-implementation-plan.md)
+- [x] **Search & Browse Phases 0–1** — shared `searchCatalog` / `searchBrowsePaths` in `@sm-mpr/shared`; TV routes + stubs; `TvSearchBrowseHeader`, keyboard stub, `?q=` sync — see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 
 ---
 
 ## Next steps (ordered)
 
-1. **Phase 7+ backlog** — podcasts/radio cards, Search & Browse, TV in-player visual ads (if design adds frames)
+1. **Search & Browse Phase 2+** — music browse (stacked vibe rows), live search swimlanes (Phase 5), podcasts/radio browse, More grids
+2. **TV-2** — limited Home aligned with mobile `LimitedBrowse` (separate from Search limited fork)
+3. **Backlog** — full Podcast Info / Radio player layouts (Search uses placeholders until then), TV in-player visual ads
 
 Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 
@@ -87,4 +91,4 @@ Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan
 - Do not replace **`figma-nodes.md`** or mobile product stories; this file **coordinates** implementation.
 - Append TV lessons to **`docs/tv/react-learning.md`** as patterns land in code.
 
-_Last updated: 2026-06-03_
+_Last updated: 2026-06-09_

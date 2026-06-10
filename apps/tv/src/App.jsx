@@ -17,6 +17,9 @@ import TvViewport from "./components/TvViewport.jsx";
 import TvShell from "./components/TvShell.jsx";
 import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
+import SearchIndexRedirect from "./routes/SearchIndexRedirect.jsx";
+import TvContentTypeUnavailable from "./pages/TvContentTypeUnavailable.jsx";
+import TvSearchRouteStub from "./pages/TvSearchRouteStub.jsx";
 import MyLibrary from "./pages/MyLibrary.jsx";
 import FocusDemo from "./pages/FocusDemo.jsx";
 import MusicChannelInfo from "./pages/MusicChannelInfo.jsx";
@@ -51,7 +54,30 @@ export default function App() {
                           <TvShell>
                             <Routes>
                               <Route path="/" element={<Home />} />
-                              <Route path="/search" element={<Search />} />
+                              <Route path="/search" element={<SearchIndexRedirect />} />
+                              <Route path="/search/music" element={<Search />} />
+                              <Route path="/search/podcasts" element={<Search />} />
+                              <Route path="/search/radio" element={<Search />} />
+                              <Route
+                                path="/search/browse/*"
+                                element={<TvSearchRouteStub title="Search browse" />}
+                              />
+                              <Route
+                                path="/search/more/*"
+                                element={<TvSearchRouteStub title="Search more" />}
+                              />
+                              <Route
+                                path="/podcast/:podcastId"
+                                element={
+                                  <TvContentTypeUnavailable contentLabel="Podcast" />
+                                }
+                              />
+                              <Route
+                                path="/radio/:stationId"
+                                element={
+                                  <TvContentTypeUnavailable contentLabel="Radio" />
+                                }
+                              />
                               <Route path="/my-library" element={<MyLibrary />} />
                               <Route path="/focus-demo" element={<FocusDemo />} />
                               <Route path="/music/:channelId" element={<MusicChannelInfo />} />

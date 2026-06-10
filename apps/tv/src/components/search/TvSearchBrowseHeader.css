@@ -1,0 +1,100 @@
+.tv-search-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 30px;
+  padding: 75px var(--tv-content-inline-end) 30px var(--tv-content-inline-start);
+  background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.tv-search-header__field-row {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+}
+
+.tv-search-header__field-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  min-height: var(--tv-header-button-height);
+  padding: 0 20px;
+  border-radius: var(--tv-header-button-radius);
+  background: color-mix(in srgb, var(--color-on-bkg) 10%, transparent);
+  outline: none;
+}
+
+.tv-search-header__field-wrap--focused {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring-color);
+  outline-offset: var(--tv-focus-ring-gap);
+}
+
+.tv-search-header__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-on-bkg);
+  font-family: var(--font-sans);
+  font-size: var(--tv-header-button-font-size);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.tv-search-header__input::placeholder {
+  color: color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+}
+
+.tv-search-header__input:focus {
+  outline: none;
+}
+
+.tv-search-header__search-icon {
+  flex-shrink: 0;
+  display: flex;
+  opacity: 0.85;
+}
+
+.tv-search-header__clear {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tv-header-button-gap);
+  height: var(--tv-header-button-height);
+  padding: 20px var(--tv-header-button-padding-inline-end) 20px
+    var(--tv-header-button-padding-inline-start);
+  border: 2px solid color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+  border-radius: var(--tv-header-button-radius);
+  background: transparent;
+  color: var(--color-on-bkg);
+  font-family: var(--font-sans);
+  font-size: var(--tv-header-button-font-size);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.tv-search-header__clear--focused {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring-color);
+  outline-offset: var(--tv-focus-ring-gap);
+}
+
+.tv-search-header__clear-icon {
+  display: block;
+}
+
+.tv-search-header__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}

@@ -1,0 +1,23 @@
+.tv-content-unavailable {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: 100px var(--tv-content-inline-end) 100px var(--tv-content-inline-start);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.tv-content-unavailable__title {
+  margin: 0;
+  font-size: 2.125rem;
+  font-weight: 900;
+}
+
+.tv-content-unavailable__lede {
+  margin: 0;
+  max-width: 900px;
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
