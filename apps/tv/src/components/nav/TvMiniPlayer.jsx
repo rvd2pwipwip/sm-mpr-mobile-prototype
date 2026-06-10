@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import FocusableButton from "../focus/FocusableButton.jsx";
 import "./TvMiniPlayer.css";
 
@@ -5,15 +6,21 @@ import "./TvMiniPlayer.css";
  * Left-nav now playing strip — Figma menuMiniPlayer `15521:27316`.
  * Focus uses shared `--tv-focus-ring-*` (not Figma container border).
  */
-export default function TvMiniPlayer({
-  expanded = false,
-  focused = false,
-  playing = true,
-  thumbnail,
-  title,
-  subtitle,
-  className = "",
-}) {
+const TvMiniPlayer = forwardRef(function TvMiniPlayer(
+  {
+    expanded = false,
+    focused = false,
+    playing = true,
+    thumbnail,
+    title,
+    subtitle,
+    className = "",
+    onKeyDown,
+    onClick,
+    ...rest
+  },
+  ref,
+) {
   const rootClass = [
     "tv-mini-player",
     expanded ? "tv-mini-player--expanded" : "tv-mini-player--collapsed",
@@ -35,13 +42,17 @@ export default function TvMiniPlayer({
 
   return (
     <FocusableButton
+      ref={ref}
       focused={focused}
       className={rootClass}
+      onKeyDown={onKeyDown}
+      onClick={onClick}
       aria-label={
         label
           ? `Now playing: ${label}. Open full player.`
           : "Open full player"
       }
+      {...rest}
     >
       <span className="tv-mini-player__inner">
         <span className="tv-mini-player__thumb-wrap">
@@ -74,4 +85,6 @@ export default function TvMiniPlayer({
       </span>
     </FocusableButton>
   );
-}
+});
+
+export default TvMiniPlayer;

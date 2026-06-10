@@ -227,6 +227,8 @@ html[data-theme="dark"] {
 }
 
 [data-catalog-scope="limited"] {
+  --tv-header-inline-start: var(--tv-content-inline-start-limited);
+  --tv-header-inline-end: var(--tv-content-inline-end-limited);
   --tv-swimlane-inline-start: var(--tv-content-inline-start-limited);
   --tv-swimlane-inline-end: var(--tv-content-inline-end-limited);
 }
@@ -358,6 +360,14 @@ body {
 
 .tv-home--limited {
   --tv-space-screen-gap: 20px;
+  /* Promo banner to genre row: 40px total (20px stack gap + 20px margin). */
+  --tv-space-limited-banner-after: 40px;
+}
+
+.tv-home--limited .tv-home__scroll-group--promo-banner {
+  margin-bottom: calc(
+    var(--tv-space-limited-banner-after) - var(--tv-space-screen-gap)
+  );
 }
 
 .tv-home__scroll {

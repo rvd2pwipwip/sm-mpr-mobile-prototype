@@ -211,3 +211,22 @@
   .tv-mini-player__thumb-wrap {
   outline: none;
 }
+
+/* Limited Home header B — Figma `15832:37717` (music gradient + white ring) */
+.tv-mini-player--header-embed.tv-mini-player--expanded {
+  background: linear-gradient(
+    131deg,
+    #8c29ff 4.19%,
+    #0d0add 100.59%
+  );
+}
+
+.tv-mini-player--header-embed.tv-mini-player--expanded.focusable-button--focused {
+  outline-color: var(--color-on-accent);
+  overflow: visible;
+}
+
+.tv-mini-player--header-embed.tv-mini-player--expanded.focusable-button--focused
+  .tv-mini-player__thumb-wrap {
+  outline: none;
+}

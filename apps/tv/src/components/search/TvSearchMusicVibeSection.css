@@ -1,0 +1,12 @@
+.tv-search-vibe-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-screen-gap);
+}
+
+.tv-search-vibe-section__title {
+  margin: 0;
+  font-size: var(--font-size-swimlane-title);
+  font-weight: 900;
+  color: var(--color-on-bkg);
+}

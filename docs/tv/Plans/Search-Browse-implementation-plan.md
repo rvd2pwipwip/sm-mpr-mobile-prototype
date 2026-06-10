@@ -29,7 +29,7 @@ Teaching-oriented guide for building the **Search** primary-nav destination in *
 | **Limited lineup (150+)** | Match **mobile** limited music browse (genre **tile grid**), not TV `LimitedHome` genre filter swimlane. |
 | **Limited catalog scope** | Include now: canonical **`/search`** only; no Music/Podcasts/Radio tabs; empty state = field (+ optional hint copy); results when query non-empty. Redirect **`/search/music` \| `podcasts` \| `radio`** → **`/search`** when `catalogScope === limited`. |
 | **Search field focus** | **D-pad group** in vertical stack; **Clear** focusable in **same header row** as the field. |
-| **On-screen keyboard** | **Visual stub** overlay (prototype); real entry via **PC keyboard**. Dismiss stub on **Enter/Return** or **Esc**; query + results remain. Assume production OS keyboard is external. |
+| **On-screen keyboard** | **Out of scope** for this prototype. **PC keyboard** enters text in the search field when focused. Production assumes an external OS keyboard service. |
 | **Podcast / radio taps** | **Placeholder** screens (“coming soon” / “Not available in this build” when music-only blocks type) until full layouts ship. |
 | **Search results** | Horizontal **result swimlanes** like mobile; Artists/Tags = **square label tiles** (new TV component); Channels/Podcasts/Radio = existing **`MusicChannelCard`** / **`ContentTileCard`**. |
 | **PrimaryNav reset** | Same three rules as mobile **BottomNav** (see Phase 7). |
@@ -70,7 +70,7 @@ Implement on TV unless a **TV-specific** note below says otherwise:
 1. **First character typed** → hide **Music / Podcasts / Radio** tabs; browse body replaced by **result swimlanes only** (lanes gated by content profile).
 2. **Reset to Browse** — **Clear** preserves active content-type tab + strips **`?q=`**; **PrimaryNav Search from Home/Library** → last stored browse tab; **re-tap Search on `/search/*`** → **Music** + empty query (see Phase 7).
 3. **Adaptive header** — browse mode: field + tabs; search mode: **field + Clear only**. Remeasure fixed header → update scroll **`padding-top`** (TV: `--tv-search-header-offset` on `<html>` or page root, same idea as mobile `--search-header-offset`).
-4. **Keyboard stub** overlaps bottom of viewport (and primary nav if visible); no requirement to lift chrome above stub in v1.
+4. **No on-screen keyboard** in the TV prototype; D-pad moves focus; typing uses PC keyboard when the field has DOM focus.
 5. **Minimal chrome** — no Home-style Upgrade row on Search (Upgrade stays on Home header).
 6. **URL** — broad: **`/search/music` \| `podcasts` \| `radio`** + **`?q=`** while searching; limited: **`/search`** + **`?q=`** only.
 
@@ -129,26 +129,23 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 ---
 
-## Phase 1 — Search shell: header, keyboard stub, focus group 0 ✅ (prototype)
+## Phase 1 — Search shell: header, focus groups ✅ (prototype)
 
-**Goal:** Fixed top chrome per Figma `15822:36992`; D-pad can reach field and Clear; typing works via PC keyboard; keyboard stub UX.
+**Goal:** Fixed top chrome per Figma `15822:36992`; D-pad can reach field and Clear; typing works via PC keyboard (no OS keyboard overlay).
 
 **Components**
 
 - **`TvSearchBrowseHeader.jsx`** + CSS — frosted bar (`backdrop-blur`, `pl 140px`, `pr 100px`, `pt 75px`, `pb 30px`); field row (`gap 20px`); placeholder copy from profile (full: “Search channels, artists, podcasts or radio…”; music-only: “Search channels, artists or tags”).
 - **`TvSearchField.jsx`** — `<input>` visually styled as Figma `field_md` (80px height, 20px radius); magnifying glass icon; receives **text input** when focused.
 - **`TvSearchClearButton.jsx`** — Figma Clear (`80px` height, bordered); visible when query non-empty; activates clear handler.
-- **`TvOnScreenKeyboardStub.jsx`** — bottom overlay (simple QWERTY silhouette or labeled “OS keyboard” panel); **shown** when search field is focused **and** user has started typing (or on field focus — pick one behavior in implementation; default: show on field focus). **Hide** on **Enter** or **Esc** (do not clear query). Document in plan acceptance: stub is non-interactive (PC keyboard drives text).
+**Focus rows**
 
-**Focus (group 0)**
+| Group | Row | Left/Right | Up/Down |
+|-------|-----|------------|---------|
+| 0 | Search field, Clear | Within row | Down to tabs (browse) |
+| 1 | Music / Podcasts / Radio tabs | Within row; Left on Music enters nav | Up to search row |
 
-| Index | Control |
-|-------|---------|
-| 0 | Search field |
-| 1 | Clear (skip or disable when query empty) |
-| 2+ | Content-type tab buttons (browse mode only, if switcher visible) |
-
-**Horizontal:** Left/Right within header row. **Down** → first browse or results group. **Left** from field index 0 → `PrimaryNav` (existing boundary).
+**Left** from search field → `PrimaryNav`.
 
 **Header offset:** `ResizeObserver` → `--tv-search-header-offset`; scroll body `padding-top: calc(var(--tv-search-header-offset) + var(--tv-search-header-gap))` (gap ~50px to match Figma content `pt 230px` minus header stack).
 
@@ -162,15 +159,14 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 **Shipped (2026-06-09)**
 
 - **`TvSearchBrowseHeader`** + CSS — field, **Clear**, profile-aware placeholder, content-type tabs (`FilterButton`).
-- **`TvOnScreenKeyboardStub`** — visual overlay; dismiss **Enter** / **Esc** (`data-tv-keyboard-stub` defers global Esc back).
-- **`Search.jsx`** — `?q=` sync, debounce, browse vs search mode, limited empty hint, Phase 5 results placeholder.
+- **`Search.jsx`** — `?q=` sync, debounce, browse vs search mode, limited empty hint, Phase 5 results placeholder; two-row header focus (search row + browse tabs).
 - **`--tv-search-header-offset`** via `ResizeObserver`; **`PrimaryNav`** search `to` + re-tap reset (Phase 7 partial).
 
-**Deliverable:** Header + stub + query sync; body placeholder; focus traverses field → Clear → tabs. ✓
+**Deliverable:** Header + query sync; body placeholder; two-row header focus. ✓
 
 ---
 
-## Phase 2 — Music Browse (broad + limited lineup)
+## Phase 2 — Music Browse (broad + limited lineup) ✅ (prototype)
 
 **Goal:** Music tab body matches Figma stacked vibe layout (broad) and mobile limited genre grid (150+).
 
@@ -196,6 +192,13 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 - Channel tap → **`/music/:channelId`** (existing).
 
 **Deliverable:** Music browse navigable broad + limited; D-pad through pills, tiles, and channel rows; Esc pops drill-downs.
+
+**Shipped (2026-06-09)**
+
+- **`TvSearchMusicVibeSection`** + **`TvSearchMusicBrowseBody`** — broad: five vibe stacks (pills + sub-tiles or channel swimlane); limited: horizontal genre label row.
+- **`TvSearchLabelTile`** (308px label square); **`CategoryRailMemoryProvider`** + **`useCategoryRailMemorySlug`** (TV port).
+- **`buildSearchMusicBrowseFocusLayout`** — dynamic focus groups from header group **2** (`SEARCH_FOCUS.bodyStart`); **`useTvVerticalGroupScroll`** on browse body.
+- **Drill routes:** `SearchMusicCategory`, `SearchMusicVibe`, `SearchMusicBroadTagChannels` via **`TvSearchBrowseDrillPage`** + **`ContentGrid`**.
 
 ---
 
@@ -312,7 +315,7 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 - [ ] Limited catalog: `/search` only; no browse tabs; broad paths redirect.
 - [ ] First character hides tabs; results lanes profile-aware.
 - [ ] Clear vs PrimaryNav Search vs re-tap Search match mobile rules.
-- [ ] Keyboard stub shows/dismisses; PC keyboard edits query; Enter/Esc dismisses stub only.
+- [x] PC keyboard edits query when search field is focused (no on-screen keyboard overlay).
 - [ ] D-pad: field, Clear, tabs, pills, tiles, swimlanes, nav boundary.
 - [ ] More grids + Esc back restore `?q=`.
 - [ ] Full MPR ↔ music-only toggle on `/settings/user-type` updates Search UI.
@@ -347,14 +350,13 @@ Phases **3–4** can slip after **5–6** if you want a clickable **Music search
 | … | … | … |
 | n | Podcasts/radio body | … |
 
-Exact indices depend on how many vibe sections are mounted; use **`useTvVerticalGroupScroll`** on the scroll container (same as `BroadHome`). When keyboard stub is open, optional: trap **Down** from field to stub dismiss hint only — stub is not focusable.
+Exact indices depend on how many vibe sections are mounted; use **`useTvVerticalGroupScroll`** on the scroll container (same as `BroadHome`).
 
 ---
 
 ## Out of scope (unless requested)
 
-- Real OS keyboard integration API.
-- Pixel-perfect keyboard stub layout.
+- Real OS keyboard integration API or on-screen keyboard UI.
 - Full Podcast Info / Radio player screens (placeholders only for this plan).
 - TV limited **Home** refactor to mobile `LimitedBrowse` (separate **TV-2** item); this plan only requires **Search limited** behavior like mobile.
 

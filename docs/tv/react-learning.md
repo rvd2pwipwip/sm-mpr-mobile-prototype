@@ -108,7 +108,8 @@ Swimlanes handle **Left/Right** on `window` when their group is active, so those
 - **Routes:** `/search` → redirect (broad) or limited shell; `/search/music` | `podcasts` | `radio`; drill stubs under `/search/browse/*` and `/search/more/*`.
 - **`TvSearchBrowseHeader`:** fixed frosted bar; **`ResizeObserver`** sets **`--tv-search-header-offset`** on `<html>`. Focus group **0**: search `<input>` (index 0), **Clear** (1 when non-empty), content-type tabs (browse only). Left from field → primary nav.
 - **Search mode:** first non-whitespace character hides tabs; body swaps to results placeholder (Phase 5). **`?q=`** on URL (debounced) so Back restores the query.
-- **Keyboard stub:** `TvOnScreenKeyboardStub` overlay when the field is focused; PC keyboard types into the input. **Enter** or **Esc** dismisses stub only (`data-tv-keyboard-stub` on `<html>` so **`GlobalTvKeys`** Esc does not navigate back while stub is open).
+- **Search text entry:** PC keyboard only; no on-screen keyboard overlay in this prototype (OS keyboard out of scope).
+- **Header focus rows:** Group **0** = search field + Clear (Left/Right). Group **1** = Music / Podcasts / Radio tabs (Left/Right; **Left** on Music enters nav). **Down** / **Up** move between rows (`SEARCH_FOCUS` in `searchFocusGroups.js`).
 - **PrimaryNav Search:** `to` uses **`resolveBroadSearchBrowseTab`**; re-tap while on `/search/*` resets to **Music** + empty query (limited: `/search`).
 
 ## 2026-06-09 — Home vertical scroll survives tab switches
@@ -116,3 +117,30 @@ Swimlanes handle **Left/Right** on `window` when their group is active, so those
 - **Problem:** `ScreenMemoryContext` kept **focus group + card index** (`home-broad`) but **`useTvVerticalGroupScroll`** reset **`offsetY`** on unmount (Home → Search → Home).
 - **Fix:** Optional **`screenId`** on the hook persists **`scrollOffsetY`** and **`parkLineY`** in the same screen memory bucket. On remount, initial transform uses saved offset; **`restoreVisit`** re-parks before paint if needed. **`BroadHome`** / **`LimitedHome`** pass **`home-broad`** / **`home-limited`**.
 - **Transitions after return:** Restored **`parkLineY`** skipped the path that adds **`tv-home__scroll-inner--animated`**. **`scheduleScrollTransition()`** runs when park line already exists (restored or remeasured), after the first paint — same double **`rAF`** as first visit.
+
+## 2026-06-09 — Limited Home layout B (stacked swimlanes)
+
+- **Default:** `LIMITED_HOME_LAYOUT.stacked` in **`sessionStorage`** (`limitedHomeLayout.js`). **Layout A** (`filter`) kept for stakeholder AB — toggle on **`/settings/user-type`** (click only, `tabIndex={-1}`).
+- **Body:** **`LimitedHomeStackedBody`** — one **`MusicChannelSwimlane`** or **`ContentTileSwimlane`** per taxonomy row (mobile **`LimitedBrowseTaxonomyRails`** IA); **`TvSwimlaneBannerAd`** after the **second** lane.
+- **Header B:** **`TvLimitedHomeHeaderStacked`** embeds **`TvMiniPlayer`** (expanded) when playback is active; **Esc** on Home focuses mini player via **`LimitedHomeEscContext`** (wins over global back only while handler is registered).
+- **Focus:** dynamic group count from **`buildLimitedHomeStackedLanes`** + **`useTvVerticalGroupScroll`** (same parked-scroll pattern as broad Home).
+
+---
+
+## 2026-06-09 — Limited Home header (search affordance)
+
+Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`TvLimitedHomeHeader`** (Figma `15831:37572`) uses a **three-column grid** (`1fr auto 1fr`): wordmark start, **`TvHomeContentSwitcher`** center, actions end (Upgrade or provider logo + info + search icons). The center column stays centered when Upgrade is absent because end/start columns share equal flex tracks.
+
+- **Search icon** → **`/search`** (limited shell).
+- **Info icon** → **`/settings/user-type`** (prototype settings).
+- **D-pad:** header is focus group **0**; tabs and icons are one horizontal index row (Left/Right).
+
+---
+
+## 2026-06-09 — Search music browse (Phase 2)
+
+- **Broad lineup:** **`TvSearchMusicVibeSection`** mirrors mobile **`SearchMusicVibeBrowseRail`** — **`GenreFilterSwimlane`** (pills) + either **`TvSearchLabelTileSwimlane`** (sub-tags) or **`MusicChannelSwimlane`** (leaf channels + More). Focus groups start at **`SEARCH_FOCUS.bodyStart` (2)**; each vibe uses two groups (pills, cards).
+- **Limited lineup:** one horizontal genre row (**`MUSIC_GENRES`** → **`/search/browse/music/category/:id`**), not the Limited Home filter pattern.
+- **Pill memory:** **`CategoryRailMemoryProvider`** + **`useCategoryRailMemorySlug`** (same session keys as mobile).
+- **Drill-downs:** **`TvSearchBrowseDrillPage`** wraps **`ContentGrid`** (4 columns); Esc → **`navigate(-1)`** via **`GlobalTvKeys`**.
+- **Vertical scroll:** Search browse body reuses **`useTvVerticalGroupScroll`** with screen memory **`search`** (same Home tab-switch fix).

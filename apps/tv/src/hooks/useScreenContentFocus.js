@@ -309,6 +309,7 @@ export function useScreenContentFocus(
     enterContent,
     enterNavFromContent,
     setFocusedIndex,
+    setFocusedGroupIndex,
     handleMoveUp,
     handleMoveDown,
     handleMoveLeft,

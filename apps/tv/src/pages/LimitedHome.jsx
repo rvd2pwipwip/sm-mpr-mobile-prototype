@@ -1,11 +1,34 @@
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { showVisualAds } from "@sm-mpr/shared/utils/userTierRules.js";
+import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
+import {
+  getBrowseTabsForProfile,
+  resolveLimitedBrowseTab,
+  writeStoredLimitedBrowseTab,
+} from "@sm-mpr/shared/constants/searchBrowsePaths.js";
+import {
+  showUpgradeCallToAction,
+  showVisualAds,
+} from "@sm-mpr/shared/utils/userTierRules.js";
 import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
+import LimitedHomeFilterBody, {
+  FILTERS_GROUP,
+  SWIMLANE_GROUP,
+} from "../components/limited/LimitedHomeFilterBody.jsx";
+import LimitedHomeStackedBody from "../components/limited/LimitedHomeStackedBody.jsx";
+import TvLimitedHomeHeaderSection from "../components/TvLimitedHomeHeaderSection.jsx";
+import { useContentProfile } from "../context/ContentProfileContext.jsx";
+import { useLimitedHomeEsc } from "../context/LimitedHomeEscContext.jsx";
+import { usePlayback } from "../context/PlaybackContext.jsx";
+import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
+import {
+  LIMITED_HOME_LAYOUT,
+  useLimitedHomeLayout,
+} from "../constants/limitedHomeLayout.js";
 import {
   HOME_BANNER_GROUP,
   HOME_FIRST_SWIMLANE_GROUP,
@@ -17,9 +40,6 @@ import {
   useHomeHeaderLayout,
 } from "../constants/homeHeaderLayout.js";
 import TvHomeBanner from "../components/TvHomeBanner.jsx";
-import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
-import GenreFilterSwimlane from "../components/swimlanes/GenreFilterSwimlane.jsx";
-import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
 import { useScreenMemory } from "../context/ScreenMemoryContext.jsx";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import {
@@ -27,53 +47,219 @@ import {
   getLimitedHomeFilterLabel,
   getLimitedHomeFilters,
 } from "../utils/limitedHomeData.js";
+import {
+  buildLimitedHomeHeaderFocusSlots,
+  getLimitedHomeMiniPlayerSlotIndex,
+  limitedHomeHeaderItemCount,
+} from "../utils/limitedHomeHeaderFocus.js";
+import { buildLimitedHomeStackedLanes } from "../utils/limitedHomeStackedLanes.js";
 import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 
-const FILTERS_GROUP = HOME_FIRST_SWIMLANE_GROUP;
-const SWIMLANE_GROUP = HOME_FIRST_SWIMLANE_GROUP + 1;
-
 export default function LimitedHome() {
   const navigate = useNavigate();
+  const layoutMode = useLimitedHomeLayout();
+  const isStackedLayout = layoutMode === LIMITED_HOME_LAYOUT.stacked;
+
   const { userType } = useUserType();
   const showBannerAd = showVisualAds(userType);
   const { catalogScope, musicLineupMode } = useTerritory();
+  const { session, miniPlayerVisible } = usePlayback();
+  const { enterContent } = useTvNavFocus();
+  const limitedHomeEsc = useLimitedHomeEsc();
+
+  const {
+    enabledContentTypes,
+    shouldShowBrowseContentSwitcher,
+  } = useContentProfile();
+
+  const browseTabs = useMemo(
+    () => getBrowseTabsForProfile(enabledContentTypes),
+    [enabledContentTypes],
+  );
+
+  const [browseTab, setBrowseTab] = useState(() =>
+    resolveLimitedBrowseTab(enabledContentTypes),
+  );
+  const [bannerVisible, setBannerVisible] = useState(true);
+
+  const effectiveBrowseTab = useMemo(() => {
+    if (!shouldShowBrowseContentSwitcher) {
+      return browseTabs[0]?.id ?? CONTENT_TYPE.music;
+    }
+    return browseTabs.some((t) => t.id === browseTab)
+      ? browseTab
+      : (browseTabs[0]?.id ?? CONTENT_TYPE.music);
+  }, [browseTabs, browseTab, shouldShowBrowseContentSwitcher]);
+
+  useLayoutEffect(() => {
+    const resolved = resolveLimitedBrowseTab(enabledContentTypes);
+    if (browseTab !== resolved) {
+      if (!browseTabs.some((t) => t.id === browseTab)) {
+        setBrowseTab(resolved);
+      }
+    }
+  }, [enabledContentTypes, browseTab, browseTabs]);
+
+  useLayoutEffect(() => {
+    writeStoredLimitedBrowseTab(effectiveBrowseTab);
+  }, [effectiveBrowseTab]);
+
   const filters = useMemo(() => getLimitedHomeFilters(), []);
+  const showUpgrade = showUpgradeCallToAction(userType);
+  const showHeaderMini =
+    isStackedLayout &&
+    miniPlayerVisible &&
+    session.active &&
+    session.variant === "music";
+
+  const headerFocusSlots = useMemo(
+    () =>
+      buildLimitedHomeHeaderFocusSlots(
+        browseTabs,
+        shouldShowBrowseContentSwitcher,
+        showUpgrade,
+        showHeaderMini,
+        { stacked: isStackedLayout },
+      ),
+    [
+      browseTabs,
+      shouldShowBrowseContentSwitcher,
+      showUpgrade,
+      showHeaderMini,
+      isStackedLayout,
+    ],
+  );
+
+  const headerItemCount = limitedHomeHeaderItemCount(headerFocusSlots);
+  const miniPlayerSlotIndex = getLimitedHomeMiniPlayerSlotIndex(
+    headerFocusSlots,
+  );
+
+  const isMusicBrowse = effectiveBrowseTab === CONTENT_TYPE.music;
 
   const { memory, setField } = useScreenMemory("home-limited");
   const activeFilterId =
     memory.activeFilterId ?? filters[0]?.id ?? null;
 
   const channels = useMemo(
-    () => getLimitedHomeChannels(activeFilterId),
-    [activeFilterId],
+    () =>
+      !isStackedLayout && isMusicBrowse
+        ? getLimitedHomeChannels(activeFilterId)
+        : [],
+    [activeFilterId, isMusicBrowse, isStackedLayout],
   );
 
-  const swimlaneSlotCount = getMusicSwimlaneSlotCount(channels.length);
+  const stackedLanes = useMemo(
+    () =>
+      isStackedLayout
+        ? buildLimitedHomeStackedLanes(effectiveBrowseTab)
+        : [],
+    [isStackedLayout, effectiveBrowseTab],
+  );
+
+  const swimlaneSlotCount =
+    !isStackedLayout && isMusicBrowse
+      ? getMusicSwimlaneSlotCount(channels.length)
+      : 0;
+
   const activeFilterIndex = filters.findIndex(
     (filter) => filter.id === activeFilterId,
   );
 
+  const focusConfig = useMemo(() => {
+    if (isStackedLayout) {
+      const laneGroupOffset = HOME_FIRST_SWIMLANE_GROUP;
+      const itemCounts = {
+        [HOME_HEADER_GROUP]: headerItemCount,
+        [HOME_BANNER_GROUP]: bannerVisible ? 1 : 0,
+      };
+      const swimlaneGroups = [];
+
+      stackedLanes.forEach((lane, index) => {
+        const groupIndex = laneGroupOffset + index;
+        itemCounts[groupIndex] = lane.slotCount;
+        swimlaneGroups.push(groupIndex);
+      });
+
+      const groupCount = Math.max(
+        laneGroupOffset + stackedLanes.length,
+        HOME_BANNER_GROUP + 1,
+      );
+
+      const firstBodyGroup =
+        stackedLanes.length > 0
+          ? laneGroupOffset
+          : bannerVisible
+            ? HOME_BANNER_GROUP
+            : HOME_HEADER_GROUP;
+
+      const lastBodyGroup =
+        stackedLanes.length > 0
+          ? laneGroupOffset + stackedLanes.length - 1
+          : bannerVisible
+            ? HOME_BANNER_GROUP
+            : HOME_HEADER_GROUP;
+
+      return {
+        groupCount,
+        itemCounts,
+        swimlaneGroups,
+        firstBodyGroup,
+        lastBodyGroup,
+        defaultGroupIndex: firstBodyGroup,
+      };
+    }
+
+    const groupCount = isMusicBrowse ? 4 : 2;
+    return {
+      groupCount,
+      itemCounts: {
+        [HOME_HEADER_GROUP]: headerItemCount,
+        [HOME_BANNER_GROUP]: bannerVisible ? 1 : 0,
+        ...(isMusicBrowse
+          ? {
+              [FILTERS_GROUP]: filters.length,
+              [SWIMLANE_GROUP]: swimlaneSlotCount,
+            }
+          : {}),
+      },
+      swimlaneGroups: isMusicBrowse ? [FILTERS_GROUP, SWIMLANE_GROUP] : [],
+      firstBodyGroup: isMusicBrowse ? SWIMLANE_GROUP : HOME_BANNER_GROUP,
+      lastBodyGroup: isMusicBrowse
+        ? SWIMLANE_GROUP
+        : bannerVisible
+          ? HOME_BANNER_GROUP
+          : HOME_HEADER_GROUP,
+      defaultGroupIndex: isMusicBrowse ? SWIMLANE_GROUP : HOME_BANNER_GROUP,
+    };
+  }, [
+    isStackedLayout,
+    headerItemCount,
+    bannerVisible,
+    stackedLanes,
+    isMusicBrowse,
+    filters.length,
+    swimlaneSlotCount,
+  ]);
+
   const {
-    handleMoveUp,
-    handleMoveDown,
+    handleMoveUp: moveFocusUp,
+    handleMoveDown: moveFocusDown,
     registerItemRef,
     isContentGroupActive,
     getItemFocusIndex,
     setFocusedIndex,
+    setFocusedGroupIndex,
     focusedGroupIndex,
     focusedIndex,
     getItemElement,
+    enterNavFromContent,
   } = useScreenContentFocus("home-limited", {
-    groupCount: 4,
-    itemCounts: {
-      [HOME_HEADER_GROUP]: 1,
-      [HOME_BANNER_GROUP]: 1,
-      [FILTERS_GROUP]: filters.length,
-      [SWIMLANE_GROUP]: swimlaneSlotCount,
-    },
-    swimlaneGroups: [FILTERS_GROUP, SWIMLANE_GROUP],
-    defaultGroupIndex: SWIMLANE_GROUP,
+    groupCount: focusConfig.groupCount,
+    itemCounts: focusConfig.itemCounts,
+    swimlaneGroups: focusConfig.swimlaneGroups,
+    defaultGroupIndex: focusConfig.defaultGroupIndex,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
     navEnterEnabled: false,
   });
@@ -83,6 +269,115 @@ export default function LimitedHome() {
     [getItemElement, focusedGroupIndex, focusedIndex],
   );
 
+  const openFullPlayer = useCallback(() => {
+    if (!session.fullPlayerPath) return;
+    navigate(session.fullPlayerPath, {
+      state: { expandFromMiniPlayer: true },
+    });
+  }, [navigate, session.fullPlayerPath]);
+
+  useEffect(() => {
+    if (!isStackedLayout || !limitedHomeEsc) return undefined;
+
+    limitedHomeEsc.setHandler(() => {
+      if (!showHeaderMini || miniPlayerSlotIndex < 0) return false;
+      enterContent();
+      setFocusedGroupIndex(HOME_HEADER_GROUP);
+      setFocusedIndex(HOME_HEADER_GROUP, miniPlayerSlotIndex);
+      requestAnimationFrame(() => {
+        getItemElement(HOME_HEADER_GROUP, miniPlayerSlotIndex)?.focus({
+          preventScroll: true,
+        });
+      });
+      return true;
+    });
+
+    return () => limitedHomeEsc.clearHandler();
+  }, [
+    isStackedLayout,
+    limitedHomeEsc,
+    showHeaderMini,
+    miniPlayerSlotIndex,
+    enterContent,
+    setFocusedGroupIndex,
+    setFocusedIndex,
+    getItemElement,
+  ]);
+
+  const handleDismissBanner = useCallback(() => {
+    setBannerVisible(false);
+  }, []);
+
+  const skipBannerGroup = useCallback(() => {
+    if (!bannerVisible && focusedGroupIndex === HOME_BANNER_GROUP) {
+      if (isStackedLayout && stackedLanes.length > 0) {
+        setFocusedGroupIndex(HOME_FIRST_SWIMLANE_GROUP);
+        return true;
+      }
+      if (!isStackedLayout && isMusicBrowse) {
+        setFocusedGroupIndex(FILTERS_GROUP);
+        return true;
+      }
+      setFocusedGroupIndex(HOME_HEADER_GROUP);
+      return true;
+    }
+    return false;
+  }, [
+    bannerVisible,
+    focusedGroupIndex,
+    isStackedLayout,
+    stackedLanes.length,
+    isMusicBrowse,
+    setFocusedGroupIndex,
+  ]);
+
+  useLayoutEffect(() => {
+    skipBannerGroup();
+  }, [skipBannerGroup]);
+
+  const handleMoveDown = useCallback(() => {
+    if (!bannerVisible && focusedGroupIndex === HOME_HEADER_GROUP) {
+      if (isStackedLayout && stackedLanes.length > 0) {
+        setFocusedGroupIndex(HOME_FIRST_SWIMLANE_GROUP);
+        return;
+      }
+      if (!isStackedLayout && isMusicBrowse) {
+        setFocusedGroupIndex(FILTERS_GROUP);
+        return;
+      }
+      return;
+    }
+    moveFocusDown();
+  }, [
+    bannerVisible,
+    focusedGroupIndex,
+    isStackedLayout,
+    stackedLanes.length,
+    isMusicBrowse,
+    setFocusedGroupIndex,
+    moveFocusDown,
+  ]);
+
+  const handleMoveUp = useCallback(() => {
+    if (!bannerVisible) {
+      if (isStackedLayout && focusedGroupIndex === HOME_FIRST_SWIMLANE_GROUP) {
+        setFocusedGroupIndex(HOME_HEADER_GROUP);
+        return;
+      }
+      if (!isStackedLayout && focusedGroupIndex === FILTERS_GROUP) {
+        setFocusedGroupIndex(HOME_HEADER_GROUP);
+        return;
+      }
+    }
+    moveFocusUp();
+  }, [
+    bannerVisible,
+    isStackedLayout,
+    focusedGroupIndex,
+    setFocusedGroupIndex,
+    moveFocusUp,
+  ]);
+
   const {
     viewportRef,
     innerRef,
@@ -90,8 +385,8 @@ export default function LimitedHome() {
     offsetY,
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
-    landingGroupIndex: SWIMLANE_GROUP,
-    lastFocusableGroupIndex: SWIMLANE_GROUP,
+    landingGroupIndex: focusConfig.firstBodyGroup,
+    lastFocusableGroupIndex: focusConfig.lastBodyGroup,
     getFocusedElement,
     screenId: "home-limited",
   });
@@ -107,16 +402,14 @@ export default function LimitedHome() {
     [setField, setFocusedIndex],
   );
 
-  // Entering the filter row: focus the active catalog pill (not last browsed index).
   useLayoutEffect(() => {
+    if (isStackedLayout) return;
+
     const enteredFilters =
       focusedGroupIndex === FILTERS_GROUP &&
       prevFocusedGroupRef.current !== FILTERS_GROUP;
 
-    if (
-      enteredFilters &&
-      activeFilterIndex >= 0
-    ) {
+    if (enteredFilters && activeFilterIndex >= 0) {
       setFocusedIndex(FILTERS_GROUP, activeFilterIndex);
     } else if (
       activeFilterIndex >= 0 &&
@@ -127,6 +420,7 @@ export default function LimitedHome() {
 
     prevFocusedGroupRef.current = focusedGroupIndex;
   }, [
+    isStackedLayout,
     focusedGroupIndex,
     activeFilterIndex,
     memory.groupItemIndexes,
@@ -145,11 +439,23 @@ export default function LimitedHome() {
   const scrollableHeader = headerLayout === HOME_HEADER_LAYOUT.SCROLL;
 
   const headerProps = {
+    layoutMode,
     groupIndex: HOME_HEADER_GROUP,
     focused: isContentGroupActive(HOME_HEADER_GROUP),
+    focusedItemIndex: getItemFocusIndex(HOME_HEADER_GROUP),
     registerItemRef,
     onMoveUp: handleMoveUp,
     onMoveDown: handleMoveDown,
+    browseTabs,
+    activeBrowseTab: effectiveBrowseTab,
+    onBrowseTabChange: setBrowseTab,
+    showContentSwitcher: shouldShowBrowseContentSwitcher,
+    showMiniPlayer: showHeaderMini,
+    miniPlayerTitle: session.title,
+    miniPlayerSubtitle: session.subtitle,
+    miniPlayerThumbnail: session.thumbnail,
+    miniPlayerPlaying: !session.isPaused,
+    onMiniPlayerSelect: openFullPlayer,
   };
 
   return (
@@ -157,16 +463,17 @@ export default function LimitedHome() {
       className={[
         "tv-home",
         "tv-home--limited",
+        isStackedLayout ? "tv-home--limited-stacked" : "tv-home--limited-filter",
         scrollableHeader ? "tv-home--header-scroll" : "tv-home--header-sticky",
       ]
         .filter(Boolean)
         .join(" ")}
     >
       <p className="tv-home__ab-badge" aria-hidden="true">
-        Header {headerLayout}
+        Header {headerLayout} · Layout {layoutMode}
       </p>
       {!scrollableHeader ? (
-        <TvHomeHeaderSection {...headerProps} />
+        <TvLimitedHomeHeaderSection {...headerProps} />
       ) : null}
       <div ref={viewportRef} className="tv-home__scroll">
         <div
@@ -175,80 +482,77 @@ export default function LimitedHome() {
           style={{ transform: `translateY(-${offsetY}px)` }}
         >
           {scrollableHeader ? (
-            <TvHomeHeaderSection
+            <TvLimitedHomeHeaderSection
               {...headerProps}
               scrollable
               registerGroupRef={registerGroupRef}
             />
           ) : null}
-          <div
-            className="tv-home__scroll-group tv-home__content-inset"
-            ref={(node) => registerGroupRef(HOME_BANNER_GROUP, node)}
-          >
-            <TvHomeBanner
-              groupIndex={HOME_BANNER_GROUP}
-              focused={isContentGroupActive(HOME_BANNER_GROUP)}
-              registerItemRef={registerItemRef}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
-            />
-          </div>
-
-          <div
-            className="tv-home__scroll-group"
-            ref={(node) => registerGroupRef(FILTERS_GROUP, node)}
-          >
-            <GenreFilterSwimlane
-              showTitle={false}
-              filters={filters}
-              activeFilterId={activeFilterId}
-              groupIndex={FILTERS_GROUP}
-              focused={isContentGroupActive(FILTERS_GROUP)}
-              focusedIndex={getItemFocusIndex(FILTERS_GROUP)}
-              onFocusChange={(index) => setFocusedIndex(FILTERS_GROUP, index)}
-              onSelectFilter={handleSelectFilter}
-              registerItemRef={registerItemRef}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
-            />
-          </div>
-
-          {activeFilterId ? (
+          {bannerVisible ? (
             <div
-              className="tv-home__scroll-group"
-              ref={(node) => registerGroupRef(SWIMLANE_GROUP, node)}
+              className="tv-home__scroll-group tv-home__scroll-group--promo-banner tv-home__content-inset"
+              ref={(node) => registerGroupRef(HOME_BANNER_GROUP, node)}
             >
-              <MusicChannelSwimlane
-                showTitle={false}
-                title={laneTitle}
-                channels={channels}
-                sourceCount={channels.length}
-                groupIndex={SWIMLANE_GROUP}
-                focused={isContentGroupActive(SWIMLANE_GROUP)}
-                focusedIndex={getItemFocusIndex(SWIMLANE_GROUP)}
-                onFocusChange={(index) => setFocusedIndex(SWIMLANE_GROUP, index)}
+              <TvHomeBanner
+                groupIndex={HOME_BANNER_GROUP}
+                focused={isContentGroupActive(HOME_BANNER_GROUP)}
                 registerItemRef={registerItemRef}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
-                onSelectChannel={openChannelInfo}
-                onMore={() => navigate(`/more/music/${activeFilterId}`)}
+                onDismiss={handleDismissBanner}
               />
             </div>
           ) : null}
 
-          {showBannerAd ? (
+          {isStackedLayout ? (
+            <LimitedHomeStackedBody
+              activeBrowseTab={effectiveBrowseTab}
+              showMidStackAd={showBannerAd}
+              registerGroupRef={registerGroupRef}
+              registerItemRef={registerItemRef}
+              isContentGroupActive={isContentGroupActive}
+              getItemFocusIndex={getItemFocusIndex}
+              setFocusedIndex={setFocusedIndex}
+              onMoveUp={handleMoveUp}
+              onMoveDown={handleMoveDown}
+              enterNavFromContent={enterNavFromContent}
+            />
+          ) : isMusicBrowse ? (
+            <LimitedHomeFilterBody
+              filters={filters}
+              activeFilterId={activeFilterId}
+              channels={channels}
+              laneTitle={laneTitle}
+              registerGroupRef={registerGroupRef}
+              registerItemRef={registerItemRef}
+              isContentGroupActive={isContentGroupActive}
+              getItemFocusIndex={getItemFocusIndex}
+              setFocusedIndex={setFocusedIndex}
+              onMoveUp={handleMoveUp}
+              onMoveDown={handleMoveDown}
+              onSelectFilter={handleSelectFilter}
+              onSelectChannel={openChannelInfo}
+              onMore={() => navigate(`/more/music/${activeFilterId}`)}
+            />
+          ) : (
+            <div className="tv-home__scroll-group tv-home__content-inset">
+              <p className="tv-home__catalog-proof">
+                Switch to Music or use layout B for podcasts/radio stacks.
+              </p>
+            </div>
+          )}
+
+          {showBannerAd && !isStackedLayout ? (
             <div className="tv-home__scroll-group tv-home__content-inset">
               <TvSwimlaneBannerAd />
             </div>
           ) : null}
 
           <p className="tv-home__catalog-proof tv-home__content-inset">
-            Limited catalog Home: genre filters + channel rail. Territory:{" "}
+            Limited Home ({layoutMode}). Territory:{" "}
             <strong>{musicLineupLabel(musicLineupMode)}</strong> (
-            <code>{catalogScope}</code>). Wordmark click toggles to{" "}
-            <code>{CATALOG_SCOPE.broad}</code> (mouse only). Header AB:{" "}
-            <strong>{headerLayout}</strong> — compare{" "}
-            <code>?homeHeader=sticky</code> vs <code>?homeHeader=scroll</code>.
+            <code>{catalogScope}</code>). Toggle layout on{" "}
+            <code>/settings/user-type</code> (prototype).
           </p>
         </div>
       </div>

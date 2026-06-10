@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLimitedHomeEsc } from "../../context/LimitedHomeEscContext.jsx";
 
 /** Global TV remote keys: Esc = back; Tab disabled outside text fields. */
 export default function GlobalTvKeys() {
   const navigate = useNavigate();
+  const limitedHomeEsc = useLimitedHomeEsc();
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -11,7 +13,8 @@ export default function GlobalTvKeys() {
         if (document.querySelector('[aria-modal="true"]')) {
           return;
         }
-        if (document.documentElement.hasAttribute("data-tv-keyboard-stub")) {
+        if (limitedHomeEsc?.tryHandleEscape()) {
+          event.preventDefault();
           return;
         }
         event.preventDefault();
@@ -29,7 +32,7 @@ export default function GlobalTvKeys() {
 
     window.addEventListener("keydown", onKeyDown, true);
     return () => window.removeEventListener("keydown", onKeyDown, true);
-  }, [navigate]);
+  }, [navigate, limitedHomeEsc]);
 
   return null;
 }

@@ -11,7 +11,9 @@
   );
   padding-bottom: 100px;
   padding-inline: var(--tv-content-inline-start) var(--tv-content-inline-end);
+  overflow: hidden;
 }
+
 
 .tv-search-page__body {
   display: flex;

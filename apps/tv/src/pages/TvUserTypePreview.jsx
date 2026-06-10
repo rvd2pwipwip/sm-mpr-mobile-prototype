@@ -1,4 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  LIMITED_HOME_LAYOUT,
+  readLimitedHomeLayout,
+  writeLimitedHomeLayout,
+} from "../constants/limitedHomeLayout.js";
 import { MUSIC_CHANNELS } from "@sm-mpr/shared/data/musicChannels.js";
 import { USER_TYPES } from "@sm-mpr/shared/constants/userTypes.js";
 import { showPlayerPreroll } from "@sm-mpr/shared/utils/userTierRules.js";
@@ -26,8 +32,16 @@ const CONTENT_PROFILE_LABELS = {
 const TEST_CHANNEL = MUSIC_CHANNELS[0];
 
 /** Prototype tier toggles — mirror mobile `Subscription` preview block. */
+const LIMITED_LAYOUT_LABELS = {
+  [LIMITED_HOME_LAYOUT.stacked]: "B — Stacked swimlanes (default)",
+  [LIMITED_HOME_LAYOUT.filter]: "A — Filter + single rail",
+};
+
 export default function TvUserTypePreview() {
   const navigate = useNavigate();
+  const [limitedHomeLayout, setLimitedHomeLayout] = useState(() =>
+    readLimitedHomeLayout(),
+  );
   const { userType, setUserType } = useUserType();
   const { contentProfileMode, setContentProfileMode } = useContentProfile();
   const prerollOnPlay = showPlayerPreroll(userType);
@@ -122,6 +136,47 @@ export default function TvUserTypePreview() {
           </FocusableButton>
         </section>
       ) : null}
+      <section
+        className="tv-user-type-preview__prototype"
+        aria-labelledby="tv-user-type-preview-limited-layout-heading"
+      >
+        <h2
+          id="tv-user-type-preview-limited-layout-heading"
+          className="tv-user-type-preview__section-title"
+        >
+          Limited Home layout (prototype)
+        </h2>
+        <p className="tv-user-type-preview__lead">
+          Click only — not in D-pad focus order. Session storage; reload resets.
+          Current: <strong>{LIMITED_LAYOUT_LABELS[limitedHomeLayout]}</strong>
+        </p>
+        <div className="tv-user-type-preview__prototype-actions">
+          {[LIMITED_HOME_LAYOUT.stacked, LIMITED_HOME_LAYOUT.filter].map(
+            (mode) => (
+              <button
+                key={mode}
+                type="button"
+                tabIndex={-1}
+                className={[
+                  "tv-user-type-preview__prototype-btn",
+                  limitedHomeLayout === mode
+                    ? "tv-user-type-preview__prototype-btn--active"
+                    : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => {
+                  writeLimitedHomeLayout(mode);
+                  setLimitedHomeLayout(mode);
+                  navigate(`/?limitedHome=${mode}`);
+                }}
+              >
+                {LIMITED_LAYOUT_LABELS[mode]}
+              </button>
+            ),
+          )}
+        </div>
+      </section>
     </main>
   );
 }

@@ -39,6 +39,18 @@ Use as starting tokens in `apps/tv/src/index.css`; tune during build.
 
 ---
 
+## Home (limited catalog)
+
+| Screen | Node | Notes |
+|--------|------|--------|
+| Limited home header (layout A) | [15831:37572](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15831-37572) | Three-column row: wordmark \| switcher \| Upgrade/provider + info + search. No mini player. |
+| Limited home header (layout B) | [15832:37717](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15832-37717) | Same row + **mini player** in end cluster (limited catalog; no left nav). |
+| Limited home body (layout B) | [15834:37844](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15834-37844) | Stacked taxonomy swimlanes (mobile `LimitedBrowse` parity). |
+
+**Code:** `TvLimitedHomeHeader.jsx` (layout A today). Layout B header + stacked body: see **`docs/tv/Plans/Limited-Home-layout-comparison.md`**.
+
+---
+
 ## Full-screen player
 
 | Screen | Node | Notes |

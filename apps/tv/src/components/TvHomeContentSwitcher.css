@@ -1,0 +1,13 @@
+.tv-home-content-switcher {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.tv-home-content-switcher .filter-button.focusable-button {
+  min-height: 80px;
+  padding: 20px 34px;
+  font-size: 28px;
+  border-radius: 20px;
+}

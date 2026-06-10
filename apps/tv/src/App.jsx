@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { GroupFocusNavigationProvider } from "./context/GroupFocusNavigationContext.jsx";
 import { ScreenMemoryProvider } from "./context/ScreenMemoryContext.jsx";
+import { CategoryRailMemoryProvider } from "./context/CategoryRailMemoryContext.jsx";
 import { TerritoryProvider } from "./context/TerritoryContext.jsx";
 import { ContentProfileProvider } from "./context/ContentProfileContext.jsx";
 import { UserTypeProvider, useUserType } from "./context/UserTypeContext.jsx";
@@ -9,6 +10,7 @@ import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext.js
 import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext.jsx";
 import { LikesProvider } from "./context/LikesContext.jsx";
 import { PlaybackProvider } from "./context/PlaybackContext.jsx";
+import { LimitedHomeEscProvider } from "./context/LimitedHomeEscContext.jsx";
 import { TvNavFocusProvider } from "./context/TvNavFocusContext.jsx";
 import GlobalTvKeys from "./components/focus/GlobalTvKeys.jsx";
 import TvAccountRequiredDialog from "./components/player/TvAccountRequiredDialog.jsx";
@@ -19,6 +21,9 @@ import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
 import SearchIndexRedirect from "./routes/SearchIndexRedirect.jsx";
 import TvContentTypeUnavailable from "./pages/TvContentTypeUnavailable.jsx";
+import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels.jsx";
+import SearchMusicCategory from "./pages/SearchMusicCategory.jsx";
+import SearchMusicVibe from "./pages/SearchMusicVibe.jsx";
 import TvSearchRouteStub from "./pages/TvSearchRouteStub.jsx";
 import MyLibrary from "./pages/MyLibrary.jsx";
 import FocusDemo from "./pages/FocusDemo.jsx";
@@ -45,9 +50,11 @@ export default function App() {
               <LikesProvider>
                 <PlaybackProvider>
                   <TerritoryProvider>
+                    <CategoryRailMemoryProvider>
                     <ScreenMemoryProvider>
                       <GroupFocusNavigationProvider>
                         <TvNavFocusProvider>
+                          <LimitedHomeEscProvider>
                           <GlobalTvKeys />
                           <TvAccountRequiredDialog />
                           <TvGuestSkipLimitDialog />
@@ -58,6 +65,22 @@ export default function App() {
                               <Route path="/search/music" element={<Search />} />
                               <Route path="/search/podcasts" element={<Search />} />
                               <Route path="/search/radio" element={<Search />} />
+                              <Route
+                                path="/search/browse/music/vibe/:vibeId/tag/:tagSlug/sub/:subSlug"
+                                element={<SearchMusicBroadTagChannels />}
+                              />
+                              <Route
+                                path="/search/browse/music/vibe/:vibeId/tag/:tagSlug"
+                                element={<SearchMusicBroadTagChannels />}
+                              />
+                              <Route
+                                path="/search/browse/music/vibe/:vibeId"
+                                element={<SearchMusicVibe />}
+                              />
+                              <Route
+                                path="/search/browse/music/category/:categoryId"
+                                element={<SearchMusicCategory />}
+                              />
                               <Route
                                 path="/search/browse/*"
                                 element={<TvSearchRouteStub title="Search browse" />}
@@ -102,9 +125,11 @@ export default function App() {
                               <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
                           </TvShell>
+                          </LimitedHomeEscProvider>
                         </TvNavFocusProvider>
                       </GroupFocusNavigationProvider>
                     </ScreenMemoryProvider>
+                    </CategoryRailMemoryProvider>
                   </TerritoryProvider>
                 </PlaybackProvider>
               </LikesProvider>

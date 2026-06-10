@@ -9,10 +9,13 @@ export default function TvHomeBanner({
   onMoveUp,
   onMoveDown,
   onBoundaryLeft,
+  /** Demo only: click / Enter dismisses banner (limited Home). */
+  onDismiss,
 }) {
   return (
     <KeyboardWrapper
       ref={(node) => registerItemRef?.(groupIndex, 0, node)}
+      onSelect={() => onDismiss?.()}
       onUp={onMoveUp}
       onDown={onMoveDown}
       onLeft={() => onBoundaryLeft?.()}
@@ -28,7 +31,11 @@ export default function TvHomeBanner({
             .join(" ")}
           role="button"
           tabIndex={-1}
-          aria-label="Promo banner"
+          aria-label={
+            onDismiss
+              ? "Promo banner. Activate to hide for this session."
+              : "Promo banner"
+          }
         >
           Promo Banner
         </div>

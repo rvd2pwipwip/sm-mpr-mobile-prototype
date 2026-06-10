@@ -14,7 +14,9 @@ export default function Home() {
 
   useEffect(() => {
     if (searchParams.get("homeHeader")) return;
-    navigate(`/?homeHeader=${HOME_HEADER_LAYOUT.SCROLL}`, { replace: true });
+    const next = new URLSearchParams(searchParams);
+    next.set("homeHeader", HOME_HEADER_LAYOUT.SCROLL);
+    navigate({ pathname: "/", search: `?${next.toString()}` }, { replace: true });
   }, [navigate, searchParams]);
 
   if (catalogScope === CATALOG_SCOPE.limited) {

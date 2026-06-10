@@ -1,0 +1,36 @@
+.tv-search-drill {
+  box-sizing: border-box;
+  min-height: 100%;
+}
+
+.tv-search-drill__header {
+  flex-shrink: 0;
+  padding: 2rem var(--tv-content-inline-end) 1.5rem var(--tv-content-inline-start);
+}
+
+.tv-search-drill__title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-on-bkg);
+}
+
+.tv-search-drill__meta {
+  margin: 0.5rem 0 0;
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+}
+
+.tv-search-drill__grid-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 var(--tv-content-inline-end) 4rem var(--tv-content-inline-start);
+}
+
+.tv-search-drill__empty {
+  margin: 0;
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+}

@@ -33,7 +33,8 @@ function useTvSearchHeaderOffset() {
 
 /**
  * Fixed Search & Browse header — field, Clear, optional content-type tabs (browse mode).
- * Focus indices in group 0: 0 = field, 1 = Clear (when query non-empty), then tabs.
+ * Row 0 (searchRowGroup): field, Clear. Row 1 (browseTabsGroup): Music / Podcasts / Radio.
+ * Up/Down moves between rows; Left/Right within a row. Left from first tab enters nav.
  */
 export default function TvSearchBrowseHeader({
   query,
@@ -44,39 +45,27 @@ export default function TvSearchBrowseHeader({
   searchPlaceholder,
   registerItemRef,
   isItemFocused,
-  onFieldFocus,
-  onFieldBlur,
   onClear,
-  onDismissKeyboardStub,
   onMoveUp,
   onMoveDown,
   onMoveLeft,
   onMoveRight,
+  searchRowGroup = 0,
+  browseTabsGroup = 1,
 }) {
   const navigate = useNavigate();
   const headerRef = useTvSearchHeaderOffset();
   const inputRef = useRef(null);
   const showClear = query.length > 0;
-  const tabStartIndex = showClear ? 2 : 1;
+  const fieldFocused = isItemFocused(searchRowGroup, 0);
 
   useEffect(() => {
-    if (isItemFocused(0, 0) && inputRef.current) {
+    if (fieldFocused && inputRef.current) {
       inputRef.current.focus({ preventScroll: true });
     }
-  }, [isItemFocused]);
+  }, [fieldFocused]);
 
   const handleInputKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      onDismissKeyboardStub?.();
-      return;
-    }
-    if (event.key === "Escape") {
-      event.preventDefault();
-      event.stopPropagation();
-      onDismissKeyboardStub?.();
-      return;
-    }
     if (event.key === "ArrowDown") {
       event.preventDefault();
       event.stopPropagation();
@@ -111,7 +100,7 @@ export default function TvSearchBrowseHeader({
         <div
           className={[
             "tv-search-header__field-wrap",
-            isItemFocused(0, 0) ? "tv-search-header__field-wrap--focused" : "",
+            fieldFocused ? "tv-search-header__field-wrap--focused" : "",
           ]
             .filter(Boolean)
             .join(" ")}
@@ -119,7 +108,7 @@ export default function TvSearchBrowseHeader({
           <input
             ref={(node) => {
               inputRef.current = node;
-              registerItemRef(0, 0, node);
+              registerItemRef(searchRowGroup, 0, node);
             }}
             id="tv-search-query"
             type="search"
@@ -130,8 +119,6 @@ export default function TvSearchBrowseHeader({
             placeholder={searchPlaceholder}
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            onFocus={() => onFieldFocus?.()}
-            onBlur={() => onFieldBlur?.()}
             onKeyDown={handleInputKeyDown}
             aria-label="Search catalog"
           />
@@ -144,7 +131,7 @@ export default function TvSearchBrowseHeader({
 
         {showClear ? (
           <KeyboardWrapper
-            ref={(node) => registerItemRef(0, 1, node)}
+            ref={(node) => registerItemRef(searchRowGroup, 1, node)}
             onSelect={onClear}
             onUp={onMoveUp}
             onDown={onMoveDown}
@@ -157,7 +144,7 @@ export default function TvSearchBrowseHeader({
                 {...focusProps}
                 className={[
                   "tv-search-header__clear",
-                  isItemFocused(0, 1)
+                  isItemFocused(searchRowGroup, 1)
                     ? "tv-search-header__clear--focused"
                     : "",
                 ]
@@ -187,12 +174,10 @@ export default function TvSearchBrowseHeader({
           role="tablist"
           aria-label="Browse content type"
         >
-          {browseTabs.map((tab, tabIndex) => {
-            const focusIndex = tabStartIndex + tabIndex;
-            return (
+          {browseTabs.map((tab, tabIndex) => (
               <KeyboardWrapper
                 key={tab.id}
-                ref={(node) => registerItemRef(0, focusIndex, node)}
+                ref={(node) => registerItemRef(browseTabsGroup, tabIndex, node)}
                 onSelect={() => navigate(SEARCH_BROWSE[tab.id])}
                 onUp={onMoveUp}
                 onDown={onMoveDown}
@@ -204,14 +189,13 @@ export default function TvSearchBrowseHeader({
                     {...focusProps}
                     label={tab.label}
                     active={tab.id === activeBrowseTab}
-                    focused={isItemFocused(0, focusIndex)}
+                    focused={isItemFocused(browseTabsGroup, tabIndex)}
                     role="tab"
                     aria-selected={tab.id === activeBrowseTab}
                   />
                 )}
               </KeyboardWrapper>
-            );
-          })}
+          ))}
         </div>
       ) : null}
     </header>

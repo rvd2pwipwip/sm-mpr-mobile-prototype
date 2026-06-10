@@ -1,0 +1,30 @@
+.tv-search-label-tile {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tv-card-size);
+  height: var(--tv-card-size);
+  padding: 1rem;
+  border-radius: var(--radius-media-thumb);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.tv-search-label-tile--focused {
+  outline: 3px solid var(--color-accent2);
+  outline-offset: 2px;
+}
+
+.tv-search-label-tile__label {
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-on-bkg);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}

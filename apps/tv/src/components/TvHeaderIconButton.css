@@ -1,0 +1,50 @@
+.tv-header-icon-button.focusable-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 20px;
+  background: transparent;
+  color: var(--color-on-bkg);
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition: outline-color var(--tv-button-transition-duration) ease;
+}
+
+.tv-header-icon-button--focused.focusable-button,
+.tv-header-icon-button.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.tv-header-icon-button__slot {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+.tv-header-icon-button__mask {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.tv-header-icon-button__mask--search {
+  mask-image: url("/search.svg");
+  -webkit-mask-image: url("/search.svg");
+}
+
+.tv-header-icon-button__mask--info {
+  mask-image: url("/info.svg");
+  -webkit-mask-image: url("/info.svg");
+}
