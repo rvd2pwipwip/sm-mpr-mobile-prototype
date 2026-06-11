@@ -75,12 +75,13 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **TV mini player (Phase 7)** — `TvMiniPlayer` in `PrimaryNav`, nav focus index 0, shortcut to full player; see [`Tv-miniplayer-implementation-plan.md`](./Tv-miniplayer-implementation-plan.md)
 - [x] **Search & Browse Phases 0–2** — shared search modules; `TvSearchBrowseHeader`, `?q=` sync; music browse (broad vibe stacks + limited genre row), drill-down grids — see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Search & Browse Phase 3** — Podcasts browse tab (category swimlanes + 5-col category grid drill); parked vertical focus — see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
+- [x] **Search & Browse Phase 4** — Radio browse tab (shared in-scroll tabs shell + category swimlanes + International geo drill); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 
 ---
 
 ## Next steps (ordered)
 
-1. **Search & Browse Phase 4+** — radio browse (Phase 4), live search swimlanes (Phase 5), More grids; optional podcast library tiles when `PodcastUserStateContext` ships on TV
+1. **Search & Browse Phase 5+** — live search swimlanes (Phase 5), More grids; optional podcast library tiles when `PodcastUserStateContext` ships on TV
 2. **TV-2** — limited Home layout B shipped (stacked taxonomy, header mini player, Esc shortcut); layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
 3. **Backlog** — full Podcast Info / Radio player layouts (Search uses placeholders until then), TV in-player visual ads
 

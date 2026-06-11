@@ -57,12 +57,18 @@ export default function VariableSwimlane({
   const gutterStart = inlineGutterStart ?? getTvSwimlaneInlineStart();
   const gutterEnd = inlineGutterEnd ?? getTvSwimlaneInlineEnd();
 
+  const itemsSignature = useMemo(
+    () => items.map((item) => item.id).join("\0"),
+    [items],
+  );
+
   const measureItems = useCallback(() => {
-    const widths = items.map(
-      (_, index) => measureRefs.current[index]?.offsetWidth ?? 0,
-    );
+    const widths = [];
+    for (let index = 0; index < items.length; index += 1) {
+      widths.push(measureRefs.current[index]?.offsetWidth ?? 0);
+    }
     setItemWidths(widths);
-  }, [items]);
+  }, [itemsSignature, items.length]);
 
   useLayoutEffect(() => {
     const node = viewportRef.current;
@@ -78,11 +84,11 @@ export default function VariableSwimlane({
     });
     observer.observe(node);
     return () => observer.disconnect();
-  }, [items, measureItems]);
+  }, [itemsSignature, measureItems]);
 
   useLayoutEffect(() => {
     measureItems();
-  }, [activeIndex, focusedIndex, focused, measureItems]);
+  }, [measureItems]);
 
   useEffect(() => {
     if (viewportWidth <= 0) return undefined;

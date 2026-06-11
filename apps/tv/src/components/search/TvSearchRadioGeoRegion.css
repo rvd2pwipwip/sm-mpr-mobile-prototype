@@ -1,0 +1,45 @@
+.tv-search-radio-geo {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.tv-search-radio-geo__header {
+  flex-shrink: 0;
+  padding: 2rem var(--tv-content-inline-end) 1.5rem
+    var(--tv-content-inline-start);
+  text-align: center;
+}
+
+.tv-search-radio-geo__title {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 400;
+  color: var(--color-on-bkg);
+}
+
+.tv-search-radio-geo__meta {
+  margin: 0.5rem 0 0;
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+}
+
+.tv-search-radio-geo__scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Full-bleed scroll content (same as drill grids — no extra horizontal padding). */
+.tv-search-radio-geo .tv-home__scroll-inner {
+  gap: var(--tv-search-stack-gap);
+  padding-bottom: 4rem;
+  box-sizing: border-box;
+}
+
+.tv-search-radio-geo__explore .swimlane-row__title {
+  font-weight: 900;
+  color: var(--color-on-bkg);
+}

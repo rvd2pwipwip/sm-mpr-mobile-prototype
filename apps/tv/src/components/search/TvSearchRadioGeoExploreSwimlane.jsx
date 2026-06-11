@@ -1,15 +1,16 @@
+import { useMemo } from "react";
 import FilterButton from "../focus/FilterButton.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
-import VariableSwimlane from "./VariableSwimlane.jsx";
-import "./SwimlaneRow.css";
+import VariableSwimlane from "../swimlanes/VariableSwimlane.jsx";
 
 /**
- * Genre / filter button row for limited-catalog TV Home (same stack pattern as SwimlaneRow).
+ * Geo sub-region pills — VariableSwimlane with standard swimlane gutters (aligned
+ * with channel card rows). Horizontal scroll is preserved when leaving the row.
  */
-export default function GenreFilterSwimlane({
+export default function TvSearchRadioGeoExploreSwimlane({
+  title,
   filters,
-  activeFilterId,
-  groupIndex = 0,
+  groupIndex,
   focused = false,
   focusedIndex = 0,
   onFocusChange,
@@ -18,26 +19,22 @@ export default function GenreFilterSwimlane({
   registerItemRef,
   onMoveUp,
   onMoveDown,
-  title = "Browse by genre",
-  showTitle = true,
-  ariaLabel = "Browse by genre",
 }) {
-  const activeIndex = filters.findIndex((filter) => filter.id === activeFilterId);
-  const hasActiveFilter = activeIndex >= 0;
+  const items = useMemo(
+    () => filters.map((filter) => ({ id: filter.id, label: filter.label })),
+    [filters],
+  );
 
   return (
-    <section className="swimlane-row" aria-label={ariaLabel}>
-      {showTitle ? (
-        <h2 className="swimlane-row__title">{title}</h2>
-      ) : null}
+    <section className="swimlane-row tv-search-radio-geo__explore" aria-label={title}>
+      <h2 className="swimlane-row__title">{title}</h2>
       <VariableSwimlane
-        items={filters}
+        items={items}
+        itemGap={30}
         focused={focused}
         focusedIndex={focusedIndex}
         onFocusChange={onFocusChange}
         onBoundaryLeft={onBoundaryLeft}
-        ensureActiveVisible={hasActiveFilter}
-        activeIndex={hasActiveFilter ? activeIndex : undefined}
         renderItem={(filter, index, isFocused) => (
           <KeyboardWrapper
             ref={(node) => registerItemRef(groupIndex, index, node)}
@@ -49,7 +46,6 @@ export default function GenreFilterSwimlane({
               <FilterButton
                 {...focusProps}
                 label={filter.label}
-                active={filter.id === activeFilterId}
                 focused={isFocused}
               />
             )}

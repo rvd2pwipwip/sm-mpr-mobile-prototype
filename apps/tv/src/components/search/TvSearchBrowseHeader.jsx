@@ -31,7 +31,7 @@ function useTvSearchHeaderOffset() {
 
 /**
  * Fixed Search header — search field + Clear (Figma `headerSearch`).
- * Browse tabs render in scroll content on Music/Podcasts browse; header tabs only on Radio placeholder.
+ * Browse tabs render in scroll content on Music/Podcasts/Radio browse (field-only header).
  */
 export default function TvSearchBrowseHeader({
   query,

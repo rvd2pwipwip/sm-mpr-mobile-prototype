@@ -223,7 +223,7 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 ---
 
-## Phase 4 — Radio Browse
+## Phase 4 — Radio Browse ✅ (prototype)
 
 **Goal:** Mobile **Search-story** radio hierarchy at **same staged depth**.
 
@@ -234,10 +234,17 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 **TV layout notes**
 
-- Top-level format/geo tiles: **`ContentGrid`** or horizontal **`ContentTileSwimlane`** per row.
-- Subregion “combo” screen: **`ContentTileSwimlane`** (popular) + **`VariableSwimlane`** of geo **`FilterButton`** pills.
+- **Same browse shell as Music/Podcasts:** field-only fixed header; **tabs in scroll content**; `search-browse-${tab}` scroll memory; first swimlane title aligns across content-type switches.
+- Category rows: **`ContentTileSwimlane`**; International: continent pills + label tiles (`TvSearchRadioInternationalSection`).
+- Drill grids: **5-col** `ContentGrid` via **`TvSearchBrowseDrillPage`**; geo combo: **`TvSearchRadioGeoRegion`** — **two swimlanes** (channels + sub-region buttons); vertical parked nav between lanes, horizontal parked nav within each lane.
 
-**Deliverable:** One full geo path + format entry navigable; placeholders on play.
+**Shipped (2026-06-09)**
+
+- **`TvSearchRadioBrowseBody`** + **`buildSearchRadioBrowseFocusLayout`** — Near You, International, format swimlanes on Radio tab.
+- **`SearchRadioStationGrid`**, **`SearchRadioInternational`** (+ **`TvSearchRadioGeoRegion`**) — near-you/format grids; continent grid; NA → Canada → Alberta → cities path; leaf station grids.
+- Routes under `/search/browse/radio/...`; shared layout with Music/Podcasts browse chrome.
+
+**Deliverable:** One full geo path + format entry navigable; placeholders on play. ✓
 
 ---
 

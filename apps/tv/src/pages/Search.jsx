@@ -18,6 +18,7 @@ import TvSearchBrowseHeader from "../components/search/TvSearchBrowseHeader.jsx"
 import TvSearchBrowseTabs from "../components/search/TvSearchBrowseTabs.jsx";
 import TvSearchMusicBrowseBody from "../components/search/TvSearchMusicBrowseBody.jsx";
 import TvSearchPodcastsBrowseBody from "../components/search/TvSearchPodcastsBrowseBody.jsx";
+import TvSearchRadioBrowseBody from "../components/search/TvSearchRadioBrowseBody.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
@@ -26,6 +27,10 @@ import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { buildSearchMusicBrowseFocusLayout } from "../utils/searchMusicBrowseLayout.js";
 import { buildSearchPodcastsBrowseFocusLayout } from "../utils/searchPodcastsBrowseLayout.js";
+import {
+  DEFAULT_RADIO_INTL_CONTINENT,
+  buildSearchRadioBrowseFocusLayout,
+} from "../utils/searchRadioBrowseLayout.js";
 import "./Search.css";
 
 const SEARCH_DEBOUNCE_MS = 250;
@@ -69,6 +74,9 @@ export default function Search() {
     searchParamFromLocationSearch(location.search),
   );
   const [vibeSelections, setVibeSelections] = useState({});
+  const [radioIntlContinent, setRadioIntlContinent] = useState(
+    DEFAULT_RADIO_INTL_CONTINENT,
+  );
   const stackKeySeenRef = useRef(null);
 
   const showBrowseTabs = query.trim().length === 0;
@@ -92,7 +100,14 @@ export default function Search() {
     browseTab === CONTENT_TYPE.podcasts &&
     isContentTypeEnabled(CONTENT_TYPE.podcasts);
 
-  const isBrowseScrollVisible = isMusicBrowseVisible || isPodcastsBrowseVisible;
+  const isRadioBrowseVisible =
+    !isSearchActive &&
+    !isLimitedSearchRoot &&
+    browseTab === CONTENT_TYPE.radio &&
+    isContentTypeEnabled(CONTENT_TYPE.radio);
+
+  const isBrowseScrollVisible =
+    isMusicBrowseVisible || isPodcastsBrowseVisible || isRadioBrowseVisible;
 
   const bodyBrowseLayout = useMemo(() => {
     if (isMusicBrowseVisible) {
@@ -101,12 +116,17 @@ export default function Search() {
     if (isPodcastsBrowseVisible) {
       return buildSearchPodcastsBrowseFocusLayout();
     }
+    if (isRadioBrowseVisible) {
+      return buildSearchRadioBrowseFocusLayout(radioIntlContinent);
+    }
     return null;
   }, [
     isMusicBrowseVisible,
     isPodcastsBrowseVisible,
+    isRadioBrowseVisible,
     musicLineupMode,
     vibeSelections,
+    radioIntlContinent,
   ]);
 
   const searchRowItemCount = query.length > 0 ? 2 : 1;
@@ -259,6 +279,10 @@ export default function Search() {
     setVibeSelections((prev) => ({ ...prev, [vibeId]: slug }));
   }, []);
 
+  const handleRadioIntlContinentChange = useCallback((continentSlug) => {
+    setRadioIntlContinent(continentSlug);
+  }, []);
+
   const searchPlaceholder = isMusicOnlyProfile
     ? "Search channels, artists or tags"
     : "Search channels, artists, podcasts or radio...";
@@ -400,22 +424,24 @@ export default function Search() {
       );
     }
 
-    const tabLabel =
-      browseTab === CONTENT_TYPE.podcasts
-        ? "Podcasts"
-        : browseTab === CONTENT_TYPE.radio
-          ? "Radio"
-          : "Music";
+    if (isRadioBrowseVisible && bodyBrowseLayout) {
+      return (
+        <TvSearchRadioBrowseBody
+          browseLayout={bodyBrowseLayout}
+          registerGroupRef={registerGroupRef}
+          registerItemRef={registerItemRef}
+          isContentGroupActive={isContentGroupActive}
+          getItemFocusIndex={getItemFocusIndex}
+          setFocusedIndex={setFocusedIndex}
+          onMoveUp={handleMoveUp}
+          onMoveDown={handleMoveDown}
+          enterNavFromContent={enterNavFromContent}
+          onInternationalContinentChange={handleRadioIntlContinentChange}
+        />
+      );
+    }
 
-    return (
-      <div className="tv-search-page__body">
-        <h2 className="tv-search-page__mode-label">{tabLabel} browse</h2>
-        <p className="tv-search-page__hint">
-          Browse body for {tabLabel.toLowerCase()} ships in Phase 3–4. Focus the
-          search field and type to preview search mode.
-        </p>
-      </div>
-    );
+    return null;
   }
 
   const scrollBody = isBrowseScrollVisible;

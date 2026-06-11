@@ -30,14 +30,17 @@
   min-height: 0;
 }
 
+/* Grid is full-bleed in the content column (insets are in shell tokens only). */
 .tv-search-drill .tv-home__scroll-inner {
   gap: var(--tv-search-stack-gap);
-  padding: 0 var(--tv-content-inline-end) 4rem var(--tv-content-inline-start);
+  padding-bottom: 4rem;
   box-sizing: border-box;
 }
 
 .tv-search-drill__empty {
   margin: 0;
+  padding-inline: var(--tv-content-inline-start) var(--tv-content-inline-end);
   font-size: var(--font-size-body);
   color: var(--color-text-muted);
+  box-sizing: border-box;
 }
