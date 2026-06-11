@@ -65,6 +65,11 @@ export function buildSearchMusicBrowseFocusLayout(
       swimlaneGroups: [groupIndex],
       firstBodyGroup: groupIndex,
       lastBodyGroup: groupIndex,
+      cardGroups: [groupIndex],
+      pillsGroups: [],
+      lastCardGroup: groupIndex,
+      /** First card swimlane — genre tiles (parked-focus landing). */
+      landingGroup: groupIndex,
       limitedGenres: genres,
       vibeSections: [],
     };
@@ -100,6 +105,10 @@ export function buildSearchMusicBrowseFocusLayout(
   });
 
   const lastBodyGroup = bodyStart + BROAD_VIBES.length * 2 - 1;
+  const firstCardsGroup = bodyStart + 1;
+  const pillsGroups = BROAD_VIBES.map((_, index) => bodyStart + index * 2);
+  const cardGroups = BROAD_VIBES.map((_, index) => bodyStart + index * 2 + 1);
+  const lastCardGroup = cardGroups[cardGroups.length - 1] ?? bodyStart;
 
   return {
     groupCount: lastBodyGroup + 1,
@@ -107,6 +116,14 @@ export function buildSearchMusicBrowseFocusLayout(
     swimlaneGroups,
     firstBodyGroup: bodyStart,
     lastBodyGroup,
+    pillsGroups,
+    cardGroups,
+    lastCardGroup,
+    /** First card row (below Genre pills) — parked-focus landing. */
+    landingGroup:
+      (itemCounts[firstCardsGroup] ?? 0) > 0
+        ? firstCardsGroup
+        : bodyStart,
     limitedGenres: null,
     vibeSections,
   };

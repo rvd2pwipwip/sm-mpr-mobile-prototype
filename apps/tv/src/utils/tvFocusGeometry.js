@@ -3,7 +3,7 @@
  * Transpose of VariableSwimlane horizontal parking: keep focus ring top on parkY,
  * scroll content via translateY until top/bottom end conditions.
  *
- * @see docs/tv/Plans/vertical-parked-navigation-plan.md
+ * @see docs/tv/vertical-parked-navigation.md
  */
 
 /** Default: `--tv-focus-ring-width` (10) + `--tv-focus-ring-gap` (4). */

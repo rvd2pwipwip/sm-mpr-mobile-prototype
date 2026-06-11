@@ -27,6 +27,9 @@
   --color-accent2: #902992;
   --color-on-accent: #ffffff;
   --color-focus-ring: #191919;
+  /* Card media / label tiles (aligned with mobile `ContentTileCard`, `BrowseTagCard`) */
+  --color-surface: #ffffff;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
 
   --tv-viewport-width: 1920px;
   --tv-viewport-height: 1080px;
@@ -190,6 +193,8 @@ html[data-visual-ads] {
     --color-text-muted: rgb(from var(--color-text) r g b / 50%);
     --color-on-bkg: #fafafa;
     --color-focus-ring: #fafafa;
+    --color-surface: #27272a;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
   }
 }
 
@@ -205,6 +210,8 @@ html[data-theme="light"] {
   --color-text-muted: rgb(from var(--color-text) r g b / 50%);
   --color-on-bkg: #191919;
   --color-focus-ring: #191919;
+  --color-surface: #ffffff;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 html[data-theme="dark"] {
@@ -219,6 +226,8 @@ html[data-theme="dark"] {
   --color-text-muted: rgb(from var(--color-text) r g b / 50%);
   --color-on-bkg: #fafafa;
   --color-focus-ring: #fafafa;
+  --color-surface: #27272a;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 [data-catalog-scope="broad"] {

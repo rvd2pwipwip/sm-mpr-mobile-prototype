@@ -29,7 +29,8 @@
   height: 100%;
   border-radius: var(--tv-card-radius);
   overflow: hidden;
-  background: transparent;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .tv-content-tile__thumbnail--playing::after {
@@ -45,7 +46,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: var(--color-bg-muted);
 }
 
 .tv-content-tile__title {

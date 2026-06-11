@@ -8,7 +8,7 @@ Teaching-oriented guide for building the **Search** primary-nav destination in *
 - Product story + **Integration notes:** [`docs/mobile/Stories/Search-story.md`](../../mobile/Stories/Search-story.md)
 - Catalog scope (broad vs limited Search fork): [`docs/mobile/Plans/catalog-scope-search-browse-refactor.md`](../../mobile/Plans/catalog-scope-search-browse-refactor.md)
 - Content profile (music-only vs full MPR): [`docs/mobile/Plans/music-only-mvp-plan.md`](../../mobile/Plans/music-only-mvp-plan.md)
-- TV focus / swimlanes: [`cards-and-swimlanes-implementation-plan.md`](./cards-and-swimlanes-implementation-plan.md), [`vertical-parked-navigation-plan.md`](./vertical-parked-navigation-plan.md)
+- TV focus / swimlanes: [`cards-and-swimlanes-implementation-plan.md`](./cards-and-swimlanes-implementation-plan.md), [`vertical-parked-navigation.md`](../vertical-parked-navigation.md) (spec), [`vertical-parked-navigation-plan.md`](./vertical-parked-navigation-plan.md) (QA log)
 - Figma index: [`docs/tv/figma-nodes.md`](../figma-nodes.md)
 - Living TV plan: [`plan.md`](./plan.md)
 

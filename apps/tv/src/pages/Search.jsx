@@ -18,6 +18,7 @@ import TvSearchBrowseHeader from "../components/search/TvSearchBrowseHeader.jsx"
 import TvSearchMusicBrowseBody from "../components/search/TvSearchMusicBrowseBody.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
+import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { SEARCH_FOCUS } from "../constants/searchFocusGroups.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
@@ -107,6 +108,8 @@ export default function Search() {
         swimlaneGroups: [],
         firstBodyGroup: null,
         lastBodyGroup: null,
+        landingGroup: null,
+        lastCardGroup: null,
       };
     }
 
@@ -116,6 +119,8 @@ export default function Search() {
       swimlaneGroups: browseLayout.swimlaneGroups,
       firstBodyGroup: browseLayout.firstBodyGroup,
       lastBodyGroup: browseLayout.lastBodyGroup,
+      landingGroup: browseLayout.landingGroup,
+      lastCardGroup: browseLayout.lastCardGroup,
     };
   }, [
     searchRowItemCount,
@@ -123,6 +128,37 @@ export default function Search() {
     browseTabs.length,
     browseLayout,
   ]);
+
+  /** Browse tabs are group 1 when visible; when hidden, skip the empty slot. */
+  const resolveMoveDown = useCallback(
+    (current) => {
+      if (
+        !showHeaderBrowseTabs &&
+        isMusicBrowseVisible &&
+        focusConfig.firstBodyGroup != null &&
+        current === SEARCH_FOCUS.searchRow
+      ) {
+        return focusConfig.firstBodyGroup;
+      }
+      return null;
+    },
+    [showHeaderBrowseTabs, isMusicBrowseVisible, focusConfig.firstBodyGroup],
+  );
+
+  const resolveMoveUp = useCallback(
+    (current) => {
+      if (
+        !showHeaderBrowseTabs &&
+        isMusicBrowseVisible &&
+        focusConfig.firstBodyGroup != null &&
+        current === focusConfig.firstBodyGroup
+      ) {
+        return SEARCH_FOCUS.searchRow;
+      }
+      return null;
+    },
+    [showHeaderBrowseTabs, isMusicBrowseVisible, focusConfig.firstBodyGroup],
+  );
 
   const {
     registerItemRef,
@@ -138,12 +174,18 @@ export default function Search() {
     setFocusedIndex,
     enterNavFromContent,
     getItemElement,
+    focusedIndex,
   } = useScreenContentFocus("search", {
     groupCount: focusConfig.groupCount,
     itemCounts: focusConfig.itemCounts,
     swimlaneGroups: focusConfig.swimlaneGroups,
-    defaultGroupIndex: SEARCH_FOCUS.searchRow,
-    defaultItemIndex: 0,
+    defaultGroupIndex:
+      isMusicBrowseVisible && focusConfig.landingGroup != null
+        ? focusConfig.landingGroup
+        : SEARCH_FOCUS.searchRow,
+    defaultItemIndex: HOME_LANDING_ITEM_INDEX,
+    resolveMoveDown,
+    resolveMoveUp,
   });
 
   useLayoutEffect(() => {
@@ -163,9 +205,19 @@ export default function Search() {
   ]);
 
   const getFocusedElement = useCallback(
-    () => getItemElement(focusedGroupIndex, getItemFocusIndex(focusedGroupIndex)),
-    [getItemElement, focusedGroupIndex, getItemFocusIndex],
+    () => getItemElement(focusedGroupIndex, focusedIndex),
+    [getItemElement, focusedGroupIndex, focusedIndex],
   );
+
+  const lastFocusableGroupIndex = useMemo(() => {
+    if (focusConfig.lastBodyGroup != null) {
+      return focusConfig.lastBodyGroup;
+    }
+    if (showHeaderBrowseTabs) {
+      return SEARCH_FOCUS.browseTabs;
+    }
+    return SEARCH_FOCUS.searchRow;
+  }, [focusConfig.lastBodyGroup, showHeaderBrowseTabs]);
 
   const {
     viewportRef,
@@ -174,12 +226,14 @@ export default function Search() {
     offsetY,
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
-    landingGroupIndex: focusConfig.firstBodyGroup ?? SEARCH_FOCUS.searchRow,
-    firstFocusableGroupIndex: focusConfig.firstBodyGroup ?? SEARCH_FOCUS.searchRow,
-    lastFocusableGroupIndex:
-      focusConfig.lastBodyGroup ?? SEARCH_FOCUS.browseTabs,
+    landingGroupIndex:
+      isMusicBrowseVisible && focusConfig.landingGroup != null
+        ? focusConfig.landingGroup
+        : SEARCH_FOCUS.searchRow,
+    firstFocusableGroupIndex: SEARCH_FOCUS.searchRow,
+    lastFocusableGroupIndex,
     getFocusedElement,
-    screenId: "search",
+    screenId: isMusicBrowseVisible ? "search" : undefined,
   });
 
   const handlePillChange = useCallback((vibeId, slug) => {
@@ -352,19 +406,19 @@ export default function Search() {
       />
 
       {scrollBody ? (
-        <div ref={viewportRef} className="tv-search-page__scroll">
+        <div ref={viewportRef} className="tv-search-page__scroll tv-home__scroll">
           <div
             ref={innerRef}
-            className={["tv-search-page__scroll-inner", innerClassName]
-              .filter(Boolean)
-              .join(" ")}
+            className={innerClassName}
             style={{ transform: `translateY(-${offsetY}px)` }}
           >
             {renderBody()}
           </div>
         </div>
       ) : (
-        <div className="tv-search-page__scroll">{renderBody()}</div>
+        <div className="tv-search-page__scroll tv-home__scroll">
+          {renderBody()}
+        </div>
       )}
     </div>
   );

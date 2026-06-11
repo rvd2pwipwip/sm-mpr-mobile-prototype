@@ -11,7 +11,8 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - **`docs/mobile/Plans/music-only-mvp-plan.md`** — music-only content profile: mobile Phases 0–5 shipped; TV **Broad Home** gating + profile toggle (§7 **TV-0**, **TV-1**); **TV-2** limited Home pending
 - **`docs/tv/Plans/Music-player-agent-handoff.md`** — **start here** for music player implementation (clean-slate agent brief)
 - **`docs/tv/Plans/Music-player-implementation-plan.md`** — detailed player plan (reference)
-- **`docs/tv/Plans/vertical-parked-navigation-plan.md`** — vertical parked focus ring (tag-row pattern on Y); Phase A geometry in `tvFocusGeometry.js`
+- **`docs/tv/vertical-parked-navigation.md`** — vertical parked focus spec + implementation (canonical)
+- **`docs/tv/Plans/vertical-parked-navigation-plan.md`** — vertical parked focus phases / QA log
 - **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`** — phased build plan for focus, cards, swimlanes (start here for implementation)
 - **`docs/tv/Plans/Search-Browse-implementation-plan.md`** — Search & Browse TV slice (broad + limited, full content profile, keyboard stub)
 - **`docs/tv/figma-nodes.md`** — TV Figma index ([SM HTML TV MPR](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=0-1))

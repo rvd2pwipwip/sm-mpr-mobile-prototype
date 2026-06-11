@@ -6,16 +6,21 @@
   justify-content: center;
   width: var(--tv-card-size);
   height: var(--tv-card-size);
+  margin: 0;
   padding: 1rem;
-  border-radius: var(--radius-media-thumb);
+  border: none;
+  border-radius: var(--tv-card-radius);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
   text-align: center;
+  cursor: pointer;
+  outline: var(--tv-focus-ring-width) solid transparent;
+  outline-offset: var(--tv-focus-ring-gap);
+  transition: outline-color var(--tv-button-transition-duration) ease;
 }
 
 .tv-search-label-tile--focused {
-  outline: 3px solid var(--color-accent2);
-  outline-offset: 2px;
+  outline-color: var(--tv-focus-ring-color);
 }
 
 .tv-search-label-tile__label {

@@ -26,6 +26,8 @@ export function useScreenContentFocus(
     navEnterEnabled = true,
     contentKeysEnabled = true,
     suspendDomFocus = false,
+    resolveMoveDown,
+    resolveMoveUp,
   } = {},
 ) {
   const { catalogScope } = useTerritory();
@@ -174,14 +176,36 @@ export function useScreenContentFocus(
 
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
+    const resolved = resolveMoveUp?.(focusedGroupIndex);
+    if (resolved != null) {
+      setFocusedGroupIndex(resolved);
+      return;
+    }
     if (focusedGroupIndex === 0) return;
     moveFocusUp(focusedGroupIndex, setFocusedGroupIndex);
-  }, [focusZone, focusedGroupIndex, moveFocusUp, setFocusedGroupIndex]);
+  }, [
+    focusZone,
+    focusedGroupIndex,
+    resolveMoveUp,
+    setFocusedGroupIndex,
+    moveFocusUp,
+  ]);
 
   const handleMoveDown = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
+    const resolved = resolveMoveDown?.(focusedGroupIndex);
+    if (resolved != null) {
+      setFocusedGroupIndex(resolved);
+      return;
+    }
     moveFocusDown(focusedGroupIndex, setFocusedGroupIndex);
-  }, [focusZone, focusedGroupIndex, moveFocusDown, setFocusedGroupIndex]);
+  }, [
+    focusZone,
+    focusedGroupIndex,
+    resolveMoveDown,
+    setFocusedGroupIndex,
+    moveFocusDown,
+  ]);
 
   const handleMoveLeft = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;

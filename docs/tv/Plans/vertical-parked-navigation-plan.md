@@ -1,8 +1,11 @@
 # Vertical parked focus navigation — implementation plan
 
+> **Canonical spec and integration guide:** [`../vertical-parked-navigation.md`](../vertical-parked-navigation.md)  
+> This file tracks phases, QA, and progress log.
+
 Living plan for **TV vertical scroll** with **parked focus ring** behavior (same mental model as **Channel Info tag row** / `VariableSwimlane` horizontal parking, transposed to Y).
 
-**Scope:** Reusable hook for any screen with a vertical scrollport + focus groups. **First consumers:** `BroadHome`, `LimitedHome`. Future screens import the same contract.
+**Scope:** Reusable hook for any screen with a vertical scrollport + focus groups. **First consumers:** `BroadHome`, `LimitedHome`. **Search browse** wiring in progress — see spec doc.
 
 **References:**
 
@@ -127,3 +130,5 @@ Pure + DOM helpers in **`apps/tv/src/utils/tvFocusGeometry.js`**:
 | 2026-06-03 | A | Added `tvFocusGeometry.js` + this plan |
 | 2026-06-03 | B+C | Hook rewrite + Broad/Limited wiring |
 | 2026-06-03 | D+E | Polish (double rAF, footer ad slot) + QA sign-off on parked up/down |
+| 2026-06-09 | Doc | Canonical spec: [`../vertical-parked-navigation.md`](../vertical-parked-navigation.md) (Search wiring gaps, chrome vs inner) |
+| 2026-06-09 | Search | Linear vertical nav + parked scroll on Search music browse (`Search.jsx`); removed skip-nav helper |

@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import "./ContentTileCard.css";
 
 /**
@@ -24,6 +24,14 @@ const ContentTileCard = forwardRef(function ContentTileCard(
   },
   ref,
 ) {
+  const [imageLoaded, setImageLoaded] = useState(true);
+
+  useEffect(() => {
+    setImageLoaded(true);
+  }, [imageUrl]);
+
+  const showImage = Boolean(imageUrl) && imageLoaded;
+
   const thumbWrapClass = [
     "tv-content-tile__thumb-wrap",
     focused ? "tv-content-tile__thumb-wrap--focused" : "",
@@ -49,15 +57,18 @@ const ContentTileCard = forwardRef(function ContentTileCard(
     >
       <div className={thumbWrapClass}>
         <div className={thumbnailClass}>
-        <img
-          className="tv-content-tile__img"
-          src={imageUrl}
-          alt=""
-          width={308}
-          height={308}
-          loading="lazy"
-          decoding="async"
-        />
+        {showImage ? (
+          <img
+            className="tv-content-tile__img"
+            src={imageUrl}
+            alt=""
+            width={308}
+            height={308}
+            loading="lazy"
+            decoding="async"
+            onError={() => setImageLoaded(false)}
+          />
+        ) : null}
         {playing ? (
           <span className="tv-content-tile__playing" aria-label="Now playing">
             <span className="tv-content-tile__playing-bars" aria-hidden="true">

@@ -42,7 +42,7 @@ export default function TvSearchMusicBrowseBody({
       <div className="tv-search-music-browse">
         <h2 className="tv-search-music-browse__title">Browse by genre</h2>
         <div
-          className="tv-search-music-browse__group"
+          className="tv-home__scroll-group tv-search-music-browse__group"
           ref={(node) => wrapGroup(groupIndex, node)}
         >
           <TvSearchLabelTileSwimlane

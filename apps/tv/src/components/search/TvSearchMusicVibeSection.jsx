@@ -99,7 +99,10 @@ export default function TvSearchMusicVibeSection({
     <section className="tv-search-vibe-section" aria-label={title}>
       <h2 className="tv-search-vibe-section__title">{title}</h2>
 
-      <div ref={(node) => registerGroupRef?.(pillsGroup, node)}>
+      <div
+        className="tv-home__scroll-group"
+        ref={(node) => registerGroupRef?.(pillsGroup, node)}
+      >
       <GenreFilterSwimlane
         filters={pillFilters}
         activeFilterId={selectedSlug}
@@ -117,7 +120,10 @@ export default function TvSearchMusicVibeSection({
       />
       </div>
 
-      <div ref={(node) => registerGroupRef?.(cardsGroup, node)}>
+      <div
+        className="tv-home__scroll-group"
+        ref={(node) => registerGroupRef?.(cardsGroup, node)}
+      >
       {isLeaf ? (
         <MusicChannelSwimlane
           key={selectedSlug}
