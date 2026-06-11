@@ -1,8 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { SEARCH_BROWSE } from "@sm-mpr/shared/constants/searchBrowsePaths.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
-import FilterButton from "../focus/FilterButton.jsx";
+import TvSearchBrowseTabs from "./TvSearchBrowseTabs.jsx";
 import "./TvSearchBrowseHeader.css";
 
 function useTvSearchHeaderOffset() {
@@ -32,9 +30,8 @@ function useTvSearchHeaderOffset() {
 }
 
 /**
- * Fixed Search & Browse header — field, Clear, optional content-type tabs (browse mode).
- * Row 0 (searchRowGroup): field, Clear. Row 1 (browseTabsGroup): Music / Podcasts / Radio.
- * Up/Down moves between rows; Left/Right within a row. Left from first tab enters nav.
+ * Fixed Search header — search field + Clear (Figma `headerSearch`).
+ * Browse tabs render in scroll content on music browse; here when placeholder browse tabs.
  */
 export default function TvSearchBrowseHeader({
   query,
@@ -53,7 +50,6 @@ export default function TvSearchBrowseHeader({
   searchRowGroup = 0,
   browseTabsGroup = 1,
 }) {
-  const navigate = useNavigate();
   const headerRef = useTvSearchHeaderOffset();
   const inputRef = useRef(null);
   const showClear = query.length > 0;
@@ -169,34 +165,17 @@ export default function TvSearchBrowseHeader({
       </div>
 
       {showBrowseTabs && browseTabs.length > 0 ? (
-        <div
-          className="tv-search-header__tabs"
-          role="tablist"
-          aria-label="Browse content type"
-        >
-          {browseTabs.map((tab, tabIndex) => (
-              <KeyboardWrapper
-                key={tab.id}
-                ref={(node) => registerItemRef(browseTabsGroup, tabIndex, node)}
-                onSelect={() => navigate(SEARCH_BROWSE[tab.id])}
-                onUp={onMoveUp}
-                onDown={onMoveDown}
-                onLeft={onMoveLeft}
-                onRight={onMoveRight}
-              >
-                {(focusProps) => (
-                  <FilterButton
-                    {...focusProps}
-                    label={tab.label}
-                    active={tab.id === activeBrowseTab}
-                    focused={isItemFocused(browseTabsGroup, tabIndex)}
-                    role="tab"
-                    aria-selected={tab.id === activeBrowseTab}
-                  />
-                )}
-              </KeyboardWrapper>
-          ))}
-        </div>
+        <TvSearchBrowseTabs
+          browseTabs={browseTabs}
+          activeBrowseTab={activeBrowseTab}
+          browseTabsGroup={browseTabsGroup}
+          registerItemRef={registerItemRef}
+          isItemFocused={isItemFocused}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+          onMoveLeft={onMoveLeft}
+          onMoveRight={onMoveRight}
+        />
       ) : null}
     </header>
   );

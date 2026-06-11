@@ -66,6 +66,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 
 ## What we have done (recent)
 
+- [x] **Limited catalog footer ad removed** — no `TvFooterAdBanner` / `TvVisualAdsHtmlSync` in `TvShell`; in-feed `TvSwimlaneBannerAd` on stacked limited Home unchanged
 - [x] **Vertical parked navigation — Phase D+E** — double rAF polish, limited footer ad + scroll reserve, QA on parked up/down
 - [x] **Vertical parked navigation — Phase B+C** — `useTvVerticalGroupScroll` ring-top parking + `BroadHome` / `LimitedHome` wiring; see **`vertical-parked-navigation-plan.md`**
 - [x] **Home harmonization** — broad Home swimlanes match mobile order (music, podcasts, in-feed ad, radio, recommendations); **`@sm-mpr/shared`** tier rules + podcasts/radio data; SMTV03-style **`TvFooterAdBanner`**; **`/settings/user-type`** preview — see **`docs/tv/visual-ads-and-user-types.md`**

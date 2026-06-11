@@ -123,7 +123,7 @@ export function getTvScrollParkDownBiasPx(scrollportEl) {
   );
 }
 
-/** `--tv-scroll-ad-reserve` (footer ad padding on scroll inner when enabled). */
+/** `--tv-scroll-ad-reserve` (optional extra bottom padding on scroll inners). */
 export function getTvScrollAdReservePx(element) {
   return readCssPx(
     element ?? document.documentElement,

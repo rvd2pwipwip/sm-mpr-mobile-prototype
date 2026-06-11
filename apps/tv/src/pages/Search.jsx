@@ -15,6 +15,7 @@ import {
   writeStoredBroadSearchBrowseTab,
 } from "@sm-mpr/shared/constants/searchBrowsePaths.js";
 import TvSearchBrowseHeader from "../components/search/TvSearchBrowseHeader.jsx";
+import TvSearchBrowseTabs from "../components/search/TvSearchBrowseTabs.jsx";
 import TvSearchMusicBrowseBody from "../components/search/TvSearchMusicBrowseBody.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
@@ -390,7 +391,7 @@ export default function Search() {
       <TvSearchBrowseHeader
         query={query}
         onQueryChange={handleQueryChange}
-        showBrowseTabs={showHeaderBrowseTabs}
+        showBrowseTabs={showHeaderBrowseTabs && !isMusicBrowseVisible}
         browseTabs={browseTabs}
         activeBrowseTab={browseTab}
         searchPlaceholder={searchPlaceholder}
@@ -409,9 +410,23 @@ export default function Search() {
         <div ref={viewportRef} className="tv-search-page__scroll tv-home__scroll">
           <div
             ref={innerRef}
-            className={innerClassName}
+            className={`${innerClassName} tv-search-page__scroll-inner`}
             style={{ transform: `translateY(-${offsetY}px)` }}
           >
+            {showHeaderBrowseTabs ? (
+              <TvSearchBrowseTabs
+                browseTabs={browseTabs}
+                activeBrowseTab={browseTab}
+                browseTabsGroup={SEARCH_FOCUS.browseTabs}
+                registerGroupRef={registerGroupRef}
+                registerItemRef={registerItemRef}
+                isItemFocused={isItemFocused}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onMoveLeft={handleMoveLeft}
+                onMoveRight={handleMoveRight}
+              />
+            ) : null}
             {renderBody()}
           </div>
         </div>

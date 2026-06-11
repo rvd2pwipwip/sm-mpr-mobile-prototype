@@ -295,7 +295,7 @@ Use this when adding a vertically scrollable, focusable screen:
 
 - [ ] Flex column shell so scrollport gets remaining height (`min-height: 0`).
 - [ ] Decide **chrome in or out** of scroll inner; document Up/Down behavior at `offsetY === 0`.
-- [ ] Add **`padding-bottom`** on inner for bottom bias / footer ad if applicable.
+- [ ] Add **`padding-bottom`** on inner for bottom bias if needed (`--tv-scroll-ad-reserve`).
 
 ### Horizontal rows
 

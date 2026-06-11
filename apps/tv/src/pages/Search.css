@@ -16,11 +16,24 @@
   overflow: hidden;
 }
 
+/*
+ * Figma content stack: pt 230px, 50px vertical gap.
+ * No horizontal padding here — swimlanes are full-bleed; gutters live on
+ * title inset + track padding (same as Home). Padding on this node clips rings.
+ */
+.tv-search-page__scroll-inner {
+  gap: var(--tv-search-stack-gap);
+  padding-top: calc(
+    var(--tv-search-header-offset) + var(--tv-search-content-gap-after-header)
+  );
+  box-sizing: border-box;
+}
+
 .tv-search-page__body {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-space-screen-gap);
-  padding-inline: var(--tv-swimlane-inline-start) var(--tv-swimlane-inline-end);
+  gap: var(--tv-search-stack-gap);
+  padding-inline: var(--tv-content-inline-start) var(--tv-content-inline-end);
   box-sizing: border-box;
 }
 

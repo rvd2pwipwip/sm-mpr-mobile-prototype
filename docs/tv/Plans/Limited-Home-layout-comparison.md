@@ -37,7 +37,7 @@ Limited TV Home stacks fixed chrome that SMTV03 did not have:
 | **Mini player reach** | Few groups → easy via focus Up/Down | Header mini player always visible; **Esc** jumps focus to mini player when session active |
 | **Default in prototype** | Available for comparison | **Yes** |
 
-**Shared shell (both layouts):** limited header (variant per layout), optional promo banner (click/Enter dismiss, session-only), Music \| Podcasts \| Radio switcher, footer ad when `showVisualAds`, fake data from `@sm-mpr/shared`.
+**Shared shell (both layouts):** limited header (variant per layout), optional promo banner (click/Enter dismiss, session-only), Music \| Podcasts \| Radio switcher, fake data from `@sm-mpr/shared`.
 
 ---
 
@@ -85,7 +85,7 @@ LimitedHome.jsx
 1. Confirm **limited catalog** (wordmark toggle if needed).
 2. **Layout B (default):** Header with mini player visible after starting playback from a channel.
 3. Scroll stacked **music** genres; show **More** on a lane.
-4. **Dismiss promo** — show extra vertical room; note footer ad still present.
+4. **Dismiss promo** — show extra vertical room.
 5. Switch header tabs **Podcasts** / **Radio** (lanes or honest placeholder until shipped).
 6. Deep in scroll: press **Esc** → focus lands on **header mini player** → Enter opens full player.
 7. Toggle **Layout A** on `/settings/user-type` (prototype section): filter + single rail — compare fold height and mini player reach (nav not used on limited).
@@ -95,7 +95,7 @@ LimitedHome.jsx
 
 - Is stacked browse acceptable with vertical scroll vs one-at-a-time genre filter?
 - Is header mini player + Esc shortcut enough for “always reachable” playback?
-- Promo + footer ad + stacked lanes: still enough content visible without dismissing promo?
+- Promo + stacked lanes: still enough content visible without dismissing promo?
 
 ---
 

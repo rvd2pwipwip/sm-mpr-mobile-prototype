@@ -1,8 +1,9 @@
 .tv-search-music-browse {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-space-screen-gap);
+  gap: var(--tv-search-stack-gap);
   flex-shrink: 0;
+  width: 100%;
 }
 
 .tv-search-music-browse__title {
@@ -16,5 +17,5 @@
 .tv-search-music-browse__group {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-space-screen-gap);
+  gap: var(--tv-search-vibe-stack-gap);
 }

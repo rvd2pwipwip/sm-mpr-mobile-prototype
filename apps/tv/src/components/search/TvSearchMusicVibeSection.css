@@ -1,8 +1,9 @@
 .tv-search-vibe-section {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-space-screen-gap);
+  gap: var(--tv-search-vibe-stack-gap);
   flex-shrink: 0;
+  width: 100%;
 }
 
 .tv-search-vibe-section__title {

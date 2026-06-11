@@ -137,10 +137,6 @@ export default function App() {
           </GuestMusicSkipProvider>
         </AccountRequiredDialogProvider>
         </ContentProfileProvider>
-        {/*
-          Footer ad + scroll reserve: limited catalog only (TvShell mounts
-          TvFooterAdBanner + TvVisualAdsHtmlSync). Broad Home uses in-feed banner.
-        */}
       </UserTypeProvider>
     </TvViewport>
   );

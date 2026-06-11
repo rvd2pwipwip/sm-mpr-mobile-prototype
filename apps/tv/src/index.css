@@ -74,8 +74,7 @@
   --tv-player-transport-gap: 40px;
   --tv-player-progress-height: 4px;
 
-  /* Footer ad (SMTV03 `--ad-banner-height`; mobile strip ~86px). */
-  --tv-footer-ad-height: 150px;
+  /* Optional extra bottom padding on vertical scroll inners (prototype: unused). */
   --tv-scroll-ad-reserve: 0px;
   /* Extra gap below focused row when moving Down (Home vertical scroll). */
   --tv-scroll-park-down-bias: 60px;
@@ -171,12 +170,14 @@
   --tv-swimlane-inline-end: var(--tv-content-inline-end);
 
   /* Search & Browse — Figma `15822:35859`; measured header publishes offset on <html> */
-  --tv-search-header-offset: 200px;
-  --tv-search-header-gap: 50px;
-}
-
-html[data-visual-ads] {
-  --tv-scroll-ad-reserve: var(--tv-footer-ad-height);
+  --tv-search-header-offset: 185px;
+  --tv-search-header-stack-gap: 30px;
+  /* Content stack inset below fixed search header (230px total - header height). */
+  --tv-search-content-gap-after-header: 45px;
+  /* Major blocks: tabs, vibe sections (Figma content gap 50px). */
+  --tv-search-stack-gap: 50px;
+  /* Within one vibe: title, pills, cards (Figma row gap 20px). */
+  --tv-search-vibe-stack-gap: 20px;
 }
 
 /* System dark when no manual theme is set (same as mobile) */

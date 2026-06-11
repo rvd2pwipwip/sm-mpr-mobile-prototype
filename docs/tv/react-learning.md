@@ -45,7 +45,7 @@ Previous row-fit scroll in `useTvVerticalGroupScroll` replaced by parked ring-to
 
 - **Tier rules:** `@sm-mpr/shared/utils/userTierRules.js` (`showVisualAds`, `showPlayerPreroll`, etc.) — same as mobile.
 - **In-feed ad:** `TvSwimlaneBannerAd` on broad Home between podcasts and radio rails (matches mobile `Home.jsx`).
-- **Footer ad:** `TvFooterAdBanner` + `TvVisualAdsHtmlSync` mount on **limited catalog** only (`TvShell`); sets `html[data-visual-ads]` and `--tv-scroll-ad-reserve` padding on scroll inners. Broad Home uses in-feed `TvSwimlaneBannerAd` only.
+- **In-feed banner ad:** `TvSwimlaneBannerAd` on broad Home and limited Home **stacked** layout (mid-stack); not used on limited filter layout A.
 - **Preview types:** `/settings/user-type` — use Home **Upgrade** or navigate directly; pick **Subscribed** to hide the in-feed banner.
 
 ## 2026-05-27 — Monorepo shared mock data (`@sm-mpr/shared`)

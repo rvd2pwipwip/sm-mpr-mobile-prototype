@@ -5,9 +5,9 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 30px;
-  padding: 75px var(--tv-content-inline-end)
-    calc(30px + var(--tv-search-header-gap, 50px)) var(--tv-content-inline-start);
+  gap: var(--tv-search-header-stack-gap, 30px);
+  padding: 75px var(--tv-content-inline-end) 30px
+    var(--tv-content-inline-start);
   background: color-mix(in srgb, var(--color-bg) 90%, transparent);
   backdrop-filter: blur(4px);
 }
@@ -89,10 +89,3 @@
   display: block;
 }
 
-.tv-search-header__tabs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-}
