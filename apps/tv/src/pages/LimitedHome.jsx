@@ -10,7 +10,6 @@ import {
   showUpgradeCallToAction,
   showVisualAds,
 } from "@sm-mpr/shared/utils/userTierRules.js";
-import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
 import LimitedHomeFilterBody, {
   FILTERS_GROUP,
   SWIMLANE_GROUP,
@@ -243,9 +242,52 @@ export default function LimitedHome() {
     swimlaneSlotCount,
   ]);
 
+  /** Skip empty banner group (1) when promo is dismissed — window Up/Down use these resolvers. */
+  const resolveMoveUp = useCallback(
+    (current) => {
+      if (bannerVisible) return null;
+
+      if (current === HOME_BANNER_GROUP) {
+        return HOME_HEADER_GROUP;
+      }
+
+      if (isStackedLayout) {
+        if (current === HOME_FIRST_SWIMLANE_GROUP) {
+          return HOME_HEADER_GROUP;
+        }
+        return null;
+      }
+
+      if (isMusicBrowse && current === FILTERS_GROUP) {
+        return HOME_HEADER_GROUP;
+      }
+
+      return null;
+    },
+    [bannerVisible, isStackedLayout, isMusicBrowse],
+  );
+
+  const resolveMoveDown = useCallback(
+    (current) => {
+      if (bannerVisible) return null;
+
+      if (current === HOME_HEADER_GROUP) {
+        if (isStackedLayout && stackedLanes.length > 0) {
+          return HOME_FIRST_SWIMLANE_GROUP;
+        }
+        if (!isStackedLayout && isMusicBrowse) {
+          return FILTERS_GROUP;
+        }
+      }
+
+      return null;
+    },
+    [bannerVisible, isStackedLayout, stackedLanes.length, isMusicBrowse],
+  );
+
   const {
-    handleMoveUp: moveFocusUp,
-    handleMoveDown: moveFocusDown,
+    handleMoveUp,
+    handleMoveDown,
     registerItemRef,
     isContentGroupActive,
     getItemFocusIndex,
@@ -262,6 +304,8 @@ export default function LimitedHome() {
     defaultGroupIndex: focusConfig.defaultGroupIndex,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
     navEnterEnabled: false,
+    resolveMoveUp,
+    resolveMoveDown,
   });
 
   const getFocusedElement = useCallback(
@@ -335,49 +379,6 @@ export default function LimitedHome() {
     skipBannerGroup();
   }, [skipBannerGroup]);
 
-  const handleMoveDown = useCallback(() => {
-    if (!bannerVisible && focusedGroupIndex === HOME_HEADER_GROUP) {
-      if (isStackedLayout && stackedLanes.length > 0) {
-        setFocusedGroupIndex(HOME_FIRST_SWIMLANE_GROUP);
-        return;
-      }
-      if (!isStackedLayout && isMusicBrowse) {
-        setFocusedGroupIndex(FILTERS_GROUP);
-        return;
-      }
-      return;
-    }
-    moveFocusDown();
-  }, [
-    bannerVisible,
-    focusedGroupIndex,
-    isStackedLayout,
-    stackedLanes.length,
-    isMusicBrowse,
-    setFocusedGroupIndex,
-    moveFocusDown,
-  ]);
-
-  const handleMoveUp = useCallback(() => {
-    if (!bannerVisible) {
-      if (isStackedLayout && focusedGroupIndex === HOME_FIRST_SWIMLANE_GROUP) {
-        setFocusedGroupIndex(HOME_HEADER_GROUP);
-        return;
-      }
-      if (!isStackedLayout && focusedGroupIndex === FILTERS_GROUP) {
-        setFocusedGroupIndex(HOME_HEADER_GROUP);
-        return;
-      }
-    }
-    moveFocusUp();
-  }, [
-    bannerVisible,
-    isStackedLayout,
-    focusedGroupIndex,
-    setFocusedGroupIndex,
-    moveFocusUp,
-  ]);
-
   const {
     viewportRef,
     innerRef,
@@ -388,7 +389,8 @@ export default function LimitedHome() {
     landingGroupIndex: focusConfig.firstBodyGroup,
     lastFocusableGroupIndex: focusConfig.lastBodyGroup,
     getFocusedElement,
-    screenId: "home-limited",
+    screenId: isStackedLayout ? "home-limited" : undefined,
+    scrollEnabled: isStackedLayout,
   });
 
   const prevFocusedGroupRef = useRef(focusedGroupIndex);
@@ -479,7 +481,11 @@ export default function LimitedHome() {
         <div
           ref={innerRef}
           className={innerClassName}
-          style={{ transform: `translateY(-${offsetY}px)` }}
+          style={
+            isStackedLayout
+              ? { transform: `translateY(-${offsetY}px)` }
+              : undefined
+          }
         >
           {scrollableHeader ? (
             <TvLimitedHomeHeaderSection
@@ -518,22 +524,24 @@ export default function LimitedHome() {
               enterNavFromContent={enterNavFromContent}
             />
           ) : isMusicBrowse ? (
-            <LimitedHomeFilterBody
-              filters={filters}
-              activeFilterId={activeFilterId}
-              channels={channels}
-              laneTitle={laneTitle}
-              registerGroupRef={registerGroupRef}
-              registerItemRef={registerItemRef}
-              isContentGroupActive={isContentGroupActive}
-              getItemFocusIndex={getItemFocusIndex}
-              setFocusedIndex={setFocusedIndex}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
-              onSelectFilter={handleSelectFilter}
-              onSelectChannel={openChannelInfo}
-              onMore={() => navigate(`/more/music/${activeFilterId}`)}
-            />
+            <div className="tv-home__limited-filter-body">
+              <LimitedHomeFilterBody
+                filters={filters}
+                activeFilterId={activeFilterId}
+                channels={channels}
+                laneTitle={laneTitle}
+                registerGroupRef={registerGroupRef}
+                registerItemRef={registerItemRef}
+                isContentGroupActive={isContentGroupActive}
+                getItemFocusIndex={getItemFocusIndex}
+                setFocusedIndex={setFocusedIndex}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onSelectFilter={handleSelectFilter}
+                onSelectChannel={openChannelInfo}
+                onMore={() => navigate(`/more/music/${activeFilterId}`)}
+              />
+            </div>
           ) : (
             <div className="tv-home__scroll-group tv-home__content-inset">
               <p className="tv-home__catalog-proof">
@@ -542,18 +550,14 @@ export default function LimitedHome() {
             </div>
           )}
 
-          {showBannerAd && !isStackedLayout ? (
-            <div className="tv-home__scroll-group tv-home__content-inset">
-              <TvSwimlaneBannerAd />
-            </div>
+          {isStackedLayout ? (
+            <p className="tv-home__catalog-proof tv-home__content-inset">
+              Limited Home ({layoutMode}). Territory:{" "}
+              <strong>{musicLineupLabel(musicLineupMode)}</strong> (
+              <code>{catalogScope}</code>). Toggle layout on{" "}
+              <code>/settings/user-type</code> (prototype).
+            </p>
           ) : null}
-
-          <p className="tv-home__catalog-proof tv-home__content-inset">
-            Limited Home ({layoutMode}). Territory:{" "}
-            <strong>{musicLineupLabel(musicLineupMode)}</strong> (
-            <code>{catalogScope}</code>). Toggle layout on{" "}
-            <code>/settings/user-type</code> (prototype).
-          </p>
         </div>
       </div>
     </div>

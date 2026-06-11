@@ -8,7 +8,6 @@ import {
   getMusicChannelsByCategory,
   getMusicChannelsWithTag,
 } from "@sm-mpr/shared/data/musicChannels.js";
-import { SWIMLANE_CARD_MAX } from "../../constants/swimlane.js";
 import { useCategoryRailMemorySlug } from "../../hooks/useCategoryRailMemorySlug.js";
 import GenreFilterSwimlane from "../swimlanes/GenreFilterSwimlane.jsx";
 import MusicChannelSwimlane from "../swimlanes/MusicChannelSwimlane.jsx";
@@ -140,11 +139,6 @@ export default function TvSearchMusicVibeSection({
           onMoveUp={onMoveUp}
           onMoveDown={onMoveDown}
           onMore={navigateVibeMore}
-          hint={
-            leafChannels.length > SWIMLANE_CARD_MAX
-              ? `Showing ${SWIMLANE_CARD_MAX} of ${leafChannels.length}`
-              : undefined
-          }
         />
       ) : (
         <TvSearchLabelTileSwimlane

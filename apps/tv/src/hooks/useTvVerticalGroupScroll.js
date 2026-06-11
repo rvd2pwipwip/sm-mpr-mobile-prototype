@@ -27,6 +27,7 @@ function isElementInScrollInner(focusEl, innerEl) {
  *   firstFocusableGroupIndex?: number,
  *   getFocusedElement?: () => HTMLElement | null,
  *   screenId?: string,
+ *   scrollEnabled?: boolean,
  * }} [options]
  */
 export function useTvVerticalGroupScroll(
@@ -37,16 +38,18 @@ export function useTvVerticalGroupScroll(
     firstFocusableGroupIndex = 0,
     getFocusedElement,
     screenId,
+    scrollEnabled = true,
   } = {},
 ) {
   const { memory, persistField } = useOptionalScreenMemory(screenId);
-  const initialOffsetY = memory.scrollOffsetY ?? 0;
-  const initialParkLineY = memory.parkLineY ?? null;
+  const initialOffsetY = scrollEnabled ? (memory.scrollOffsetY ?? 0) : 0;
+  const initialParkLineY = scrollEnabled ? (memory.parkLineY ?? null) : null;
   const hasPersistedVisit =
-    initialOffsetY > 0 ||
-    (initialParkLineY != null &&
-      landingGroupIndex != null &&
-      focusedGroupIndex !== landingGroupIndex);
+    scrollEnabled &&
+    (initialOffsetY > 0 ||
+      (initialParkLineY != null &&
+        landingGroupIndex != null &&
+        focusedGroupIndex !== landingGroupIndex));
 
   const viewportRef = useRef(null);
   const innerRef = useRef(null);
@@ -114,6 +117,8 @@ export function useTvVerticalGroupScroll(
 
   const measureAndPark = useCallback(
     (options = {}) => {
+      if (!scrollEnabled) return;
+
       const { focusChanged = false, restoreVisit = false } = options;
       const viewport = viewportRef.current;
       const inner = innerRef.current;
@@ -241,10 +246,13 @@ export function useTvVerticalGroupScroll(
       focusedGroupIndex,
       landingGroupIndex,
       lastFocusableGroupIndex,
+      scrollEnabled,
     ],
   );
 
   useLayoutEffect(() => {
+    if (!scrollEnabled) return undefined;
+
     const focusChanged = prevGroupRef.current !== focusedGroupIndex;
     const restoreVisit = needsRestoreParkRef.current;
     if (focusChanged) {
@@ -267,9 +275,11 @@ export function useTvVerticalGroupScroll(
       cancelAnimationFrame(frameId);
       if (frameId2 != null) cancelAnimationFrame(frameId2);
     };
-  }, [measureAndPark, focusedGroupIndex]);
+  }, [measureAndPark, focusedGroupIndex, scrollEnabled]);
 
   useLayoutEffect(() => {
+    if (!scrollEnabled) return undefined;
+
     const viewport = viewportRef.current;
     const inner = innerRef.current;
     if (!viewport || !inner) return undefined;
@@ -285,11 +295,11 @@ export function useTvVerticalGroupScroll(
     });
 
     return () => observer.disconnect();
-  }, [measureAndPark]);
+  }, [measureAndPark, scrollEnabled]);
 
   const innerClassName = [
     "tv-home__scroll-inner",
-    transitionEnabled ? "tv-home__scroll-inner--animated" : "",
+    scrollEnabled && transitionEnabled ? "tv-home__scroll-inner--animated" : "",
   ]
     .filter(Boolean)
     .join(" ");

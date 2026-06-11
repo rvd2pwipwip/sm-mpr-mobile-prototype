@@ -379,6 +379,19 @@ body {
   );
 }
 
+/* Layout A: filter + single rail — fixed viewport, no vertical parked scroll. */
+.tv-home--limited-filter .tv-home__scroll-inner {
+  padding-bottom: 0;
+  will-change: auto;
+}
+
+.tv-home--limited-filter .tv-home__limited-filter-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-screen-gap);
+  margin-top: 80px;
+}
+
 .tv-home__scroll {
   flex: 1;
   min-height: 0;
