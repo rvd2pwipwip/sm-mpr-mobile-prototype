@@ -172,7 +172,7 @@
   /* Search & Browse — Figma `15822:35859`; measured header publishes offset on <html> */
   --tv-search-header-offset: 185px;
   --tv-search-header-stack-gap: 30px;
-  /* Content stack inset below fixed search header (230px total - header height). */
+  /* Browse row below in-flow search header (Figma 230px fold - 185px header = 45px). */
   --tv-search-content-gap-after-header: 45px;
   /* Major blocks: tabs, vibe sections (Figma content gap 50px). */
   --tv-search-stack-gap: 50px;

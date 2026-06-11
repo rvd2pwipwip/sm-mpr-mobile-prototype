@@ -1,0 +1,18 @@
+/* Mirror `.tv-search-music-browse` — browse body is second child after in-scroll tabs. */
+.tv-search-podcasts-browse {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-search-stack-gap);
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.tv-search-podcasts-browse__group {
+  flex-shrink: 0;
+}
+
+.tv-search-podcasts-browse .swimlane-row__title {
+  padding-inline-start: var(--tv-swimlane-inline-start);
+  font-weight: 900;
+  color: var(--color-on-bkg);
+}

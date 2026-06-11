@@ -1,6 +1,8 @@
 import {
+  forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -24,20 +26,27 @@ function clampPosition(position, gridRows) {
 }
 
 /**
- * Fixed-column 2D grid for TV More screens (adapted from SMTV03 ChannelGrid).
+ * Fixed-column 2D grid for TV browse / More screens (adapted from SMTV03 ChannelGrid).
  * Arrow keys when `focused`; boundary escape via `onNavigationEscape`.
+ * Horizontal moves stay inside the row (no horizontal scroll or wrap).
  */
-export default function ContentGrid({
-  items = [],
-  renderItem,
-  focused = false,
-  focusedPosition = { row: 0, col: 0 },
-  onFocusChange,
-  onNavigationEscape,
-  onSelect,
-  columns: columnsProp,
-}) {
-  const cardSize = getTvCardSize();
+const ContentGrid = forwardRef(function ContentGrid(
+  {
+    items = [],
+    renderItem,
+    focused = false,
+    focusedPosition = { row: 0, col: 0 },
+    onFocusChange,
+    onNavigationEscape,
+    onSelect,
+    columns: columnsProp,
+    cardSize: cardSizeProp,
+    registerRowRef,
+    scrollIntoViewOnFocus = true,
+  },
+  ref,
+) {
+  const cardSize = cardSizeProp ?? getTvCardSize();
   const cardGap = getTvCardGap();
   const columns = columnsProp ?? getTvGridColumnCount();
   const itemRefs = useRef([]);
@@ -51,6 +60,18 @@ export default function ContentGrid({
     }
     return rows;
   }, [items, columns]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getFocusedElement() {
+        const { row, col } = clampPosition(focusedPosition, gridRows);
+        const flatIndex = row * columns + col;
+        return itemRefs.current[flatIndex] ?? null;
+      },
+    }),
+    [focusedPosition, gridRows, columns],
+  );
 
   const clampedPosition = useMemo(
     () => clampPosition(focusedPosition, gridRows),
@@ -143,11 +164,13 @@ export default function ContentGrid({
     const { row, col } = clampedPosition;
     const flatIndex = row * columns + col;
     itemRefs.current[flatIndex]?.focus();
-    itemRefs.current[flatIndex]?.scrollIntoView({
-      block: "nearest",
-      behavior: "smooth",
-    });
-  }, [focused, clampedPosition, columns]);
+    if (scrollIntoViewOnFocus) {
+      itemRefs.current[flatIndex]?.scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [focused, clampedPosition, columns, scrollIntoViewOnFocus]);
 
   return (
     <div
@@ -158,7 +181,11 @@ export default function ContentGrid({
       }}
     >
       {gridRows.map((rowItems, rowIndex) => (
-        <div key={rowIndex} className="content-grid__row">
+        <div
+          key={rowIndex}
+          className="content-grid__row tv-home__scroll-group"
+          ref={(node) => registerRowRef?.(rowIndex, node)}
+        >
           {rowItems.map((item, colIndex) => {
             const flatIndex = rowIndex * columns + colIndex;
             const isItemFocused =
@@ -183,4 +210,6 @@ export default function ContentGrid({
       ))}
     </div>
   );
-}
+});
+
+export default ContentGrid;

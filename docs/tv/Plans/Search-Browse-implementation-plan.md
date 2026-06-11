@@ -202,18 +202,24 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 ---
 
-## Phase 3 — Podcasts Browse
+## Phase 3 — Podcasts Browse ✅ (prototype)
 
 **Goal:** Mobile **`SearchPodcastsBrowse`** IA on TV.
 
-- Conditional **library** tiles (Continue listening, Your Podcasts, …) when stub data populated — same rules as mobile `PodcastUserStateContext` (wire context to TV if not already, or stub counts).
-- **Category grid** of podcast shows — `ContentTileCard` in **`ContentGrid`** (4 col) or dedicated 2-col if Figma mobile spacing is required (prefer 4-col TV default).
-- Library sections → `/search/browse/podcasts/library/:section`; categories → `/search/browse/podcasts/category/:id`.
-- Show tap → **`/podcast/:id`** placeholder until Podcast Info ships.
+- Conditional **library** tiles (Continue listening, Your Podcasts, …) when stub data populated — same rules as mobile `PodcastUserStateContext` (wire context to TV if not already, or stub counts). **Deferred:** mobile top-level browse is category swimlanes only today; library rows can follow when TV mounts `PodcastUserStateContext`.
+- **Category swimlanes** on the Podcasts tab — one **`ContentTileSwimlane`** per **`PODCAST_CATEGORIES`** row (capped + More).
+- **Category drill** — **`ContentTileCard`** in **`ContentGrid`** at **5 columns** (`getTvBrowseGridLayout()`); card width computed to fit the content area (no horizontal scroll; focus moves L/R inside the row).
+- Categories → `/search/browse/podcasts/category/:id`; show tap → **`/podcast/:id`** placeholder until Podcast Info ships.
 
-**Focus:** Grid uses same D-pad pattern as `SwimlaneMore` / `ContentGrid` on Home More.
+**Focus:** Browse tab uses **`useTvVerticalGroupScroll`** (parked ring) per category swimlane. Drill grids register each grid row as a scroll group; horizontal navigation stays inside the row (`ContentGrid` boundary escape only at row edges).
 
-**Deliverable:** Podcasts tab matches mobile conditional rows; placeholders on show open.
+**Shipped (2026-06-09)**
+
+- **`TvSearchPodcastsBrowseBody`** + **`buildSearchPodcastsBrowseFocusLayout`** — parked vertical scroll on Search Podcasts tab.
+- **`SearchPodcastsCategory`** + route — 5-col grid via **`TvSearchBrowseDrillPage`** (parked row scroll).
+- **`getTvBrowseGridLayout()`** / **`TV_BROWSE_GRID_COLUMNS`** in **`tvLayout.js`**; **`ContentGrid`** row refs + `forwardRef` for parked drill integration.
+
+**Deliverable:** Podcasts tab matches mobile category swimlane IA; category More + show open reach placeholders. ✓
 
 ---
 

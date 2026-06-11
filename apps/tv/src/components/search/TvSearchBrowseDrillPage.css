@@ -1,6 +1,10 @@
 .tv-search-drill {
   box-sizing: border-box;
-  min-height: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .tv-search-drill__header {
@@ -21,12 +25,15 @@
   color: var(--color-text-muted);
 }
 
-.tv-search-drill__grid-wrap {
+.tv-search-drill__scroll {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+}
+
+.tv-search-drill .tv-home__scroll-inner {
+  gap: var(--tv-search-stack-gap);
   padding: 0 var(--tv-content-inline-end) 4rem var(--tv-content-inline-start);
+  box-sizing: border-box;
 }
 
 .tv-search-drill__empty {

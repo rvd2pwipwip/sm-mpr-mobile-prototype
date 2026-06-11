@@ -24,6 +24,7 @@ import TvContentTypeUnavailable from "./pages/TvContentTypeUnavailable.jsx";
 import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels.jsx";
 import SearchMusicCategory from "./pages/SearchMusicCategory.jsx";
 import SearchMusicVibe from "./pages/SearchMusicVibe.jsx";
+import SearchPodcastsCategory from "./pages/SearchPodcastsCategory.jsx";
 import TvSearchRouteStub from "./pages/TvSearchRouteStub.jsx";
 import MyLibrary from "./pages/MyLibrary.jsx";
 import FocusDemo from "./pages/FocusDemo.jsx";
@@ -80,6 +81,10 @@ export default function App() {
                               <Route
                                 path="/search/browse/music/category/:categoryId"
                                 element={<SearchMusicCategory />}
+                              />
+                              <Route
+                                path="/search/browse/podcasts/category/:categoryId"
+                                element={<SearchPodcastsCategory />}
                               />
                               <Route
                                 path="/search/browse/*"

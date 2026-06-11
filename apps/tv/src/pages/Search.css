@@ -17,15 +17,15 @@
 }
 
 /*
- * Figma content stack: pt 230px, 50px vertical gap.
- * No horizontal padding here — swimlanes are full-bleed; gutters live on
- * title inset + track padding (same as Home). Padding on this node clips rings.
+ * Gap below the in-flow search header before first browse row (tabs or swimlane).
+ * Figma `15822:35859`: header block ends at 185px; tabs / browse content at 230px
+ * (45px). Music-only skips tabs but keeps the same 230px fold. Header height is
+ * not repeated here — it already lives in `.tv-search-header` above the scrollport.
+ * No horizontal padding — swimlanes are full-bleed (rings clip if padded here).
  */
 .tv-search-page__scroll-inner {
   gap: var(--tv-search-stack-gap);
-  padding-top: calc(
-    var(--tv-search-header-offset) + var(--tv-search-content-gap-after-header)
-  );
+  padding-top: var(--tv-search-content-gap-after-header);
   box-sizing: border-box;
 }
 

@@ -1,16 +1,18 @@
-import { useCallback } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import ContentGrid from "../grid/ContentGrid.jsx";
 import { useContentFocusGroups } from "../../hooks/useContentFocusGroups.js";
+import { useTvVerticalGroupScroll } from "../../hooks/useTvVerticalGroupScroll.js";
 import { useScreenMemory } from "../../context/ScreenMemoryContext.jsx";
 import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
-import { getTvGridColumnCount } from "../../utils/tvLayout.js";
+import { getTvBrowseGridLayout } from "../../utils/tvLayout.js";
 import "./TvSearchBrowseDrillPage.css";
 
 const GRID_GROUP = 0;
 const DEFAULT_GRID_POSITION = { row: 0, col: 0 };
 
 /**
- * Full-screen Search browse drill-down with title header + ContentGrid.
+ * Full-screen Search browse drill-down: title header + 5-col grid with parked
+ * vertical scroll (one row per focus group; horizontal moves inside the row).
  */
 export default function TvSearchBrowseDrillPage({
   screenId,
@@ -21,6 +23,14 @@ export default function TvSearchBrowseDrillPage({
   onSelectItem,
   renderItem,
 }) {
+  const gridLayout = useMemo(() => getTvBrowseGridLayout(), []);
+  const gridRef = useRef(null);
+
+  const rowCount = useMemo(() => {
+    if (items.length === 0) return 0;
+    return Math.ceil(items.length / gridLayout.columns);
+  }, [items.length, gridLayout.columns]);
+
   useContentFocusGroups(1);
 
   const { enterNav, enterContent, focusZone } = useTvNavFocus();
@@ -37,6 +47,25 @@ export default function TvSearchBrowseDrillPage({
     },
     [setField],
   );
+
+  const getFocusedElement = useCallback(
+    () => gridRef.current?.getFocusedElement() ?? null,
+    [],
+  );
+
+  const {
+    viewportRef,
+    innerRef,
+    registerGroupRef,
+    offsetY,
+    innerClassName,
+  } = useTvVerticalGroupScroll(gridFocusedPosition.row, {
+    landingGroupIndex: 0,
+    firstFocusableGroupIndex: 0,
+    lastFocusableGroupIndex: Math.max(0, rowCount - 1),
+    getFocusedElement,
+    screenId,
+  });
 
   const handleGridNavigationEscape = useCallback(
     (direction) => {
@@ -55,8 +84,6 @@ export default function TvSearchBrowseDrillPage({
     [enterContent, onSelectItem],
   );
 
-  const columnCount = getTvGridColumnCount();
-
   return (
     <div className="tv-search-drill">
       <header className="tv-search-drill__header">
@@ -64,23 +91,36 @@ export default function TvSearchBrowseDrillPage({
         {meta ? <p className="tv-search-drill__meta">{meta}</p> : null}
       </header>
 
-      <div className="tv-search-drill__grid-wrap">
-        {items.length === 0 ? (
-          <p className="tv-search-drill__empty">{emptyMessage}</p>
-        ) : (
-          <ContentGrid
-            items={items}
-            columns={columnCount}
-            focused={gridFocused}
-            focusedPosition={gridFocusedPosition}
-            onFocusChange={setGridFocusedPosition}
-            onNavigationEscape={handleGridNavigationEscape}
-            onSelect={handleSelect}
-            renderItem={(item, _row, _col, isFocused, setRef) =>
-              renderItem(item, isFocused, setRef, handleSelect)
-            }
-          />
-        )}
+      <div
+        ref={viewportRef}
+        className="tv-search-drill__scroll tv-home__scroll"
+      >
+        <div
+          ref={innerRef}
+          className={`tv-home__scroll-inner ${innerClassName}`}
+          style={{ transform: `translateY(-${offsetY}px)` }}
+        >
+          {items.length === 0 ? (
+            <p className="tv-search-drill__empty">{emptyMessage}</p>
+          ) : (
+            <ContentGrid
+              ref={gridRef}
+              items={items}
+              columns={gridLayout.columns}
+              cardSize={gridLayout.cardSize}
+              focused={gridFocused}
+              focusedPosition={gridFocusedPosition}
+              onFocusChange={setGridFocusedPosition}
+              onNavigationEscape={handleGridNavigationEscape}
+              onSelect={handleSelect}
+              registerRowRef={registerGroupRef}
+              scrollIntoViewOnFocus={false}
+              renderItem={(item, _row, _col, isFocused, setRef) =>
+                renderItem(item, isFocused, setRef, handleSelect)
+              }
+            />
+          )}
+        </div>
       </div>
     </div>
   );
