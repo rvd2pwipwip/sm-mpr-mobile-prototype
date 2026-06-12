@@ -161,7 +161,7 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 
 ---
 
-## Phase 3 — Episode UI components — **partial** (`TvEpisodeListItem` done; `TvEpisodeCard` backlog)
+## Phase 3 — Episode UI components — **done**
 
 **Goal:** Reusable TV episode surfaces for info, search, and later library grids.
 
@@ -172,10 +172,11 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 - Separate focusable actions: bookmark, download (do not navigate on action activate)
 - Reuse / extend **`TvEpisodeRow`** CSS where sensible; info page row is **wider** and includes actions
 
-### `TvEpisodeCard` — Figma `10841:24500`
+### `TvEpisodeCard` — Figma `10841:24500` — **done**
 
-- Same data props; card layout for **2-column grids** (~`656px` width at default tokens)
-- Use later in: bookmarked episodes grid, downloaded episodes, Search More episodes (if product wants cards vs list)
+- Same data props + optional `showTitle`; card layout for **2-column grids** (~`656px` width at default tokens)
+- Shared helpers: `episodeFocusSlots.js`, `tvEpisodeDisplay.js`, `TvEpisodeActionButtons.jsx`, `TvEpisodeSurfaceShared.css`
+- Use later in: bookmarked episodes grid, downloaded episodes, Search More episodes (Phase 7)
 
 ### Icons
 
@@ -185,25 +186,25 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 
 ---
 
-## Phase 4 — Full podcast player (`/podcast/:podcastId/play/:episodeId`)
+## Phase 4 — Full podcast player (`/podcast/:podcastId/play/:episodeId`) — **done**
 
 **Goal:** Mobile **`PodcastPlayer`** behavior in **TV music player** chrome (`23:20013` structure).
 
 **Feature checklist**
 
-- [ ] Invalid ids → home redirect
-- [ ] **`TvPlayerPrerollAd`** when `showPlayerPreroll(userType)` && !`expandFromMiniPlayer` && !`graceActive`
-- [ ] Artwork (episode thumb), show title (subtitle), episode title (primary)
-- [ ] Progress bar + elapsed / remaining (stub tick via `setEpisodeProgress`)
-- [ ] Play / pause (UI only)
-- [ ] **−15 s** / **+30 s** (adjust progress; clamp 0–1)
-- [ ] **Speed** — tap cycles `PODCAST_SPEED_STEPS`, label `Nx`
-- [ ] **Bookmark** toggle (gate + dialog)
-- [ ] **Subscribe** shortcut (optional; mobile has it in player header)
-- [ ] **Esc / Back** → `navigate(/podcast/:podcastId)` (collapse to info, session stays active — mirror mobile minimize)
-- [ ] Focus groups: meta actions row, transport row (play, seek back, seek forward, speed)
+- [x] Invalid ids → home redirect (bad episode → show info)
+- [x] **`TvPlayerPrerollAd`** when `showPlayerPreroll(userType)` && !`expandFromMiniPlayer` && !`graceActive`
+- [x] Artwork (episode thumb), show title (header), episode title (primary under art)
+- [x] Progress bar + elapsed / remaining (stub tick via `setEpisodeProgress`)
+- [x] Play / pause (UI only)
+- [x] **−15 s** / **+30 s** (adjust progress; clamp 0–1)
+- [x] **Speed** — Enter cycles `PODCAST_SPEED_STEPS`, label `Nx`
+- [x] **Bookmark** toggle (gate + dialog) — transport end
+- [x] **Subscribe** shortcut — meta row (no share/cast on TV)
+- [x] **Esc / Back** → global `navigate(-1)` to info; **Info** meta → `replace` to `/podcast/:podcastId`
+- [x] Focus groups: meta (info, subscribe), transport (speed, seek back, play, seek forward, bookmark)
 
-**PlaybackContext:** On mount (after preroll gate), call **`upsertPodcastSession`** with episode title, show title, thumb, `fullPlayerPath`.
+**PlaybackContext:** **`upsertPodcastSession`** on mount after preroll gate; `hideMiniOnFullPlayer` includes podcast play route.
 
 **Deliverable:** Info → episode → full player → Esc → back to info with session active.
 

@@ -1,0 +1,11 @@
+/* Podcast player — single transport row with even spacing between controls. */
+
+.tv-podcast-player-transport {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}

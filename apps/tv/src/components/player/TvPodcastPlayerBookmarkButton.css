@@ -1,0 +1,21 @@
+.tv-podcast-bookmark-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tv-player-meta-btn-size);
+  height: var(--tv-player-meta-btn-size);
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: color-mix(in srgb, var(--color-text) 88%, transparent);
+  background: transparent;
+}
+
+.tv-podcast-bookmark-btn--active {
+  color: var(--color-accent);
+}
+
+.tv-podcast-bookmark-btn .tv-episode-action-icon {
+  width: 48px;
+  height: 48px;
+}

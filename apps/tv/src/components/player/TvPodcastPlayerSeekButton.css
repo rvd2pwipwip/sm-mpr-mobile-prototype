@@ -1,0 +1,35 @@
+.tv-podcast-seek-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tv-player-meta-btn-size);
+  height: var(--tv-player-meta-btn-size);
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: var(--color-text);
+  background: transparent;
+}
+
+.tv-podcast-seek-btn__icon {
+  display: block;
+  width: 48px;
+  height: 48px;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.tv-podcast-seek-btn__icon--back {
+  mask-image: url("/replay15.svg");
+  -webkit-mask-image: url("/replay15.svg");
+}
+
+.tv-podcast-seek-btn__icon--forward {
+  mask-image: url("/fwd30.svg");
+  -webkit-mask-image: url("/fwd30.svg");
+}

@@ -78,94 +78,9 @@
   white-space: nowrap;
 }
 
-.tv-episode-list-item__dot {
-  flex-shrink: 0;
-  width: 1.875rem;
-  height: 1.875rem;
-  border-radius: 50%;
-  background: var(--color-accent2);
-}
-
-.tv-episode-list-item__dot--muted {
-  background: transparent;
-  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--color-on-bkg) 35%, transparent);
-}
-
-.tv-episode-list-item__dot--complete {
-  background: color-mix(in srgb, var(--color-on-bkg) 45%, transparent);
-}
-
-.tv-episode-list-item__progress-track {
-  display: block;
-  width: 100%;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--color-on-bkg) 10%, transparent);
-}
-
-.tv-episode-list-item__progress-fill {
-  display: block;
-  width: 100%;
-  height: 100%;
-  transform-origin: left center;
-  background: #2da499;
-}
-
 .tv-episode-list-item__actions {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   gap: 1.625rem;
-}
-
-.tv-episode-list-item__action.focusable-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 120px;
-  margin: 0;
-  padding: 0;
-  border: none;
-  border-radius: var(--tv-header-button-radius);
-  color: color-mix(in srgb, var(--color-on-bkg) 88%, transparent);
-  background: transparent;
-}
-
-.tv-episode-list-item__action--active {
-  color: var(--color-accent);
-}
-
-.tv-episode-action-icon {
-  display: block;
-  width: 80px;
-  height: 80px;
-  background-color: currentColor;
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-}
-
-.tv-episode-action-icon--bookmark-episode {
-  mask-image: url("/bookmarkEpisode.svg");
-  -webkit-mask-image: url("/bookmarkEpisode.svg");
-}
-
-.tv-episode-action-icon--unbookmark-episode {
-  mask-image: url("/unbookmarkEpisode.svg");
-  -webkit-mask-image: url("/unbookmarkEpisode.svg");
-}
-
-.tv-episode-action-icon--download-episode {
-  mask-image: url("/downloadEpisode.svg");
-  -webkit-mask-image: url("/downloadEpisode.svg");
-}
-
-.tv-episode-action-icon--clear-downloaded-episode {
-  mask-image: url("/clearDownloadedEpisode.svg");
-  -webkit-mask-image: url("/clearDownloadedEpisode.svg");
 }

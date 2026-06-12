@@ -65,7 +65,7 @@
   --tv-player-column-max-width: 1000px;
   --tv-player-column-gap: 50px;
   --tv-player-padding-top: 100px;
-  --tv-player-channel-actions-gap: 10px;
+  --tv-player-channel-actions-gap: 30px;
   --tv-player-channel-title-size: 2.125rem;
   --tv-player-meta-actions-gap: 24px;
   --tv-player-meta-btn-size: 60px;
@@ -78,7 +78,7 @@
   /* Figma `23:20013` playPauseRec — 80px rounded rect, 10px focus ring */
   --tv-player-play-pause-size: 80px;
   --tv-player-play-pause-radius: 10px;
-  --tv-player-play-pause-icon-size: 40px;
+  --tv-player-play-pause-icon-size: 60px;
   --tv-player-play-pause-focus-ring-width: 10px;
 
   /* Optional extra bottom padding on vertical scroll inners (prototype: unused). */

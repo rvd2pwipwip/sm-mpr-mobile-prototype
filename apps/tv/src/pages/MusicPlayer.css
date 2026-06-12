@@ -16,7 +16,8 @@
   gap: var(--tv-player-column-gap);
   width: 100%;
   max-width: var(--tv-player-column-max-width);
-  padding: var(--tv-player-padding-top) 80px 40px;
+  padding: 60px 40px;
+  /* padding: var(--tv-player-padding-top) 80px 40px; */
   box-sizing: border-box;
 }
 

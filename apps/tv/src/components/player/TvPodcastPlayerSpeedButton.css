@@ -1,0 +1,19 @@
+.tv-podcast-speed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tv-player-meta-btn-size);
+  height: var(--tv-player-meta-btn-size);
+  margin: 0;
+  padding: 0 8px;
+  border: none;
+  color: var(--color-text);
+  background: transparent;
+}
+
+.tv-podcast-speed-btn__label {
+  font-size: 1.375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}

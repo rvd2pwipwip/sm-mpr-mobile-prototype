@@ -1,46 +1,54 @@
-.tv-podcast-player-shell {
+/* Podcast player — extends `MusicPlayer.css`; Figma `7531:342033`. */
+
+.tv-podcast-player__meta-btn--active {
+  color: var(--color-accent);
+}
+
+.tv-music-player__meta-icon--subscribe-podcast {
+  mask-image: url("/subscribePodcast.svg");
+  -webkit-mask-image: url("/subscribePodcast.svg");
+}
+
+.tv-music-player__meta-icon--unsubscribe-podcast {
+  mask-image: url("/unsubscribePodcast.svg");
+  -webkit-mask-image: url("/unsubscribePodcast.svg");
+}
+
+.tv-podcast-player__episode-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.tv-podcast-player__controls {
+  gap: var(--tv-player-controls-gap);
+}
+
+.tv-podcast-player__scrub {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.tv-podcast-player__time-row {
+  display: flex;
   align-items: center;
-  gap: 30px;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 100px var(--tv-content-padding-inline) var(--tv-content-padding-block);
-  text-align: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.tv-podcast-player-shell__show {
-  margin: 0;
-  font-size: 34px;
-  font-weight: 900;
-  line-height: 1;
-  color: var(--color-text-muted, rgba(0, 0, 0, 0.8));
+.tv-podcast-player__time {
+  font-size: 1.375rem;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 65%, transparent);
 }
 
-.tv-podcast-player-shell__art {
-  width: 360px;
-  height: 360px;
-  border-radius: 32px;
-  object-fit: cover;
-  background: var(--color-surface-muted, rgba(0, 0, 0, 0.08));
-}
-
-.tv-podcast-player-shell__episode {
-  margin: 0;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 1.1;
-  color: var(--color-text);
-}
-
-.tv-podcast-player-shell__meta {
-  margin: 0;
-  font-size: 28px;
-  color: var(--color-text-muted, rgba(0, 0, 0, 0.5));
-}
-
-.tv-podcast-player-shell__lede {
-  margin: 0;
-  font-size: 28px;
-  color: var(--color-text-muted, rgba(0, 0, 0, 0.8));
+.tv-podcast-player__progress .tv-music-player__progress-fill {
+  width: 0;
+  transition: width 0.15s linear;
 }

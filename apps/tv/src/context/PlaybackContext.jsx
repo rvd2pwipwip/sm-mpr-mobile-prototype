@@ -28,9 +28,9 @@ export function PlaybackProvider({ children }) {
   const location = useLocation();
   const [session, setSession] = useState(initialSession);
 
-  const hideMiniOnFullPlayer = /^\/music\/[^/]+\/play\/?$/.test(
-    location.pathname,
-  );
+  const hideMiniOnFullPlayer =
+    /^\/music\/[^/]+\/play\/?$/.test(location.pathname) ||
+    /^\/podcast\/[^/]+\/play\/[^/]+\/?$/.test(location.pathname);
   const miniPlayerVisible = session.active && !hideMiniOnFullPlayer;
 
   const setPaused = useCallback((isPaused) => {
@@ -61,6 +61,33 @@ export function PlaybackProvider({ children }) {
     [],
   );
 
+  const upsertPodcastSession = useCallback(
+    ({
+      podcastId: pid,
+      episodeId,
+      thumbnail: thumb,
+      title: epTitle,
+      subtitle: showTitle,
+      isPaused,
+    }) => {
+      const fullPlayerPath = `/podcast/${pid}/play/${episodeId}`;
+      setSession({
+        active: true,
+        variant: "podcasts",
+        channelId: null,
+        podcastId: pid,
+        podcastEpisodeId: episodeId,
+        radioStationId: null,
+        thumbnail: thumb,
+        title: epTitle,
+        subtitle: showTitle,
+        isPaused,
+        fullPlayerPath,
+      });
+    },
+    [],
+  );
+
   const clearSession = useCallback(() => {
     setSession(initialSession);
   }, []);
@@ -72,6 +99,7 @@ export function PlaybackProvider({ children }) {
       setPaused,
       togglePlayPause,
       upsertMusicSession,
+      upsertPodcastSession,
       clearSession,
     }),
     [
@@ -80,6 +108,7 @@ export function PlaybackProvider({ children }) {
       setPaused,
       togglePlayPause,
       upsertMusicSession,
+      upsertPodcastSession,
       clearSession,
     ],
   );

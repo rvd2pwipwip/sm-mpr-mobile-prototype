@@ -1,40 +1,404 @@
-import { Navigate, useParams } from "react-router-dom";
-import { getPodcastEpisodeById } from "@sm-mpr/shared/data/podcasts.js";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import { PODCAST_SPEED_STEPS } from "@sm-mpr/shared/constants/podcastPlayback.js";
+import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
+import {
+  userMayBookmarkEpisodes,
+  userMaySubscribePodcasts,
+} from "@sm-mpr/shared/utils/userContentGates.js";
+import {
+  approxDurationSecondsFromLabel,
+  formatPlaybackClock,
+} from "@sm-mpr/shared/utils/podcastDuration.js";
+import { showPlayerPreroll } from "@sm-mpr/shared/utils/userTierRules.js";
+import {
+  getPodcastById,
+  getPodcastEpisodeById,
+} from "@sm-mpr/shared/data/podcasts.js";
+import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import FocusableButton from "../components/focus/FocusableButton.jsx";
+import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
+import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
+import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
+import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
+import { usePlayback } from "../context/PlaybackContext.jsx";
+import { useUserType } from "../context/UserTypeContext.jsx";
+import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
+import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import "./MusicPlayer.css";
 import "./PodcastPlayer.css";
 
-/**
- * Full-screen podcast player — Phase 0 route shell; full layout in Phase 4 (Figma `7531:342033`).
- */
+const META_GROUP = 0;
+const TRANSPORT_GROUP = 1;
+
+const TRANSPORT_SLOT = {
+  speed: 0,
+  seekBack: 1,
+  play: 2,
+  seekForward: 3,
+  bookmark: 4,
+};
+
+function PlayerMetaIcon({ variant }) {
+  return (
+    <span
+      className={[
+        "tv-music-player__meta-icon",
+        `tv-music-player__meta-icon--${variant}`,
+      ].join(" ")}
+      aria-hidden={true}
+    />
+  );
+}
+
+/** Full-screen podcast player — Figma `7531:342033`; music player structural parity. */
 export default function PodcastPlayer() {
   const { podcastId, episodeId } = useParams();
-  const resolved =
-    podcastId && episodeId
-      ? getPodcastEpisodeById(podcastId, episodeId)
-      : null;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { enterContent } = useTvNavFocus();
+  const { session, upsertPodcastSession } = usePlayback();
+  const { graceActive } = useGuestPrerollGrace();
+  const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
 
-  if (!resolved) {
+  const needsPreroll = showPlayerPreroll(userType);
+  const expandFromMini = location.state?.expandFromMiniPlayer === true;
+  const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
+  const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
+  const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [speedIdx, setSpeedIdx] = useState(() =>
+    Math.max(0, PODCAST_SPEED_STEPS.indexOf(1)),
+  );
+
+  const {
+    toggleSubscribe,
+    toggleBookmark,
+    isSubscribed,
+    isBookmarked,
+    episodeProgressById,
+    setEpisodeProgress,
+    getEpisodeProgress,
+  } = usePodcastUserState();
+
+  const getEpisodeProgressRef = useRef(getEpisodeProgress);
+  getEpisodeProgressRef.current = getEpisodeProgress;
+  const setEpisodeProgressRef = useRef(setEpisodeProgress);
+  setEpisodeProgressRef.current = setEpisodeProgress;
+
+  const podcast =
+    podcastId && typeof podcastId === "string"
+      ? getPodcastById(podcastId)
+      : null;
+  const bundle =
+    podcast && episodeId
+      ? getPodcastEpisodeById(podcast.id, episodeId)
+      : null;
+  const episode = bundle?.episode ?? null;
+
+  const durationSec = useMemo(() => {
+    if (!episode) return 0;
+    return approxDurationSecondsFromLabel(episode.duration);
+  }, [episode?.duration]);
+
+  const position01Raw = episode ? episodeProgressById[episode.id] : undefined;
+  const position01 =
+    typeof position01Raw === "number" && !Number.isNaN(position01Raw)
+      ? Math.min(1, Math.max(0, position01Raw))
+      : 0;
+
+  const itemCounts = useMemo(
+    () => ({
+      [META_GROUP]: 2,
+      [TRANSPORT_GROUP]: 5,
+    }),
+    [],
+  );
+
+  const {
+    handleMoveUp,
+    handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
+    registerItemRef,
+    isItemFocused,
+    syncDomFocus,
+  } = useScreenContentFocus(
+    `podcast-player-${podcastId}-${episodeId}`,
+    {
+      groupCount: 2,
+      itemCounts,
+      defaultGroupIndex: TRANSPORT_GROUP,
+      defaultItemIndex: TRANSPORT_SLOT.play,
+      navEnterEnabled: false,
+      contentKeysEnabled: prerollComplete,
+      suspendDomFocus: !prerollComplete,
+    },
+  );
+
+  useEffect(() => {
+    enterContent();
+  }, [enterContent]);
+
+  useEffect(() => {
+    if (!prerollComplete) return;
+    syncDomFocus();
+  }, [prerollComplete, syncDomFocus]);
+
+  useEffect(() => {
+    if (!podcast || !episode) return;
+    if (needsPreroll && !prerollComplete) return;
+    if (
+      session.podcastId === podcast.id &&
+      session.podcastEpisodeId === episode.id
+    ) {
+      setPlaying(!session.isPaused);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [podcast?.id, episode?.id, needsPreroll, prerollComplete]);
+
+  useEffect(() => {
+    if (!podcast || !episode) return;
+    if (needsPreroll && !prerollComplete) return;
+    upsertPodcastSession({
+      podcastId: podcast.id,
+      episodeId: episode.id,
+      thumbnail: episode.thumbnail,
+      title: episode.title,
+      subtitle: podcast.title,
+      isPaused: !playing,
+    });
+  }, [
+    podcast,
+    episode,
+    playing,
+    needsPreroll,
+    prerollComplete,
+    upsertPodcastSession,
+  ]);
+
+  useEffect(() => {
+    if (!episode) return;
+    if (!playing) return;
+    if (needsPreroll && !prerollComplete) return;
+    if (durationSec <= 0) return;
+    if (position01 >= 1) return;
+    const eid = episode.id;
+    const tick = PODCAST_SPEED_STEPS[speedIdx] / durationSec;
+    const id = window.setInterval(() => {
+      const frac = getEpisodeProgressRef.current(eid, 0);
+      if (frac >= 1) return;
+      const next = frac + tick;
+      if (next >= 1) {
+        setEpisodeProgressRef.current(eid, 1);
+        setPlaying(false);
+      } else {
+        setEpisodeProgressRef.current(eid, next);
+      }
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [
+    episode?.id,
+    playing,
+    speedIdx,
+    durationSec,
+    needsPreroll,
+    prerollComplete,
+    position01,
+  ]);
+
+  if (!podcastId) {
     return <Navigate to="/" replace />;
   }
+  if (!podcast) {
+    return <Navigate to="/" replace />;
+  }
+  if (!bundle || !episode) {
+    return <Navigate to={`/podcast/${podcast.id}`} replace />;
+  }
 
-  const { podcast, episode } = resolved;
+  const elapsedSec = position01 * durationSec;
+  const speed = PODCAST_SPEED_STEPS[speedIdx] ?? 1;
+  const subscribedHere = isSubscribed(podcast.id);
+  const bookmarkedHere = isBookmarked(episode.id);
+
+  const leaveForPodcastInfo = () => {
+    if (expandFromMini) {
+      navigate(-1);
+      return;
+    }
+    navigate(`/podcast/${podcast.id}`, { replace: true });
+  };
+
+  const onSubscribePress = () => {
+    if (!subscribedHere && !userMaySubscribePodcasts(userType)) {
+      openAccountRequiredDialog("podcastSubscribe");
+      return;
+    }
+    toggleSubscribe(podcast.id);
+  };
+
+  const onBookmarkPress = () => {
+    if (!bookmarkedHere && !userMayBookmarkEpisodes(userType)) {
+      openAccountRequiredDialog("episodeBookmark");
+      return;
+    }
+    toggleBookmark(episode.id);
+  };
+
+  const adjustSeconds = (delta) => {
+    const frac = getEpisodeProgress(episode.id, 0);
+    const posSec = frac * durationSec + delta;
+    const next01 = Math.min(1, Math.max(0, posSec / durationSec));
+    setEpisodeProgress(episode.id, next01);
+  };
+
+  const cycleSpeed = () => {
+    setSpeedIdx((i) => (i + 1) % PODCAST_SPEED_STEPS.length);
+  };
+
+  const showPreroll = needsPreroll && !prerollComplete;
 
   return (
-    <div className="tv-podcast-player-shell">
-      <p className="tv-podcast-player-shell__show">{podcast.title}</p>
-      <img
-        className="tv-podcast-player-shell__art"
-        src={episode.thumbnail}
-        alt=""
-        width={360}
-        height={360}
-      />
-      <h1 className="tv-podcast-player-shell__episode">{episode.title}</h1>
-      <p className="tv-podcast-player-shell__meta">
-        {episode.releaseDate} — {episode.duration}
-      </p>
-      <p className="tv-podcast-player-shell__lede">
-        Full player controls ship in the next podcasts phase.
-      </p>
+    <div className="tv-page tv-music-player tv-podcast-player">
+      {showPreroll ? (
+        <TvPlayerPrerollAd
+          onComplete={() => {
+            setPrerollComplete(true);
+            setPlaying(true);
+          }}
+        />
+      ) : null}
+
+      {!showPreroll ? (
+        <div className="tv-music-player__column">
+          <header className="tv-music-player__channel-block">
+            <h1 className="tv-music-player__channel-name">{podcast.title}</h1>
+            <div className="tv-music-player__meta-actions">
+              <KeyboardWrapper
+                ref={(node) => registerItemRef(META_GROUP, 0, node)}
+                onSelect={leaveForPodcastInfo}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onMoveLeft={handleMoveLeft}
+                onMoveRight={handleMoveRight}
+              >
+                {(focusProps) => (
+                  <FocusableButton
+                    {...focusProps}
+                    type="button"
+                    className="tv-music-player__meta-btn"
+                    focused={isItemFocused(META_GROUP, 0)}
+                    aria-label="Podcast info"
+                  >
+                    <PlayerMetaIcon variant="info" />
+                  </FocusableButton>
+                )}
+              </KeyboardWrapper>
+
+              <KeyboardWrapper
+                ref={(node) => registerItemRef(META_GROUP, 1, node)}
+                onSelect={onSubscribePress}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onMoveLeft={handleMoveLeft}
+                onMoveRight={handleMoveRight}
+              >
+                {(focusProps) => (
+                  <FocusableButton
+                    {...focusProps}
+                    type="button"
+                    className={[
+                      "tv-music-player__meta-btn",
+                      subscribedHere ? "tv-podcast-player__meta-btn--active" : "",
+                    ].join(" ")}
+                    focused={isItemFocused(META_GROUP, 1)}
+                    aria-label={
+                      subscribedHere ? "Unsubscribe from podcast" : "Subscribe"
+                    }
+                    aria-pressed={subscribedHere}
+                  >
+                    <PlayerMetaIcon
+                      variant={
+                        subscribedHere
+                          ? "unsubscribe-podcast"
+                          : "subscribe-podcast"
+                      }
+                    />
+                  </FocusableButton>
+                )}
+              </KeyboardWrapper>
+            </div>
+          </header>
+
+          <div className="tv-music-player__cover-block">
+            <div className="tv-music-player__cover">
+              <img
+                src={episode.thumbnail}
+                alt=""
+                width={360}
+                height={360}
+                decoding="async"
+              />
+            </div>
+            <div className="tv-music-player__track-text">
+              <p className="tv-music-player__song tv-podcast-player__episode-title">
+                {episode.title}
+              </p>
+              <p className="tv-music-player__artist">
+                {episode.releaseDate}
+                {" · "}
+                {episode.duration}
+              </p>
+            </div>
+          </div>
+
+          <div className="tv-music-player__controls tv-podcast-player__controls">
+            <div className="tv-podcast-player__scrub">
+              <div className="tv-podcast-player__time-row">
+                <span className="tv-podcast-player__time">
+                  {formatPlaybackClock(elapsedSec)}
+                </span>
+                <span className="tv-podcast-player__time">
+                  −{formatPlaybackClock(Math.max(0, durationSec - elapsedSec))}
+                </span>
+              </div>
+              <div className="tv-music-player__progress tv-podcast-player__progress">
+                <div className="tv-music-player__progress-track">
+                  <div
+                    className="tv-music-player__progress-fill"
+                    style={{ width: `${position01 * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <TvPodcastPlayerTransport
+              groupIndex={TRANSPORT_GROUP}
+              transportSlots={TRANSPORT_SLOT}
+              playing={playing}
+              speed={speed}
+              isBookmarked={bookmarkedHere}
+              isItemFocused={isItemFocused}
+              registerItemRef={registerItemRef}
+              onCycleSpeed={cycleSpeed}
+              onSeekBack={() => adjustSeconds(-15)}
+              onSeekForward={() => adjustSeconds(30)}
+              onTogglePlayPause={() => setPlaying((p) => !p)}
+              onToggleBookmark={onBookmarkPress}
+              onMoveUp={handleMoveUp}
+              onMoveDown={handleMoveDown}
+              onMoveLeft={handleMoveLeft}
+              onMoveRight={handleMoveRight}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
