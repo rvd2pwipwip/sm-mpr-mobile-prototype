@@ -1,9 +1,6 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { CATALOG_SCOPE } from "../constants/catalogScope.js";
-import {
-  resolveBroadSearchBrowseTab,
-  writeStoredBroadSearchBrowseTab,
-} from "../constants/searchBrowsePaths.js";
+import { resolveBroadSearchBrowseTab } from "../constants/searchBrowsePaths.js";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useUserType } from "../context/UserTypeContext";
@@ -45,7 +42,6 @@ const INFO_TAB = {
 export default function BottomNav({ className = "" }) {
   const rootClass = ["bottom-nav", className].filter(Boolean).join(" ");
   const location = useLocation();
-  const navigate = useNavigate();
   const { userType } = useUserType();
   const { catalogScope } = useTerritory();
   const { enabledContentTypes } = useContentProfile();
@@ -83,26 +79,11 @@ export default function BottomNav({ className = "" }) {
           const searchNavTo =
             id === "search" ? `/search/${broadSearchTab}` : to;
 
-          const onSearchShell =
-            id === "search" && location.pathname.startsWith("/search");
-
           return (
             <NavLink
               key={id}
               to={searchNavTo}
               end={Boolean(end)}
-              onClick={
-                onSearchShell
-                  ? (e) => {
-                      e.preventDefault();
-                      writeStoredBroadSearchBrowseTab("music");
-                      navigate({
-                        pathname: `/search/${broadSearchTab}`,
-                        search: "",
-                      });
-                    }
-                  : undefined
-              }
               className={({ isActive }) =>
                 [
                   "bottom-nav__item",

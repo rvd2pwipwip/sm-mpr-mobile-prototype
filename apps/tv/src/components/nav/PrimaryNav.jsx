@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
-import {
-  resolveBroadSearchBrowseTab,
-  writeStoredBroadSearchBrowseTab,
-} from "@sm-mpr/shared/constants/searchBrowsePaths.js";
+import { resolveBroadSearchBrowseTab } from "@sm-mpr/shared/constants/searchBrowsePaths.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import FocusableButton from "../focus/FocusableButton.jsx";
 import { useContentProfile } from "../../context/ContentProfileContext.jsx";
@@ -100,19 +97,16 @@ export default function PrimaryNav() {
       const tabIndex = showMini ? index - 1 : index;
       const item = NAV_ITEMS[tabIndex];
       if (!item) return;
-      if (item.id === "search" && onSearchShell) {
-        writeStoredBroadSearchBrowseTab("music");
-        navigate({
-          pathname:
-            catalogScope === CATALOG_SCOPE.limited
-              ? "/search"
-              : "/search/music",
-          search: "",
-        });
+      if (item.id === "search") {
+        if (onSearchShell) {
+          enterContent();
+          return;
+        }
+        navigate({ pathname: searchNavTo, search: "" });
         enterContent();
         return;
       }
-      navigate(item.id === "search" ? searchNavTo : item.to);
+      navigate(item.to);
       enterContent();
     },
     [
@@ -231,19 +225,16 @@ export default function PrimaryNav() {
                     navRefs.current[navIndex] = node;
                   }}
                   onSelect={() => {
-                    if (item.id === "search" && onSearchShell) {
-                      writeStoredBroadSearchBrowseTab("music");
-                      navigate({
-                        pathname:
-                          catalogScope === CATALOG_SCOPE.limited
-                            ? "/search"
-                            : "/search/music",
-                        search: "",
-                      });
+                    if (item.id === "search") {
+                      if (onSearchShell) {
+                        enterContent();
+                        return;
+                      }
+                      navigate({ pathname: searchNavTo, search: "" });
                       enterContent();
                       return;
                     }
-                    navigate(item.id === "search" ? searchNavTo : item.to);
+                    navigate(item.to);
                     enterContent();
                   }}
                 >

@@ -83,6 +83,7 @@ export default function Search() {
     DEFAULT_RADIO_INTL_CONTINENT,
   );
   const stackKeySeenRef = useRef(null);
+  const skipUrlSyncRef = useRef(false);
   const prevSearchActiveRef = useRef(false);
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
@@ -261,14 +262,12 @@ export default function Search() {
   }, [isSearchActive, setFocusedGroupIndex]);
 
   useLayoutEffect(() => {
-    if (!showHeaderBrowseTabs && focusedGroupIndex > SEARCH_FOCUS.searchRow) {
-      if (
-        !isBodyScrollVisible ||
-        focusedGroupIndex < SEARCH_FOCUS.bodyStart
-      ) {
-        setFocusedGroupIndex(SEARCH_FOCUS.searchRow);
-      }
+    if (showHeaderBrowseTabs) return;
+    if (focusedGroupIndex <= SEARCH_FOCUS.searchRow) return;
+    if (isBodyScrollVisible && focusedGroupIndex >= SEARCH_FOCUS.bodyStart) {
+      return;
     }
+    setFocusedGroupIndex(SEARCH_FOCUS.searchRow);
   }, [
     showHeaderBrowseTabs,
     focusedGroupIndex,
@@ -336,7 +335,8 @@ export default function Search() {
     }
   }, [catalogScope, location.pathname, location.search, navigate]);
 
-  useEffect(() => {
+  // Hydrate from URL before URL-sync effect runs (avoids stale debouncedQuery writing ?q= back).
+  useLayoutEffect(() => {
     if (!matchesSearchShellPath(location.pathname, catalogScope)) return;
     if (stackKeySeenRef.current === null) {
       stackKeySeenRef.current = location.key;
@@ -346,9 +346,10 @@ export default function Search() {
     stackKeySeenRef.current = location.key;
 
     const restored = searchParamFromLocationSearch(location.search);
+    skipUrlSyncRef.current = true;
     setQuery(restored);
     setDebouncedQuery(restored.trim() === "" ? "" : restored);
-  }, [location.key, location.pathname, location.search, catalogScope, stackKeySeenRef]);
+  }, [location.key, location.pathname, location.search, catalogScope]);
 
   useEffect(() => {
     if (query.trim() === "") {
@@ -363,6 +364,10 @@ export default function Search() {
 
   useEffect(() => {
     if (!matchesSearchShellPath(location.pathname, catalogScope)) return;
+    if (skipUrlSyncRef.current) {
+      skipUrlSyncRef.current = false;
+      return;
+    }
 
     const next = debouncedQuery.trim();
     const current = searchParamFromLocationSearch(location.search).trim();

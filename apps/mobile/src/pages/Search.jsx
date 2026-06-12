@@ -66,6 +66,7 @@ export default function Search() {
   );
 
   const stackKeySeenRef = useRef(null);
+  const skipUrlSyncRef = useRef(false);
 
   const showBrowseTabs = query.trim().length === 0;
   const isSearchActive = query.trim().length > 0;
@@ -78,8 +79,8 @@ export default function Search() {
   const isLimitedSearchRoot =
     catalogScope === CATALOG_SCOPE.limited && location.pathname === "/search";
 
-  // After browser Back/Forward, reload field + results from `?q=`.
-  useEffect(() => {
+  // After Back/Forward or main-nav navigation, hydrate from URL before URL-sync runs.
+  useLayoutEffect(() => {
     if (!matchesSearchShellPath(location.pathname, catalogScope)) return;
     if (stackKeySeenRef.current === null) {
       stackKeySeenRef.current = location.key;
@@ -89,6 +90,7 @@ export default function Search() {
     stackKeySeenRef.current = location.key;
 
     const u = searchParamFromLocationSearch(location.search);
+    skipUrlSyncRef.current = true;
     setQuery(u);
     setDebouncedQuery(u.trim() === "" ? "" : u);
   }, [location.key, location.pathname, location.search, catalogScope]);
@@ -106,6 +108,10 @@ export default function Search() {
 
   useEffect(() => {
     if (!matchesSearchShellPath(location.pathname, catalogScope)) return;
+    if (skipUrlSyncRef.current) {
+      skipUrlSyncRef.current = false;
+      return;
+    }
 
     const next = debouncedQuery.trim();
     const current = searchParamFromLocationSearch(location.search).trim();

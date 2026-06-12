@@ -302,6 +302,8 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 ## Phase 7 — Reset + PrimaryNav integration
 
+**Retrospective (bugs, attempts, future options):** [`Search-Phase-7-reset-retrospective.md`](./Search-Phase-7-reset-retrospective.md)
+
 **Goal:** Match mobile **BottomNav** semantics in **`PrimaryNav.jsx`**.
 
 1. **Clear** — `query ''`, remove `?q=`, browse mode; **keep** `/search/music` \| `podcasts` \| `radio` (broad) or `/search` (limited).

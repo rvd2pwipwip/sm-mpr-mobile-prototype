@@ -114,7 +114,7 @@ Swimlanes handle **Left/Right** on `window` when their group is active, so those
 - **Search mode:** first non-whitespace character hides tabs; body swaps to results placeholder (Phase 5). **`?q=`** on URL (debounced) so Back restores the query.
 - **Search text entry:** PC keyboard only; no on-screen keyboard overlay in this prototype (OS keyboard out of scope).
 - **Header focus rows:** Group **0** = search field + Clear (Left/Right). Group **1** = Music / Podcasts / Radio tabs (Left/Right; **Left** on Music enters nav). **Down** / **Up** move between rows (`SEARCH_FOCUS` in `searchFocusGroups.js`).
-- **PrimaryNav Search:** `to` uses **`resolveBroadSearchBrowseTab`**; re-tap while on `/search/*` resets to **Music** + empty query (limited: `/search`).
+- **PrimaryNav Search:** enter from Home uses **`resolveBroadSearchBrowseTab`**; re-tap on `/search/*` is **no-op** (focus only). **`Search.jsx`:** hydrate `query` from URL in **`useLayoutEffect`** on **`location.key`** change + skip one URL-sync pass so stale **`debouncedQuery`** does not rewrite **`?q=`**.
 
 ## 2026-06-09 — Home vertical scroll survives tab switches
 

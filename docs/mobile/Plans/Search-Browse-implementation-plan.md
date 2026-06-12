@@ -206,9 +206,11 @@ Implement these (see **Search-story** Integration notes for nuance on **Reset**)
 
 ---
 
-## Phase 7 — Reset + BottomNav integration ✅ (prototype)
+## Phase 7 — Reset + BottomNav integration (partial)
 
-**Goal:** Document **implemented** reset behavior (**`Search.jsx`** + **`BottomNav.jsx`**); matches **`docs/mobile/Stories/Search-story.md`** Integration notes.
+**Retrospective (shared TV/mobile issues, what failed, future options):** [`docs/tv/Plans/Search-Phase-7-reset-retrospective.md`](../../tv/Plans/Search-Phase-7-reset-retrospective.md)
+
+**Goal:** Document reset behavior (**`Search.jsx`** + **`BottomNav.jsx`**); matches **`docs/mobile/Stories/Search-story.md`** where shipped. **Re-tap Search reset** deferred — see retrospective.
 
 1. **Clear** (header control or empty field) → **`query` ''**, **`?q=`** removed, browse mode (**tabs visible**); pathname stays **`/search/music`** | **`/search/podcasts`** | **`/search/radio`** — **preserve** whichever tab the user had.
 2. **BottomNav Search (from another main tab):** **`NavLink`** **`to`** = **`/search/`** + **`readStoredBroadSearchBrowseTab() ?? 'music'`** (no **`?q=`**). **`/search`** redirects to the same stored tab. From **Home**, **My Library**, etc., tap **Search** → last **Music / Podcasts / Radio** + empty field (**sessionStorage** key **`PROTOTYPE_BROAD_SEARCH_BROWSE_TAB_STORAGE_KEY`**).
