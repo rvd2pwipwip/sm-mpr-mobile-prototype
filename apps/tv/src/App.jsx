@@ -85,6 +85,12 @@ export default function App() {
                                 element={<SearchMusicCategory />}
                               />
                               <Route
+                                path="/search/browse/music/artist/:artistId"
+                                element={
+                                  <TvSearchRouteStub title="Artist channels" />
+                                }
+                              />
+                              <Route
                                 path="/search/browse/podcasts/category/:categoryId"
                                 element={<SearchPodcastsCategory />}
                               />

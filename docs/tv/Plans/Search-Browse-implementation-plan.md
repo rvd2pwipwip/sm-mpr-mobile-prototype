@@ -248,7 +248,7 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 ---
 
-## Phase 5 — Live search + result swimlanes
+## Phase 5 — Live search + result swimlanes ✅ (prototype)
 
 **Goal:** Non-empty query shows filtered lanes (profile-gated).
 
@@ -269,7 +269,14 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 **Focus groups:** Each populated swimlane = one vertical group (same as Home). Header group 0 hidden tabs when `isSearchActive`.
 
-**Deliverable:** Typing filters catalog; lanes match mobile semantics; music-only shows three lanes only.
+**Deliverable:** Typing filters catalog; lanes match mobile semantics; music-only shows three lanes only. ✓
+
+**Shipped (2026-06-09)**
+
+- **`TvSearchResultsBody`** + **`computeSearchResults`** / **`buildSearchResultsFocusLayout`** — profile-gated lanes from `@sm-mpr/shared/search/searchCatalog.js`; 9 + More cap; empty lanes omitted.
+- **Channels** — `MusicChannelSwimlane`; **Artists / Tags** — `TvSearchLabelTileSwimlane`; **Podcasts / Radio** — `ContentTileSwimlane`; **Episodes** — `TvSearchEpisodeList` + `TvEpisodeRow`.
+- **`Search.jsx`** — search mode hides tabs; parked vertical scroll per result lane (`screenId: search-results`); Down from field → first lane.
+- **More** → `/search/more/catalog?lane=&q=` (stub until Phase 6); artist tap → `/search/browse/music/artist/:id` (stub).
 
 ---
 

@@ -19,6 +19,7 @@ import TvSearchBrowseTabs from "../components/search/TvSearchBrowseTabs.jsx";
 import TvSearchMusicBrowseBody from "../components/search/TvSearchMusicBrowseBody.jsx";
 import TvSearchPodcastsBrowseBody from "../components/search/TvSearchPodcastsBrowseBody.jsx";
 import TvSearchRadioBrowseBody from "../components/search/TvSearchRadioBrowseBody.jsx";
+import TvSearchResultsBody from "../components/search/TvSearchResultsBody.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
@@ -31,6 +32,8 @@ import {
   DEFAULT_RADIO_INTL_CONTINENT,
   buildSearchRadioBrowseFocusLayout,
 } from "../utils/searchRadioBrowseLayout.js";
+import { computeSearchResults } from "../utils/searchResultsData.js";
+import { buildSearchResultsFocusLayout } from "../utils/searchResultsFocusLayout.js";
 import "./Search.css";
 
 const SEARCH_DEBOUNCE_MS = 250;
@@ -59,6 +62,7 @@ export default function Search() {
     shouldShowBrowseContentSwitcher,
     isMusicOnlyProfile,
     isContentTypeEnabled,
+    enabledSearchResultLanes,
   } = useContentProfile();
 
   const browseTab = getSearchBrowseTabFromPathname(location.pathname);
@@ -78,6 +82,7 @@ export default function Search() {
     DEFAULT_RADIO_INTL_CONTINENT,
   );
   const stackKeySeenRef = useRef(null);
+  const prevSearchActiveRef = useRef(false);
 
   const showBrowseTabs = query.trim().length === 0;
   const isSearchActive = query.trim().length > 0;
@@ -108,6 +113,21 @@ export default function Search() {
 
   const isBrowseScrollVisible =
     isMusicBrowseVisible || isPodcastsBrowseVisible || isRadioBrowseVisible;
+
+  const searchResults = useMemo(
+    () => computeSearchResults(debouncedQuery, enabledSearchResultLanes),
+    [debouncedQuery, enabledSearchResultLanes],
+  );
+
+  const resultsFocusLayout = useMemo(() => {
+    if (!isSearchActive || !searchResults.anyHits) return null;
+    return buildSearchResultsFocusLayout(searchResults);
+  }, [isSearchActive, searchResults]);
+
+  const isResultsScrollVisible = Boolean(resultsFocusLayout);
+
+  const isBodyScrollVisible =
+    isBrowseScrollVisible || isResultsScrollVisible;
 
   const bodyBrowseLayout = useMemo(() => {
     if (isMusicBrowseVisible) {
@@ -140,7 +160,9 @@ export default function Search() {
       itemCounts[SEARCH_FOCUS.browseTabs] = browseTabs.length;
     }
 
-    if (!bodyBrowseLayout) {
+    const bodyLayout = isSearchActive ? resultsFocusLayout : bodyBrowseLayout;
+
+    if (!bodyLayout) {
       return {
         groupCount: headerGroupCount,
         itemCounts,
@@ -153,19 +175,21 @@ export default function Search() {
     }
 
     return {
-      groupCount: Math.max(headerGroupCount, bodyBrowseLayout.groupCount),
-      itemCounts: { ...itemCounts, ...bodyBrowseLayout.itemCounts },
-      swimlaneGroups: bodyBrowseLayout.swimlaneGroups,
-      firstBodyGroup: bodyBrowseLayout.firstBodyGroup,
-      lastBodyGroup: bodyBrowseLayout.lastBodyGroup,
-      landingGroup: bodyBrowseLayout.landingGroup,
-      lastCardGroup: bodyBrowseLayout.lastCardGroup,
+      groupCount: Math.max(headerGroupCount, bodyLayout.groupCount),
+      itemCounts: { ...itemCounts, ...bodyLayout.itemCounts },
+      swimlaneGroups: bodyLayout.swimlaneGroups,
+      firstBodyGroup: bodyLayout.firstBodyGroup,
+      lastBodyGroup: bodyLayout.lastBodyGroup,
+      landingGroup: bodyLayout.landingGroup,
+      lastCardGroup: bodyLayout.lastCardGroup ?? null,
     };
   }, [
     searchRowItemCount,
     showHeaderBrowseTabs,
     browseTabs.length,
     bodyBrowseLayout,
+    isSearchActive,
+    resultsFocusLayout,
   ]);
 
   /** Browse tabs are group 1 when visible; when hidden, skip the empty slot. */
@@ -173,7 +197,7 @@ export default function Search() {
     (current) => {
       if (
         !showHeaderBrowseTabs &&
-        isBrowseScrollVisible &&
+        isBodyScrollVisible &&
         focusConfig.firstBodyGroup != null &&
         current === SEARCH_FOCUS.searchRow
       ) {
@@ -181,14 +205,14 @@ export default function Search() {
       }
       return null;
     },
-    [showHeaderBrowseTabs, isBrowseScrollVisible, focusConfig.firstBodyGroup],
+    [showHeaderBrowseTabs, isBodyScrollVisible, focusConfig.firstBodyGroup],
   );
 
   const resolveMoveUp = useCallback(
     (current) => {
       if (
         !showHeaderBrowseTabs &&
-        isBrowseScrollVisible &&
+        isBodyScrollVisible &&
         focusConfig.firstBodyGroup != null &&
         current === focusConfig.firstBodyGroup
       ) {
@@ -196,7 +220,7 @@ export default function Search() {
       }
       return null;
     },
-    [showHeaderBrowseTabs, isBrowseScrollVisible, focusConfig.firstBodyGroup],
+    [showHeaderBrowseTabs, isBodyScrollVisible, focusConfig.firstBodyGroup],
   );
 
   const {
@@ -219,7 +243,7 @@ export default function Search() {
     itemCounts: focusConfig.itemCounts,
     swimlaneGroups: focusConfig.swimlaneGroups,
     defaultGroupIndex:
-      isBrowseScrollVisible && focusConfig.landingGroup != null
+      isBodyScrollVisible && focusConfig.landingGroup != null
         ? focusConfig.landingGroup
         : SEARCH_FOCUS.searchRow,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
@@ -228,9 +252,16 @@ export default function Search() {
   });
 
   useLayoutEffect(() => {
+    if (isSearchActive && !prevSearchActiveRef.current) {
+      setFocusedGroupIndex(SEARCH_FOCUS.searchRow);
+    }
+    prevSearchActiveRef.current = isSearchActive;
+  }, [isSearchActive, setFocusedGroupIndex]);
+
+  useLayoutEffect(() => {
     if (!showHeaderBrowseTabs && focusedGroupIndex > SEARCH_FOCUS.searchRow) {
       if (
-        !isBrowseScrollVisible ||
+        !isBodyScrollVisible ||
         focusedGroupIndex < SEARCH_FOCUS.bodyStart
       ) {
         setFocusedGroupIndex(SEARCH_FOCUS.searchRow);
@@ -240,7 +271,7 @@ export default function Search() {
     showHeaderBrowseTabs,
     focusedGroupIndex,
     setFocusedGroupIndex,
-    isBrowseScrollVisible,
+    isBodyScrollVisible,
   ]);
 
   const getFocusedElement = useCallback(
@@ -266,13 +297,17 @@ export default function Search() {
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
     landingGroupIndex:
-      isBrowseScrollVisible && focusConfig.landingGroup != null
+      isBodyScrollVisible && focusConfig.landingGroup != null
         ? focusConfig.landingGroup
         : SEARCH_FOCUS.searchRow,
     firstFocusableGroupIndex: SEARCH_FOCUS.searchRow,
     lastFocusableGroupIndex,
     getFocusedElement,
-    screenId: isBrowseScrollVisible ? `search-browse-${browseTab}` : undefined,
+    screenId: isBrowseScrollVisible
+      ? `search-browse-${browseTab}`
+      : isResultsScrollVisible
+        ? "search-results"
+        : undefined,
   });
 
   const handlePillChange = useCallback((vibeId, slug) => {
@@ -367,15 +402,33 @@ export default function Search() {
 
   function renderBody() {
     if (isSearchActive) {
-      return (
-        <div className="tv-search-page__body">
-          <h2 className="tv-search-page__mode-label">Search results</h2>
-          <p className="tv-search-page__query-preview">
-            Query: <strong>{debouncedQuery.trim()}</strong> — result swimlanes
-            ship in Phase 5.
-          </p>
-        </div>
-      );
+      if (!searchResults.anyHits) {
+        return (
+          <div className="tv-search-page__body">
+            <p className="tv-search-page__hint">
+              No results for &ldquo;{debouncedQuery.trim()}&rdquo;.
+            </p>
+          </div>
+        );
+      }
+
+      if (resultsFocusLayout) {
+        return (
+          <TvSearchResultsBody
+            results={searchResults}
+            resultsLayout={resultsFocusLayout}
+            debouncedQuery={debouncedQuery}
+            registerGroupRef={registerGroupRef}
+            registerItemRef={registerItemRef}
+            isContentGroupActive={isContentGroupActive}
+            getItemFocusIndex={getItemFocusIndex}
+            setFocusedIndex={setFocusedIndex}
+            onMoveUp={handleMoveUp}
+            onMoveDown={handleMoveDown}
+            enterNavFromContent={enterNavFromContent}
+          />
+        );
+      }
     }
 
     if (isLimitedSearchRoot) {
@@ -444,7 +497,7 @@ export default function Search() {
     return null;
   }
 
-  const scrollBody = isBrowseScrollVisible;
+  const scrollBody = isBodyScrollVisible;
 
   return (
     <div className="tv-search-page">

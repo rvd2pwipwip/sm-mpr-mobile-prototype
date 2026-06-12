@@ -11,6 +11,7 @@ import "../swimlanes/SwimlaneRow.css";
  * Horizontal row of label-only square tiles (broad vibe sub-tags, radio geo rows).
  */
 export default function TvSearchLabelTileSwimlane({
+  title,
   tiles,
   sourceCount,
   onMore,
@@ -23,6 +24,7 @@ export default function TvSearchLabelTileSwimlane({
   registerItemRef,
   onMoveUp,
   onMoveDown,
+  showTitle = true,
   ariaLabel = "Browse sub-tags",
 }) {
   const { enterContent } = useTvNavFocus();
@@ -83,6 +85,9 @@ export default function TvSearchLabelTileSwimlane({
 
   return (
     <section className="swimlane-row" aria-label={ariaLabel}>
+      {showTitle && title ? (
+        <h2 className="swimlane-row__title">{title}</h2>
+      ) : null}
       <FixedSwimlane
         slotCount={slotCount}
         focused={focused}

@@ -1,0 +1,7 @@
+.tv-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-search-stack-gap);
+  width: 100%;
+  min-width: 0;
+}
