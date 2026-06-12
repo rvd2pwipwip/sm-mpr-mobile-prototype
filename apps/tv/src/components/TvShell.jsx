@@ -3,14 +3,15 @@ import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import PrimaryNav from "./nav/PrimaryNav.jsx";
 
-const FULL_PLAYER_PATH = /^\/music\/[^/]+\/play\/?$/;
+const FULL_PLAYER_PATH =
+  /^\/music\/[^/]+\/play\/?$|^\/podcast\/[^/]+\/play\/[^/]+\/?$/;
 
 export default function TvShell({ children }) {
   const { pathname } = useLocation();
   const { catalogScope } = useTerritory();
-  const onFullMusicPlayer = FULL_PLAYER_PATH.test(pathname);
+  const onFullScreenPlayer = FULL_PLAYER_PATH.test(pathname);
   const showNav =
-    catalogScope !== CATALOG_SCOPE.limited && !onFullMusicPlayer;
+    catalogScope !== CATALOG_SCOPE.limited && !onFullScreenPlayer;
 
   return (
     <div className="tv-shell">

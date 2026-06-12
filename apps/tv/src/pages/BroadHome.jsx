@@ -301,8 +301,8 @@ export default function BroadHome() {
             focused={isContentGroupActive(lane.groupIndex)}
             focusedIndex={getItemFocusIndex(lane.groupIndex)}
             onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
-            onSelectItem={() => navigate("/search")}
-            onMore={() => navigate("/search")}
+            onSelectItem={(item) => navigate(`/podcast/${item.id}`)}
+            onMore={() => navigate("/search/podcasts")}
             {...swimlaneNav}
           />
         );

@@ -3,21 +3,31 @@ import FocusableButton from "./focus/FocusableButton.jsx";
 import "./TvUpgradeButton.css";
 
 /**
- * Figma TV header CTA (`15515:41291` / `.button_lg`) — Home Upgrade, Channel Info Play, etc.
+ * Figma TV header CTA (`15515:41291` / `.button_lg`) — Home Upgrade, Channel Info Play,
+ * Podcast Info Play / Subscribe, etc. Rounded-rect focus ring via `FocusableButton`.
  */
 const TvUpgradeButton = forwardRef(function TvUpgradeButton(
   {
     focused = false,
     onClick,
     className = "",
+    variant = "primary",
     iconSrc = "/upgrade.svg",
     label = "Upgrade",
     ariaLabel,
+    disabled = false,
     ...rest
   },
   ref,
 ) {
-  const rootClass = ["tv-upgrade-button", className].filter(Boolean).join(" ");
+  const rootClass = [
+    "tv-upgrade-button",
+    variant === "secondary" ? "tv-upgrade-button--secondary" : "",
+    disabled ? "tv-upgrade-button--disabled" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <FocusableButton
@@ -26,7 +36,9 @@ const TvUpgradeButton = forwardRef(function TvUpgradeButton(
       className={rootClass}
       tabIndex={-1}
       onClick={onClick}
+      disabled={disabled}
       aria-label={ariaLabel ?? label}
+      aria-disabled={disabled || undefined}
       {...rest}
     >
       <span className="tv-upgrade-button__icon" aria-hidden="true">

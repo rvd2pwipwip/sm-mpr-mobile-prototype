@@ -75,6 +75,11 @@
   --tv-player-controls-gap: 30px;
   --tv-player-transport-gap: 40px;
   --tv-player-progress-height: 4px;
+  /* Figma `23:20013` playPauseRec — 80px rounded rect, 10px focus ring */
+  --tv-player-play-pause-size: 80px;
+  --tv-player-play-pause-radius: 10px;
+  --tv-player-play-pause-icon-size: 40px;
+  --tv-player-play-pause-focus-ring-width: 10px;
 
   /* Optional extra bottom padding on vertical scroll inners (prototype: unused). */
   --tv-scroll-ad-reserve: 0px;

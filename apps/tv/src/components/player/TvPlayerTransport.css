@@ -1,0 +1,77 @@
+/* Transport grid — mirrors mobile `music-player__transport` centering model. */
+
+.tv-player-transport {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--tv-player-transport-gap);
+  width: 100%;
+}
+
+.tv-player-transport__start,
+.tv-player-transport__end {
+  align-self: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.tv-player-transport__start-cluster,
+.tv-player-transport__end-cluster {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.tv-player-transport__middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Figma `23:20013` playPauseRec — rounded rect + 10px focus ring (not mobile circle art). */
+.tv-player-play-pause.focusable-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tv-player-play-pause-size);
+  height: var(--tv-player-play-pause-size);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--tv-player-play-pause-radius);
+  color: var(--color-text);
+  background: transparent;
+  outline-width: var(--tv-player-play-pause-focus-ring-width);
+  outline-offset: 0;
+}
+
+.tv-player-play-pause.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.tv-player-play-pause__icon {
+  display: block;
+  width: var(--tv-player-play-pause-icon-size);
+  height: var(--tv-player-play-pause-icon-size);
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.tv-player-play-pause__icon--play {
+  mask-image: url("/play.svg");
+  -webkit-mask-image: url("/play.svg");
+}
+
+.tv-player-play-pause__icon--pause {
+  mask-image: url("/pause.svg");
+  -webkit-mask-image: url("/pause.svg");
+}

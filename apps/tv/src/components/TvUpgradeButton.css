@@ -53,3 +53,18 @@
 .tv-upgrade-button__label {
   white-space: nowrap;
 }
+
+.tv-upgrade-button--secondary.focusable-button {
+  color: var(--color-on-bkg);
+  background: transparent;
+  border: 2px solid color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+}
+
+.tv-upgrade-button--disabled.focusable-button {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tv-upgrade-button--disabled.focusable-button:active {
+  transform: none;
+}

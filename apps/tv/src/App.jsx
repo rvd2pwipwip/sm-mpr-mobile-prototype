@@ -20,7 +20,12 @@ import TvShell from "./components/TvShell.jsx";
 import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
 import SearchIndexRedirect from "./routes/SearchIndexRedirect.jsx";
+import { PodcastUserStateProvider } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
+import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
+import RequireContentType from "./components/RequireContentType.jsx";
 import TvContentTypeUnavailable from "./pages/TvContentTypeUnavailable.jsx";
+import PodcastInfo from "./pages/PodcastInfo.jsx";
+import PodcastPlayer from "./pages/PodcastPlayer.jsx";
 import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels.jsx";
 import SearchMusicCategory from "./pages/SearchMusicCategory.jsx";
 import SearchMusicVibe from "./pages/SearchMusicVibe.jsx";
@@ -45,6 +50,15 @@ function MusicPlayerRoute() {
   return <MusicPlayer key={`${channelId}-${userType}`} />;
 }
 
+/** Remount when show, episode, or user type changes so preroll + transport reset. */
+function PodcastPlayerRoute() {
+  const { podcastId, episodeId } = useParams();
+  const { userType } = useUserType();
+  return (
+    <PodcastPlayer key={`${podcastId}-${episodeId}-${userType}`} />
+  );
+}
+
 export default function App() {
   return (
     <TvViewport>
@@ -54,6 +68,7 @@ export default function App() {
           <GuestMusicSkipProvider>
             <GuestPrerollGraceProvider>
               <LikesProvider>
+                <PodcastUserStateProvider>
                 <PlaybackProvider>
                   <TerritoryProvider>
                     <CategoryRailMemoryProvider>
@@ -126,7 +141,17 @@ export default function App() {
                               <Route
                                 path="/podcast/:podcastId"
                                 element={
-                                  <TvContentTypeUnavailable contentLabel="Podcast" />
+                                  <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+                                    <PodcastInfo />
+                                  </RequireContentType>
+                                }
+                              />
+                              <Route
+                                path="/podcast/:podcastId/play/:episodeId"
+                                element={
+                                  <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+                                    <PodcastPlayerRoute />
+                                  </RequireContentType>
                                 }
                               />
                               <Route
@@ -166,6 +191,7 @@ export default function App() {
                     </CategoryRailMemoryProvider>
                   </TerritoryProvider>
                 </PlaybackProvider>
+                </PodcastUserStateProvider>
               </LikesProvider>
             </GuestPrerollGraceProvider>
           </GuestMusicSkipProvider>

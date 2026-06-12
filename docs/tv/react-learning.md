@@ -18,6 +18,12 @@ Same product data; **different** presentation components. Do not copy mobile `Co
 
 ## Entries
 
+## 2026-06-04 — TV player transport (`TvPlayerTransport`)
+
+- **Play/pause** uses `public/play.svg` and `public/pause.svg` (icon only — no mobile circular `playerCtrl*` frame).
+- **Rounded rect** hit target: `--tv-player-play-pause-size` (80px), `--tv-player-play-pause-radius` (10px), 10px focus ring per Figma `23:20013`.
+- **Centering:** `grid-template-columns: 1fr auto 1fr` (same as mobile `music-player__transport`) — play/pause stays on the horizontal center of the bar; optional `startSlot` / `endSlot` for podcast rewind, skip, speed, etc.
+
 ## 2026-06-04 — TV music player + preroll
 
 - **Route:** `/music/:channelId/play` — `MusicPlayerRoute` remounts with `key={channelId-userType}` (same as mobile).

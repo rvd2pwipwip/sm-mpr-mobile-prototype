@@ -1,0 +1,95 @@
+/* Podcast Info — Figma `7551:27042`; overlay scroll like Search / drill screens. */
+
+/* Top inset without a visible header — scroll inner pads down; parked scroll lifts content to the top edge. */
+.tv-podcast-info.tv-screen-overlay {
+  --tv-screen-header-offset: var(--tv-player-padding-top);
+  box-sizing: border-box;
+}
+
+.tv-podcast-info .tv-home__scroll-inner {
+  gap: 4.375rem;
+  padding-inline: var(--tv-content-inline-start) var(--tv-content-inline-end);
+  padding-bottom: 4rem;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.tv-podcast-info__hero {
+  width: 100%;
+}
+
+.tv-podcast-info__hero-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+  max-width: 77.5rem;
+}
+
+.tv-podcast-info__art {
+  flex-shrink: 0;
+  width: 25rem;
+  height: 25rem;
+  border-radius: 1.875rem;
+  object-fit: cover;
+  background: color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+}
+
+.tv-podcast-info__hero-copy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.tv-podcast-info__title {
+  margin: 0;
+  max-width: 50rem;
+  text-align: start;
+  color: color-mix(in srgb, var(--color-on-bkg) 80%, transparent);
+}
+
+.tv-podcast-info__actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tv-header-button-gap);
+}
+
+.tv-podcast-info__episodes {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.tv-podcast-info__episodes-heading {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-on-bkg);
+}
+
+.tv-podcast-info__episodes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.tv-podcast-info__description-static {
+  margin: 0;
+  max-width: 50rem;
+  font-size: 1.75rem;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--color-on-bkg) 80%, transparent);
+}
+
+.tv-podcast-info__lede {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}

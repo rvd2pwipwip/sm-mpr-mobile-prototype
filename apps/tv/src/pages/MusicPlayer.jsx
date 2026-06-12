@@ -6,6 +6,7 @@ import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvMusicSkipButton from "../components/player/TvMusicSkipButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
+import TvPlayerTransport from "../components/player/TvPlayerTransport.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
@@ -23,20 +24,6 @@ function PlayerMetaIcon({ variant }) {
       className={[
         "tv-music-player__meta-icon",
         `tv-music-player__meta-icon--${variant}`,
-      ].join(" ")}
-      aria-hidden={true}
-    />
-  );
-}
-
-function PlayerPlayPauseIcon({ playing }) {
-  return (
-    <span
-      className={[
-        "tv-music-player__play-icon",
-        playing
-          ? "tv-music-player__play-icon--pause"
-          : "tv-music-player__play-icon--play",
       ].join(" ")}
       aria-hidden={true}
     />
@@ -203,44 +190,34 @@ export default function MusicPlayer() {
               <div className="tv-music-player__progress-fill" />
             </div>
           </div>
-          <div className="tv-music-player__transport">
-            <KeyboardWrapper
-              ref={(node) => registerItemRef(TRANSPORT_GROUP, 0, node)}
-              onSelect={() => setPlaying((p) => !p)}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
-              onMoveLeft={handleMoveLeft}
-              onMoveRight={handleMoveRight}
-            >
-              {(focusProps) => (
-                <FocusableButton
-                  {...focusProps}
-                  type="button"
-                  className="tv-music-player__play-toggle"
-                  focused={isItemFocused(TRANSPORT_GROUP, 0)}
-                  aria-label={playing ? "Pause" : "Play"}
-                >
-                  <PlayerPlayPauseIcon playing={playing} />
-                </FocusableButton>
-              )}
-            </KeyboardWrapper>
-
-            <TvMusicSkipButton
-              groupIndex={TRANSPORT_GROUP}
-              itemIndex={1}
-              focused={isItemFocused(TRANSPORT_GROUP, 1)}
-              registerItemRef={registerItemRef}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
-              onMoveLeft={handleMoveLeft}
-              onMoveRight={handleMoveRight}
-            />
-          </div>
+          <TvPlayerTransport
+            playing={playing}
+            playPauseAriaLabel={playing ? "Pause" : "Play"}
+            playPauseFocused={isItemFocused(TRANSPORT_GROUP, 0)}
+            registerPlayPauseRef={(node) =>
+              registerItemRef(TRANSPORT_GROUP, 0, node)
+            }
+            onTogglePlayPause={() => setPlaying((p) => !p)}
+            onMoveUp={handleMoveUp}
+            onMoveDown={handleMoveDown}
+            onMoveLeft={handleMoveLeft}
+            onMoveRight={handleMoveRight}
+            endSlot={
+              <TvMusicSkipButton
+                groupIndex={TRANSPORT_GROUP}
+                itemIndex={1}
+                focused={isItemFocused(TRANSPORT_GROUP, 1)}
+                registerItemRef={registerItemRef}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onMoveLeft={handleMoveLeft}
+                onMoveRight={handleMoveRight}
+              />
+            }
+          />
         </div>
       </div>
       ) : null}
-
-      <p className="tv-page__lede tv-music-player__hint">Press Esc to go back.</p>
     </div>
   );
 }
