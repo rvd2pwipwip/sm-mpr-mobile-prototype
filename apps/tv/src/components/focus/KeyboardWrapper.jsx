@@ -19,27 +19,31 @@ const KeyboardWrapper = forwardRef(function KeyboardWrapper(
       return;
     }
     if (event.key === "ArrowUp") {
+      if (!onUp) return;
       event.preventDefault();
       event.stopPropagation();
-      if (onUp) onUp(event);
+      onUp(event);
       return;
     }
     if (event.key === "ArrowDown") {
+      if (!onDown) return;
       event.preventDefault();
       event.stopPropagation();
-      if (onDown) onDown(event);
+      onDown(event);
       return;
     }
     if (event.key === "ArrowLeft") {
+      if (!onLeft) return;
       event.preventDefault();
       event.stopPropagation();
-      if (onLeft) onLeft(event);
+      onLeft(event);
       return;
     }
     if (event.key === "ArrowRight") {
+      if (!onRight) return;
       event.preventDefault();
       event.stopPropagation();
-      if (onRight) onRight(event);
+      onRight(event);
     }
   };
 

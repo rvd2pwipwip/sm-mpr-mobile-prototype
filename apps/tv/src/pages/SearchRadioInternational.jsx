@@ -8,6 +8,7 @@ import {
 import { INTERNATIONAL_CONTINENTS_PLANNED } from "@sm-mpr/shared/data/radioStations.js";
 import ContentTileCard from "../components/cards/ContentTileCard.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 import TvSearchLabelTile from "../components/search/TvSearchLabelTile.jsx";
 import TvSearchRadioGeoRegion from "../components/search/TvSearchRadioGeoRegion.jsx";
@@ -40,15 +41,16 @@ export default function SearchRadioInternational() {
       <TvSearchBrowseDrillPage
         screenId={`search-radio-intl-${parentSegments.join("-")}-all`}
         title={`Popular in ${parentResolved.node.label}`}
-        meta={`${allPopular.length} stations`}
         items={allPopular}
         emptyMessage="No stations in this region yet."
         onSelectItem={(station) => navigate(`/radio/${station.id}`)}
-        renderItem={(station, isFocused, setRef, onSelect) => (
+        renderItem={(station, isFocused, setRef, onSelect, cellNav) => (
           <KeyboardWrapper
             ref={setRef}
             selectData={station}
             onSelect={() => onSelect(station)}
+          {...gridCellKeyboardProps(cellNav)}
+
           >
             {(focusProps) => (
               <ContentTileCard
@@ -74,17 +76,18 @@ export default function SearchRadioInternational() {
       <TvSearchBrowseDrillPage
         screenId="search-radio-international-continents"
         title="International"
-        meta="Browse by region"
         items={continents}
         emptyMessage="No regions available."
         onSelectItem={(continent) =>
           navigate(radioInternationalPath([continent.id]))
         }
-        renderItem={(continent, isFocused, setRef, onSelect) => (
+        renderItem={(continent, isFocused, setRef, onSelect, cellNav) => (
           <KeyboardWrapper
             ref={setRef}
             selectData={continent}
             onSelect={() => onSelect(continent)}
+          {...gridCellKeyboardProps(cellNav)}
+
           >
             {(focusProps) => (
               <TvSearchLabelTile
@@ -114,15 +117,16 @@ export default function SearchRadioInternational() {
       <TvSearchBrowseDrillPage
         screenId={screenId}
         title={node.label}
-        meta={`${popular.length} stations`}
         items={popular}
         emptyMessage="No stations in this region yet."
         onSelectItem={(station) => navigate(`/radio/${station.id}`)}
-        renderItem={(station, isFocused, setRef, onSelect) => (
+        renderItem={(station, isFocused, setRef, onSelect, cellNav) => (
           <KeyboardWrapper
             ref={setRef}
             selectData={station}
             onSelect={() => onSelect(station)}
+          {...gridCellKeyboardProps(cellNav)}
+
           >
             {(focusProps) => (
               <ContentTileCard

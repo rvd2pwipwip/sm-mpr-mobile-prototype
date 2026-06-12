@@ -5,6 +5,7 @@ import {
   getChildTagsForBroadVibe,
 } from "@sm-mpr/shared/data/musicBrowseTaxonomy.js";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 import TvSearchLabelTile from "../components/search/TvSearchLabelTile.jsx";
 
@@ -44,12 +45,16 @@ export default function SearchMusicVibe() {
     <TvSearchBrowseDrillPage
       screenId={`search-music-vibe-${vibeId}`}
       title={vibe.label}
-      meta="Choose a tag"
       items={tiles}
       emptyMessage="No tags for this vibe."
       onSelectItem={(tile) => navigateRow(tile.row)}
-      renderItem={(tile, isFocused, setRef, onSelect) => (
-        <KeyboardWrapper ref={setRef} onSelect={() => onSelect(tile)}>
+      renderItem={(tile, isFocused, setRef, onSelect, cellNav) => (
+        <KeyboardWrapper
+          ref={setRef}
+          onSelect={() => onSelect(tile)}
+          {...gridCellKeyboardProps(cellNav)}
+
+        >
           {(focusProps) => (
             <TvSearchLabelTile
               {...focusProps}

@@ -1,17 +1,30 @@
 .content-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--content-grid-gap, var(--tv-space-card-gap));
-  width: 100%;
+  row-gap: calc(var(--content-grid-gap, var(--tv-space-card-gap)) + 30px);
+  width: var(--content-grid-width, fit-content);
+  max-width: 100%;
+  margin-inline: auto;
+  overflow: visible;
+  box-sizing: border-box;
+  /* Match tile components to computed track width (browse grid sizes cards to fit 5 cols). */
+  --tv-card-size: var(--content-grid-card-size);
+  /* Focus ring bleed inside the scroll clip (matches swimlane row padding). */
+  padding: calc(var(--tv-focus-ring-width) + var(--tv-focus-ring-gap));
 }
 
 .content-grid__row {
-  display: flex;
-  flex-direction: row;
-  gap: var(--content-grid-gap, var(--tv-space-card-gap));
+  display: grid;
+  grid-template-columns: repeat(
+    var(--content-grid-columns, 5),
+    var(--content-grid-card-size, var(--tv-card-size))
+  );
+  column-gap: var(--content-grid-gap, var(--tv-space-card-gap));
+  width: var(--content-grid-width, fit-content);
+  overflow: visible;
 }
 
 .content-grid__cell {
-  width: var(--content-grid-card-size, var(--tv-card-size));
-  flex-shrink: 0;
+  min-width: 0;
+  overflow: visible;
 }

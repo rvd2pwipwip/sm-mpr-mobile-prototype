@@ -9,6 +9,7 @@ import { radioInternationalPath } from "../../constants/radioBrowsePaths.js";
 import { HOME_LANDING_ITEM_INDEX } from "../../constants/homeFocusGroups.js";
 import { getMusicSwimlaneSlotCount } from "../../utils/swimlaneUtils.js";
 import { useScreenContentFocus } from "../../hooks/useScreenContentFocus.js";
+import { useTvScreenHeaderOffset } from "../../hooks/useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "../../hooks/useTvVerticalGroupScroll.js";
 import ContentTileSwimlane from "../swimlanes/ContentTileSwimlane.jsx";
 import TvSearchRadioGeoExploreSwimlane from "./TvSearchRadioGeoExploreSwimlane.jsx";
@@ -112,10 +113,15 @@ export default function TvSearchRadioGeoRegion({ node, segments, screenId }) {
     [children],
   );
 
+  const { shellRef, headerRef } = useTvScreenHeaderOffset();
+
   return (
-    <div className="tv-search-radio-geo">
-      <header className="tv-search-radio-geo__header">
-        <h1 className="tv-search-radio-geo__title">{node.label}</h1>
+    <div ref={shellRef} className="tv-search-radio-geo tv-screen-overlay">
+      <header
+        ref={headerRef}
+        className="tv-search-radio-geo__header tv-screen-overlay__header"
+      >
+        <h1 className="tv-screen-header-title">{node.label}</h1>
         {/* {hasChannels ? (
           <p className="tv-search-radio-geo__meta">
             {popular.length} stations in this region
@@ -125,7 +131,7 @@ export default function TvSearchRadioGeoRegion({ node, segments, screenId }) {
 
       <div
         ref={viewportRef}
-        className="tv-search-radio-geo__scroll tv-home__scroll"
+        className="tv-search-radio-geo__scroll tv-home__scroll tv-screen-overlay__scroll"
       >
         <div
           ref={innerRef}

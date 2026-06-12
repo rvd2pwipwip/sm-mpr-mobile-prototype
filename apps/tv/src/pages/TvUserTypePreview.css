@@ -15,9 +15,10 @@
 
 .tv-user-type-preview__title {
   margin: 0;
-  font-size: 2.125rem;
-  font-weight: 700;
-  color: var(--color-on-bkg);
+  font-size: var(--tv-screen-header-title-size);
+  font-weight: var(--tv-screen-header-title-weight);
+  line-height: var(--tv-screen-header-title-line-height);
+  color: var(--tv-screen-header-title-color);
 }
 
 .tv-user-type-preview__section-title {

@@ -25,9 +25,12 @@ import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels.jsx
 import SearchMusicCategory from "./pages/SearchMusicCategory.jsx";
 import SearchMusicVibe from "./pages/SearchMusicVibe.jsx";
 import SearchPodcastsCategory from "./pages/SearchPodcastsCategory.jsx";
+import SearchMusicArtistChannels from "./pages/SearchMusicArtistChannels.jsx";
 import SearchRadioInternational from "./pages/SearchRadioInternational.jsx";
 import SearchRadioStationGrid from "./pages/SearchRadioStationGrid.jsx";
+import TvSearchCatalogMore from "./pages/TvSearchCatalogMore.jsx";
 import TvSearchRouteStub from "./pages/TvSearchRouteStub.jsx";
+import TvSearchTagsMore from "./pages/TvSearchTagsMore.jsx";
 import MyLibrary from "./pages/MyLibrary.jsx";
 import FocusDemo from "./pages/FocusDemo.jsx";
 import MusicChannelInfo from "./pages/MusicChannelInfo.jsx";
@@ -86,9 +89,7 @@ export default function App() {
                               />
                               <Route
                                 path="/search/browse/music/artist/:artistId"
-                                element={
-                                  <TvSearchRouteStub title="Artist channels" />
-                                }
+                                element={<SearchMusicArtistChannels />}
                               />
                               <Route
                                 path="/search/browse/podcasts/category/:categoryId"
@@ -115,8 +116,12 @@ export default function App() {
                                 element={<TvSearchRouteStub title="Search browse" />}
                               />
                               <Route
-                                path="/search/more/*"
-                                element={<TvSearchRouteStub title="Search more" />}
+                                path="/search/more/catalog"
+                                element={<TvSearchCatalogMore />}
+                              />
+                              <Route
+                                path="/search/more/tags"
+                                element={<TvSearchTagsMore />}
                               />
                               <Route
                                 path="/podcast/:podcastId"

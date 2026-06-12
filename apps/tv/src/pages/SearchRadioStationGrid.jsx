@@ -6,6 +6,7 @@ import {
 } from "@sm-mpr/shared/data/radioStations.js";
 import ContentTileCard from "../components/cards/ContentTileCard.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 
 function sortByPopularityMock(stations) {
@@ -36,15 +37,16 @@ export default function SearchRadioStationGrid() {
     <TvSearchBrowseDrillPage
       screenId={`search-radio-${categoryId}`}
       title={category.label}
-      meta={`${stations.length} stations`}
       items={stations}
       emptyMessage="No stations in this category."
       onSelectItem={(station) => navigate(`/radio/${station.id}`)}
-      renderItem={(station, isFocused, setRef, onSelect) => (
+      renderItem={(station, isFocused, setRef, onSelect, cellNav) => (
         <KeyboardWrapper
           ref={setRef}
           selectData={station}
           onSelect={() => onSelect(station)}
+          {...gridCellKeyboardProps(cellNav)}
+
         >
           {(focusProps) => (
             <ContentTileCard

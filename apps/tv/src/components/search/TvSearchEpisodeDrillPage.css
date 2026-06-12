@@ -1,0 +1,4 @@
+.tv-search-episode-drill__row {
+  padding-inline: var(--tv-swimlane-inline-start) var(--tv-swimlane-inline-end);
+  box-sizing: border-box;
+}

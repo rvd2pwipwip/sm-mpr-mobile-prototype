@@ -123,7 +123,9 @@ export default function MusicChannelInfo() {
           </div>
 
           <div className="music-channel-info__details">
-            <h1 className="music-channel-info__title">{channel.name}</h1>
+            <h1 className="music-channel-info__title tv-screen-header-title">
+              {channel.name}
+            </h1>
 
             <div className="music-channel-info__actions-row">
               <KeyboardWrapper

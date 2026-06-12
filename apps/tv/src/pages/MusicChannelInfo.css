@@ -49,12 +49,7 @@
 }
 
 .music-channel-info__title {
-  margin: 0;
   max-width: 62.5rem;
-  font-size: 2.125rem;
-  font-weight: 900;
-  line-height: 1.15;
-  color: color-mix(in srgb, var(--color-text) 80%, transparent);
 }
 
 .music-channel-info__actions-row {

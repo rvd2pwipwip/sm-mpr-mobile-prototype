@@ -25,6 +25,7 @@ import { useTerritory } from "../context/TerritoryContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { SEARCH_FOCUS } from "../constants/searchFocusGroups.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { buildSearchMusicBrowseFocusLayout } from "../utils/searchMusicBrowseLayout.js";
 import { buildSearchPodcastsBrowseFocusLayout } from "../utils/searchPodcastsBrowseLayout.js";
@@ -83,6 +84,7 @@ export default function Search() {
   );
   const stackKeySeenRef = useRef(null);
   const prevSearchActiveRef = useRef(false);
+  const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
   const showBrowseTabs = query.trim().length === 0;
   const isSearchActive = query.trim().length > 0;
@@ -500,8 +502,12 @@ export default function Search() {
   const scrollBody = isBodyScrollVisible;
 
   return (
-    <div className="tv-search-page">
+    <div
+      ref={shellRef}
+      className="tv-search-page tv-screen-overlay tv-screen-overlay--search-browse"
+    >
       <TvSearchBrowseHeader
+        headerRef={headerRef}
         query={query}
         onQueryChange={handleQueryChange}
         showBrowseTabs={showHeaderBrowseTabs && !isBrowseScrollVisible}
@@ -520,7 +526,10 @@ export default function Search() {
       />
 
       {scrollBody ? (
-        <div ref={viewportRef} className="tv-search-page__scroll tv-home__scroll">
+        <div
+          ref={viewportRef}
+          className="tv-search-page__scroll tv-home__scroll tv-screen-overlay__scroll"
+        >
           <div
             ref={innerRef}
             className={`${innerClassName} tv-search-page__scroll-inner`}
@@ -544,7 +553,7 @@ export default function Search() {
           </div>
         </div>
       ) : (
-        <div className="tv-search-page__scroll tv-home__scroll">
+        <div className="tv-search-page__scroll tv-home__scroll tv-screen-overlay__scroll tv-screen-overlay__body">
           {renderBody()}
         </div>
       )}

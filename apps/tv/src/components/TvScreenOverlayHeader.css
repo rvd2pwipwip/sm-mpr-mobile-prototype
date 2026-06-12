@@ -1,0 +1,69 @@
+/*
+ * Fixed frosted header over full-height scroll (mobile `ScreenHeader` / `HomeHeader`).
+ * Shell measures header height into `--tv-screen-header-offset`; scroll inner pads
+ * below so content starts under the bar and moves up behind it while scrolling.
+ */
+
+.tv-screen-overlay {
+  --tv-screen-header-offset: 0px;
+  --tv-screen-header-scroll-gap: 0px;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.tv-screen-overlay__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  background-color: var(--color-header-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
+}
+
+/* Inner chrome keeps layout only; frost lives on the overlay layer. */
+.tv-screen-overlay__header .tv-home-header,
+.tv-screen-overlay__header .tv-limited-home-header {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.tv-screen-overlay__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tv-screen-overlay .tv-home__scroll-inner,
+.tv-screen-overlay__body {
+  padding-top: calc(
+    var(--tv-screen-header-offset) + var(--tv-screen-header-scroll-gap)
+  );
+  box-sizing: border-box;
+}
+
+/* Search browse: Figma gap below field header before first swimlane row. */
+.tv-screen-overlay--search-browse {
+  --tv-screen-header-scroll-gap: var(--tv-search-content-gap-after-header);
+}
+
+.tv-screen-header-title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--tv-screen-header-title-size);
+  font-weight: var(--tv-screen-header-title-weight);
+  line-height: var(--tv-screen-header-title-line-height);
+  color: var(--tv-screen-header-title-color);
+}
+
+.tv-screen-overlay__header .tv-screen-header-title {
+  text-align: center;
+}

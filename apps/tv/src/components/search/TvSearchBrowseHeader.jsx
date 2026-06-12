@@ -1,39 +1,14 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import TvSearchBrowseTabs from "./TvSearchBrowseTabs.jsx";
 import "./TvSearchBrowseHeader.css";
-
-function useTvSearchHeaderOffset() {
-  const ref = useRef(null);
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return undefined;
-
-    const publish = () => {
-      document.documentElement.style.setProperty(
-        "--tv-search-header-offset",
-        `${el.offsetHeight}px`,
-      );
-    };
-
-    publish();
-    const ro = new ResizeObserver(publish);
-    ro.observe(el);
-    return () => {
-      ro.disconnect();
-      document.documentElement.style.removeProperty("--tv-search-header-offset");
-    };
-  }, []);
-
-  return ref;
-}
 
 /**
  * Fixed Search header — search field + Clear (Figma `headerSearch`).
  * Browse tabs render in scroll content on Music/Podcasts/Radio browse (field-only header).
  */
 export default function TvSearchBrowseHeader({
+  headerRef,
   query,
   onQueryChange,
   showBrowseTabs,
@@ -50,7 +25,6 @@ export default function TvSearchBrowseHeader({
   searchRowGroup = 0,
   browseTabsGroup = 1,
 }) {
-  const headerRef = useTvSearchHeaderOffset();
   const inputRef = useRef(null);
   const showClear = query.length > 0;
   const fieldFocused = isItemFocused(searchRowGroup, 0);
@@ -91,7 +65,10 @@ export default function TvSearchBrowseHeader({
   };
 
   return (
-    <header ref={headerRef} className="tv-search-header">
+    <header
+      ref={headerRef}
+      className="tv-search-header tv-screen-overlay__header"
+    >
       <div className="tv-search-header__field-row">
         <div
           className={[

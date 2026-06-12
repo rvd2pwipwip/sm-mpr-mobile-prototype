@@ -280,7 +280,7 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 ---
 
-## Phase 6 — Search More + drill-down grids
+## Phase 6 — Search More + drill-down grids ✅ (prototype)
 
 **Goal:** Full result sets and tag/artist browse grids.
 
@@ -289,7 +289,14 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 - Artist channel grid, music category browse, podcast category — TV grids with focus memory.
 - **Back (`Esc`)** → `navigate(-1)` to restore `/search/...?q=...`.
 
-**Deliverable:** More + tag grids work; Back restores search field + lanes.
+**Deliverable:** More + tag grids work; Back restores search field + lanes. ✓
+
+**Shipped (2026-06-09)**
+
+- **`TvSearchCatalogMore`** — profile-gated full grids per lane (channels, artists, tags, podcasts, radio); **episodes** use **`TvSearchEpisodeDrillPage`** (vertical parked list).
+- **`TvSearchTagsMore`** — `getMusicChannelsWithTag` channel grid (5-col `TvSearchBrowseDrillPage`).
+- **`SearchMusicArtistChannels`** — artist hit drill (`getFeaturedChannelsForArtist`).
+- Routes replace `/search/more/*` stub; **Esc** uses existing **`GlobalTvKeys`** `navigate(-1)`.
 
 ---
 

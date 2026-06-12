@@ -1,4 +1,5 @@
 import { useMemo, useCallback } from "react";
+import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { useNavigate } from "react-router-dom";
 import {
   getRecommendationsMusicChannels,
@@ -218,6 +219,7 @@ export default function BroadHome() {
 
   const headerLayout = useHomeHeaderLayout();
   const scrollableHeader = headerLayout === HOME_HEADER_LAYOUT.SCROLL;
+  const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
   const headerProps = {
     groupIndex: HOME_HEADER_GROUP,
@@ -344,8 +346,10 @@ export default function BroadHome() {
 
   return (
     <div
+      ref={shellRef}
       className={[
         "tv-home",
+        "tv-screen-overlay",
         scrollableHeader ? "tv-home--header-scroll" : "tv-home--header-sticky",
       ]
         .filter(Boolean)
@@ -355,9 +359,11 @@ export default function BroadHome() {
         Header {headerLayout}
       </p>
       {!scrollableHeader ? (
-        <TvHomeHeaderSection {...headerProps} />
+        <div ref={headerRef} className="tv-screen-overlay__header">
+          <TvHomeHeaderSection {...headerProps} />
+        </div>
       ) : null}
-      <div ref={viewportRef} className="tv-home__scroll">
+      <div ref={viewportRef} className="tv-home__scroll tv-screen-overlay__scroll">
         <div
           ref={innerRef}
           className={innerClassName}

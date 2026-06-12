@@ -6,6 +6,7 @@ import {
 } from "@sm-mpr/shared/data/podcasts.js";
 import ContentTileCard from "../components/cards/ContentTileCard.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 
 /** Search -> Browse -> Podcasts -> one category grid (5-col, parked vertical scroll). */
@@ -24,15 +25,16 @@ export default function SearchPodcastsCategory() {
     <TvSearchBrowseDrillPage
       screenId={`search-podcasts-category-${categoryId}`}
       title={category.label}
-      meta={`${podcasts.length} shows`}
       items={podcasts}
       emptyMessage="No podcasts in this category."
       onSelectItem={(podcast) => navigate(`/podcast/${podcast.id}`)}
-      renderItem={(podcast, isFocused, setRef, onSelect) => (
+      renderItem={(podcast, isFocused, setRef, onSelect, cellNav) => (
         <KeyboardWrapper
           ref={setRef}
           selectData={podcast}
           onSelect={() => onSelect(podcast)}
+          {...gridCellKeyboardProps(cellNav)}
+
         >
           {(focusProps) => (
             <ContentTileCard

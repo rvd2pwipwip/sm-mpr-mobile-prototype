@@ -1,32 +1,37 @@
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { SEARCH_BROWSE } from "@sm-mpr/shared/constants/searchBrowsePaths.js";
-import {
-  MUSIC_GENRES,
-  getMusicChannelsByCategory,
-} from "@sm-mpr/shared/data/musicChannels.js";
+import { useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getMusicChannelsWithTag } from "@sm-mpr/shared/data/musicChannels.js";
 import MusicChannelCard from "../components/cards/MusicChannelCard.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 
-/** Limited + broad Genre vibe: channels for one lineup genre. */
-export default function SearchMusicCategory() {
-  const { categoryId } = useParams();
+/** Channel grid for an exact vibe tag (`/search/more/tags?q=`). */
+export default function TvSearchTagsMore() {
+  const [params] = useSearchParams();
   const navigate = useNavigate();
+  const rawQ = params.get("q") ?? "";
+  const tag = rawQ.trim();
+  const channels = useMemo(
+    () => (tag ? getMusicChannelsWithTag(tag) : []),
+    [tag],
+  );
 
-  const genre = categoryId ? MUSIC_GENRES.find((g) => g.id === categoryId) : null;
-  const channels = genre ? getMusicChannelsByCategory(categoryId) : [];
-
-  if (!categoryId || !genre) {
-    return <Navigate to={SEARCH_BROWSE.music} replace />;
-  }
+  const screenId = useMemo(() => {
+    const slug = tag.slice(0, 48).replace(/\s+/g, "-") || "missing";
+    return `search-more-tags-${slug}`;
+  }, [tag]);
 
   return (
     <TvSearchBrowseDrillPage
-      screenId={`search-music-category-${categoryId}`}
-      title={genre.label}
+      screenId={screenId}
+      title={tag || "Tags"}
       items={channels}
-      emptyMessage="No channels in this genre."
+      emptyMessage={
+        !tag
+          ? "Missing tag query."
+          : `No channels with tag "${tag}".`
+      }
       onSelectItem={(channel) => navigate(`/music/${channel.id}`)}
       renderItem={(channel, isFocused, setRef, onSelect, cellNav) => (
         <KeyboardWrapper

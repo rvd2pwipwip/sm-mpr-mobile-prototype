@@ -4,6 +4,8 @@
  * Viewport: 1920 x 1080 (locked). Screen bg matches mobile (`apps/mobile/src/index.css`).
  */
 
+@import "./components/TvScreenOverlayHeader.css";
+
 :root {
   color-scheme: light dark;
 
@@ -169,8 +171,15 @@
   --tv-swimlane-inline-start: var(--tv-content-inline-start);
   --tv-swimlane-inline-end: var(--tv-content-inline-end);
 
-  /* Search & Browse — Figma `15822:35859`; measured header publishes offset on <html> */
+  /* Search & Browse — Figma `15822:35859`; shell publishes measured header offset */
   --tv-search-header-offset: 185px;
+  /* Overlay screen titles (e.g. Radio geo "Canada") — shared drill / browse headers */
+  --tv-screen-header-title-size: 3rem;
+  --tv-screen-header-title-weight: 400;
+  --tv-screen-header-title-line-height: 1.15;
+  --tv-screen-header-title-color: var(--color-on-bkg);
+  /* Overlay headers: gap below measured bar before first scroll row (0 = flush). */
+  --tv-screen-header-scroll-gap: 0px;
   --tv-search-header-stack-gap: 30px;
   /* Browse row below in-flow search header (Figma 230px fold - 185px header = 45px). */
   --tv-search-content-gap-after-header: 45px;
@@ -390,7 +399,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--tv-space-screen-gap);
-  margin-top: 80px;
 }
 
 .tv-home__scroll {
@@ -507,8 +515,10 @@ body {
 
 .tv-page__title {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: var(--tv-screen-header-title-size);
+  font-weight: var(--tv-screen-header-title-weight);
+  line-height: var(--tv-screen-header-title-line-height);
+  color: var(--tv-screen-header-title-color);
 }
 
 .tv-page__lede {

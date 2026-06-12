@@ -8,6 +8,7 @@ import {
 import { getMusicChannelsWithTag } from "@sm-mpr/shared/data/musicChannels.js";
 import MusicChannelCard from "../components/cards/MusicChannelCard.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 import TvSearchLabelTile from "../components/search/TvSearchLabelTile.jsx";
 
@@ -48,7 +49,6 @@ export default function SearchMusicBroadTagChannels() {
       <TvSearchBrowseDrillPage
         screenId={`search-music-tag-${vibeId}-${tagSlug}`}
         title={meta.label}
-        meta="Choose a sub-tag"
         items={tiles}
         emptyMessage="No sub-tags."
         onSelectItem={(tile) =>
@@ -56,8 +56,13 @@ export default function SearchMusicBroadTagChannels() {
             `/search/browse/music/vibe/${vibeId}/tag/${tagSlug}/sub/${tile.sub.slug}`,
           )
         }
-        renderItem={(tile, isFocused, setRef, onSelect) => (
-          <KeyboardWrapper ref={setRef} onSelect={() => onSelect(tile)}>
+        renderItem={(tile, isFocused, setRef, onSelect, cellNav) => (
+          <KeyboardWrapper
+            ref={setRef}
+            onSelect={() => onSelect(tile)}
+          {...gridCellKeyboardProps(cellNav)}
+
+          >
             {(focusProps) => (
               <TvSearchLabelTile
                 {...focusProps}
@@ -83,15 +88,16 @@ export default function SearchMusicBroadTagChannels() {
     <TvSearchBrowseDrillPage
       screenId={`search-music-tag-channels-${vibeId}-${tagSlug}-${subSlug ?? "leaf"}`}
       title={channelTagLabel}
-      meta={`${channels.length} channels`}
       items={channels}
       emptyMessage={`No channels with tag "${channelTagLabel}".`}
       onSelectItem={(channel) => navigate(`/music/${channel.id}`)}
-      renderItem={(channel, isFocused, setRef, onSelect) => (
+      renderItem={(channel, isFocused, setRef, onSelect, cellNav) => (
         <KeyboardWrapper
           ref={setRef}
           selectData={channel}
           onSelect={() => onSelect(channel)}
+          {...gridCellKeyboardProps(cellNav)}
+
         >
           {(focusProps) => (
             <MusicChannelCard

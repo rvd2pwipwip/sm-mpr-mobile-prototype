@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
 } from "react";
+import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import {
   getTvCardGap,
   getTvCardSize,
@@ -26,9 +27,10 @@ function clampPosition(position, gridRows) {
 }
 
 /**
- * Fixed-column 2D grid for TV browse / More screens (adapted from SMTV03 ChannelGrid).
- * Arrow keys when `focused`; boundary escape via `onNavigationEscape`.
- * Horizontal moves stay inside the row (no horizontal scroll or wrap).
+ * Fixed-column 2D grid for TV browse / More screens.
+ * D-pad: window capture listener (VariableSwimlane pattern) plus per-card
+ * `cellNav` on KeyboardWrapper as fallback when DOM focus is on the card.
+ * Left on column 0 calls `onBoundaryLeft` to enter primary nav.
  */
 const ContentGrid = forwardRef(function ContentGrid(
   {
@@ -37,6 +39,7 @@ const ContentGrid = forwardRef(function ContentGrid(
     focused = false,
     focusedPosition = { row: 0, col: 0 },
     onFocusChange,
+    onBoundaryLeft,
     onNavigationEscape,
     onSelect,
     columns: columnsProp,
@@ -46,6 +49,7 @@ const ContentGrid = forwardRef(function ContentGrid(
   },
   ref,
 ) {
+  const { focusZone, canEnterNavFromContent, enterNav } = useTvNavFocus();
   const cardSize = cardSizeProp ?? getTvCardSize();
   const cardGap = getTvCardGap();
   const columns = columnsProp ?? getTvGridColumnCount();
@@ -82,34 +86,51 @@ const ContentGrid = forwardRef(function ContentGrid(
     itemRefs.current[flatIndex] = node;
   }, []);
 
-  useEffect(() => {
-    if (!focused) return undefined;
+  const leaveToNav = useCallback(
+    (row, col) => {
+      if (!canEnterNavFromContent) return;
+      onBoundaryLeft?.();
+      onNavigationEscape?.("left");
+      enterNav();
+      const flatIndex = row * columns + col;
+      itemRefs.current[flatIndex]?.blur();
+    },
+    [
+      canEnterNavFromContent,
+      columns,
+      enterNav,
+      onBoundaryLeft,
+      onNavigationEscape,
+    ],
+  );
 
-    const handleKeyDown = (event) => {
-      const { row, col } = clampPosition(focusedPosition, gridRows);
+  const handleGridArrow = useCallback(
+    (direction, row, col, event) => {
+      if (focusZone !== FOCUS_ZONE_CONTENT) return;
+
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+
       const rowLength = gridRows[row]?.length ?? 0;
 
-      if (event.key === "ArrowRight") {
+      if (direction === "left") {
+        if (col > 0) {
+          onFocusChange?.(clampPosition({ row, col: col - 1 }, gridRows));
+          return;
+        }
+        leaveToNav(row, col);
+        return;
+      }
+
+      if (direction === "right") {
         if (col < rowLength - 1) {
-          event.preventDefault();
           onFocusChange?.(clampPosition({ row, col: col + 1 }, gridRows));
         }
         return;
       }
 
-      if (event.key === "ArrowLeft") {
-        if (col > 0) {
-          event.preventDefault();
-          onFocusChange?.(clampPosition({ row, col: col - 1 }, gridRows));
-          return;
-        }
-        onNavigationEscape?.("left");
-        return;
-      }
-
-      if (event.key === "ArrowDown") {
+      if (direction === "down") {
         if (row < gridRows.length - 1) {
-          event.preventDefault();
           const nextRowLength = gridRows[row + 1]?.length ?? 0;
           onFocusChange?.(
             clampPosition(
@@ -123,9 +144,8 @@ const ContentGrid = forwardRef(function ContentGrid(
         return;
       }
 
-      if (event.key === "ArrowUp") {
+      if (direction === "up") {
         if (row > 0) {
-          event.preventDefault();
           const prevRowLength = gridRows[row - 1]?.length ?? 0;
           onFocusChange?.(
             clampPosition(
@@ -133,9 +153,72 @@ const ContentGrid = forwardRef(function ContentGrid(
               gridRows,
             ),
           );
+        }
+      }
+    },
+    [focusZone, gridRows, leaveToNav, onFocusChange, onNavigationEscape],
+  );
+
+  useEffect(() => {
+    if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (focusZone !== FOCUS_ZONE_CONTENT) return;
+
+      const { row, col } = clampPosition(focusedPosition, gridRows);
+      const rowLength = gridRows[row]?.length ?? 0;
+
+      if (event.key === "ArrowRight") {
+        if (col < rowLength - 1) {
+          event.preventDefault();
+          event.stopPropagation();
+          onFocusChange?.(clampPosition({ row, col: col + 1 }, gridRows));
+        }
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        event.stopPropagation();
+        if (col > 0) {
+          onFocusChange?.(clampPosition({ row, col: col - 1 }, gridRows));
           return;
         }
-        onNavigationEscape?.("up");
+        leaveToNav(row, col);
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        if (row < gridRows.length - 1) {
+          event.preventDefault();
+          event.stopPropagation();
+          const nextRowLength = gridRows[row + 1]?.length ?? 0;
+          onFocusChange?.(
+            clampPosition(
+              { row: row + 1, col: Math.min(col, nextRowLength - 1) },
+              gridRows,
+            ),
+          );
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        onNavigationEscape?.("down");
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        if (row > 0) {
+          event.preventDefault();
+          event.stopPropagation();
+          const prevRowLength = gridRows[row - 1]?.length ?? 0;
+          onFocusChange?.(
+            clampPosition(
+              { row: row - 1, col: Math.min(col, prevRowLength - 1) },
+              gridRows,
+            ),
+          );
+        }
         return;
       }
 
@@ -143,27 +226,33 @@ const ContentGrid = forwardRef(function ContentGrid(
         const item = gridRows[row]?.[col];
         if (item) {
           event.preventDefault();
+          event.stopPropagation();
           onSelect?.(item, clampPosition(focusedPosition, gridRows));
         }
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [
-    focused,
+    focusZone,
     focusedPosition,
     gridRows,
+    canEnterNavFromContent,
+    leaveToNav,
     onFocusChange,
     onNavigationEscape,
     onSelect,
   ]);
 
   useLayoutEffect(() => {
-    if (!focused) return;
+    if (!focused) {
+      itemRefs.current.forEach((node) => node?.blur());
+      return;
+    }
     const { row, col } = clampedPosition;
     const flatIndex = row * columns + col;
-    itemRefs.current[flatIndex]?.focus();
+    itemRefs.current[flatIndex]?.focus({ preventScroll: true });
     if (scrollIntoViewOnFocus) {
       itemRefs.current[flatIndex]?.scrollIntoView({
         block: "nearest",
@@ -172,12 +261,16 @@ const ContentGrid = forwardRef(function ContentGrid(
     }
   }, [focused, clampedPosition, columns, scrollIntoViewOnFocus]);
 
+  const gridWidth = columns * cardSize + Math.max(0, columns - 1) * cardGap;
+
   return (
     <div
       className="content-grid"
       style={{
+        "--content-grid-columns": columns,
         "--content-grid-card-size": `${cardSize}px`,
         "--content-grid-gap": `${cardGap}px`,
+        "--content-grid-width": `${gridWidth}px`,
       }}
     >
       {gridRows.map((rowItems, rowIndex) => (
@@ -193,6 +286,15 @@ const ContentGrid = forwardRef(function ContentGrid(
               rowIndex === clampedPosition.row &&
               colIndex === clampedPosition.col;
 
+            const cellNav = {
+              onLeft: (event) => handleGridArrow("left", rowIndex, colIndex, event),
+              onRight: (event) =>
+                handleGridArrow("right", rowIndex, colIndex, event),
+              onUp: (event) => handleGridArrow("up", rowIndex, colIndex, event),
+              onDown: (event) =>
+                handleGridArrow("down", rowIndex, colIndex, event),
+            };
+
             return (
               <ContentGridItem
                 key={item.id ?? `${rowIndex}-${colIndex}`}
@@ -203,6 +305,7 @@ const ContentGrid = forwardRef(function ContentGrid(
                 isFocused={isItemFocused}
                 renderItem={renderItem}
                 onItemRef={onItemRef}
+                cellNav={cellNav}
               />
             );
           })}

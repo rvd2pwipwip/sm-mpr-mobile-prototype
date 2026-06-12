@@ -22,6 +22,7 @@ import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
+import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
 import {
@@ -439,6 +440,7 @@ export default function LimitedHome() {
 
   const headerLayout = useHomeHeaderLayout();
   const scrollableHeader = headerLayout === HOME_HEADER_LAYOUT.SCROLL;
+  const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
   const headerProps = {
     layoutMode,
@@ -462,9 +464,11 @@ export default function LimitedHome() {
 
   return (
     <div
+      ref={shellRef}
       className={[
         "tv-home",
         "tv-home--limited",
+        "tv-screen-overlay",
         isStackedLayout ? "tv-home--limited-stacked" : "tv-home--limited-filter",
         scrollableHeader ? "tv-home--header-scroll" : "tv-home--header-sticky",
       ]
@@ -475,9 +479,11 @@ export default function LimitedHome() {
         Header {headerLayout} · Layout {layoutMode}
       </p>
       {!scrollableHeader ? (
-        <TvLimitedHomeHeaderSection {...headerProps} />
+        <div ref={headerRef} className="tv-screen-overlay__header">
+          <TvLimitedHomeHeaderSection {...headerProps} />
+        </div>
       ) : null}
-      <div ref={viewportRef} className="tv-home__scroll">
+      <div ref={viewportRef} className="tv-home__scroll tv-screen-overlay__scroll">
         <div
           ref={innerRef}
           className={innerClassName}

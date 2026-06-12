@@ -1,31 +1,10 @@
-/* Same flex + clipped scrollport model as `.tv-home` (parked vertical focus). */
+/* Overlay header + full-height scroll (see `TvScreenOverlayHeader.css`). */
 .tv-search-page {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   box-sizing: border-box;
 }
 
-.tv-search-page__scroll {
-  flex: 1;
-  min-height: 0;
-  box-sizing: border-box;
-  padding: 0;
-  overflow: hidden;
-}
-
-/*
- * Gap below the in-flow search header before first browse row (tabs or swimlane).
- * Figma `15822:35859`: header block ends at 185px; tabs / browse content at 230px
- * (45px). Music-only skips tabs but keeps the same 230px fold. Header height is
- * not repeated here — it already lives in `.tv-search-header` above the scrollport.
- * No horizontal padding — swimlanes are full-bleed (rings clip if padded here).
- */
 .tv-search-page__scroll-inner {
   gap: var(--tv-search-stack-gap);
-  padding-top: var(--tv-search-content-gap-after-header);
   box-sizing: border-box;
 }
 
