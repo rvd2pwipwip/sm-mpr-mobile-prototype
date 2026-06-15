@@ -51,6 +51,13 @@
   outline: none;
 }
 
+/* Native search field clear/decoration; TV uses the separate Clear button. */
+.tv-search-header__input::-webkit-search-cancel-button,
+.tv-search-header__input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .tv-search-header__search-icon {
   flex-shrink: 0;
   display: flex;
@@ -83,5 +90,17 @@
 
 .tv-search-header__clear-icon {
   display: block;
+  flex-shrink: 0;
+  width: var(--tv-header-button-icon-size);
+  height: var(--tv-header-button-icon-size);
+  background-color: currentColor;
+  mask-image: url("/close.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url("/close.svg");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
 }
 

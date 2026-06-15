@@ -27,6 +27,8 @@ export default function ContentTileSwimlane({
   onMore,
   hint,
   showTitle = true,
+  /** When set, tile with matching `item.id` shows the now-playing scrim (e.g. active podcast show). */
+  playingItemId = null,
 }) {
   const { enterContent } = useTvNavFocus();
 
@@ -83,6 +85,7 @@ export default function ContentTileSwimlane({
             imageUrl={item.thumbnail}
             title={item.title}
             focused={isFocused}
+            playing={playingItemId != null && playingItemId === item.id}
           />
         )}
       </KeyboardWrapper>

@@ -9,6 +9,8 @@ import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPag
 import TvSearchEpisodeDrillPage from "../components/search/TvSearchEpisodeDrillPage.jsx";
 import TvSearchLabelTile from "../components/search/TvSearchLabelTile.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
+import { usePlayback } from "../context/PlaybackContext.jsx";
+import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
 import {
   CATALOG_MORE_LANE_LABELS,
   getCatalogMoreItems,
@@ -26,6 +28,8 @@ export default function TvSearchCatalogMore() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { enabledSearchResultLanes } = useContentProfile();
+  const { session } = usePlayback();
+  const playingPodcastId = getActivePodcastShowId(session);
 
   const rawLane = params.get("lane");
   const rawQ = params.get("q") ?? "";
@@ -62,7 +66,9 @@ export default function TvSearchCatalogMore() {
         title={title}
         rows={items}
         emptyMessage={emptyMessage}
-        onSelectRow={({ podcast }) => navigate(`/podcast/${podcast.id}`)}
+        onSelectRow={({ podcast, episode }) =>
+          navigate(`/podcast/${podcast.id}/play/${episode.id}`)
+        }
       />
     );
   }
@@ -142,6 +148,10 @@ export default function TvSearchCatalogMore() {
                 title={item.title ?? item.name}
                 imageUrl={item.thumbnail}
                 focused={isFocused}
+                playing={
+                  activeLane === SEARCH_RESULT_LANE.podcasts &&
+                  playingPodcastId === item.id
+                }
               />
             )}
           </KeyboardWrapper>

@@ -26,7 +26,7 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 | **Preroll** | `showPlayerPreroll(userType)` + `GuestPrerollGraceContext` + `expandFromMiniPlayer` | Reuse **`TvPlayerPrerollAd`** |
 | **Account gates** | `userMaySubscribePodcasts`, `userMayBookmarkEpisodes`, `userMayDownloadEpisodesOffline` from **`@sm-mpr/shared/utils/userContentGates.js`** | Already on TV for music likes |
 | **Nav chrome** | Hide **`PrimaryNav`** on full podcast player (like music `/play`) | Extend **`TvShell`** regex |
-| **Episode list layout on info** | **List row** (`7545:22722`) as default | **Card** (`10841:24500`) reserved for grid / library surfaces |
+| **Episode list layout on info** | **List row** (`7545:22722`) on Podcast Info and Search More | **Card** (`10841:24500` / in-car `10841:25225`) in **horizontal swimlanes** (search results, library rows) |
 | **Mini player** | Shortcut to full player only (no ±15/+30 on TV nav) | Differs from mobile mini transport |
 | **Listen again / history** | Optional late phase | Mobile uses **`ListenHistoryContext`**; TV My Library is thin today |
 
@@ -210,34 +210,34 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 
 ---
 
-## Phase 5 — `PlaybackContext` + mini player (podcast variant)
+## Phase 5 — `PlaybackContext` + mini player (podcast variant) — **done**
 
 **Goal:** Same session loop as mobile Phase 5.
 
 1. Extend TV **`PlaybackContext`**:
-   - `upsertPodcastSession` (copy from mobile)
-   - `hideMiniOnFullPlayer` includes `/podcast/.../play/...`
-2. **`PrimaryNav`:** Show mini when `session.variant === "podcasts"` (same slot as music)
-3. Mini tap → `navigate(fullPlayerPath, { state: { expandFromMiniPlayer: true } })`
-4. Optional: podcast gradient token on mini (Figma music gradient today — product may want podcast accent later)
+   - `upsertPodcastSession` — **done** (Phase 4)
+   - `hideMiniOnFullPlayer` includes `/podcast/.../play/...` — **done**
+2. **`PrimaryNav`:** Show mini when `session.variant === "podcasts"` via `shouldShowTvMiniPlayer` — **done**
+3. Mini tap → `navigate(fullPlayerPath, { state: { expandFromMiniPlayer: true } })` — **done** (shared `openFullPlayer`)
+4. Podcast teal gradient on limited Home header mini (`tv-mini-player--podcasts`); nav mini unchanged (no fill)
 
 **Deliverable:** Play episode → full player (mini hidden) → Esc to info → **mini visible in nav** → Enter mini → full player without second preroll.
 
 ---
 
-## Phase 6 — Entry points (stop landing on stubs)
+## Phase 6 — Entry points (stop landing on stubs) — **done**
 
-Wire navigation that already points at `/podcast/:id`:
+All surfaces navigate to **`PodcastInfo`** (`/podcast/:id`) or play route; episode search hits open **show info** (mobile parity).
 
-| Source | Work |
-|--------|------|
-| **`BroadHome.jsx`** | Popular podcasts swimlane — already navigates |
-| **`LimitedHomeStackedBody.jsx`** | Category podcast lanes |
-| **`TvSearchResultsBody`**, **`TvSearchCatalogMore`** | Podcast + episode hits |
-| **`SearchPodcastsCategory`**, **`TvSearchPodcastsBrowseBody`** | Category drill grids |
-| **`SwimlaneMore`** | If podcast more routes exist |
+| Source | Status |
+|--------|--------|
+| **`BroadHome.jsx`** | `/podcast/:id`; More → `/search/podcasts`; now-playing scrim on active show |
+| **`LimitedHomeStackedBody.jsx`** | Podcast lanes + category More drill |
+| **`TvSearchResultsBody`**, **`TvSearchCatalogMore`** | Podcast tiles → info; episode rows → info |
+| **`SearchPodcastsCategory`**, **`TvSearchPodcastsBrowseBody`** | Category grids → info |
+| **`SwimlaneMore`** | No TV `/more/podcasts` route (Home More uses Search browse) |
 
-Episode hits from search: choose **show info** vs **play episode** — mobile episode rows on search go to show; keep parity unless UX asks for direct play.
+**`RequireContentType`** on `/podcast/*` routes — full MPR shows real pages; music-only profile still gets unavailable copy.
 
 **Deliverable:** No `TvContentTypeUnavailable` for podcasts in **full MPR** profile.
 

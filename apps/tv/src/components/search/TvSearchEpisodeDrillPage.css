@@ -1,4 +1,10 @@
-.tv-search-episode-drill__row {
-  padding-inline: var(--tv-swimlane-inline-start) var(--tv-swimlane-inline-end);
+.tv-search-episode-drill__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: var(--tv-content-padding-inline);
   box-sizing: border-box;
 }

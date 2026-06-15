@@ -19,6 +19,7 @@ import TvLimitedHomeHeaderSection from "../components/TvLimitedHomeHeaderSection
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useLimitedHomeEsc } from "../context/LimitedHomeEscContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
+import { shouldShowTvMiniPlayer } from "../utils/playbackMiniPlayer.js";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
@@ -108,10 +109,7 @@ export default function LimitedHome() {
   const filters = useMemo(() => getLimitedHomeFilters(), []);
   const showUpgrade = showUpgradeCallToAction(userType);
   const showHeaderMini =
-    isStackedLayout &&
-    miniPlayerVisible &&
-    session.active &&
-    session.variant === "music";
+    isStackedLayout && shouldShowTvMiniPlayer(miniPlayerVisible, session);
 
   const headerFocusSlots = useMemo(
     () =>
@@ -459,6 +457,7 @@ export default function LimitedHome() {
     miniPlayerSubtitle: session.subtitle,
     miniPlayerThumbnail: session.thumbnail,
     miniPlayerPlaying: !session.isPaused,
+    miniPlayerVariant: session.variant,
     onMiniPlayerSelect: openFullPlayer,
   };
 

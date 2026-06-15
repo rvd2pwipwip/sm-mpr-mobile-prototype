@@ -1,16 +1,24 @@
 import { useCallback, useMemo } from "react";
+import {
+  userMayBookmarkEpisodes,
+  userMayDownloadEpisodesOffline,
+} from "@sm-mpr/shared/utils/userContentGates.js";
+import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../../constants/homeFocusGroups.js";
-import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
+import { useAccountRequiredDialog } from "../../context/AccountRequiredDialogContext.jsx";
+import { useUserType } from "../../context/UserTypeContext.jsx";
+import TvEpisodeListItem from "../podcasts/TvEpisodeListItem.jsx";
 import { useScreenContentFocus } from "../../hooks/useScreenContentFocus.js";
 import { useTvScreenHeaderOffset } from "../../hooks/useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "../../hooks/useTvVerticalGroupScroll.js";
 import TvDrillScreenHeader from "../drill/TvDrillScreenHeader.jsx";
-import TvEpisodeRow from "./TvEpisodeRow.jsx";
 import "../drill/TvDrillScreen.css";
-import "./TvSearchEpisodeList.css";
+import "./TvSearchEpisodeDrillPage.css";
+
+const EPISODE_SLOTS = 3;
 
 /**
- * Full episode list for Search catalog More (vertical parked focus, one row per group).
+ * Search catalog More — full episode list (`TvEpisodeListItem` rows).
  */
 export default function TvSearchEpisodeDrillPage({
   screenId,
@@ -19,6 +27,16 @@ export default function TvSearchEpisodeDrillPage({
   emptyMessage,
   onSelectRow,
 }) {
+  const { userType } = useUserType();
+  const { openAccountRequiredDialog } = useAccountRequiredDialog();
+  const {
+    toggleBookmark,
+    toggleDownload,
+    getEpisodeProgress,
+    isBookmarked,
+    isDownloaded,
+  } = usePodcastUserState();
+
   const lastGroup = Math.max(0, rows.length - 1);
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
@@ -26,7 +44,7 @@ export default function TvSearchEpisodeDrillPage({
     /** @type {Record<number, number>} */
     const counts = {};
     for (let index = 0; index < rows.length; index += 1) {
-      counts[index] = 1;
+      counts[index] = EPISODE_SLOTS;
     }
     return counts;
   }, [rows.length]);
@@ -36,7 +54,10 @@ export default function TvSearchEpisodeDrillPage({
     focusedGroupIndex,
     handleMoveUp,
     handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
     isItemFocused,
+    getItemFocusIndex,
     getItemElement,
     enterNavFromContent,
   } = useScreenContentFocus(screenId, {
@@ -47,10 +68,11 @@ export default function TvSearchEpisodeDrillPage({
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
   });
 
-  const getFocusedElement = useCallback(
-    () => getItemElement(focusedGroupIndex, HOME_LANDING_ITEM_INDEX),
-    [getItemElement, focusedGroupIndex],
-  );
+  const getFocusedElement = useCallback(() => {
+    const itemIndex =
+      getItemFocusIndex(focusedGroupIndex) ?? HOME_LANDING_ITEM_INDEX;
+    return getItemElement(focusedGroupIndex, itemIndex);
+  }, [focusedGroupIndex, getItemElement, getItemFocusIndex]);
 
   const {
     viewportRef,
@@ -83,33 +105,51 @@ export default function TvSearchEpisodeDrillPage({
           {rows.length === 0 ? (
             <p className="tv-drill-screen__empty">{emptyMessage}</p>
           ) : (
-            rows.map((row, index) => (
-              <div
-                key={row.episode.id}
-                className="tv-home__scroll-group tv-search-episode-drill__row"
-                ref={(el) => registerGroupRef(index, el)}
-              >
-                <KeyboardWrapper
-                  ref={(node) => registerItemRef(index, 0, node)}
-                  onSelect={() => onSelectRow(row)}
-                  onUp={handleMoveUp}
-                  onDown={handleMoveDown}
-                  onLeft={enterNavFromContent}
+            <div className="tv-search-episode-drill__list">
+              {rows.map((row, index) => (
+                <div
+                  key={row.episode.id}
+                  className="tv-home__scroll-group"
+                  ref={(el) => registerGroupRef(index, el)}
                 >
-                  {(focusProps) => (
-                    <TvEpisodeRow
-                      {...focusProps}
-                      episodeTitle={row.episode.title}
-                      showTitle={row.podcast.title}
-                      thumbnail={
-                        row.episode.thumbnail ?? row.podcast.thumbnail
+                  <TvEpisodeListItem
+                    episode={row.episode}
+                    progressFraction={getEpisodeProgress(row.episode.id)}
+                    isBookmarked={isBookmarked(row.episode.id)}
+                    isDownloaded={isDownloaded(row.episode.id)}
+                    groupIndex={index}
+                    focusedIndex={getItemFocusIndex(index)}
+                    focused={focusedGroupIndex === index}
+                    registerItemRef={registerItemRef}
+                    onMoveUp={handleMoveUp}
+                    onMoveDown={handleMoveDown}
+                    onMoveLeft={enterNavFromContent}
+                    onMoveRight={handleMoveRight}
+                    onPlay={() => onSelectRow(row)}
+                    onToggleBookmark={() => {
+                      if (
+                        !isBookmarked(row.episode.id) &&
+                        !userMayBookmarkEpisodes(userType)
+                      ) {
+                        openAccountRequiredDialog("episodeBookmark");
+                        return;
                       }
-                      focused={isItemFocused(index, 0)}
-                    />
-                  )}
-                </KeyboardWrapper>
-              </div>
-            ))
+                      toggleBookmark(row.episode.id);
+                    }}
+                    onToggleDownload={() => {
+                      if (
+                        !isDownloaded(row.episode.id) &&
+                        !userMayDownloadEpisodesOffline(userType)
+                      ) {
+                        openAccountRequiredDialog("episodeOfflineDownload");
+                        return;
+                      }
+                      toggleDownload(row.episode.id);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>

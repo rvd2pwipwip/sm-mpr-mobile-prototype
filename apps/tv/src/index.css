@@ -96,6 +96,7 @@
 
   /* Card tokens (Phase 2+) */
   --tv-card-size: 308px;
+  --tv-episode-card-width: 656px;
   --tv-card-radius: 30px;
 
   /* TV buttons (SMTV03 tv-component-library Button medium) */

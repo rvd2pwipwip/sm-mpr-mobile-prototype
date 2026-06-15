@@ -1,9 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEARCH_RESULT_LANE } from "@sm-mpr/shared/constants/productProfile.js";
+import { usePlayback } from "../../context/PlaybackContext.jsx";
+import { getActivePodcastShowId } from "../../utils/playbackMiniPlayer.js";
+import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import ContentTileSwimlane from "../swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../swimlanes/MusicChannelSwimlane.jsx";
-import TvSearchEpisodeList from "./TvSearchEpisodeList.jsx";
+import TvEpisodeCardSwimlane from "../podcasts/TvEpisodeCardSwimlane.jsx";
 import TvSearchLabelTileSwimlane from "./TvSearchLabelTileSwimlane.jsx";
 import "./TvSearchResultsBody.css";
 
@@ -24,6 +27,9 @@ export default function TvSearchResultsBody({
   enterNavFromContent,
 }) {
   const navigate = useNavigate();
+  const { session } = usePlayback();
+  const { getEpisodeProgress } = usePodcastUserState();
+  const playingPodcastId = getActivePodcastShowId(session);
   const qEnc = encodeURIComponent(debouncedQuery.trim());
 
   const navigateCatalogMore = useCallback(
@@ -170,6 +176,7 @@ export default function TvSearchResultsBody({
                 sourceCount={results.podcasts.length}
                 onSelectItem={(item) => navigate(`/podcast/${item.id}`)}
                 onMore={() => navigateCatalogMore("podcasts")}
+                playingItemId={playingPodcastId}
                 {...laneProps(groupIndex)}
               />
             </div>
@@ -183,11 +190,15 @@ export default function TvSearchResultsBody({
               className="tv-home__scroll-group"
               ref={(node) => wrapGroup(groupIndex, node)}
             >
-              <TvSearchEpisodeList
+              <TvEpisodeCardSwimlane
+                title="Episodes"
                 rows={results.episodeRows}
                 sourceCount={results.episodeRows.length}
-                onSelectRow={({ podcast }) => navigate(`/podcast/${podcast.id}`)}
+                onSelectRow={({ podcast, episode }) =>
+                  navigate(`/podcast/${podcast.id}/play/${episode.id}`)
+                }
                 onMore={() => navigateCatalogMore("episodes")}
+                getProgressFraction={getEpisodeProgress}
                 {...laneProps(groupIndex)}
               />
             </div>

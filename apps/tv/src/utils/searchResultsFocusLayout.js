@@ -48,9 +48,7 @@ export function buildSearchResultsFocusLayout(results) {
     const slotCount = getMusicSwimlaneSlotCount(sourceCount);
 
     itemCounts[groupIndex] = slotCount;
-    if (laneId !== SEARCH_RESULT_LANE.episodes) {
-      swimlaneGroups.push(groupIndex);
-    }
+    swimlaneGroups.push(groupIndex);
     lanes.push({ laneId, groupIndex });
   }
 

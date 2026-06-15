@@ -22,14 +22,20 @@ export default function FixedSwimlane({
   registerSlotRef,
   renderSlot,
   className = "",
+  /** Override default square tile width (e.g. episode cards at 656px). */
+  slotWidth,
+  slotGap,
+  /** Return true when handled (e.g. intra-card focus before moving to next slot). */
+  onArrowRight,
+  onArrowLeft,
 }) {
   const { focusZone, canEnterNavFromContent } = useTvNavFocus();
   const viewportRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(false);
 
-  const cardSize = getTvCardSize();
-  const cardGap = getTvCardGap();
+  const cardSize = slotWidth ?? getTvCardSize();
+  const cardGap = slotGap ?? getTvCardGap();
   const cardFullWidth = cardSize + cardGap;
 
   useLayoutEffect(() => {
@@ -85,6 +91,11 @@ export default function FixedSwimlane({
       if (event.key === "ArrowRight") {
         event.preventDefault();
         event.stopPropagation();
+        if (
+          onArrowRight?.({ focusedIndex, slotCount }) === true
+        ) {
+          return;
+        }
         if (focusedIndex < slotCount - 1) {
           onFocusChange?.(focusedIndex + 1);
         }
@@ -94,6 +105,9 @@ export default function FixedSwimlane({
       if (event.key === "ArrowLeft") {
         event.preventDefault();
         event.stopPropagation();
+        if (onArrowLeft?.({ focusedIndex, slotCount }) === true) {
+          return;
+        }
         if (focusedIndex === 0) {
           if (canEnterNavFromContent) {
             onBoundaryLeft?.(event);
@@ -114,6 +128,8 @@ export default function FixedSwimlane({
     canEnterNavFromContent,
     onFocusChange,
     onBoundaryLeft,
+    onArrowRight,
+    onArrowLeft,
   ]);
 
   const viewportClass = ["fixed-swimlane__viewport", className]

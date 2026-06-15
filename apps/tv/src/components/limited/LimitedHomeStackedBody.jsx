@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePlayback } from "../../context/PlaybackContext.jsx";
+import { getActivePodcastShowId } from "../../utils/playbackMiniPlayer.js";
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
 import {
   getMusicChannelsByCategory,
@@ -35,6 +37,8 @@ export default function LimitedHomeStackedBody({
   laneGroupOffset = HOME_FIRST_SWIMLANE_GROUP,
 }) {
   const navigate = useNavigate();
+  const { session } = usePlayback();
+  const playingPodcastId = getActivePodcastShowId(session);
 
   const lanes = useMemo(
     () => buildLimitedHomeStackedLanes(activeBrowseTab),
@@ -112,6 +116,9 @@ export default function LimitedHomeStackedBody({
                     }
                     navigate(`/radio/${item.id}`);
                   }}
+                  playingItemId={
+                    lane.type === CONTENT_TYPE.podcasts ? playingPodcastId : null
+                  }
                   onMore={() => {
                     if (lane.type === CONTENT_TYPE.podcasts) {
                       navigate(

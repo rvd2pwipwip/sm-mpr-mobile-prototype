@@ -7,6 +7,7 @@ import FocusableButton from "../focus/FocusableButton.jsx";
 import { useContentProfile } from "../../context/ContentProfileContext.jsx";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
 import { useTerritory } from "../../context/TerritoryContext.jsx";
+import { shouldShowTvMiniPlayer } from "../../utils/playbackMiniPlayer.js";
 import { FOCUS_ZONE_NAV, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import TvMiniPlayer from "./TvMiniPlayer.jsx";
 import "./PrimaryNav.css";
@@ -76,11 +77,7 @@ export default function PrimaryNav() {
     moveNavFocus,
   } = useTvNavFocus();
 
-  const showMini =
-    miniPlayerVisible &&
-    session.active &&
-    session.variant === "music" &&
-    session.fullPlayerPath;
+  const showMini = shouldShowTvMiniPlayer(miniPlayerVisible, session);
 
   const openFullPlayer = useCallback(() => {
     if (!session.fullPlayerPath) return;
@@ -202,6 +199,7 @@ export default function PrimaryNav() {
                     {...focusProps}
                     expanded={navExpanded}
                     focused={miniFocused}
+                    variant={session.variant}
                     playing={!session.isPaused}
                     thumbnail={session.thumbnail}
                     title={session.title}

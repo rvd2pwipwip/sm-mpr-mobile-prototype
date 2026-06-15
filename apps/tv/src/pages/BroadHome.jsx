@@ -37,6 +37,7 @@ import {
 } from "../constants/homeHeaderLayout.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
+import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
 import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 
 function bannerAfterSwimlaneId(visibleIds, showBannerAd) {
@@ -212,6 +213,7 @@ export default function BroadHome() {
 
   const playingChannelId =
     session.active && session.channelId ? session.channelId : null;
+  const playingPodcastId = getActivePodcastShowId(session);
 
   const openChannelInfo = (channel) => {
     navigate(`/music/${channel.id}`);
@@ -303,6 +305,7 @@ export default function BroadHome() {
             onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
             onSelectItem={(item) => navigate(`/podcast/${item.id}`)}
             onMore={() => navigate("/search/podcasts")}
+            playingItemId={playingPodcastId}
             {...swimlaneNav}
           />
         );

@@ -92,6 +92,7 @@ export default function TvLimitedHomeHeaderStacked({
   miniPlayerSubtitle = "",
   miniPlayerThumbnail = "",
   miniPlayerPlaying = true,
+  miniPlayerVariant = "music",
   onMiniPlayerSelect,
 }) {
   const navigate = useNavigate();
@@ -243,6 +244,7 @@ export default function TvLimitedHomeHeaderStacked({
                       registerItemRef?.(groupIndex, miniIndex, node);
                     }}
                     expanded
+                    variant={miniPlayerVariant}
                     playing={miniPlayerPlaying}
                     thumbnail={miniPlayerThumbnail}
                     title={miniPlayerTitle}

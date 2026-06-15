@@ -6,6 +6,8 @@ import {
 } from "@sm-mpr/shared/data/podcasts.js";
 import ContentTileCard from "../components/cards/ContentTileCard.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
+import { usePlayback } from "../context/PlaybackContext.jsx";
+import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
 import { gridCellKeyboardProps } from "../components/grid/contentGridKeyboard.js";
 import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPage.jsx";
 
@@ -13,6 +15,8 @@ import TvSearchBrowseDrillPage from "../components/search/TvSearchBrowseDrillPag
 export default function SearchPodcastsCategory() {
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const { session } = usePlayback();
+  const playingPodcastId = getActivePodcastShowId(session);
 
   const category = categoryId ? getPodcastCategoryById(categoryId) : null;
   const podcasts = categoryId ? getPodcastsByCategory(categoryId) : [];
@@ -42,6 +46,7 @@ export default function SearchPodcastsCategory() {
               title={podcast.title}
               imageUrl={podcast.thumbnail}
               focused={isFocused}
+              playing={playingPodcastId === podcast.id}
             />
           )}
         </KeyboardWrapper>

@@ -126,11 +126,7 @@ export default function TvSearchBrowseHeader({
                 onClick={onClear}
                 aria-label="Clear search"
               >
-                <img
-                  src="/close.svg"
-                  alt=""
-                  width={40}
-                  height={40}
+                <span
                   className="tv-search-header__clear-icon"
                   aria-hidden="true"
                 />

@@ -10,6 +10,7 @@ const TvMiniPlayer = forwardRef(function TvMiniPlayer(
   {
     expanded = false,
     focused = false,
+    variant = "music",
     playing = true,
     thumbnail,
     title,
@@ -24,6 +25,7 @@ const TvMiniPlayer = forwardRef(function TvMiniPlayer(
   const rootClass = [
     "tv-mini-player",
     expanded ? "tv-mini-player--expanded" : "tv-mini-player--collapsed",
+    variant === "podcasts" ? "tv-mini-player--podcasts" : "",
     className,
   ]
     .filter(Boolean)
@@ -52,6 +54,7 @@ const TvMiniPlayer = forwardRef(function TvMiniPlayer(
           ? `Now playing: ${label}. Open full player.`
           : "Open full player"
       }
+      data-variant={variant}
       {...rest}
     >
       <span className="tv-mini-player__inner">

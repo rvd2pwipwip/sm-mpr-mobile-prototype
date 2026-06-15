@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePlayback } from "../../context/PlaybackContext.jsx";
+import { getActivePodcastShowId } from "../../utils/playbackMiniPlayer.js";
 import { getPodcastsByCategory } from "@sm-mpr/shared/data/podcasts.js";
 import ContentTileSwimlane from "../swimlanes/ContentTileSwimlane.jsx";
 import "./TvSearchPodcastsBrowseBody.css";
@@ -19,6 +21,8 @@ export default function TvSearchPodcastsBrowseBody({
   enterNavFromContent,
 }) {
   const navigate = useNavigate();
+  const { session } = usePlayback();
+  const playingPodcastId = getActivePodcastShowId(session);
 
   const wrapGroup = useCallback(
     (groupIndex, node) => {
@@ -57,6 +61,7 @@ export default function TvSearchPodcastsBrowseBody({
               onMoveUp={onMoveUp}
               onMoveDown={onMoveDown}
               onSelectItem={(item) => navigate(`/podcast/${item.id}`)}
+              playingItemId={playingPodcastId}
               onMore={() =>
                 navigate(`/search/browse/podcasts/category/${category.id}`)
               }

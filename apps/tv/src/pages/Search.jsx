@@ -20,6 +20,7 @@ import TvSearchMusicBrowseBody from "../components/search/TvSearchMusicBrowseBod
 import TvSearchPodcastsBrowseBody from "../components/search/TvSearchPodcastsBrowseBody.jsx";
 import TvSearchRadioBrowseBody from "../components/search/TvSearchRadioBrowseBody.jsx";
 import TvSearchResultsBody from "../components/search/TvSearchResultsBody.jsx";
+import TvSearchResultsEmpty from "../components/search/TvSearchResultsEmpty.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
@@ -84,7 +85,8 @@ export default function Search() {
   );
   const stackKeySeenRef = useRef(null);
   const skipUrlSyncRef = useRef(false);
-  const prevSearchActiveRef = useRef(false);
+  /** Init from current query so remount (e.g. Esc back from player) is not treated as "user just typed". */
+  const prevSearchActiveRef = useRef(query.trim().length > 0);
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
   const showBrowseTabs = query.trim().length === 0;
@@ -127,7 +129,7 @@ export default function Search() {
     return buildSearchResultsFocusLayout(searchResults);
   }, [isSearchActive, searchResults]);
 
-  const isResultsScrollVisible = Boolean(resultsFocusLayout);
+  const isResultsScrollVisible = isSearchActive;
 
   const isBodyScrollVisible =
     isBrowseScrollVisible || isResultsScrollVisible;
@@ -253,6 +255,22 @@ export default function Search() {
     resolveMoveDown,
     resolveMoveUp,
   });
+
+  useLayoutEffect(() => {
+    if (!isSearchActive || searchResults.anyHits) return;
+    const maxGroup = showHeaderBrowseTabs
+      ? SEARCH_FOCUS.browseTabs
+      : SEARCH_FOCUS.searchRow;
+    if (focusedGroupIndex > maxGroup) {
+      setFocusedGroupIndex(SEARCH_FOCUS.searchRow);
+    }
+  }, [
+    isSearchActive,
+    searchResults.anyHits,
+    focusedGroupIndex,
+    setFocusedGroupIndex,
+    showHeaderBrowseTabs,
+  ]);
 
   useLayoutEffect(() => {
     if (isSearchActive && !prevSearchActiveRef.current) {
@@ -410,13 +428,7 @@ export default function Search() {
   function renderBody() {
     if (isSearchActive) {
       if (!searchResults.anyHits) {
-        return (
-          <div className="tv-search-page__body">
-            <p className="tv-search-page__hint">
-              No results for &ldquo;{debouncedQuery.trim()}&rdquo;.
-            </p>
-          </div>
-        );
+        return <TvSearchResultsEmpty query={debouncedQuery} />;
       }
 
       if (resultsFocusLayout) {
