@@ -28,7 +28,7 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 | **Nav chrome** | Hide **`PrimaryNav`** on full podcast player (like music `/play`) | Extend **`TvShell`** regex |
 | **Episode list layout on info** | **List row** (`7545:22722`) on Podcast Info and Search More | **Card** (`10841:24500` / in-car `10841:25225`) in **horizontal swimlanes** (search results, library rows) |
 | **Mini player** | Shortcut to full player only (no ±15/+30 on TV nav) | Differs from mobile mini transport |
-| **Listen again / history** | Optional late phase | Mobile uses **`ListenHistoryContext`**; TV My Library is thin today |
+| **Listen again / history** | **Done** — shared `ListenHistoryContext`; compact swimlane on broad + limited Home |
 
 **Playback speed sequence (tap advances, wraps):** `0.6` → `0.8` → `1` → `1.2` → `1.4` → `1.6` → `1.8` → `2` → `0.6` — display with `x` suffix.
 
@@ -285,13 +285,16 @@ Conditional rows:
 
 ---
 
-## Phase 9 — Listen history + My Library (optional / later)
+## Phase 9 — Listen history + Listen again
 
-- Port or share **`ListenHistoryContext`**; `recordPodcastShowListen` on meaningful play
-- **Listen again** swimlane on TV Home (if / when Home ships mixed-type listen again)
-- My Library podcast history segment (mobile has `LibraryPodcastUserSwimlanes`)
+- Shared **`ListenHistoryContext`** on TV; **`recordMusicChannelListen`** / **`recordPodcastShowListen`** after preroll gate
+- **Listen again** on **broad Home** (mixed, profile-filtered) and **limited Home** (tab-scoped by kind)
+- **Compact thumb-only tiles** (`--tv-card-size-compact`, 192px) — no labels, mobile parity
+- **More** drill: `/more/listen-again` (full-size labeled grid)
 
-Defer until Phases 1–6 feel solid.
+**Status:** Done — `TvListenAgainSwimlane`, shared listen history module, Home wiring.
+
+**Deferred:** My Library typed history rails (music / podcasts / radio segments).
 
 ---
 

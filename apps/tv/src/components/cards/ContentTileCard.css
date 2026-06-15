@@ -9,6 +9,25 @@
   cursor: pointer;
 }
 
+.tv-content-tile--compact {
+  width: var(--tv-card-size-compact);
+}
+
+.tv-content-tile--compact .tv-content-tile__thumb-wrap {
+  width: var(--tv-card-size-compact);
+  height: var(--tv-card-size-compact);
+}
+
+.tv-content-tile--ghost {
+  pointer-events: none;
+  cursor: default;
+}
+
+.tv-content-tile__thumbnail--ghost {
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  box-shadow: none;
+}
+
 /* Outline ring on wrap only — thumbnail stays unchanged (SMTV03 / plan thumb-wrap pattern). */
 .tv-content-tile__thumb-wrap {
   width: var(--tv-card-size);

@@ -21,6 +21,7 @@ import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
 import SearchIndexRedirect from "./routes/SearchIndexRedirect.jsx";
 import { PodcastUserStateProvider } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
+import { ListenHistoryProvider } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
 import RequireContentType from "./components/RequireContentType.jsx";
 import TvContentTypeUnavailable from "./pages/TvContentTypeUnavailable.jsx";
@@ -42,6 +43,7 @@ import FocusDemo from "./pages/FocusDemo.jsx";
 import MusicChannelInfo from "./pages/MusicChannelInfo.jsx";
 import MusicPlayer from "./pages/MusicPlayer.jsx";
 import SwimlaneMore from "./pages/SwimlaneMore.jsx";
+import ListenAgainMore from "./pages/ListenAgainMore.jsx";
 import TvUserTypePreview from "./pages/TvUserTypePreview.jsx";
 
 /** Remount when channel or user type changes so preroll + transport reset. */
@@ -69,6 +71,7 @@ export default function App() {
           <GuestMusicSkipProvider>
             <GuestPrerollGraceProvider>
               <LikesProvider>
+                <ListenHistoryProvider>
                 <PodcastUserStateProvider>
                 <PlaybackProvider>
                   <TerritoryProvider>
@@ -176,6 +179,10 @@ export default function App() {
                                 path="/music/:channelId/play"
                                 element={<MusicPlayerRoute />}
                               />
+                              <Route
+                                path="/more/listen-again"
+                                element={<ListenAgainMore />}
+                              />
                               <Route path="/more/music/:categoryId?" element={<SwimlaneMore />} />
                               <Route
                                 path="/more/recommendations"
@@ -201,6 +208,7 @@ export default function App() {
                   </TerritoryProvider>
                 </PlaybackProvider>
                 </PodcastUserStateProvider>
+                </ListenHistoryProvider>
               </LikesProvider>
             </GuestPrerollGraceProvider>
           </GuestMusicSkipProvider>

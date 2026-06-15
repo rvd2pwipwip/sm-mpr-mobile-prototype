@@ -8,6 +8,16 @@ export function getTvCardSize() {
   return Number.isNaN(parsed) ? 308 : parsed;
 }
 
+/** Compact square tile (Listen again — labels hidden). */
+export function getTvCardSizeCompact() {
+  if (typeof window === "undefined") return 192;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(
+    "--tv-card-size-compact",
+  );
+  const parsed = parseInt(raw, 10);
+  return Number.isNaN(parsed) ? 192 : parsed;
+}
+
 /** Read card row gap from CSS tokens (default 30). */
 export function getTvCardGap() {
   if (typeof window === "undefined") return 30;

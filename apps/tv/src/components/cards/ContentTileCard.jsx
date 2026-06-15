@@ -19,6 +19,8 @@ const ContentTileCard = forwardRef(function ContentTileCard(
     imageUrl,
     focused = false,
     playing = false,
+    compact = false,
+    ghost = false,
     onKeyDown,
     onClick,
   },
@@ -30,7 +32,16 @@ const ContentTileCard = forwardRef(function ContentTileCard(
     setImageLoaded(true);
   }, [imageUrl]);
 
-  const showImage = Boolean(imageUrl) && imageLoaded;
+  const showImage = Boolean(imageUrl) && imageLoaded && !ghost;
+  const showTitle = !compact && !ghost && Boolean(title);
+
+  const rootClass = [
+    "tv-content-tile",
+    compact ? "tv-content-tile--compact" : "",
+    ghost ? "tv-content-tile--ghost" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const thumbWrapClass = [
     "tv-content-tile__thumb-wrap",
@@ -42,6 +53,7 @@ const ContentTileCard = forwardRef(function ContentTileCard(
   const thumbnailClass = [
     "tv-content-tile__thumbnail",
     playing ? "tv-content-tile__thumbnail--playing" : "",
+    ghost ? "tv-content-tile__thumbnail--ghost" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -49,11 +61,12 @@ const ContentTileCard = forwardRef(function ContentTileCard(
   return (
     <div
       ref={ref}
-      className="tv-content-tile"
-      tabIndex={-1}
-      onKeyDown={onKeyDown}
-      onClick={onClick}
-      role="button"
+      className={rootClass}
+      tabIndex={ghost ? -1 : -1}
+      onKeyDown={ghost ? undefined : onKeyDown}
+      onClick={ghost ? undefined : onClick}
+      role={ghost ? "presentation" : "button"}
+      aria-hidden={ghost || undefined}
     >
       <div className={thumbWrapClass}>
         <div className={thumbnailClass}>
@@ -62,8 +75,8 @@ const ContentTileCard = forwardRef(function ContentTileCard(
             className="tv-content-tile__img"
             src={imageUrl}
             alt=""
-            width={308}
-            height={308}
+            width={compact ? 192 : 308}
+            height={compact ? 192 : 308}
             loading="lazy"
             decoding="async"
             onError={() => setImageLoaded(false)}
@@ -80,7 +93,7 @@ const ContentTileCard = forwardRef(function ContentTileCard(
         ) : null}
         </div>
       </div>
-      <p className="tv-content-tile__title">{title}</p>
+      {showTitle ? <p className="tv-content-tile__title">{title}</p> : null}
     </div>
   );
 });

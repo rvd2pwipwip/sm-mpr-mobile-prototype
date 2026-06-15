@@ -1,0 +1,8 @@
+.tv-listen-again-swimlane__more {
+  width: var(--tv-card-size-compact);
+}
+
+.tv-listen-again-swimlane__more .tv-content-tile__thumb-wrap {
+  width: var(--tv-card-size-compact);
+  height: var(--tv-card-size-compact);
+}

@@ -27,6 +27,7 @@ import TvUpgradeButton from "../components/TvUpgradeButton.jsx";
 import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
@@ -72,6 +73,7 @@ export default function PodcastPlayer() {
   const { enterContent } = useTvNavFocus();
   const { session, upsertPodcastSession } = usePlayback();
   const { graceActive } = useGuestPrerollGrace();
+  const { recordPodcastShowListen } = useListenHistory();
   const { userType, setUserType } = useUserType();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
 
@@ -100,6 +102,7 @@ export default function PodcastPlayer() {
   getEpisodeProgressRef.current = getEpisodeProgress;
   const setEpisodeProgressRef = useRef(setEpisodeProgress);
   setEpisodeProgressRef.current = setEpisodeProgress;
+  const listenHistoryRecordedForEpisodeRef = useRef(null);
 
   const podcast =
     podcastId && typeof podcastId === "string"
@@ -220,6 +223,27 @@ export default function PodcastPlayer() {
     needsPreroll,
     prerollComplete,
     position01,
+  ]);
+
+  useEffect(() => {
+    listenHistoryRecordedForEpisodeRef.current = null;
+  }, [episode?.id]);
+
+  useEffect(() => {
+    if (!podcast || !episode) return;
+    if (needsPreroll && !prerollComplete) return;
+    if (listenHistoryRecordedForEpisodeRef.current === episode.id) return;
+    if (!playing && position01 <= 0.05) return;
+    listenHistoryRecordedForEpisodeRef.current = episode.id;
+    recordPodcastShowListen(podcast.id);
+  }, [
+    podcast?.id,
+    episode?.id,
+    needsPreroll,
+    prerollComplete,
+    playing,
+    position01,
+    recordPodcastShowListen,
   ]);
 
   if (!podcastId) {

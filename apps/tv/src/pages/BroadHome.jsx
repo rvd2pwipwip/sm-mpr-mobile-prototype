@@ -20,9 +20,11 @@ import { showVisualAds } from "@sm-mpr/shared/utils/userTierRules.js";
 import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
 import TvHomeBanner from "../components/TvHomeBanner.jsx";
 import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
+import TvListenAgainSwimlane from "../components/swimlanes/TvListenAgainSwimlane.jsx";
 import ContentTileSwimlane from "../components/swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import {
@@ -38,7 +40,10 @@ import {
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
-import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
+import {
+  getListenAgainSwimlaneSlotCount,
+  getMusicSwimlaneSlotCount,
+} from "../utils/swimlaneUtils.js";
 
 function bannerAfterSwimlaneId(visibleIds, showBannerAd) {
   if (!showBannerAd) return null;
@@ -58,8 +63,16 @@ export default function BroadHome() {
   const navigate = useNavigate();
   const { session } = usePlayback();
   const { userType } = useUserType();
-  const { enabledContentTypes, isMusicOnlyProfile } = useContentProfile();
+  const { enabledContentTypes, isMusicOnlyProfile, filterListenHistory } =
+    useContentProfile();
+  const { items: listenHistoryItems } = useListenHistory();
   const showBannerAd = showVisualAds(userType);
+
+  const listenAgainFiltered = useMemo(
+    () => filterListenHistory(listenHistoryItems),
+    [filterListenHistory, listenHistoryItems],
+  );
+  const showListenAgain = listenAgainFiltered.length > 0;
 
   const recommendations = useMemo(() => getRecommendationsMusicChannels(), []);
   const newReleaseChannels = useMemo(
@@ -134,6 +147,15 @@ export default function BroadHome() {
     const lanes = [];
     let groupIndex = HOME_FIRST_SWIMLANE_GROUP;
 
+    if (showListenAgain) {
+      lanes.push({
+        id: BROAD_HOME_SWIMLANE_ID.listenAgain,
+        groupIndex,
+        slotCount: getListenAgainSwimlaneSlotCount(listenAgainFiltered.length),
+      });
+      groupIndex += 1;
+    }
+
     for (const swimlane of visibleTvSwimlanes) {
       lanes.push({
         id: swimlane.id,
@@ -167,7 +189,7 @@ export default function BroadHome() {
           HOME_FIRST_SWIMLANE_GROUP,
       },
     };
-  }, [visibleTvSwimlanes, slotCountById]);
+  }, [visibleTvSwimlanes, slotCountById, showListenAgain, listenAgainFiltered.length]);
 
   const bannerAfterLaneId = bannerAfterSwimlaneId(
     visibleTvSwimlanes.map((s) => s.id),
@@ -241,6 +263,22 @@ export default function BroadHome() {
 
   function renderSwimlane(lane) {
     switch (lane.id) {
+      case BROAD_HOME_SWIMLANE_ID.listenAgain:
+        return (
+          <TvListenAgainSwimlane
+            historyItems={listenAgainFiltered}
+            groupIndex={lane.groupIndex}
+            playingChannelId={playingChannelId}
+            playingPodcastId={playingPodcastId}
+            focused={isContentGroupActive(lane.groupIndex)}
+            focusedIndex={getItemFocusIndex(lane.groupIndex)}
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
+            registerItemRef={registerItemRef}
+            onMoveUp={handleMoveUp}
+            onMoveDown={handleMoveDown}
+            onBoundaryLeft={enterNavFromContent}
+          />
+        );
       case BROAD_HOME_SWIMLANE_ID.mostPopularMusic:
         return (
           <MusicChannelSwimlane

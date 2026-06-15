@@ -6,7 +6,7 @@ import "./SwimlaneMoreTile.css";
  * Trailing square More tile (308px) for fixed swimlanes.
  */
 const SwimlaneMoreTile = forwardRef(function SwimlaneMoreTile(
-  { focused = false, onKeyDown, onClick },
+  { focused = false, onKeyDown, onClick, className = "" },
   ref,
 ) {
   const thumbWrapClass = [
@@ -19,7 +19,9 @@ const SwimlaneMoreTile = forwardRef(function SwimlaneMoreTile(
   return (
     <div
       ref={ref}
-      className="tv-content-tile swimlane-more-tile"
+      className={["tv-content-tile swimlane-more-tile", className]
+        .filter(Boolean)
+        .join(" ")}
       tabIndex={-1}
       role="button"
       onKeyDown={onKeyDown}

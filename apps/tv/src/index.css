@@ -96,6 +96,8 @@
 
   /* Card tokens (Phase 2+) */
   --tv-card-size: 308px;
+  /* Listen again — thumb only, no labels (mobile compact parity ~62% of standard). */
+  --tv-card-size-compact: 192px;
   --tv-episode-card-width: 656px;
   --tv-card-radius: 30px;
 

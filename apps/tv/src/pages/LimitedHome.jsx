@@ -2,6 +2,8 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { useNavigate } from "react-router-dom";
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
 import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
+import { LISTEN_HISTORY_KIND_FOR_BROWSE_TAB } from "@sm-mpr/shared/constants/listenHistory.js";
 import {
   getBrowseTabsForProfile,
   resolveLimitedBrowseTab,
@@ -56,7 +58,10 @@ import {
 } from "../utils/limitedHomeHeaderFocus.js";
 import { buildLimitedHomeStackedLanes } from "../utils/limitedHomeStackedLanes.js";
 import { buildTvPodcastLibraryRails } from "../utils/tvPodcastLibraryRails.js";
-import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
+import {
+  getListenAgainSwimlaneSlotCount,
+  getMusicSwimlaneSlotCount,
+} from "../utils/swimlaneUtils.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 
 export default function LimitedHome() {
@@ -74,6 +79,7 @@ export default function LimitedHome() {
   const {
     enabledContentTypes,
     shouldShowBrowseContentSwitcher,
+    filterListenHistory,
   } = useContentProfile();
 
   const browseTabs = useMemo(
@@ -150,6 +156,25 @@ export default function LimitedHome() {
     [activeFilterId, isMusicBrowse, isStackedLayout],
   );
 
+  const { items: listenHistoryItems } = useListenHistory();
+
+  const tabListenItems = useMemo(() => {
+    if (!isStackedLayout) return [];
+    const kind = LISTEN_HISTORY_KIND_FOR_BROWSE_TAB[effectiveBrowseTab];
+    if (!kind) return [];
+    return filterListenHistory(listenHistoryItems).filter(
+      (item) => item.kind === kind,
+    );
+  }, [
+    isStackedLayout,
+    effectiveBrowseTab,
+    filterListenHistory,
+    listenHistoryItems,
+  ]);
+
+  const listenAgainLaneCount =
+    isStackedLayout && tabListenItems.length > 0 ? 1 : 0;
+
   const podcastUserState = usePodcastUserState();
   const podcastLibraryRails = useMemo(() => {
     if (!isStackedLayout || effectiveBrowseTab !== CONTENT_TYPE.podcasts) {
@@ -175,7 +200,7 @@ export default function LimitedHome() {
   );
 
   const stackedBodyLaneCount =
-    podcastLibraryRails.length + stackedLanes.length;
+    listenAgainLaneCount + podcastLibraryRails.length + stackedLanes.length;
 
   const swimlaneSlotCount =
     !isStackedLayout && isMusicBrowse
@@ -196,13 +221,22 @@ export default function LimitedHome() {
       const swimlaneGroups = [];
 
       podcastLibraryRails.forEach((rail, index) => {
-        const groupIndex = laneGroupOffset + index;
+        const groupIndex = laneGroupOffset + listenAgainLaneCount + index;
         itemCounts[groupIndex] = rail.slotCount;
         swimlaneGroups.push(groupIndex);
       });
 
+      if (listenAgainLaneCount > 0) {
+        const groupIndex = laneGroupOffset;
+        itemCounts[groupIndex] = getListenAgainSwimlaneSlotCount(
+          tabListenItems.length,
+        );
+        swimlaneGroups.unshift(groupIndex);
+      }
+
       stackedLanes.forEach((lane, index) => {
-        const groupIndex = laneGroupOffset + podcastLibraryRails.length + index;
+        const groupIndex =
+          laneGroupOffset + listenAgainLaneCount + podcastLibraryRails.length + index;
         itemCounts[groupIndex] = lane.slotCount;
         swimlaneGroups.push(groupIndex);
       });
@@ -263,6 +297,8 @@ export default function LimitedHome() {
     headerItemCount,
     bannerVisible,
     podcastLibraryRails,
+    listenAgainLaneCount,
+    tabListenItems.length,
     stackedLanes,
     stackedBodyLaneCount,
     isMusicBrowse,

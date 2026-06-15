@@ -15,6 +15,7 @@ import {
   DEFAULT_CONTENT_PROFILE_MODE,
   enabledContentTypesForMode,
   enabledSearchResultLanes,
+  filterListenHistoryByProfile,
   isContentTypeEnabled as isContentTypeEnabledForTypes,
   shouldShowBrowseContentSwitcher,
 } from "@sm-mpr/shared/constants/productProfile.js";
@@ -65,6 +66,8 @@ export function ContentProfileProvider({ children }) {
         enabledContentTypes,
       ),
       enabledSearchResultLanes: enabledSearchResultLanes(enabledContentTypes),
+      filterListenHistory: (historyItems) =>
+        filterListenHistoryByProfile(historyItems, enabledContentTypes),
       isMusicOnlyProfile:
         contentProfileMode === CONTENT_PROFILE_MODE.musicOnly,
     }),

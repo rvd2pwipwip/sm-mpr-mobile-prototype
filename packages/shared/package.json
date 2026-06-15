@@ -21,6 +21,7 @@
     "./utils/userTierRules.js": "./utils/userTierRules.js",
     "./utils/userContentGates.js": "./utils/userContentGates.js",
     "./constants/searchBrowsePaths.js": "./constants/searchBrowsePaths.js",
+    "./constants/listenHistory.js": "./constants/listenHistory.js",
     "./constants/podcastSearchLibrary.js": "./constants/podcastSearchLibrary.js",
     "./data/musicArtists.js": "./data/musicArtists.js",
     "./data/radioInternationalBrowse.js": "./data/radioInternationalBrowse.js",
@@ -28,7 +29,9 @@
     "./constants/podcastPlayback.js": "./constants/podcastPlayback.js",
     "./utils/podcastDuration.js": "./utils/podcastDuration.js",
     "./utils/deriveContinueListening.js": "./utils/deriveContinueListening.js",
-    "./context/PodcastUserStateContext.jsx": "./context/PodcastUserStateContext.jsx"
+    "./context/PodcastUserStateContext.jsx": "./context/PodcastUserStateContext.jsx",
+    "./context/ListenHistoryContext.jsx": "./context/ListenHistoryContext.jsx",
+    "./utils/listenAgainItems.js": "./utils/listenAgainItems.js"
   },
   "peerDependencies": {
     "react": "^19.0.0"

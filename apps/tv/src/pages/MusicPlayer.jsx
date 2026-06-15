@@ -8,6 +8,7 @@ import TvMusicSkipButton from "../components/player/TvMusicSkipButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
 import TvPlayerTransport from "../components/player/TvPlayerTransport.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
@@ -38,6 +39,7 @@ export default function MusicPlayer() {
   const { enterContent } = useTvNavFocus();
   const { session, upsertMusicSession } = usePlayback();
   const { graceActive } = useGuestPrerollGrace();
+  const { recordMusicChannelListen } = useListenHistory();
   const { userType } = useUserType();
 
   const needsPreroll = showPlayerPreroll(userType);
@@ -102,6 +104,12 @@ export default function MusicPlayer() {
       isPaused: !playing,
     });
   }, [channel, needsPreroll, prerollComplete, playing, upsertMusicSession]);
+
+  useEffect(() => {
+    if (!channel) return;
+    if (needsPreroll && !prerollComplete) return;
+    recordMusicChannelListen(channel.id);
+  }, [channel?.id, needsPreroll, prerollComplete, recordMusicChannelListen]);
 
   if (!channel) {
     return <Navigate to="/" replace />;
