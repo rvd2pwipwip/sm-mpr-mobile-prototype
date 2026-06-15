@@ -39,6 +39,8 @@ import TvSearchCatalogMore from "./pages/TvSearchCatalogMore.jsx";
 import TvSearchRouteStub from "./pages/TvSearchRouteStub.jsx";
 import TvSearchTagsMore from "./pages/TvSearchTagsMore.jsx";
 import MyLibrary from "./pages/MyLibrary.jsx";
+import MyLibraryHistoryMore from "./pages/MyLibraryHistoryMore.jsx";
+import MyLibraryLikesMore from "./pages/MyLibraryLikesMore.jsx";
 import FocusDemo from "./pages/FocusDemo.jsx";
 import MusicChannelInfo from "./pages/MusicChannelInfo.jsx";
 import MusicPlayer from "./pages/MusicPlayer.jsx";
@@ -173,6 +175,22 @@ export default function App() {
                                 }
                               />
                               <Route path="/my-library" element={<MyLibrary />} />
+                              <Route
+                                path="/my-library/history/:historySegment"
+                                element={<MyLibraryHistoryMore />}
+                              />
+                              <Route
+                                path="/my-library/likes/:likeKind"
+                                element={<MyLibraryLikesMore />}
+                              />
+                              <Route
+                                path="/info/contact"
+                                element={<TvSearchRouteStub title="Contact us" />}
+                              />
+                              <Route
+                                path="/info/about"
+                                element={<TvSearchRouteStub title="About" />}
+                              />
                               <Route path="/focus-demo" element={<FocusDemo />} />
                               <Route path="/music/:channelId" element={<MusicChannelInfo />} />
                               <Route

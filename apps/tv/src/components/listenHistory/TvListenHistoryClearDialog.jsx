@@ -13,7 +13,12 @@ const BUTTON = {
 /**
  * Listen again Clear speed bump (mobile `ListenAgainMore` / `AppStackedDialog`).
  */
-export default function TvListenHistoryClearDialog({ open, onClose, onConfirm }) {
+export default function TvListenHistoryClearDialog({
+  open,
+  onClose,
+  onConfirm,
+  confirm = LISTEN_AGAIN_CLEAR_CONFIRM,
+}) {
   const [focusedButton, setFocusedButton] = useState(BUTTON.cancel);
   const focusedButtonRef = useRef(BUTTON.cancel);
   const buttonRefs = useRef(
@@ -109,7 +114,7 @@ export default function TvListenHistoryClearDialog({ open, onClose, onConfirm })
             id="tv-listen-history-clear-title"
             className="tv-listen-history-clear-dialog__title"
           >
-            {LISTEN_AGAIN_CLEAR_CONFIRM.dialogTitle}
+            {confirm.dialogTitle}
           </h2>
         </header>
         <div
@@ -118,7 +123,7 @@ export default function TvListenHistoryClearDialog({ open, onClose, onConfirm })
         >
           <p className="tv-listen-history-clear-dialog__confirm-line">
             Are you sure you want to clear your{" "}
-            {LISTEN_AGAIN_CLEAR_CONFIRM.bodyPhrase}?
+            {confirm.bodyPhrase}?
           </p>
           <p className="tv-listen-history-clear-dialog__confirm-line">
             This action cannot be undone.
@@ -134,7 +139,7 @@ export default function TvListenHistoryClearDialog({ open, onClose, onConfirm })
             focused={focusedButton === BUTTON.confirm}
             onClick={onConfirm}
           >
-            {LISTEN_AGAIN_CLEAR_CONFIRM.primaryLabel}
+            {confirm.primaryLabel}
           </FocusableButton>
           <FocusableButton
             ref={(node) => {

@@ -17,3 +17,15 @@ export function getListenAgainSwimlaneSlotCount(sourceCount) {
   const visible = Math.min(sourceCount, SWIMLANE_CARD_MAX);
   return visible + 1;
 }
+
+/** My Library typed history: empty placeholder + More, or items + Clear/More. */
+export function getLibraryHistorySwimlaneSlotCount(sourceCount) {
+  if (sourceCount <= 0) return 2;
+  const visible = Math.min(sourceCount, SWIMLANE_CARD_MAX);
+  return visible + 1;
+}
+
+/** True when rail shows More (empty or 10+ items); otherwise trailing tile is Clear. */
+export function showsLibraryHistoryMoreTile(sourceCount) {
+  return sourceCount === 0 || sourceCount > SWIMLANE_CARD_MAX;
+}

@@ -1,73 +1,55 @@
 import { useCallback, useMemo } from "react";
 import {
   getVisibleMyLibrarySections,
-  MY_LIBRARY_SECTION_ID,
 } from "@sm-mpr/shared/constants/myLibrarySections.js";
 import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
-import TvLibraryPodcastUserSwimlanes from "../components/podcasts/TvLibraryPodcastUserSwimlanes.jsx";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
+import TvDrillScreenHeader from "../components/drill/TvDrillScreenHeader.jsx";
+import TvMyLibraryBody from "../components/library/TvMyLibraryBody.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
+import { useLikes } from "../context/LikesContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
-import { buildTvPodcastLibraryRails } from "../utils/tvPodcastLibraryRails.js";
+import { buildTvMyLibraryFocusLayout } from "../utils/tvMyLibraryLayout.js";
+import "../components/drill/TvDrillScreen.css";
 import "./MyLibrary.css";
 
-/** Broad catalog My Library hub (mobile {@link MyLibrary} parity for podcast user rails). */
+/** Broad catalog My Library hub (mobile {@link MyLibrary} parity, TV swimlanes). */
 export default function MyLibrary() {
-  const { enabledContentTypes } = useContentProfile();
+  const { enabledContentTypes, filterListenHistory } = useContentProfile();
+  const { items: listenHistoryItems } = useListenHistory();
+  const { items: likesItems } = useLikes();
   const podcastUserState = usePodcastUserState();
+
+  const focusLayout = useMemo(
+    () =>
+      buildTvMyLibraryFocusLayout(enabledContentTypes, {
+        listenHistoryItems,
+        filterListenHistory,
+        likesItems,
+        podcastUserState,
+      }),
+    [
+      enabledContentTypes,
+      listenHistoryItems,
+      filterListenHistory,
+      likesItems,
+      podcastUserState.subscribedPodcasts,
+      podcastUserState.continueListening,
+      podcastUserState.bookmarkedEpisodes,
+      podcastUserState.newEpisodeRows,
+      podcastUserState.downloadedEpisodes,
+    ],
+  );
 
   const visibleSections = useMemo(
     () => getVisibleMyLibrarySections(enabledContentTypes),
     [enabledContentTypes],
   );
 
-  const showPodcastUserSwimlanes = visibleSections.some(
-    (section) => section.id === MY_LIBRARY_SECTION_ID.podcastUserSwimlanes,
-  );
-
-  const libraryRails = useMemo(() => {
-    if (!showPodcastUserSwimlanes) return [];
-    return buildTvPodcastLibraryRails(podcastUserState);
-  }, [
-    showPodcastUserSwimlanes,
-    podcastUserState.subscribedPodcasts,
-    podcastUserState.continueListening,
-    podcastUserState.bookmarkedEpisodes,
-    podcastUserState.newEpisodeRows,
-    podcastUserState.downloadedEpisodes,
-  ]);
-
-  const focusConfig = useMemo(() => {
-    if (libraryRails.length === 0) {
-      return {
-        groupCount: 1,
-        itemCounts: { 0: 0 },
-        swimlaneGroups: [],
-        firstBodyGroup: 0,
-        lastBodyGroup: 0,
-        defaultGroupIndex: 0,
-      };
-    }
-
-    const itemCounts = {};
-    const swimlaneGroups = [];
-
-    libraryRails.forEach((rail, index) => {
-      itemCounts[index] = rail.slotCount;
-      swimlaneGroups.push(index);
-    });
-
-    return {
-      groupCount: libraryRails.length,
-      itemCounts,
-      swimlaneGroups,
-      firstBodyGroup: 0,
-      lastBodyGroup: libraryRails.length - 1,
-      defaultGroupIndex: 0,
-    };
-  }, [libraryRails]);
+  const hasBodyContent = focusLayout.swimlaneGroups.length > 0;
 
   const {
     handleMoveUp,
@@ -81,16 +63,26 @@ export default function MyLibrary() {
     getItemElement,
     enterNavFromContent,
   } = useScreenContentFocus("my-library", {
-    groupCount: focusConfig.groupCount,
-    itemCounts: focusConfig.itemCounts,
-    swimlaneGroups: focusConfig.swimlaneGroups,
-    defaultGroupIndex: focusConfig.defaultGroupIndex,
+    groupCount: focusLayout.groupCount,
+    itemCounts: focusLayout.itemCounts,
+    swimlaneGroups: focusLayout.swimlaneGroups,
+    defaultGroupIndex: focusLayout.defaultGroupIndex,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
   });
 
   const getFocusedElement = useCallback(
     () => getItemElement(focusedGroupIndex, focusedIndex),
     [getItemElement, focusedGroupIndex, focusedIndex],
+  );
+
+  const onHistoryCleared = useCallback(
+    (groupIndex) => {
+      setFocusedIndex(groupIndex, 0);
+      requestAnimationFrame(() => {
+        getItemElement(groupIndex, 0)?.focus({ preventScroll: true });
+      });
+    },
+    [getItemElement, setFocusedIndex],
   );
 
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
@@ -102,31 +94,31 @@ export default function MyLibrary() {
     offsetY,
     innerClassName,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
-    landingGroupIndex: focusConfig.firstBodyGroup,
-    lastFocusableGroupIndex: focusConfig.lastBodyGroup,
+    landingGroupIndex: focusLayout.firstBodyGroup,
+    firstFocusableGroupIndex: focusLayout.firstBodyGroup,
+    lastFocusableGroupIndex: focusLayout.lastBodyGroup,
     getFocusedElement,
     screenId: "my-library",
-    scrollEnabled: libraryRails.length > 0,
+    scrollEnabled: hasBodyContent,
   });
 
   return (
-    <div ref={shellRef} className="tv-my-library tv-screen-overlay">
-      <header ref={headerRef} className="tv-screen-overlay__header">
-        <h1 className="tv-screen-header-title">My Library</h1>
-      </header>
+    <div ref={shellRef} className="tv-drill-screen tv-my-library tv-screen-overlay">
+      <TvDrillScreenHeader title="My Library" headerRef={headerRef} />
 
       <div
         ref={viewportRef}
-        className="tv-home__scroll tv-screen-overlay__scroll"
+        className="tv-drill-screen__scroll tv-home__scroll tv-screen-overlay__scroll"
       >
         <div
           ref={innerRef}
-          className={`tv-home__scroll-inner ${innerClassName}`}
+          className={innerClassName}
           style={{ transform: `translateY(-${offsetY}px)` }}
         >
-          {showPodcastUserSwimlanes && libraryRails.length > 0 ? (
-            <TvLibraryPodcastUserSwimlanes
-              groupIndexOffset={0}
+          {hasBodyContent ? (
+            <TvMyLibraryBody
+              visibleSections={visibleSections}
+              sectionGroups={focusLayout.sectionGroups}
               registerGroupRef={registerGroupRef}
               registerItemRef={registerItemRef}
               isContentGroupActive={isContentGroupActive}
@@ -135,10 +127,11 @@ export default function MyLibrary() {
               onMoveUp={handleMoveUp}
               onMoveDown={handleMoveDown}
               enterNavFromContent={enterNavFromContent}
+              onHistoryCleared={onHistoryCleared}
             />
           ) : (
-            <p className="tv-my-library__empty tv-home__content-inset">
-              Subscribe or bookmark podcasts to see your library here.
+            <p className="tv-drill-screen__empty tv-my-library__empty">
+              Your library content will appear here.
             </p>
           )}
         </div>

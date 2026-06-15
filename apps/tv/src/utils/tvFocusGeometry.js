@@ -9,6 +9,25 @@
 /** Default: `--tv-focus-ring-width` (10) + `--tv-focus-ring-gap` (4). */
 export const TV_FOCUS_RING_INSET_FALLBACK_PX = 14;
 
+/**
+ * Element that actually draws the TV focus ring (thumb-wrap), when present.
+ * @param {HTMLElement | null} focusEl
+ */
+export function resolveTvFocusRingElement(focusEl) {
+  if (!focusEl) return null;
+  if (focusEl.matches?.(".tv-content-tile__thumb-wrap")) {
+    return focusEl;
+  }
+  const thumbWrap = focusEl.querySelector?.(".tv-content-tile__thumb-wrap");
+  if (thumbWrap instanceof HTMLElement) {
+    return thumbWrap;
+  }
+  if (focusEl.matches?.(".tv-search-label-tile")) {
+    return focusEl;
+  }
+  return focusEl;
+}
+
 const PARK_DOWN_BIAS_FALLBACK_PX = 60;
 const SCROLL_AD_RESERVE_FALLBACK_PX = 0;
 
@@ -97,8 +116,9 @@ export function getTvFocusRingInsetPx(element) {
  * @param {HTMLElement} scrollportEl - e.g. `.tv-home__scroll`
  */
 export function getFocusRingTopInScrollport(focusEl, scrollportEl) {
-  const inset = getTvFocusRingInsetPx(focusEl);
-  const focusRect = focusEl.getBoundingClientRect();
+  const ringEl = resolveTvFocusRingElement(focusEl) ?? focusEl;
+  const inset = getTvFocusRingInsetPx(ringEl);
+  const focusRect = ringEl.getBoundingClientRect();
   const scrollportRect = scrollportEl.getBoundingClientRect();
   return calcFocusRingTopFromRect(
     focusRect.top - scrollportRect.top,

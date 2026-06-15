@@ -1,5 +1,26 @@
 .tv-my-library__empty {
   margin: 0;
+  padding-inline: var(--tv-content-inline-start) var(--tv-content-inline-end);
+  font-size: var(--font-size-body);
   color: var(--color-text-muted);
-  font-size: var(--tv-font-size-body);
+  box-sizing: border-box;
+}
+
+/* Stacked hub swimlanes — same vertical gap as Search browse / drill More screens. */
+.tv-my-library-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-search-stack-gap);
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.tv-my-library-body .tv-home__scroll-group {
+  flex-shrink: 0;
+}
+
+.tv-my-library-body .swimlane-row__title {
+  padding-inline-start: var(--tv-swimlane-inline-start);
+  font-weight: 900;
+  color: var(--color-on-bkg);
 }

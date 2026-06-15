@@ -1,21 +1,7 @@
-/**
- * Info collapsible "Info" section + My Library App Info tiles (FAQ URL, paths).
- * FAQ: set from Figma when available; placeholder keeps row clickable in prototype.
- */
-
-/** Stingray Music support FAQ / help center (opens in new tab from App Info). */
-export const INFO_FAQ_HREF =
-  "https://musicsupport.stingray.com/hc/en-us/categories/360002161253-Troubleshooting";
-// "https://music.stingray.com/en/CA/support";
-
-/** Drill-in from My Library App Info swimlane (Phase 2). */
-export const MY_LIBRARY_ACCOUNT_SETTINGS_PATH = "/my-library/account-settings";
-
-export const INFO_CONTACT_PATH = "/info/contact";
-export const INFO_ABOUT_PATH = "/info/about";
-
-/** @param {string} href */
-export function externalFaqAnchorProps(href) {
-  const faqIsHttp = /^https?:\/\//i.test(href);
-  return faqIsHttp ? { target: "_blank", rel: "noopener noreferrer" } : {};
-}
+export {
+  INFO_FAQ_HREF,
+  MY_LIBRARY_ACCOUNT_SETTINGS_PATH,
+  INFO_CONTACT_PATH,
+  INFO_ABOUT_PATH,
+  externalFaqAnchorProps,
+} from "@sm-mpr/shared/constants/infoHelpLinks.js";

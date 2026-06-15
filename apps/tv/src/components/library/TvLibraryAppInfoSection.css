@@ -1,0 +1,25 @@
+.tv-library-app-info__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-inline-start: var(--tv-swimlane-inline-start);
+}
+
+.tv-library-app-info__gear {
+  width: 32px;
+  height: 32px;
+  mask-image: url("/infoGear.svg");
+  -webkit-mask-image: url("/infoGear.svg");
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  background-color: currentColor;
+}
+
+.tv-library-app-info__title {
+  margin: 0;
+  font-size: var(--tv-font-size-section, 32px);
+  font-weight: 600;
+}

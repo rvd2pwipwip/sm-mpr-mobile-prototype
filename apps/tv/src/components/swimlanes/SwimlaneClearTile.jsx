@@ -4,7 +4,13 @@ import "./SwimlaneClearTile.css";
 
 /** Trailing square Clear tile for Listen again swimlane (compact size). */
 const SwimlaneClearTile = forwardRef(function SwimlaneClearTile(
-  { focused = false, onKeyDown, onClick, className = "" },
+  {
+    focused = false,
+    onKeyDown,
+    onClick,
+    className = "",
+    ariaLabel = "Clear listening history",
+  },
   ref,
 ) {
   const thumbWrapClass = [
@@ -22,7 +28,7 @@ const SwimlaneClearTile = forwardRef(function SwimlaneClearTile(
         .join(" ")}
       tabIndex={-1}
       role="button"
-      aria-label="Clear listening history"
+      aria-label={ariaLabel}
       onKeyDown={onKeyDown}
       onClick={onClick}
     >

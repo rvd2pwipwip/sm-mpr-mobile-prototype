@@ -1,6 +1,1 @@
-/** Full grid for liked music channels or radio stations (`/my-library/likes/:kind`). */
-
-/** @param {'music' | 'radio'} kind */
-export function myLibraryLikesMorePath(kind) {
-  return `/my-library/likes/${kind}`;
-}
+export { myLibraryLikesMorePath } from "@sm-mpr/shared/constants/myLibraryLikes.js";
