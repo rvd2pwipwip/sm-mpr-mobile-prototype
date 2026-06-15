@@ -46,6 +46,7 @@ import {
 import TvHomeBanner from "../components/TvHomeBanner.jsx";
 import { useScreenMemory } from "../context/ScreenMemoryContext.jsx";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useRestoreFocusAfterListenAgainClear } from "../hooks/useRestoreFocusAfterListenAgainClear.js";
 import {
   getLimitedHomeChannels,
   getLimitedHomeFilterLabel,
@@ -372,6 +373,14 @@ export default function LimitedHome() {
     resolveMoveDown,
   });
 
+  const onListenAgainCleared = useRestoreFocusAfterListenAgainClear({
+    showListenAgain: listenAgainLaneCount > 0,
+    targetGroupIndex: focusConfig.firstBodyGroup,
+    setFocusedGroupIndex,
+    setFocusedIndex,
+    getItemElement,
+  });
+
   const getFocusedElement = useCallback(
     () => getItemElement(focusedGroupIndex, focusedIndex),
     [getItemElement, focusedGroupIndex, focusedIndex],
@@ -592,6 +601,7 @@ export default function LimitedHome() {
               onMoveUp={handleMoveUp}
               onMoveDown={handleMoveDown}
               enterNavFromContent={enterNavFromContent}
+              onHistoryCleared={onListenAgainCleared}
             />
           ) : isMusicBrowse ? (
             <div className="tv-home__limited-filter-body">

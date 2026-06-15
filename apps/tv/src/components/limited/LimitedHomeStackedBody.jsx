@@ -41,6 +41,7 @@ export default function LimitedHomeStackedBody({
   onMoveUp,
   onMoveDown,
   enterNavFromContent,
+  onHistoryCleared,
   laneGroupOffset = HOME_FIRST_SWIMLANE_GROUP,
 }) {
   const navigate = useNavigate();
@@ -111,6 +112,7 @@ export default function LimitedHomeStackedBody({
             onMoveUp={onMoveUp}
             onMoveDown={onMoveDown}
             onBoundaryLeft={enterNavFromContent}
+            onHistoryCleared={onHistoryCleared}
           />
         </div>
       ) : null}

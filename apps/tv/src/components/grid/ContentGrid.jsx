@@ -166,6 +166,7 @@ const ContentGrid = forwardRef(function ContentGrid(
     const handleKeyDown = (event) => {
       if (isTvStackedDialogOpen()) return;
       if (focusZone !== FOCUS_ZONE_CONTENT) return;
+      if (!focused) return;
 
       const { row, col } = clampPosition(focusedPosition, gridRows);
       const rowLength = gridRows[row]?.length ?? 0;
@@ -238,6 +239,7 @@ const ContentGrid = forwardRef(function ContentGrid(
     return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [
     focusZone,
+    focused,
     focusedPosition,
     gridRows,
     canEnterNavFromContent,

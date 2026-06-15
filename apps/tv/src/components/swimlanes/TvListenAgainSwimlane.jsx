@@ -1,11 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { resolveListenAgainItems } from "@sm-mpr/shared/utils/listenAgainItems.js";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { SWIMLANE_CARD_MAX } from "../../constants/swimlane.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import { getTvCardSizeCompact } from "../../utils/tvLayout.js";
+import { showsListenAgainMoreTile } from "../../utils/swimlaneUtils.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import ContentTileCard from "../cards/ContentTileCard.jsx";
+import TvListenHistoryClearDialog from "../listenHistory/TvListenHistoryClearDialog.jsx";
+import SwimlaneClearTile from "./SwimlaneClearTile.jsx";
 import SwimlaneMoreTile from "./SwimlaneMoreTile.jsx";
 import SwimlaneRow from "./SwimlaneRow.jsx";
 import "../cards/ContentTileCard.css";
@@ -29,9 +33,12 @@ export default function TvListenAgainSwimlane({
   playingChannelId = null,
   playingPodcastId = null,
   onMore = "/more/listen-again",
+  onHistoryCleared,
 }) {
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
+  const { clearListenHistory } = useListenHistory();
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
   const tiles = useMemo(
     () => resolveListenAgainItems(historyItems),
@@ -48,7 +55,8 @@ export default function TvListenAgainSwimlane({
   }
 
   const slotCount = visibleTiles.length + 1;
-  const moreIndex = visibleTiles.length;
+  const trailingIndex = visibleTiles.length;
+  const showMoreTile = showsListenAgainMoreTile(tiles.length);
   const compactCardSize = getTvCardSizeCompact();
 
   const registerSlotRef = (index, node) => {
@@ -66,23 +74,45 @@ export default function TvListenAgainSwimlane({
   };
 
   const renderSlot = (index, isFocused, setRef) => {
-    if (index === moreIndex) {
+    if (index === trailingIndex) {
+      if (showMoreTile) {
+        return (
+          <KeyboardWrapper
+            key="more"
+            ref={setRef}
+            onSelect={() => {
+              enterContent();
+              navigate(
+                typeof onMore === "string" ? onMore : "/more/listen-again",
+              );
+            }}
+            onUp={onMoveUp}
+            onDown={onMoveDown}
+          >
+            {(focusProps) => (
+              <SwimlaneMoreTile
+                {...focusProps}
+                focused={isFocused}
+                className="tv-listen-again-swimlane__more"
+              />
+            )}
+          </KeyboardWrapper>
+        );
+      }
+
       return (
         <KeyboardWrapper
-          key="more"
+          key="clear"
           ref={setRef}
-          onSelect={() => {
-            enterContent();
-            navigate(typeof onMore === "string" ? onMore : "/more/listen-again");
-          }}
+          onSelect={() => setClearDialogOpen(true)}
           onUp={onMoveUp}
           onDown={onMoveDown}
         >
           {(focusProps) => (
-            <SwimlaneMoreTile
+            <SwimlaneClearTile
               {...focusProps}
               focused={isFocused}
-              className="tv-listen-again-swimlane__more"
+              className="tv-listen-again-swimlane__clear"
             />
           )}
         </KeyboardWrapper>
@@ -118,19 +148,30 @@ export default function TvListenAgainSwimlane({
   };
 
   return (
-    <SwimlaneRow
-      title={title}
-      swimlaneProps={{
-        slotCount,
-        focusedIndex,
-        onFocusChange,
-        focused,
-        onBoundaryLeft,
-        registerSlotRef,
-        renderSlot,
-        slotWidth: compactCardSize,
-        className: "tv-listen-again-swimlane__scroller",
-      }}
-    />
+    <>
+      <SwimlaneRow
+        title={title}
+        swimlaneProps={{
+          slotCount,
+          focusedIndex,
+          onFocusChange,
+          focused,
+          onBoundaryLeft,
+          registerSlotRef,
+          renderSlot,
+          slotWidth: compactCardSize,
+          className: "tv-listen-again-swimlane__scroller",
+        }}
+      />
+      <TvListenHistoryClearDialog
+        open={clearDialogOpen}
+        onClose={() => setClearDialogOpen(false)}
+        onConfirm={() => {
+          clearListenHistory();
+          setClearDialogOpen(false);
+          onHistoryCleared?.();
+        }}
+      />
+    </>
   );
 }

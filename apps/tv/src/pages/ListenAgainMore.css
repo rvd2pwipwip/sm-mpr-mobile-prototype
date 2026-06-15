@@ -1,0 +1,14 @@
+.listen-again-more__clear-btn {
+  min-height: var(--tv-button-height-medium);
+  padding: var(--tv-button-padding-block) var(--tv-button-padding-inline);
+  font-size: var(--font-size-body);
+  font-weight: 500;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+}
+
+.listen-again-more__clear-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

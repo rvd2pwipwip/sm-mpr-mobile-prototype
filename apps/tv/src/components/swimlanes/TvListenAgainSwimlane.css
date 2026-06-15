@@ -1,8 +1,10 @@
-.tv-listen-again-swimlane__more {
+.tv-listen-again-swimlane__more,
+.tv-listen-again-swimlane__clear {
   width: var(--tv-card-size-compact);
 }
 
-.tv-listen-again-swimlane__more .tv-content-tile__thumb-wrap {
+.tv-listen-again-swimlane__more .tv-content-tile__thumb-wrap,
+.tv-listen-again-swimlane__clear .tv-content-tile__thumb-wrap {
   width: var(--tv-card-size-compact);
   height: var(--tv-card-size-compact);
 }

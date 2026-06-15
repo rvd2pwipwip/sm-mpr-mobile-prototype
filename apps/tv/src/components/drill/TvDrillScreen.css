@@ -13,6 +13,21 @@
   padding-inline: var(--tv-content-inline-start) var(--tv-content-inline-end);
 }
 
+.tv-drill-screen__header-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.tv-drill-screen__header-end {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .tv-drill-screen .tv-home__scroll-inner {
   gap: var(--tv-search-stack-gap);
   padding-inline: calc(var(--tv-focus-ring-width) + var(--tv-focus-ring-gap));

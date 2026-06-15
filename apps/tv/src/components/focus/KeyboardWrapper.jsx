@@ -13,7 +13,7 @@ const KeyboardWrapper = forwardRef(function KeyboardWrapper(
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === " ") {
+    if (event.key === "Enter" || event.key === " " || event.key === "Select") {
       event.preventDefault();
       handleActivate(event);
       return;

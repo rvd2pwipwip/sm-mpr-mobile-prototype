@@ -1,0 +1,124 @@
+.tv-listen-history-clear-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-tv-stacked-dialog);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.tv-listen-history-clear-dialog__scrim {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: rgb(0 0 0 / 0.25);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .tv-listen-history-clear-dialog__scrim {
+    background-color: rgb(255 255 255 / 0.25);
+  }
+}
+
+html[data-theme="dark"] .tv-listen-history-clear-dialog__scrim {
+  background-color: rgb(255 255 255 / 0.25);
+}
+
+html[data-theme="light"] .tv-listen-history-clear-dialog__scrim {
+  background-color: rgb(0 0 0 / 0.25);
+}
+
+.tv-listen-history-clear-dialog__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--tv-stacked-dialog-panel-max-width);
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--color-bg2);
+  box-shadow: var(--shadow-card);
+}
+
+.tv-listen-history-clear-dialog__header {
+  margin: 0;
+  padding: 32px 40px;
+  background-color: var(--tv-stacked-dialog-header-bg);
+  color: var(--tv-stacked-dialog-header-fg);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border-subtle, rgb(0 0 0 / 0.08));
+}
+
+.tv-listen-history-clear-dialog__title {
+  margin: 0;
+  font-size: 2.125rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: inherit;
+}
+
+.tv-listen-history-clear-dialog__body {
+  margin: 0;
+  padding: 32px 40px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.tv-listen-history-clear-dialog__confirm-line {
+  margin: 0;
+  font-size: inherit;
+  line-height: 1.35;
+}
+
+.tv-listen-history-clear-dialog__confirm-line + .tv-listen-history-clear-dialog__confirm-line {
+  margin-top: 24px;
+}
+
+.tv-listen-history-clear-dialog__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  padding: 0 40px 40px;
+  box-sizing: border-box;
+}
+
+.tv-listen-history-clear-dialog__btn {
+  width: 100%;
+  min-height: 60px;
+  padding: 16px 24px;
+  font-size: var(--tv-button-font-size);
+  font-weight: 500;
+  border-radius: var(--tv-button-radius);
+}
+
+.tv-listen-history-clear-dialog__btn--primary {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: 3px solid transparent;
+}
+
+.tv-listen-history-clear-dialog__btn--secondary {
+  color: var(--color-text);
+  background: transparent;
+  border: 2px solid var(--tv-button-secondary-border);
+}
+
+.tv-listen-history-clear-dialog__btn--primary.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.tv-listen-history-clear-dialog__btn--secondary.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+}

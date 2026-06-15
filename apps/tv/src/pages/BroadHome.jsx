@@ -38,6 +38,7 @@ import {
   useHomeHeaderLayout,
 } from "../constants/homeHeaderLayout.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useRestoreFocusAfterListenAgainClear } from "../hooks/useRestoreFocusAfterListenAgainClear.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
 import {
@@ -203,6 +204,7 @@ export default function BroadHome() {
     isContentGroupActive,
     getItemFocusIndex,
     setFocusedIndex,
+    setFocusedGroupIndex,
     enterNavFromContent,
     focusedGroupIndex,
     focusedIndex,
@@ -213,6 +215,14 @@ export default function BroadHome() {
     swimlaneGroups: focusConfig.swimlaneGroups,
     defaultGroupIndex: focusConfig.firstSwimlaneGroup,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
+  });
+
+  const onListenAgainCleared = useRestoreFocusAfterListenAgainClear({
+    showListenAgain,
+    targetGroupIndex: focusConfig.firstSwimlaneGroup,
+    setFocusedGroupIndex,
+    setFocusedIndex,
+    getItemElement,
   });
 
   const getFocusedElement = useCallback(
@@ -277,6 +287,7 @@ export default function BroadHome() {
             onMoveUp={handleMoveUp}
             onMoveDown={handleMoveDown}
             onBoundaryLeft={enterNavFromContent}
+            onHistoryCleared={onListenAgainCleared}
           />
         );
       case BROAD_HOME_SWIMLANE_ID.mostPopularMusic:

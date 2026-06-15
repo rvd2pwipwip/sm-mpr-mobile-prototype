@@ -61,6 +61,11 @@
   --z-tv-player-preroll: 250;
   --z-tv-stacked-dialog: 300;
 
+  /* AppStackedDialog parity (mobile `app-stacked-dialog__header`) */
+  --tv-stacked-dialog-header-bg: #191919;
+  --tv-stacked-dialog-header-fg: #fafafa;
+  --tv-stacked-dialog-panel-max-width: 560px;
+
   /* Full-screen music player — Figma `23:20013` */
   --tv-player-column-max-width: 1000px;
   --tv-player-column-gap: 50px;
@@ -213,6 +218,8 @@
     --color-focus-ring: #fafafa;
     --color-surface: #27272a;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --tv-stacked-dialog-header-bg: #f4f4f5;
+    --tv-stacked-dialog-header-fg: #191919;
   }
 }
 
@@ -246,6 +253,8 @@ html[data-theme="dark"] {
   --color-focus-ring: #fafafa;
   --color-surface: #27272a;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --tv-stacked-dialog-header-bg: #f4f4f5;
+  --tv-stacked-dialog-header-fg: #191919;
 }
 
 [data-catalog-scope="broad"] {
