@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
 import { getActivePodcastShowId } from "../../utils/playbackMiniPlayer.js";
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
+import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import {
   getMusicChannelsByCategory,
 } from "@sm-mpr/shared/data/musicChannels.js";
@@ -15,7 +16,9 @@ import {
 import TvSwimlaneBannerAd from "../ads/TvSwimlaneBannerAd.jsx";
 import ContentTileSwimlane from "../swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../swimlanes/MusicChannelSwimlane.jsx";
+import TvLibraryPodcastUserSwimlanes from "../podcasts/TvLibraryPodcastUserSwimlanes.jsx";
 import { buildLimitedHomeStackedLanes } from "../../utils/limitedHomeStackedLanes.js";
+import { buildTvPodcastLibraryRails } from "../../utils/tvPodcastLibraryRails.js";
 import { HOME_FIRST_SWIMLANE_GROUP } from "../../constants/homeFocusGroups.js";
 
 const MID_STACK_AD_AFTER_LANE_INDEX = 1;
@@ -39,13 +42,29 @@ export default function LimitedHomeStackedBody({
   const navigate = useNavigate();
   const { session } = usePlayback();
   const playingPodcastId = getActivePodcastShowId(session);
+  const podcastUserState = usePodcastUserState();
+
+  const podcastLibraryRails = useMemo(() => {
+    if (activeBrowseTab !== CONTENT_TYPE.podcasts) return [];
+    return buildTvPodcastLibraryRails(podcastUserState);
+  }, [
+    activeBrowseTab,
+    podcastUserState.subscribedPodcasts,
+    podcastUserState.continueListening,
+    podcastUserState.bookmarkedEpisodes,
+    podcastUserState.newEpisodeRows,
+    podcastUserState.downloadedEpisodes,
+  ]);
+
+  const libraryRailCount = podcastLibraryRails.length;
+  const taxonomyLaneOffset = laneGroupOffset + libraryRailCount;
 
   const lanes = useMemo(
     () => buildLimitedHomeStackedLanes(activeBrowseTab),
     [activeBrowseTab],
   );
 
-  if (lanes.length === 0) {
+  if (libraryRailCount === 0 && lanes.length === 0) {
     return (
       <div className="tv-home__scroll-group tv-home__content-inset">
         <p className="tv-home__catalog-proof">No browse lanes for this tab.</p>
@@ -55,8 +74,22 @@ export default function LimitedHomeStackedBody({
 
   return (
     <>
+      {libraryRailCount > 0 ? (
+        <TvLibraryPodcastUserSwimlanes
+          groupIndexOffset={laneGroupOffset}
+          registerGroupRef={registerGroupRef}
+          registerItemRef={registerItemRef}
+          isContentGroupActive={isContentGroupActive}
+          getItemFocusIndex={getItemFocusIndex}
+          setFocusedIndex={setFocusedIndex}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+          enterNavFromContent={enterNavFromContent}
+        />
+      ) : null}
+
       {lanes.map((lane, laneIndex) => {
-        const groupIndex = laneGroupOffset + laneIndex;
+        const groupIndex = taxonomyLaneOffset + laneIndex;
 
         return (
           <div key={lane.id}>

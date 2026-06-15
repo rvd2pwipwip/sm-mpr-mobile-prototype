@@ -78,15 +78,15 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Search & Browse Phase 4** — Radio browse tab (shared in-scroll tabs shell + category swimlanes + International geo drill); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Search & Browse Phase 5** — live search result swimlanes (`TvSearchResultsBody`, profile-gated lanes, episode list row); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Search & Browse Phase 6** — Search More catalog/tags grids + artist channel drill (`TvSearchCatalogMore`, `TvSearchTagsMore`, `SearchMusicArtistChannels`); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
-- [x] **Podcasts Phase 0–6** — full flow + entry points (Home, Search, limited stacked); see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
+- [x] **Podcasts Phase 0–7** — full flow, entry points, library swimlanes (limited Home + broad My Library); see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
 
 ---
 
 ## Next steps (ordered)
 
-1. **Podcasts on TV Phase 7** — Search browse library rows (continue listening, Your Podcasts, etc.); see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
-2. **Search & Browse Phase 7** — PrimaryNav reset semantics (Clear, re-tap Search, stored browse tab); podcast library tiles blocked on Podcasts Phase 1 + 7
-3. **TV-2** — limited Home layout B shipped (stacked taxonomy, header mini player, Esc shortcut); layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
+1. **Search & Browse Phase 7** — PrimaryNav reset semantics (Clear, re-tap Search, stored browse tab); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
+2. **Podcasts Phase 8** — monetization + account dialog parity on TV player
+3. **TV-2** — limited Home layout B polish if needed; layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
 4. **Backlog** — Radio player layouts, TV in-player visual ads
 
 Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
@@ -99,4 +99,4 @@ Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan
 - Do not replace **`figma-nodes.md`** or mobile product stories; this file **coordinates** implementation.
 - Append TV lessons to **`docs/tv/react-learning.md`** as patterns land in code.
 
-_Last updated: 2026-06-09_
+_Last updated: 2026-06-12_

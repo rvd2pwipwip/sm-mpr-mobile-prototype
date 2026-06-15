@@ -1,0 +1,6 @@
+.tv-library-podcast-user-swimlanes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-screen-gap);
+  width: 100%;
+}

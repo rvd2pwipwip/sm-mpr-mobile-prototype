@@ -87,7 +87,7 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 | `TvMiniPlayer` podcast variant | **Not wired** (`session.variant === "music"` only) |
 | `TvEpisodeRow` | **Search results only** (no bookmark/download) |
 | `TvPlayerPrerollAd`, grace, tier gates | **Done** (music player) |
-| Podcast browse library tiles (Continue listening, Your Podcasts, …) | **Deferred** in Search plan Phase 7 until context ships |
+| Podcast library swimlanes (Continue listening, Your Podcasts, …) | **Done** — limited Home (podcasts tab) + broad My Library; More at `/search/browse/podcasts/library/:slug` |
 
 ---
 
@@ -243,23 +243,32 @@ All surfaces navigate to **`PodcastInfo`** (`/podcast/:id`) or play route; episo
 
 ---
 
-## Phase 7 — Search Browse library tiles (podcast-specific rows)
+## Phase 7 — Podcast library swimlanes (user-specific rows)
 
-**Goal:** Mobile **Browse / Podcasts** personal sections on TV (`TvSearchPodcastsBrowseBody`).
+**Goal:** Mobile **LibraryPodcastUserSwimlanes** parity on TV — conditional rows from `PodcastUserStateContext`, hidden when empty.
 
-Conditional rows (hide when empty), derived from `PodcastUserStateContext`:
+**Placement (matches mobile business rules):**
+
+| Catalog | Where rails appear | Not on |
+|---------|-------------------|--------|
+| **Limited** | **Home** → Podcasts tab (stacked layout B), before taxonomy lanes | Search browse |
+| **Broad** | **My Library** (`podcastUserSwimlanes` section) | Search → Podcasts browse (categories only) |
+
+**More** drill: `/search/browse/podcasts/library/:librarySection` (episode list or show grid).
+
+Conditional rows:
 
 | Row | Source | Layout |
 |-----|--------|--------|
-| Continue listening | `continueListening` | Horizontal swimlane; tile → **play** route with progress |
-| Your Podcasts | `subscribedPodcasts` | `ContentTileSwimlane` |
-| Your Episodes | `bookmarkedEpisodes` | `TvEpisodeCard` or list swimlane |
-| New Episodes | `newEpisodeRows` | Episode cards |
-| Downloaded Episodes | `downloadedEpisodes` | Episode cards |
+| Your Podcasts | `subscribedPodcasts` | `ContentTileSwimlane` → info |
+| Continue listening | `continueListening` | `TvEpisodeCardSwimlane` → **play** + progress |
+| Your Episodes | `bookmarkedEpisodes` | Episode swimlane → play |
+| New Episodes | `newEpisodeRows` | Episode swimlane → play |
+| Downloaded Episodes | `downloadedEpisodes` | Episode swimlane → play |
 
-Unblocks **Search plan Phase 7** item: “optional podcast library tiles when `PodcastUserStateContext` ships on TV”.
+**Status:** Done — `TvLibraryPodcastUserSwimlanes`, `buildTvPodcastLibraryRails`, `SearchPodcastsLibrary`, shared `podcastSearchLibrary` constants.
 
-**Deliverable:** Subscribe on info → **Your Podcasts** row appears on Search → Podcasts browse.
+**Deliverable:** Subscribe on info → **Your Podcasts** row on **limited Home (podcasts tab)** or **My Library (broad)**; **More** opens full shelf.
 
 ---
 
@@ -294,7 +303,7 @@ Defer until Phases 1–6 feel solid.
 ### Acceptance checklist (manual, after Phase 6 minimum)
 
 1. Home podcast tile → **Podcast Info** → episode → **full player** (nav hidden) → **Esc** → info + **mini in nav** → mini Enter → full player (no repeat preroll when grace / expand flag applies).
-2. **Subscribe** toggles; row appears in Search browse when Phase 7 done.
+2. **Subscribe** toggles; row appears on **limited Home (podcasts)** or **My Library (broad)** when Phase 7 done.
 3. **Bookmark / download** on episode row update icon state; guest gets account dialog.
 4. **Speed** cycles `0.6` … `2` and wraps.
 5. **−15 / +30** move progress bar (stub).

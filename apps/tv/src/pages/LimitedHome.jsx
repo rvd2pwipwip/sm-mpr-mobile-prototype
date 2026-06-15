@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
+import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import {
   getBrowseTabsForProfile,
   resolveLimitedBrowseTab,
@@ -54,6 +55,7 @@ import {
   limitedHomeHeaderItemCount,
 } from "../utils/limitedHomeHeaderFocus.js";
 import { buildLimitedHomeStackedLanes } from "../utils/limitedHomeStackedLanes.js";
+import { buildTvPodcastLibraryRails } from "../utils/tvPodcastLibraryRails.js";
 import { getMusicSwimlaneSlotCount } from "../utils/swimlaneUtils.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 
@@ -148,6 +150,22 @@ export default function LimitedHome() {
     [activeFilterId, isMusicBrowse, isStackedLayout],
   );
 
+  const podcastUserState = usePodcastUserState();
+  const podcastLibraryRails = useMemo(() => {
+    if (!isStackedLayout || effectiveBrowseTab !== CONTENT_TYPE.podcasts) {
+      return [];
+    }
+    return buildTvPodcastLibraryRails(podcastUserState);
+  }, [
+    isStackedLayout,
+    effectiveBrowseTab,
+    podcastUserState.subscribedPodcasts,
+    podcastUserState.continueListening,
+    podcastUserState.bookmarkedEpisodes,
+    podcastUserState.newEpisodeRows,
+    podcastUserState.downloadedEpisodes,
+  ]);
+
   const stackedLanes = useMemo(
     () =>
       isStackedLayout
@@ -155,6 +173,9 @@ export default function LimitedHome() {
         : [],
     [isStackedLayout, effectiveBrowseTab],
   );
+
+  const stackedBodyLaneCount =
+    podcastLibraryRails.length + stackedLanes.length;
 
   const swimlaneSlotCount =
     !isStackedLayout && isMusicBrowse
@@ -174,27 +195,33 @@ export default function LimitedHome() {
       };
       const swimlaneGroups = [];
 
-      stackedLanes.forEach((lane, index) => {
+      podcastLibraryRails.forEach((rail, index) => {
         const groupIndex = laneGroupOffset + index;
+        itemCounts[groupIndex] = rail.slotCount;
+        swimlaneGroups.push(groupIndex);
+      });
+
+      stackedLanes.forEach((lane, index) => {
+        const groupIndex = laneGroupOffset + podcastLibraryRails.length + index;
         itemCounts[groupIndex] = lane.slotCount;
         swimlaneGroups.push(groupIndex);
       });
 
       const groupCount = Math.max(
-        laneGroupOffset + stackedLanes.length,
+        laneGroupOffset + stackedBodyLaneCount,
         HOME_BANNER_GROUP + 1,
       );
 
       const firstBodyGroup =
-        stackedLanes.length > 0
+        stackedBodyLaneCount > 0
           ? laneGroupOffset
           : bannerVisible
             ? HOME_BANNER_GROUP
             : HOME_HEADER_GROUP;
 
       const lastBodyGroup =
-        stackedLanes.length > 0
-          ? laneGroupOffset + stackedLanes.length - 1
+        stackedBodyLaneCount > 0
+          ? laneGroupOffset + stackedBodyLaneCount - 1
           : bannerVisible
             ? HOME_BANNER_GROUP
             : HOME_HEADER_GROUP;
@@ -235,7 +262,9 @@ export default function LimitedHome() {
     isStackedLayout,
     headerItemCount,
     bannerVisible,
+    podcastLibraryRails,
     stackedLanes,
+    stackedBodyLaneCount,
     isMusicBrowse,
     filters.length,
     swimlaneSlotCount,
@@ -271,7 +300,7 @@ export default function LimitedHome() {
       if (bannerVisible) return null;
 
       if (current === HOME_HEADER_GROUP) {
-        if (isStackedLayout && stackedLanes.length > 0) {
+        if (isStackedLayout && stackedBodyLaneCount > 0) {
           return HOME_FIRST_SWIMLANE_GROUP;
         }
         if (!isStackedLayout && isMusicBrowse) {
@@ -281,7 +310,7 @@ export default function LimitedHome() {
 
       return null;
     },
-    [bannerVisible, isStackedLayout, stackedLanes.length, isMusicBrowse],
+    [bannerVisible, isStackedLayout, stackedBodyLaneCount, isMusicBrowse],
   );
 
   const {
@@ -353,7 +382,7 @@ export default function LimitedHome() {
 
   const skipBannerGroup = useCallback(() => {
     if (!bannerVisible && focusedGroupIndex === HOME_BANNER_GROUP) {
-      if (isStackedLayout && stackedLanes.length > 0) {
+      if (isStackedLayout && stackedBodyLaneCount > 0) {
         setFocusedGroupIndex(HOME_FIRST_SWIMLANE_GROUP);
         return true;
       }
@@ -369,7 +398,7 @@ export default function LimitedHome() {
     bannerVisible,
     focusedGroupIndex,
     isStackedLayout,
-    stackedLanes.length,
+    stackedBodyLaneCount,
     isMusicBrowse,
     setFocusedGroupIndex,
   ]);

@@ -21,6 +21,7 @@
     "./utils/userTierRules.js": "./utils/userTierRules.js",
     "./utils/userContentGates.js": "./utils/userContentGates.js",
     "./constants/searchBrowsePaths.js": "./constants/searchBrowsePaths.js",
+    "./constants/podcastSearchLibrary.js": "./constants/podcastSearchLibrary.js",
     "./data/musicArtists.js": "./data/musicArtists.js",
     "./data/radioInternationalBrowse.js": "./data/radioInternationalBrowse.js",
     "./search/searchCatalog.js": "./search/searchCatalog.js",

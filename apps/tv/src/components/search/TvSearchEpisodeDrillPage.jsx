@@ -26,6 +26,7 @@ export default function TvSearchEpisodeDrillPage({
   rows,
   emptyMessage,
   onSelectRow,
+  getProgressFraction,
 }) {
   const { userType } = useUserType();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
@@ -36,6 +37,16 @@ export default function TvSearchEpisodeDrillPage({
     isBookmarked,
     isDownloaded,
   } = usePodcastUserState();
+
+  const resolveProgress = useCallback(
+    (row) => {
+      if (getProgressFraction) {
+        return getProgressFraction(row);
+      }
+      return getEpisodeProgress(row.episode.id);
+    },
+    [getProgressFraction, getEpisodeProgress],
+  );
 
   const lastGroup = Math.max(0, rows.length - 1);
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
@@ -114,7 +125,7 @@ export default function TvSearchEpisodeDrillPage({
                 >
                   <TvEpisodeListItem
                     episode={row.episode}
-                    progressFraction={getEpisodeProgress(row.episode.id)}
+                    progressFraction={resolveProgress(row)}
                     isBookmarked={isBookmarked(row.episode.id)}
                     isDownloaded={isDownloaded(row.episode.id)}
                     groupIndex={index}

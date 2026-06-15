@@ -206,8 +206,7 @@ Update `packages/shared/package.json` `exports`. Mobile imports switch to `@sm-m
 
 **Goal:** Mobile **`SearchPodcastsBrowse`** IA on TV.
 
-- Conditional **library** tiles (Continue listening, Your Podcasts, …) when stub data populated — same rules as mobile `PodcastUserStateContext` (wire context to TV if not already, or stub counts). **Deferred:** mobile top-level browse is category swimlanes only today; library rows can follow when TV mounts `PodcastUserStateContext`.
-- **Category swimlanes** on the Podcasts tab — one **`ContentTileSwimlane`** per **`PODCAST_CATEGORIES`** row (capped + More).
+- **Category swimlanes** on the Podcasts tab — one **`ContentTileSwimlane`** per **`PODCAST_CATEGORIES`** row (capped + More). User library rows (Continue listening, Your Podcasts, …) live on **limited Home (podcasts tab)** and **broad My Library**, not on Search browse — see **Podcasts plan Phase 7**.
 - **Category drill** — **`ContentTileCard`** in **`ContentGrid`** at **5 columns** (`getTvBrowseGridLayout()`); card width computed to fit the content area (no horizontal scroll; focus moves L/R inside the row).
 - Categories → `/search/browse/podcasts/category/:id`; show tap → **`/podcast/:id`** placeholder until Podcast Info ships.
 

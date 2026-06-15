@@ -30,6 +30,7 @@ import SearchMusicBroadTagChannels from "./pages/SearchMusicBroadTagChannels.jsx
 import SearchMusicCategory from "./pages/SearchMusicCategory.jsx";
 import SearchMusicVibe from "./pages/SearchMusicVibe.jsx";
 import SearchPodcastsCategory from "./pages/SearchPodcastsCategory.jsx";
+import SearchPodcastsLibrary from "./pages/SearchPodcastsLibrary.jsx";
 import SearchMusicArtistChannels from "./pages/SearchMusicArtistChannels.jsx";
 import SearchRadioInternational from "./pages/SearchRadioInternational.jsx";
 import SearchRadioStationGrid from "./pages/SearchRadioStationGrid.jsx";
@@ -105,6 +106,14 @@ export default function App() {
                               <Route
                                 path="/search/browse/music/artist/:artistId"
                                 element={<SearchMusicArtistChannels />}
+                              />
+                              <Route
+                                path="/search/browse/podcasts/library/:librarySection"
+                                element={
+                                  <RequireContentType type={CONTENT_TYPE.podcasts}>
+                                    <SearchPodcastsLibrary />
+                                  </RequireContentType>
+                                }
                               />
                               <Route
                                 path="/search/browse/podcasts/category/:categoryId"
