@@ -8,6 +8,7 @@ import { useContentProfile } from "../../context/ContentProfileContext.jsx";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
 import { useTerritory } from "../../context/TerritoryContext.jsx";
 import { shouldShowTvMiniPlayer } from "../../utils/playbackMiniPlayer.js";
+import { isTvStackedDialogOpen } from "../../utils/tvStackedDialogFocus.js";
 import { FOCUS_ZONE_NAV, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import TvMiniPlayer from "./TvMiniPlayer.jsx";
 import "./PrimaryNav.css";
@@ -131,6 +132,8 @@ export default function PrimaryNav() {
     if (focusZone !== FOCUS_ZONE_NAV) return undefined;
 
     const onKeyDown = (event) => {
+      if (isTvStackedDialogOpen()) return;
+
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         event.stopPropagation();

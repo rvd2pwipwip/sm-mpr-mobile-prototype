@@ -9,6 +9,7 @@ import {
 import { isBroadCatalogScope } from "@sm-mpr/shared/constants/catalogScope.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useContentFocusGroups } from "../hooks/useContentFocusGroups.js";
+import { isTvStackedDialogOpen } from "../utils/tvStackedDialogFocus.js";
 
 /**
  * Shared content-area focus helpers for a screen (Phase 1 demo rows).
@@ -250,6 +251,8 @@ export function useScreenContentFocus(
     if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
 
     const handleKeyDown = (event) => {
+      if (isTvStackedDialogOpen()) return;
+
       if (event.key === "ArrowUp") {
         event.preventDefault();
         event.stopPropagation();

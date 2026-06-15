@@ -30,13 +30,24 @@
 }
 
 .tv-account-required-dialog__body {
-  margin: 0 0 32px;
+  margin: 0 0 12px;
   font-size: 1.25rem;
   line-height: 1.4;
   color: var(--color-text-muted);
 }
 
+.tv-account-required-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
 .tv-account-required-dialog__btn {
   min-height: var(--tv-button-height-medium);
   padding: var(--tv-button-padding-block) var(--tv-button-padding-inline);
+}
+
+.tv-account-required-dialog__btn--primary {
+  font-weight: 600;
 }

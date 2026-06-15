@@ -13,6 +13,7 @@ import {
   getTvCardSize,
   getTvGridColumnCount,
 } from "../../utils/tvLayout.js";
+import { isTvStackedDialogOpen } from "../../utils/tvStackedDialogFocus.js";
 import "./ContentGrid.css";
 import ContentGridItem from "./ContentGridItem.jsx";
 
@@ -163,6 +164,7 @@ const ContentGrid = forwardRef(function ContentGrid(
     if (focusZone !== FOCUS_ZONE_CONTENT) return undefined;
 
     const handleKeyDown = (event) => {
+      if (isTvStackedDialogOpen()) return;
       if (focusZone !== FOCUS_ZONE_CONTENT) return;
 
       const { row, col } = clampPosition(focusedPosition, gridRows);

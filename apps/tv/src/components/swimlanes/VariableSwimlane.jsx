@@ -9,6 +9,7 @@ import {
 import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import VariableSwimlaneItem from "./VariableSwimlaneItem.jsx";
 import { getTvSwimlaneInlineEnd, getTvSwimlaneInlineStart } from "../../utils/tvLayout.js";
+import { isTvStackedDialogOpen } from "../../utils/tvStackedDialogFocus.js";
 import "./VariableSwimlane.css";
 
 function sumWidthsBeforeIndex(widths, gap, index) {
@@ -159,6 +160,7 @@ export default function VariableSwimlane({
     if (!focused) return undefined;
 
     const handleKeyDown = (event) => {
+      if (isTvStackedDialogOpen()) return;
       if (focusZone !== FOCUS_ZONE_CONTENT) return;
 
       if (event.key === "ArrowRight") {

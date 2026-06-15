@@ -7,6 +7,7 @@ import {
 } from "react";
 import FocusableButton from "../focus/FocusableButton.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
+import { useTvStackedDialogOpenFlag } from "../../utils/tvStackedDialogFocus.js";
 import "./ChannelInfoDescriptionDialog.css";
 
 const SCROLL_STEP_PX = 48;
@@ -180,13 +181,7 @@ export default function ChannelInfoDescriptionDialog({
     return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [open, onClose, focusScrollbar, handleScrollDown, handleScrollUp]);
 
-  useEffect(() => {
-    if (!open) return;
-    document.documentElement.dataset.tvDialogOpen = "true";
-    return () => {
-      delete document.documentElement.dataset.tvDialogOpen;
-    };
-  }, [open]);
+  useTvStackedDialogOpenFlag(open);
 
   if (!open) return null;
 

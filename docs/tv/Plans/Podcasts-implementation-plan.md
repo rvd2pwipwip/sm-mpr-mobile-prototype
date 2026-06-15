@@ -274,10 +274,12 @@ Conditional rows:
 
 ## Phase 8 — Monetization + account dialogs parity
 
-- **Guest / freeStingray:** preroll on episode play; upgrade CTA in player (reuse `TvUpgradeButton` pattern)
-- **Subscribe / bookmark / download** blocked for guest → `TvAccountRequiredDialog` with correct copy keys (mirror mobile `openAccountRequiredDialog` reasons)
+- **Guest / freeStingray:** preroll on episode play; upgrade CTA in player (`TvUpgradeButton` below show title)
+- **Subscribe / bookmark / download** blocked for guest → `TvAccountRequiredDialog` with mobile copy keys (`podcastSubscribe`, `episodeBookmark`, `episodeOfflineDownload`)
 - **Subscribed:** no preroll, no upgrade strip
-- **Visual ads:** follow TV policy (in-feed only today; no in-player strip unless design adds)
+- **Visual ads:** in-feed only (no in-player strip on podcast player)
+
+**Status:** Done — `TvAccountRequiredDialog` variants, `TvPlayerHeaderCenterSlot`, podcast player Upgrade + preroll grace, tier table on `/settings/user-type`.
 
 **Deliverable:** `/settings/user-type` preview matches mobile tier table for podcast play.
 

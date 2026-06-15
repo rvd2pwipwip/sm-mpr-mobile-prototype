@@ -6,8 +6,16 @@ import {
   writeLimitedHomeLayout,
 } from "../constants/limitedHomeLayout.js";
 import { MUSIC_CHANNELS } from "@sm-mpr/shared/data/musicChannels.js";
+import { PODCASTS } from "@sm-mpr/shared/data/podcasts.js";
 import { USER_TYPES } from "@sm-mpr/shared/constants/userTypes.js";
-import { showPlayerPreroll } from "@sm-mpr/shared/utils/userTierRules.js";
+import {
+  showPlayerPreroll,
+  showUpgradeInFullPlayerHeader,
+} from "@sm-mpr/shared/utils/userTierRules.js";
+import {
+  userMayBookmarkEpisodes,
+  userMaySubscribePodcasts,
+} from "@sm-mpr/shared/utils/userContentGates.js";
 import {
   CONTENT_PROFILE_MODE,
   useContentProfile,
@@ -31,6 +39,10 @@ const CONTENT_PROFILE_LABELS = {
 /** Stable channel for music-player tier QA (first catalog row). */
 const TEST_CHANNEL = MUSIC_CHANNELS[0];
 
+/** Stable podcast + episode for podcast-player tier QA. */
+const TEST_PODCAST = PODCASTS[0] ?? null;
+const TEST_PODCAST_EPISODE = TEST_PODCAST?.episodes[0] ?? null;
+
 /** Prototype tier toggles — mirror mobile `Subscription` preview block. */
 const LIMITED_LAYOUT_LABELS = {
   [LIMITED_HOME_LAYOUT.stacked]: "B — Stacked swimlanes (default)",
@@ -45,9 +57,16 @@ export default function TvUserTypePreview() {
   const { userType, setUserType } = useUserType();
   const { contentProfileMode, setContentProfileMode } = useContentProfile();
   const prerollOnPlay = showPlayerPreroll(userType);
+  const upgradeInPlayer = showUpgradeInFullPlayerHeader(userType);
+  const maySubscribe = userMaySubscribePodcasts(userType);
+  const mayBookmark = userMayBookmarkEpisodes(userType);
   const testPlayPath = TEST_CHANNEL
     ? `/music/${TEST_CHANNEL.id}/play`
     : null;
+  const testPodcastPlayPath =
+    TEST_PODCAST && TEST_PODCAST_EPISODE
+      ? `/podcast/${TEST_PODCAST.id}/play/${TEST_PODCAST_EPISODE.id}`
+      : null;
 
   return (
     <main className="tv-user-type-preview">
@@ -64,9 +83,39 @@ export default function TvUserTypePreview() {
         <code className="tv-user-type-preview__code">App.jsx</code>).
       </p>
       <p className="tv-user-type-preview__status" aria-live="polite">
-        Current: <strong>{LABELS[userType] ?? userType}</strong> — music preroll on
-        play: <strong>{prerollOnPlay ? "yes" : "no"}</strong>
+        Current: <strong>{LABELS[userType] ?? userType}</strong> — preroll on play:{" "}
+        <strong>{prerollOnPlay ? "yes" : "no"}</strong> — upgrade in player:{" "}
+        <strong>{upgradeInPlayer ? "yes" : "no"}</strong>
       </p>
+      <table className="tv-user-type-preview__tier-table">
+        <caption className="tv-user-type-preview__tier-caption">
+          Podcast play tier rules (current selection)
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Rule</th>
+            <th scope="col">This tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15s preroll before episode play</td>
+            <td>{prerollOnPlay ? "Yes" : "No"}</td>
+          </tr>
+          <tr>
+            <td>Upgrade button in podcast player</td>
+            <td>{upgradeInPlayer ? "Yes" : "No"}</td>
+          </tr>
+          <tr>
+            <td>Subscribe to shows</td>
+            <td>{maySubscribe ? "Allowed" : "Account dialog"}</td>
+          </tr>
+          <tr>
+            <td>Bookmark episodes</td>
+            <td>{mayBookmark ? "Allowed" : "Account dialog"}</td>
+          </tr>
+        </tbody>
+      </table>
       <ul className="tv-user-type-preview__list">
         {USER_TYPES.map((value) => (
           <li key={value}>
@@ -108,6 +157,35 @@ export default function TvUserTypePreview() {
           ),
         )}
       </ul>
+      {testPodcastPlayPath ? (
+        <section
+          className="tv-user-type-preview__test"
+          aria-labelledby="tv-user-type-preview-podcast-test-heading"
+        >
+          <h2
+            id="tv-user-type-preview-podcast-test-heading"
+            className="tv-user-type-preview__test-title"
+          >
+            Test podcast player
+          </h2>
+          <p className="tv-user-type-preview__test-lead">
+            Open{" "}
+            <span className="tv-user-type-preview__test-channel">
+              {TEST_PODCAST.title}
+            </span>{" "}
+            / {TEST_PODCAST_EPISODE.title} with the tier selected above. Guest /
+            Free Stingray: 15s preroll + Upgrade in player. Subscribed: no preroll,
+            no Upgrade. Guest: Subscribe and bookmark open account dialog.
+          </p>
+          <FocusableButton
+            type="button"
+            className="tv-user-type-preview__test-btn"
+            onClick={() => navigate(testPodcastPlayPath)}
+          >
+            Open podcast player
+          </FocusableButton>
+        </section>
+      ) : null}
       {testPlayPath ? (
         <section
           className="tv-user-type-preview__test"
