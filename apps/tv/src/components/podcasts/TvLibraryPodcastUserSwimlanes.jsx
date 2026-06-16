@@ -1,6 +1,10 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { podcastLibraryBrowsePath } from "@sm-mpr/shared/constants/podcastSearchLibrary.js";
+import {
+  PODCAST_LIBRARY_EPISODE_RAIL_CLEAR,
+  PODCAST_LIBRARY_SLUG,
+  podcastLibraryBrowsePath,
+} from "@sm-mpr/shared/constants/podcastSearchLibrary.js";
 import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
@@ -24,6 +28,7 @@ export default function TvLibraryPodcastUserSwimlanes({
   onMoveUp,
   onMoveDown,
   enterNavFromContent,
+  onEpisodeRailCleared,
 }) {
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
@@ -31,6 +36,14 @@ export default function TvLibraryPodcastUserSwimlanes({
   const playingPodcastId = getActivePodcastShowId(session);
 
   const userState = usePodcastUserState();
+  const {
+    getEpisodeProgress,
+    clearAllEpisodeProgress,
+    clearAllBookmarks,
+    clearAllDownloads,
+    unsubscribePodcasts,
+  } = userState;
+
   const rails = useMemo(
     () => buildTvPodcastLibraryRails(userState),
     [
@@ -42,7 +55,34 @@ export default function TvLibraryPodcastUserSwimlanes({
     ],
   );
 
-  const { getEpisodeProgress } = userState;
+  const clearEpisodeRail = useCallback(
+    (slug, episodeRows) => {
+      switch (slug) {
+        case PODCAST_LIBRARY_SLUG.continueListening:
+          clearAllEpisodeProgress();
+          break;
+        case PODCAST_LIBRARY_SLUG.yourEpisodes:
+          clearAllBookmarks();
+          break;
+        case PODCAST_LIBRARY_SLUG.newEpisodes:
+          unsubscribePodcasts(
+            (episodeRows ?? []).map((row) => row.podcast.id),
+          );
+          break;
+        case PODCAST_LIBRARY_SLUG.downloadedEpisodes:
+          clearAllDownloads();
+          break;
+        default:
+          break;
+      }
+    },
+    [
+      clearAllEpisodeProgress,
+      clearAllBookmarks,
+      clearAllDownloads,
+      unsubscribePodcasts,
+    ],
+  );
 
   if (rails.length === 0) {
     return null;
@@ -102,6 +142,10 @@ export default function TvLibraryPodcastUserSwimlanes({
                   navigate(`/podcast/${podcast.id}/play/${episode.id}`);
                 }}
                 onMore={() => navigate(podcastLibraryBrowsePath(rail.slug))}
+                trailingTileMode="clear-or-more"
+                clearConfirm={PODCAST_LIBRARY_EPISODE_RAIL_CLEAR[rail.slug]}
+                onClear={() => clearEpisodeRail(rail.slug, rail.episodeRows)}
+                onRailCleared={() => onEpisodeRailCleared?.(groupIndex)}
                 getProgressFraction={(episodeId) => {
                   const row = (rail.episodeRows ?? []).find(
                     (entry) => entry.episode.id === episodeId,

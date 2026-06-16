@@ -85,6 +85,21 @@ export function PodcastUserStateProvider({ children }) {
     setEpisodeProgressById({});
   }, []);
 
+  const clearAllBookmarks = useCallback(() => {
+    setBookmarkedEpisodeIds([]);
+  }, []);
+
+  const clearAllDownloads = useCallback(() => {
+    setDownloadedEpisodeIds([]);
+  }, []);
+
+  /** Unsubscribe from the given show ids (e.g. clear New Episodes rail). */
+  const unsubscribePodcasts = useCallback((podcastIds) => {
+    if (!podcastIds?.length) return;
+    const remove = new Set(podcastIds);
+    setSubscribedPodcastIds((prev) => prev.filter((id) => !remove.has(id)));
+  }, []);
+
   /** @param {number} [whenMissing] defaults to `0`. */
   const getEpisodeProgress = useCallback(
     (episodeId, whenMissing = 0) => {
@@ -164,6 +179,9 @@ export function PodcastUserStateProvider({ children }) {
       toggleDownload,
       setEpisodeProgress,
       clearAllEpisodeProgress,
+      clearAllBookmarks,
+      clearAllDownloads,
+      unsubscribePodcasts,
       getEpisodeProgress,
       isSubscribed,
       isBookmarked,
@@ -184,6 +202,9 @@ export function PodcastUserStateProvider({ children }) {
       toggleDownload,
       setEpisodeProgress,
       clearAllEpisodeProgress,
+      clearAllBookmarks,
+      clearAllDownloads,
+      unsubscribePodcasts,
       getEpisodeProgress,
       isSubscribed,
       isBookmarked,

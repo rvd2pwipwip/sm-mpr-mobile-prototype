@@ -2,7 +2,7 @@ import {
   PODCAST_LIBRARY_RAIL_TITLES,
   PODCAST_LIBRARY_SLUG,
 } from "@sm-mpr/shared/constants/podcastSearchLibrary.js";
-import { getMusicSwimlaneSlotCount } from "./swimlaneUtils.js";
+import { getMusicSwimlaneSlotCount, getEpisodeLibrarySwimlaneSlotCount } from "./swimlaneUtils.js";
 
 /**
  * @typedef {'shows' | 'episodes'} TvPodcastLibraryRailKind
@@ -69,7 +69,7 @@ export function buildTvPodcastLibraryRails(userState) {
             title:
               PODCAST_LIBRARY_RAIL_TITLES[PODCAST_LIBRARY_SLUG.continueListening],
             sourceCount: continueListening.length,
-            slotCount: getMusicSwimlaneSlotCount(continueListening.length),
+            slotCount: getEpisodeLibrarySwimlaneSlotCount(continueListening.length),
             episodeRows: continueListening,
           }
         : null,
@@ -81,7 +81,7 @@ export function buildTvPodcastLibraryRails(userState) {
             kind: "episodes",
             title: PODCAST_LIBRARY_RAIL_TITLES[PODCAST_LIBRARY_SLUG.yourEpisodes],
             sourceCount: bookmarkedEpisodes.length,
-            slotCount: getMusicSwimlaneSlotCount(bookmarkedEpisodes.length),
+            slotCount: getEpisodeLibrarySwimlaneSlotCount(bookmarkedEpisodes.length),
             episodeRows: bookmarkedEpisodes,
           }
         : null,
@@ -93,7 +93,7 @@ export function buildTvPodcastLibraryRails(userState) {
             kind: "episodes",
             title: PODCAST_LIBRARY_RAIL_TITLES[PODCAST_LIBRARY_SLUG.newEpisodes],
             sourceCount: newEpisodeRows.length,
-            slotCount: getMusicSwimlaneSlotCount(newEpisodeRows.length),
+            slotCount: getEpisodeLibrarySwimlaneSlotCount(newEpisodeRows.length),
             episodeRows: newEpisodeRows,
           }
         : null,
@@ -106,7 +106,7 @@ export function buildTvPodcastLibraryRails(userState) {
             title:
               PODCAST_LIBRARY_RAIL_TITLES[PODCAST_LIBRARY_SLUG.downloadedEpisodes],
             sourceCount: downloadedEpisodes.length,
-            slotCount: getMusicSwimlaneSlotCount(downloadedEpisodes.length),
+            slotCount: getEpisodeLibrarySwimlaneSlotCount(downloadedEpisodes.length),
             episodeRows: downloadedEpisodes,
           }
         : null,

@@ -381,6 +381,18 @@ export default function LimitedHome() {
     getItemElement,
   });
 
+  const onEpisodeRailCleared = useCallback(
+    (groupIndex) => {
+      setFocusedIndex(groupIndex, HOME_LANDING_ITEM_INDEX);
+      requestAnimationFrame(() => {
+        getItemElement(groupIndex, HOME_LANDING_ITEM_INDEX)?.focus({
+          preventScroll: true,
+        });
+      });
+    },
+    [getItemElement, setFocusedIndex],
+  );
+
   const getFocusedElement = useCallback(
     () => getItemElement(focusedGroupIndex, focusedIndex),
     [getItemElement, focusedGroupIndex, focusedIndex],
@@ -602,6 +614,7 @@ export default function LimitedHome() {
               onMoveDown={handleMoveDown}
               enterNavFromContent={enterNavFromContent}
               onHistoryCleared={onListenAgainCleared}
+              onEpisodeRailCleared={onEpisodeRailCleared}
             />
           ) : isMusicBrowse ? (
             <div className="tv-home__limited-filter-body">

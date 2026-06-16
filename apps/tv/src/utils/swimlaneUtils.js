@@ -29,3 +29,15 @@ export function getLibraryHistorySwimlaneSlotCount(sourceCount) {
 export function showsLibraryHistoryMoreTile(sourceCount) {
   return sourceCount === 0 || sourceCount > SWIMLANE_CARD_MAX;
 }
+
+/** Episode library rails (non-empty): capped visible cards + trailing Clear or More. */
+export function getEpisodeLibrarySwimlaneSlotCount(sourceCount) {
+  if (sourceCount <= 0) return 0;
+  const visible = Math.min(sourceCount, SWIMLANE_CARD_MAX);
+  return visible + 1;
+}
+
+/** True when rail shows More (10+ items); otherwise trailing tile is Clear. */
+export function showsEpisodeLibraryMoreTile(sourceCount) {
+  return sourceCount > SWIMLANE_CARD_MAX;
+}

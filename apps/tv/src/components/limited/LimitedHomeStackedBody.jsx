@@ -43,6 +43,7 @@ export default function LimitedHomeStackedBody({
   enterNavFromContent,
   onHistoryCleared,
   laneGroupOffset = HOME_FIRST_SWIMLANE_GROUP,
+  onEpisodeRailCleared,
 }) {
   const navigate = useNavigate();
   const { session } = usePlayback();
@@ -128,6 +129,7 @@ export default function LimitedHomeStackedBody({
           onMoveUp={onMoveUp}
           onMoveDown={onMoveDown}
           enterNavFromContent={enterNavFromContent}
+          onEpisodeRailCleared={onEpisodeRailCleared}
         />
       ) : null}
 

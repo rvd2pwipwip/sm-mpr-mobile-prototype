@@ -1,3 +1,13 @@
 .tv-episode-card-swimlane__slot {
   flex-shrink: 0;
 }
+
+/* Square trailing Clear / More — episode cards stay wide (656px). */
+.tv-episode-card-swimlane__trailing-tile {
+  width: var(--tv-card-size);
+}
+
+.tv-episode-card-swimlane__trailing-tile .tv-content-tile__thumb-wrap {
+  width: var(--tv-card-size);
+  height: var(--tv-card-size);
+}

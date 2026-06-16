@@ -5,7 +5,7 @@ import TvLibraryAppInfoSection from "./TvLibraryAppInfoSection.jsx";
 import TvLibraryHistorySection from "./TvLibraryHistorySection.jsx";
 import TvLibraryLikedMusicSection from "./TvLibraryLikedMusicSection.jsx";
 import TvLibraryLikedRadioSection from "./TvLibraryLikedRadioSection.jsx";
-import TvLibraryPodcastUserGridSections from "./TvLibraryPodcastUserGridSections.jsx";
+import TvLibraryPodcastUserSwimlanes from "../podcasts/TvLibraryPodcastUserSwimlanes.jsx";
 
 /**
  * Renders visible My Library hub sections in mobile story order.
@@ -22,6 +22,7 @@ export default function TvMyLibraryBody({
   onMoveDown,
   enterNavFromContent,
   onHistoryCleared,
+  onEpisodeRailCleared,
 }) {
   const sharedFocus = {
     registerItemRef,
@@ -102,13 +103,14 @@ export default function TvMyLibraryBody({
 
           case MY_LIBRARY_SECTION_ID.podcastUserSwimlanes:
             return (
-              <TvLibraryPodcastUserGridSections
+              <TvLibraryPodcastUserSwimlanes
                 key={section.id}
                 groupIndexOffset={podcastOffset}
                 registerGroupRef={registerGroupRef}
                 isContentGroupActive={isContentGroupActive}
                 getItemFocusIndex={getItemFocusIndex}
                 setFocusedIndex={setFocusedIndex}
+                onEpisodeRailCleared={onEpisodeRailCleared}
                 {...sharedFocus}
               />
             );

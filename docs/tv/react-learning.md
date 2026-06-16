@@ -183,6 +183,15 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 
 ---
 
+## 2026-06-12 — MixedWidthSwimlane (variable card widths)
+
+- **`FixedSwimlane`** — one `slotWidth` for every slot; keep using it for uniform rows (music channels, podcast tiles, Listen again compact tiles).
+- **`MixedWidthSwimlane`** — same `slotCount` + `renderSlot` API as `FixedSwimlane`, but **measures each slot** after layout (`ResizeObserver`) and parks scroll with **`calcMeasuredSwimlaneOffset`** (`swimlaneScroll.js`, shared with **`VariableSwimlane`** filter pills).
+- **`SwimlaneRow`** — pass **`mixedWidth`** to swap in `MixedWidthSwimlane` without duplicating title chrome.
+- **First use:** **`TvEpisodeCardSwimlane`** — wide episode cards (656px) + square trailing **Clear** / **More** (`--tv-card-size`); horizontal scroll stays correct when focus reaches the last slot.
+
+---
+
 ## 2026-06-09 — Search music browse (Phase 2)
 
 - **Broad lineup:** **`TvSearchMusicVibeSection`** mirrors mobile **`SearchMusicVibeBrowseRail`** — **`GenreFilterSwimlane`** (pills) + either **`TvSearchLabelTileSwimlane`** (sub-tags) or **`MusicChannelSwimlane`** (leaf channels + More). Focus groups start at **`SEARCH_FOCUS.bodyStart` (2)**; each vibe uses two groups (pills, cards).

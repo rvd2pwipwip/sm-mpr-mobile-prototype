@@ -9,6 +9,7 @@ import { resolveRadioStationForStub } from "@sm-mpr/shared/data/radioInternation
 import {
   getLibraryHistorySwimlaneSlotCount,
   getMusicSwimlaneSlotCount,
+  getEpisodeLibrarySwimlaneSlotCount,
 } from "./swimlaneUtils.js";
 import { buildTvPodcastLibraryRails } from "./tvPodcastLibraryRails.js";
 
@@ -89,7 +90,10 @@ export function buildTvMyLibraryFocusLayout(
         const rails = buildTvPodcastLibraryRails(podcastUserState);
         sectionGroups[section.id] = groupIndex;
         rails.forEach((rail) => {
-          itemCounts[groupIndex] = getMusicSwimlaneSlotCount(rail.sourceCount);
+          itemCounts[groupIndex] =
+            rail.kind === "episodes"
+              ? getEpisodeLibrarySwimlaneSlotCount(rail.sourceCount)
+              : getMusicSwimlaneSlotCount(rail.sourceCount);
           swimlaneGroups.push(groupIndex);
           groupIndex += 1;
         });

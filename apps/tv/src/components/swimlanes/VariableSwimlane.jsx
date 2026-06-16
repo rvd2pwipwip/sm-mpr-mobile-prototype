@@ -9,16 +9,9 @@ import {
 import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import VariableSwimlaneItem from "./VariableSwimlaneItem.jsx";
 import { getTvSwimlaneInlineEnd, getTvSwimlaneInlineStart } from "../../utils/tvLayout.js";
+import { calcMeasuredSwimlaneOffset } from "../../utils/swimlaneScroll.js";
 import { isTvStackedDialogOpen } from "../../utils/tvStackedDialogFocus.js";
 import "./VariableSwimlane.css";
-
-function sumWidthsBeforeIndex(widths, gap, index) {
-  let sum = 0;
-  for (let i = 0; i < index; i += 1) {
-    sum += (widths[i] ?? 0) + gap;
-  }
-  return sum;
-}
 
 /**
  * Variable-width horizontal swimlane (filter pills). Measures item widths after layout.
@@ -100,40 +93,17 @@ export default function VariableSwimlane({
     return () => cancelAnimationFrame(frameId);
   }, [viewportWidth]);
 
-  const totalContentWidth = useMemo(() => {
-    if (itemWidths.length === 0) return 0;
-    return (
-      itemWidths.reduce((sum, width) => sum + width, 0) +
-      Math.max(0, itemWidths.length - 1) * gap
-    );
-  }, [itemWidths, gap]);
-
   const calcOffsetForIndex = useCallback(
-    (index) => {
-      if (viewportWidth <= 0 || itemWidths.length === 0) return 0;
-
-      const focusLeft = sumWidthsBeforeIndex(itemWidths, gap, index);
-      const focusWidth = itemWidths[index] ?? 0;
-      const lastIndex = itemWidths.length - 1;
-
-      const maxOffset = Math.max(
-        0,
-        totalContentWidth - viewportWidth + gutterStart + gutterEnd,
-      );
-
-      // Leading-edge park: focused pill's left stays on the park line (row padding = gutterStart).
-      let offset = focusLeft;
-
-      // Last item: scroll until fully visible at the trailing edge of the viewport.
-      if (index === lastIndex) {
-        const offsetForFullLast =
-          focusLeft + focusWidth - (viewportWidth - gutterEnd - gutterStart);
-        offset = Math.max(offset, offsetForFullLast);
-      }
-
-      return Math.min(Math.max(0, offset), maxOffset);
-    },
-    [gap, gutterStart, gutterEnd, itemWidths, totalContentWidth, viewportWidth],
+    (index) =>
+      calcMeasuredSwimlaneOffset({
+        index,
+        slotWidths: itemWidths,
+        gap,
+        viewportWidth,
+        gutterStart,
+        gutterEnd,
+      }),
+    [gap, gutterStart, gutterEnd, itemWidths, viewportWidth],
   );
 
   const scrollIndex = useMemo(() => {

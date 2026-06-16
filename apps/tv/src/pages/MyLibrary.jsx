@@ -85,6 +85,8 @@ export default function MyLibrary() {
     [getItemElement, setFocusedIndex],
   );
 
+  const onEpisodeRailCleared = onHistoryCleared;
+
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
 
   const {
@@ -128,6 +130,7 @@ export default function MyLibrary() {
               onMoveDown={handleMoveDown}
               enterNavFromContent={enterNavFromContent}
               onHistoryCleared={onHistoryCleared}
+              onEpisodeRailCleared={onEpisodeRailCleared}
             />
           ) : (
             <p className="tv-drill-screen__empty tv-my-library__empty">

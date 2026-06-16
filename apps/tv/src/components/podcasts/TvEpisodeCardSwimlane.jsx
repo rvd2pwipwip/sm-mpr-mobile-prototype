@@ -1,8 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { SWIMLANE_CARD_MAX } from "../../constants/swimlane.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import { getTvCardGap } from "../../utils/tvLayout.js";
+import {
+  getEpisodeLibrarySwimlaneSlotCount,
+  showsEpisodeLibraryMoreTile,
+} from "../../utils/swimlaneUtils.js";
+import TvListenHistoryClearDialog from "../listenHistory/TvListenHistoryClearDialog.jsx";
+import SwimlaneClearTile from "../swimlanes/SwimlaneClearTile.jsx";
 import SwimlaneMoreTile from "../swimlanes/SwimlaneMoreTile.jsx";
 import SwimlaneRow from "../swimlanes/SwimlaneRow.jsx";
 import TvEpisodeCard from "./TvEpisodeCard.jsx";
@@ -13,6 +19,7 @@ import "./TvEpisodeCardSwimlane.css";
  * One focus target per card (no bookmark/download on card; see player / podcast info).
  *
  * @param {{ episode: object, podcast: object }[]} rows
+ * @param {'more-only' | 'clear-or-more'} [trailingTileMode]
  */
 export default function TvEpisodeCardSwimlane({
   title = "Episodes",
@@ -29,37 +36,100 @@ export default function TvEpisodeCardSwimlane({
   onSelectRow,
   onMore,
   getProgressFraction,
+  trailingTileMode = "more-only",
+  clearConfirm,
+  onClear,
+  onRailCleared,
 }) {
   const { enterContent } = useTvNavFocus();
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
   const totalCount = sourceCount ?? rows.length;
-  const showMoreTile = totalCount > SWIMLANE_CARD_MAX;
+  const useClearOrMore = trailingTileMode === "clear-or-more";
+  const showMoreTile = useClearOrMore
+    ? showsEpisodeLibraryMoreTile(totalCount)
+    : totalCount > SWIMLANE_CARD_MAX;
   const visibleRows = useMemo(
     () => rows.slice(0, SWIMLANE_CARD_MAX),
     [rows],
   );
-  const slotCount = visibleRows.length + (showMoreTile ? 1 : 0);
-  const moreIndex = showMoreTile ? visibleRows.length : -1;
+  const slotCount = useClearOrMore
+    ? getEpisodeLibrarySwimlaneSlotCount(totalCount)
+    : visibleRows.length + (showMoreTile ? 1 : 0);
+  const trailingIndex = useClearOrMore
+    ? visibleRows.length
+    : showMoreTile
+      ? visibleRows.length
+      : -1;
 
   const registerSlotRef = (index, node) => {
     registerItemRef(groupIndex, index, node);
   };
 
+  const goToMore = () => {
+    enterContent();
+    onMore?.();
+  };
+
   const renderSlot = (index, isFocused, setRef) => {
-    if (showMoreTile && index === moreIndex) {
+    if (useClearOrMore && index === trailingIndex) {
+      if (showMoreTile) {
+        return (
+          <div key="more" className="tv-episode-card-swimlane__slot">
+            <KeyboardWrapper
+              ref={setRef}
+              onSelect={goToMore}
+              onUp={onMoveUp}
+              onDown={onMoveDown}
+            >
+              {(focusProps) => (
+                <SwimlaneMoreTile
+                  {...focusProps}
+                  focused={isFocused}
+                  className="tv-episode-card-swimlane__trailing-tile"
+                />
+              )}
+            </KeyboardWrapper>
+          </div>
+        );
+      }
+
       return (
-        <div key="more" className="tv-episode-card-swimlane__slot">
+        <div key="clear" className="tv-episode-card-swimlane__slot">
           <KeyboardWrapper
             ref={setRef}
-            onSelect={() => {
-              enterContent();
-              onMore?.();
-            }}
+            onSelect={() => setClearDialogOpen(true)}
             onUp={onMoveUp}
             onDown={onMoveDown}
           >
             {(focusProps) => (
-              <SwimlaneMoreTile {...focusProps} focused={isFocused} />
+              <SwimlaneClearTile
+                {...focusProps}
+                focused={isFocused}
+                ariaLabel={clearConfirm?.clearAriaLabel}
+                className="tv-episode-card-swimlane__trailing-tile"
+              />
+            )}
+          </KeyboardWrapper>
+        </div>
+      );
+    }
+
+    if (!useClearOrMore && showMoreTile && index === trailingIndex) {
+      return (
+        <div key="more" className="tv-episode-card-swimlane__slot">
+          <KeyboardWrapper
+            ref={setRef}
+            onSelect={goToMore}
+            onUp={onMoveUp}
+            onDown={onMoveDown}
+          >
+            {(focusProps) => (
+              <SwimlaneMoreTile
+                {...focusProps}
+                focused={isFocused}
+                className="tv-episode-card-swimlane__trailing-tile"
+              />
             )}
           </KeyboardWrapper>
         </div>
@@ -103,21 +173,43 @@ export default function TvEpisodeCardSwimlane({
     );
   };
 
+  const dialogConfirm = clearConfirm
+    ? {
+        dialogTitle: clearConfirm.clearConfirmDialogTitle,
+        bodyPhrase: clearConfirm.clearConfirmBodyHistoryPhrase,
+        primaryLabel: clearConfirm.clearConfirmPrimaryLabel,
+      }
+    : undefined;
+
   return (
-    <SwimlaneRow
-      title={title}
-      swimlaneProps={{
-        slotCount,
-        focusedIndex,
-        onFocusChange,
-        focused,
-        onBoundaryLeft,
-        registerSlotRef,
-        renderSlot,
-        className: "tv-episode-card-swimlane__viewport",
-        slotWidth: 656,
-        slotGap: getTvCardGap(),
-      }}
-    />
+    <>
+      <SwimlaneRow
+        title={title}
+        mixedWidth
+        swimlaneProps={{
+          slotCount,
+          focusedIndex,
+          onFocusChange,
+          focused,
+          onBoundaryLeft,
+          registerSlotRef,
+          renderSlot,
+          className: "tv-episode-card-swimlane__viewport",
+          slotGap: getTvCardGap(),
+        }}
+      />
+      {useClearOrMore && clearConfirm ? (
+        <TvListenHistoryClearDialog
+          open={clearDialogOpen}
+          onClose={() => setClearDialogOpen(false)}
+          onConfirm={() => {
+            onClear?.();
+            setClearDialogOpen(false);
+            onRailCleared?.();
+          }}
+          confirm={dialogConfirm}
+        />
+      ) : null}
+    </>
   );
 }
