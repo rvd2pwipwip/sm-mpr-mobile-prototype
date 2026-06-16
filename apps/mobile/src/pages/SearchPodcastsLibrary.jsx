@@ -1,10 +1,14 @@
+import { useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import AppStackedDialog from "../components/AppStackedDialog";
 import EpisodeCard from "../components/EpisodeCard";
 import PodcastCard from "../components/PodcastCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
 import {
+  PODCAST_LIBRARY_EPISODE_RAIL_CLEAR,
   PODCAST_LIBRARY_SLUG,
+  isPodcastEpisodeLibrarySlug,
   isPodcastLibrarySlug,
 } from "../constants/podcastSearchLibrary.js";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
@@ -15,6 +19,7 @@ import {
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext";
 import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
+import { runPodcastEpisodeRailClear } from "@sm-mpr/shared/utils/podcastLibraryClear.js";
 import "./Search.css";
 import "./SwimlaneMore.css";
 
@@ -28,16 +33,19 @@ const TITLES = {
 
 /**
  * Search → Browse → Podcasts → one library shelf (episodes column or show grid).
+ * Episode shelves include header Clear + speed bump (My Library + Search browse).
  */
 export default function SearchPodcastsLibrary() {
   const { librarySection } = useParams();
   const navigate = useNavigate();
   const { userType } = useUserType();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
+  const podcastUserState = usePodcastUserState();
   const {
-    continueListening,
     subscribedPodcasts,
+    continueListening,
     bookmarkedEpisodes,
     downloadedEpisodes,
     newEpisodeRows,
@@ -46,7 +54,11 @@ export default function SearchPodcastsLibrary() {
     getEpisodeProgress,
     isBookmarked,
     isDownloaded,
-  } = usePodcastUserState();
+    clearAllEpisodeProgress,
+    clearAllBookmarks,
+    clearAllDownloads,
+    unsubscribePodcasts,
+  } = podcastUserState;
 
   if (!isPodcastLibrarySlug(librarySection)) {
     return <Navigate to={SEARCH_BROWSE.podcasts} replace />;
@@ -54,6 +66,31 @@ export default function SearchPodcastsLibrary() {
 
   const title = TITLES[librarySection];
   const goBack = () => navigate(-1);
+  const isEpisodeShelf = isPodcastEpisodeLibrarySlug(librarySection);
+  const clearConfig = isEpisodeShelf
+    ? PODCAST_LIBRARY_EPISODE_RAIL_CLEAR[librarySection]
+    : null;
+
+  const episodeRows = useMemo(() => {
+    switch (librarySection) {
+      case PODCAST_LIBRARY_SLUG.continueListening:
+        return continueListening;
+      case PODCAST_LIBRARY_SLUG.yourEpisodes:
+        return bookmarkedEpisodes;
+      case PODCAST_LIBRARY_SLUG.newEpisodes:
+        return newEpisodeRows;
+      case PODCAST_LIBRARY_SLUG.downloadedEpisodes:
+        return downloadedEpisodes;
+      default:
+        return [];
+    }
+  }, [
+    librarySection,
+    continueListening,
+    bookmarkedEpisodes,
+    newEpisodeRows,
+    downloadedEpisodes,
+  ]);
 
   const episodeHandlers = (podcast, episode) => ({
     isBookmarked: isBookmarked(episode.id),
@@ -85,6 +122,24 @@ export default function SearchPodcastsLibrary() {
       toggleDownload(episode.id);
     },
   });
+
+  const closeClearDialog = () => setClearDialogOpen(false);
+
+  const confirmClear = () => {
+    if (!isEpisodeShelf) return;
+    runPodcastEpisodeRailClear(
+      librarySection,
+      {
+        clearAllEpisodeProgress,
+        clearAllBookmarks,
+        clearAllDownloads,
+        unsubscribePodcasts,
+      },
+      episodeRows,
+    );
+    closeClearDialog();
+    goBack();
+  };
 
   let body = null;
 
@@ -185,6 +240,9 @@ export default function SearchPodcastsLibrary() {
       return <Navigate to={SEARCH_BROWSE.podcasts} replace />;
   }
 
+  const dialogTitleId = `podcast-library-clear-dialog-title-${librarySection}`;
+  const dialogDescId = `podcast-library-clear-dialog-desc-${librarySection}`;
+
   return (
     <main className="app-shell app-shell--footer-fixed swimlane-more">
       <ScreenHeader
@@ -199,9 +257,51 @@ export default function SearchPodcastsLibrary() {
             <ScreenHeaderChevronBack />
           </button>
         }
+        endSlot={
+          clearConfig ? (
+            <button
+              type="button"
+              className="screen-header__text-btn"
+              disabled={episodeRows.length === 0}
+              onClick={() => setClearDialogOpen(true)}
+              aria-label={clearConfig.clearAriaLabel}
+            >
+              Clear
+            </button>
+          ) : null
+        }
       />
 
       <div className="swimlane-more__scroll">{body}</div>
+
+      {clearConfig ? (
+        <AppStackedDialog
+          open={clearDialogOpen}
+          onClose={closeClearDialog}
+          scrimCloseLabel="Close dialog without clearing list"
+          title={clearConfig.clearConfirmDialogTitle}
+          titleId={dialogTitleId}
+          descriptionId={dialogDescId}
+          primaryButton={{
+            label: clearConfig.clearConfirmPrimaryLabel,
+            onClick: confirmClear,
+            variant: "subscribe-primary",
+          }}
+          secondaryButton={{
+            label: "Cancel",
+            onClick: closeClearDialog,
+            appearance: "outline",
+          }}
+        >
+          <p className="app-stacked-dialog__confirm-line">
+            Are you sure you want to clear your{" "}
+            {clearConfig.clearConfirmBodyHistoryPhrase}?
+          </p>
+          <p className="app-stacked-dialog__confirm-line">
+            This action cannot be undone.
+          </p>
+        </AppStackedDialog>
+      ) : null}
     </main>
   );
 }

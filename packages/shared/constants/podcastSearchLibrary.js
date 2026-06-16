@@ -21,11 +21,56 @@ export function podcastLibraryBrowsePath(slug) {
   return `/search/browse/podcasts/library/${slug}`;
 }
 
+/** Full Your Podcasts grid from My Library / limited Home swimlane More (TV). */
+export function myLibraryYourPodcastsMorePath() {
+  return `/my-library/podcasts/${PODCAST_LIBRARY_SLUG.yourPodcasts}`;
+}
+
+/** Episode-library shelves opened from My Library / limited Home swimlane More (TV). */
+export const PODCAST_EPISODE_LIBRARY_SLUGS = Object.freeze([
+  PODCAST_LIBRARY_SLUG.continueListening,
+  PODCAST_LIBRARY_SLUG.yourEpisodes,
+  PODCAST_LIBRARY_SLUG.newEpisodes,
+  PODCAST_LIBRARY_SLUG.downloadedEpisodes,
+]);
+
+/** @param {string} slug */
+export function isPodcastEpisodeLibrarySlug(slug) {
+  return PODCAST_EPISODE_LIBRARY_SLUGS.includes(slug);
+}
+
+/** @param {string} slug */
+export function myLibraryPodcastEpisodeLibraryMorePath(slug) {
+  return `/my-library/${slug}`;
+}
+
+/**
+ * My Library swimlane More target (TV). Search browse keeps {@link podcastLibraryBrowsePath}.
+ * @param {string} slug
+ */
+export function myLibraryPodcastLibraryMorePath(slug) {
+  if (slug === PODCAST_LIBRARY_SLUG.yourPodcasts) {
+    return myLibraryYourPodcastsMorePath();
+  }
+  if (isPodcastEpisodeLibrarySlug(slug)) {
+    return myLibraryPodcastEpisodeLibraryMorePath(slug);
+  }
+  return podcastLibraryBrowsePath(slug);
+}
+
 /** @param {string} [slug] */
 export function isPodcastLibrarySlug(slug) {
   if (!slug) return false;
   return Object.values(PODCAST_LIBRARY_SLUG).includes(slug);
 }
+
+/** Header Clear on TV Your Podcasts More grid (`MyLibraryYourPodcastsMore`). */
+export const PODCAST_LIBRARY_YOUR_PODCASTS_CLEAR = Object.freeze({
+  clearAriaLabel: "Clear your podcasts",
+  clearConfirmDialogTitle: "Clear Your Podcasts",
+  clearConfirmBodyHistoryPhrase: "Your Podcasts subscriptions",
+  clearConfirmPrimaryLabel: "Unsubscribe from all",
+});
 
 /**
  * Swimlane Clear confirm copy for episode library rails (TV + future mobile parity).

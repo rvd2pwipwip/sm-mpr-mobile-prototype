@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   PODCAST_LIBRARY_EPISODE_RAIL_CLEAR,
   PODCAST_LIBRARY_SLUG,
-  podcastLibraryBrowsePath,
+  myLibraryPodcastLibraryMorePath,
 } from "@sm-mpr/shared/constants/podcastSearchLibrary.js";
 import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import { usePlayback } from "../../context/PlaybackContext.jsx";
@@ -120,7 +120,7 @@ export default function TvLibraryPodcastUserSwimlanes({
                 onMoveDown={onMoveDown}
                 onSelectItem={(item) => navigate(`/podcast/${item.id}`)}
                 playingItemId={playingPodcastId}
-                onMore={() => navigate(podcastLibraryBrowsePath(rail.slug))}
+                onMore={() => navigate(myLibraryPodcastLibraryMorePath(rail.slug))}
               />
             ) : (
               <TvEpisodeCardSwimlane
@@ -141,7 +141,7 @@ export default function TvLibraryPodcastUserSwimlanes({
                   enterContent();
                   navigate(`/podcast/${podcast.id}/play/${episode.id}`);
                 }}
-                onMore={() => navigate(podcastLibraryBrowsePath(rail.slug))}
+                onMore={() => navigate(myLibraryPodcastLibraryMorePath(rail.slug))}
                 trailingTileMode="clear-or-more"
                 clearConfirm={PODCAST_LIBRARY_EPISODE_RAIL_CLEAR[rail.slug]}
                 onClear={() => clearEpisodeRail(rail.slug, rail.episodeRows)}

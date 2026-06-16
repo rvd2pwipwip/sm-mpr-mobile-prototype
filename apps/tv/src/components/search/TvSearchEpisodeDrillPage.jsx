@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   userMayBookmarkEpisodes,
   userMayDownloadEpisodesOffline,
@@ -12,6 +12,11 @@ import { useScreenContentFocus } from "../../hooks/useScreenContentFocus.js";
 import { useTvScreenHeaderOffset } from "../../hooks/useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "../../hooks/useTvVerticalGroupScroll.js";
 import TvDrillScreenHeader from "../drill/TvDrillScreenHeader.jsx";
+import TvListenHistoryClearDialog from "../listenHistory/TvListenHistoryClearDialog.jsx";
+import FocusableButton from "../focus/FocusableButton.jsx";
+import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
+import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
+import "../../pages/ListenAgainMore.css";
 import "../drill/TvDrillScreen.css";
 import "./TvSearchEpisodeDrillPage.css";
 
@@ -19,6 +24,7 @@ const EPISODE_SLOTS = 3;
 
 /**
  * Search catalog More — full episode list (`TvEpisodeListItem` rows).
+ * Optional `clearConfirm` + `onClear` add a header Clear speed bump (My Library shelves).
  */
 export default function TvSearchEpisodeDrillPage({
   screenId,
@@ -27,8 +33,11 @@ export default function TvSearchEpisodeDrillPage({
   emptyMessage,
   onSelectRow,
   getProgressFraction,
+  clearConfirm,
+  onClear,
 }) {
   const { userType } = useUserType();
+  const { focusZone, enterContent } = useTvNavFocus();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
   const {
     toggleBookmark,
@@ -37,6 +46,11 @@ export default function TvSearchEpisodeDrillPage({
     isBookmarked,
     isDownloaded,
   } = usePodcastUserState();
+
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
+  const [headerClearFocused, setHeaderClearFocused] = useState(false);
+  const clearBtnRef = useRef(null);
+  const canClear = Boolean(clearConfirm && onClear && rows.length > 0);
 
   const resolveProgress = useCallback(
     (row) => {
@@ -60,6 +74,23 @@ export default function TvSearchEpisodeDrillPage({
     return counts;
   }, [rows.length]);
 
+  const focusHeaderClear = useCallback(() => {
+    if (!canClear) return;
+    setHeaderClearFocused(true);
+    requestAnimationFrame(() => {
+      clearBtnRef.current?.focus({ preventScroll: true });
+    });
+  }, [canClear]);
+
+  const resolveMoveUpToHeader = useCallback(
+    (groupIndex) => {
+      if (!canClear || groupIndex !== 0) return undefined;
+      focusHeaderClear();
+      return false;
+    },
+    [canClear, focusHeaderClear],
+  );
+
   const {
     registerItemRef,
     focusedGroupIndex,
@@ -67,7 +98,6 @@ export default function TvSearchEpisodeDrillPage({
     handleMoveDown,
     handleMoveLeft,
     handleMoveRight,
-    isItemFocused,
     getItemFocusIndex,
     getItemElement,
     enterNavFromContent,
@@ -77,6 +107,9 @@ export default function TvSearchEpisodeDrillPage({
     swimlaneGroups: [],
     defaultGroupIndex: 0,
     defaultItemIndex: HOME_LANDING_ITEM_INDEX,
+    suspendDomFocus: headerClearFocused || clearDialogOpen,
+    contentKeysEnabled: !headerClearFocused && !clearDialogOpen,
+    resolveMoveUp: canClear ? resolveMoveUpToHeader : undefined,
   });
 
   const getFocusedElement = useCallback(() => {
@@ -100,9 +133,60 @@ export default function TvSearchEpisodeDrillPage({
     scrollEnabled: rows.length > 0,
   });
 
+  const focusFirstEpisode = useCallback(() => {
+    setHeaderClearFocused(false);
+    enterContent();
+    requestAnimationFrame(() => {
+      getItemElement(0, HOME_LANDING_ITEM_INDEX)?.focus({ preventScroll: true });
+    });
+  }, [enterContent, getItemElement]);
+
+  const openClearDialog = useCallback(() => {
+    if (!canClear) return;
+    setClearDialogOpen(true);
+  }, [canClear]);
+
+  const closeClearDialog = useCallback(() => {
+    setClearDialogOpen(false);
+    if (canClear) {
+      focusHeaderClear();
+    }
+  }, [canClear, focusHeaderClear]);
+
+  const confirmClear = useCallback(() => {
+    onClear?.();
+    setClearDialogOpen(false);
+  }, [onClear]);
+
+  const headerClearButton = canClear ? (
+    <KeyboardWrapper
+      ref={clearBtnRef}
+      onSelect={openClearDialog}
+      onDown={rows.length > 0 ? focusFirstEpisode : undefined}
+    >
+      {(focusProps) => (
+        <FocusableButton
+          {...focusProps}
+          type="button"
+          className="listen-again-more__clear-btn"
+          focused={headerClearFocused && focusZone === FOCUS_ZONE_CONTENT}
+          disabled={!canClear}
+          onClick={openClearDialog}
+          aria-label={clearConfirm.clearAriaLabel}
+        >
+          Clear
+        </FocusableButton>
+      )}
+    </KeyboardWrapper>
+  ) : null;
+
   return (
     <div ref={shellRef} className="tv-drill-screen tv-screen-overlay">
-      <TvDrillScreenHeader title={title} headerRef={headerRef} />
+      <TvDrillScreenHeader
+        title={title}
+        headerRef={headerRef}
+        endSlot={headerClearButton}
+      />
 
       <div
         ref={viewportRef}
@@ -130,7 +214,7 @@ export default function TvSearchEpisodeDrillPage({
                     isDownloaded={isDownloaded(row.episode.id)}
                     groupIndex={index}
                     focusedIndex={getItemFocusIndex(index)}
-                    focused={focusedGroupIndex === index}
+                    focused={focusedGroupIndex === index && !headerClearFocused}
                     registerItemRef={registerItemRef}
                     onMoveUp={handleMoveUp}
                     onMoveDown={handleMoveDown}
@@ -164,6 +248,15 @@ export default function TvSearchEpisodeDrillPage({
           )}
         </div>
       </div>
+
+      {clearConfirm ? (
+        <TvListenHistoryClearDialog
+          open={clearDialogOpen}
+          onClose={closeClearDialog}
+          onConfirm={confirmClear}
+          confirm={clearConfirm}
+        />
+      ) : null}
     </div>
   );
 }

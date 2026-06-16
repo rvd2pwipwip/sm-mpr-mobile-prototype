@@ -202,6 +202,7 @@ export function useScreenContentFocus(
   const handleMoveUp = useCallback(() => {
     if (focusZone === FOCUS_ZONE_NAV) return;
     const resolved = resolveMoveUp?.(focusedGroupIndex);
+    if (resolved === false) return;
     if (resolved != null) {
       focusGroup(resolved);
       return;

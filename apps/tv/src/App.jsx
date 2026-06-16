@@ -42,6 +42,8 @@ import TvSearchTagsMore from "./pages/TvSearchTagsMore.jsx";
 import MyLibrary from "./pages/MyLibrary.jsx";
 import MyLibraryHistoryMore from "./pages/MyLibraryHistoryMore.jsx";
 import MyLibraryLikesMore from "./pages/MyLibraryLikesMore.jsx";
+import MyLibraryYourPodcastsMore from "./pages/MyLibraryYourPodcastsMore.jsx";
+import MyLibraryPodcastEpisodeLibraryMore from "./pages/MyLibraryPodcastEpisodeLibraryMore.jsx";
 import FocusDemo from "./pages/FocusDemo.jsx";
 import MusicChannelInfo from "./pages/MusicChannelInfo.jsx";
 import MusicPlayer from "./pages/MusicPlayer.jsx";
@@ -117,7 +119,7 @@ export default function App() {
                               <Route
                                 path="/search/browse/podcasts/library/:librarySection"
                                 element={
-                                  <RequireContentType type={CONTENT_TYPE.podcasts}>
+                                  <RequireContentType contentType={CONTENT_TYPE.podcasts}>
                                     <SearchPodcastsLibrary />
                                   </RequireContentType>
                                 }
@@ -184,6 +186,22 @@ export default function App() {
                               <Route
                                 path="/my-library/likes/:likeKind"
                                 element={<MyLibraryLikesMore />}
+                              />
+                              <Route
+                                path="/my-library/podcasts/your-podcasts"
+                                element={
+                                  <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+                                    <MyLibraryYourPodcastsMore />
+                                  </RequireContentType>
+                                }
+                              />
+                              <Route
+                                path="/my-library/:librarySection"
+                                element={
+                                  <RequireContentType contentType={CONTENT_TYPE.podcasts}>
+                                    <MyLibraryPodcastEpisodeLibraryMore />
+                                  </RequireContentType>
+                                }
                               />
                               <Route
                                 path="/info/contact"
