@@ -2,7 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
 } from "react";
@@ -19,35 +19,45 @@ function initialMusicLineupMode() {
   return readStoredMusicLineupMode() ?? MUSIC_LINEUP.broad;
 }
 
+function applyCatalogScopeToDocument(musicLineupMode) {
+  if (typeof document === "undefined") return;
+  const catalogScope = catalogScopeFromMusicLineup(musicLineupMode);
+  document.documentElement.setAttribute("data-catalog-scope", catalogScope);
+}
+
 /**
  * Prototype territory stand-in (broad vs limited catalog).
  * Default **broad**. Toggle via **wordmark click** only (mouse easter egg; not in D-pad focus order).
  * Shares sessionStorage key with mobile so the same tab keeps one lineup choice.
  */
 export function TerritoryProvider({ children }) {
-  const [musicLineupMode, setMusicLineupMode] = useState(initialMusicLineupMode);
+  const [musicLineupMode, setMusicLineupModeState] = useState(
+    initialMusicLineupMode,
+  );
 
   const catalogScope = useMemo(
     () => catalogScopeFromMusicLineup(musicLineupMode),
     [musicLineupMode],
   );
 
-  useEffect(() => {
-    writeStoredMusicLineupMode(musicLineupMode);
-  }, [musicLineupMode]);
+  const setMusicLineupMode = useCallback((nextMode) => {
+    setMusicLineupModeState((prev) => {
+      const resolved =
+        typeof nextMode === "function" ? nextMode(prev) : nextMode;
+      return resolved === prev ? prev : resolved;
+    });
+  }, []);
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-catalog-scope", catalogScope);
-    return () => {
-      document.documentElement.removeAttribute("data-catalog-scope");
-    };
-  }, [catalogScope]);
+  useLayoutEffect(() => {
+    writeStoredMusicLineupMode(musicLineupMode);
+    applyCatalogScopeToDocument(musicLineupMode);
+  }, [musicLineupMode]);
 
   const toggleMusicLineupMode = useCallback(() => {
     setMusicLineupMode((prev) =>
       prev === MUSIC_LINEUP.limited ? MUSIC_LINEUP.broad : MUSIC_LINEUP.limited,
     );
-  }, []);
+  }, [setMusicLineupMode]);
 
   const value = useMemo(
     () => ({
@@ -56,7 +66,7 @@ export function TerritoryProvider({ children }) {
       setMusicLineupMode,
       toggleMusicLineupMode,
     }),
-    [musicLineupMode, catalogScope, toggleMusicLineupMode],
+    [musicLineupMode, catalogScope, setMusicLineupMode, toggleMusicLineupMode],
   );
 
   return (

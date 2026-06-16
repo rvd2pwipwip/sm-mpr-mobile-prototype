@@ -20,8 +20,8 @@ export default function Home() {
   }, [navigate, searchParams]);
 
   if (catalogScope === CATALOG_SCOPE.limited) {
-    return <LimitedHome />;
+    return <LimitedHome key="home-limited" />;
   }
 
-  return <BroadHome />;
+  return <BroadHome key="home-broad" />;
 }

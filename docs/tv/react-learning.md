@@ -147,6 +147,42 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 
 ---
 
+## 2026-06-12 — TV podcasts (Phases 0–10)
+
+**Plan:** [`docs/tv/Plans/Podcasts-implementation-plan.md`](./Plans/Podcasts-implementation-plan.md)  
+**Mobile tutorial (shared behavior):** [`docs/mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md`](../mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md)
+
+### Podcast Info + episode row focus
+
+- **Routes:** `/podcast/:podcastId` (`PodcastInfo`), `/podcast/:podcastId/play/:episodeId` (`PodcastPlayer`). Invalid ids → `<Navigate to="/" />`.
+- **Focus groups on info:** group **0** = Play + Subscribe (Left/Right); optional description **More** group; each episode row is its own vertical group with **3 horizontal slots** (`EPISODE_FOCUS_SLOTS` in `episodeFocusSlots.js`): body → bookmark → download.
+- **Enter on body** navigates to play route; **Enter on actions** toggles library state (with `userMay*` gates → `TvAccountRequiredDialog`). Not a swimlane — **`useScreenContentFocus`** owns Up/Down; Left/Right move within the row via `handleMoveLeft` / `handleMoveRight`.
+- **Components:** `TvEpisodeListItem` (list), `TvEpisodeCard` (656px swimlane/grid), shared `TvEpisodeActionButtons.jsx`.
+
+### Podcast session + mini player
+
+- **`PodcastUserStateProvider`** in `@sm-mpr/shared/context/PodcastUserStateContext.jsx` — subscribe, bookmark, download, progress (same reducer as mobile).
+- **`PlaybackContext.upsertPodcastSession`** — called from `PodcastPlayer` after preroll gate; sets `session.variant === "podcasts"`, `fullPlayerPath`, titles, thumb.
+- **Mini:** `shouldShowTvMiniPlayer` + `PrimaryNav` index 0; Enter opens full player with `{ expandFromMiniPlayer: true }` (skips repeat preroll when grace applies). **`TvShell`** hides nav on play URLs.
+- **Listen history:** `recordPodcastShowListen` after preroll + play or >5% progress stub.
+
+### Library swimlanes (Phase 7)
+
+- **Limited:** Home → Podcasts tab, before taxonomy (`TvLibraryPodcastUserSwimlanes`).
+- **Broad:** **My Library** only (not Search browse). More drill: `/search/browse/podcasts/library/:librarySection`.
+
+---
+
+## 2026-06-12 — Listen again on TV (Phase 9)
+
+- **Shared** `ListenHistoryContext` + `listenAgainItems.js` in `@sm-mpr/shared`; TV mounts provider in `App.jsx`.
+- **`TvListenAgainSwimlane`** — compact tiles (`--tv-card-size-compact`, 192px), mixed music/podcast/radio. Trailing tile: **Clear** when `<= 9` items, **More** when `10+` (`showsListenAgainMoreTile` in `swimlaneUtils.js`).
+- **Clear speed bump:** `TvListenHistoryClearDialog` — mobile `AppStackedDialog` layout; **`createPortal`** to `.tv-viewport` so `transform` on scroll parents does not clip the panel.
+- **Grid:** `/more/listen-again` — header **Clear** (top right); Up from first row focuses Clear; **`ContentGrid`** skips window Enter when `focused={false}` so header buttons work.
+- **After clear:** `useRestoreFocusAfterListenAgainClear` — focus card 0 on the next swimlane; `FixedSwimlane` horizontal offset resets with index 0.
+
+---
+
 ## 2026-06-09 — Search music browse (Phase 2)
 
 - **Broad lineup:** **`TvSearchMusicVibeSection`** mirrors mobile **`SearchMusicVibeBrowseRail`** — **`GenreFilterSwimlane`** (pills) + either **`TvSearchLabelTileSwimlane`** (sub-tags) or **`MusicChannelSwimlane`** (leaf channels + More). Focus groups start at **`SEARCH_FOCUS.bodyStart` (2)**; each vibe uses two groups (pills, cards).

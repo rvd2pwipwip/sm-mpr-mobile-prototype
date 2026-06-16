@@ -13,6 +13,7 @@ import { PlaybackProvider } from "./context/PlaybackContext.jsx";
 import { LimitedHomeEscProvider } from "./context/LimitedHomeEscContext.jsx";
 import { TvNavFocusProvider } from "./context/TvNavFocusContext.jsx";
 import GlobalTvKeys from "./components/focus/GlobalTvKeys.jsx";
+import CatalogScopeRouteSync from "./components/CatalogScopeRouteSync.jsx";
 import TvAccountRequiredDialog from "./components/player/TvAccountRequiredDialog.jsx";
 import TvGuestSkipLimitDialog from "./components/player/TvGuestSkipLimitDialog.jsx";
 import TvViewport from "./components/TvViewport.jsx";
@@ -83,6 +84,7 @@ export default function App() {
                         <TvNavFocusProvider>
                           <LimitedHomeEscProvider>
                           <GlobalTvKeys />
+                          <CatalogScopeRouteSync />
                           <TvAccountRequiredDialog />
                           <TvGuestSkipLimitDialog />
                           <TvShell>

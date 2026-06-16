@@ -78,16 +78,15 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Search & Browse Phase 4** — Radio browse tab (shared in-scroll tabs shell + category swimlanes + International geo drill); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Search & Browse Phase 5** — live search result swimlanes (`TvSearchResultsBody`, profile-gated lanes, episode list row); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Search & Browse Phase 6** — Search More catalog/tags grids + artist channel drill (`TvSearchCatalogMore`, `TvSearchTagsMore`, `SearchMusicArtistChannels`); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
-- [x] **Podcasts Phase 0–9** — full flow, library swimlanes, monetization, Listen again on Home; see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
+- [x] **Podcasts Phase 0–10** — full flow, library swimlanes, monetization, Listen again, docs + acceptance checklist; see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
 
 ---
 
 ## Next steps (ordered)
 
 1. **Search & Browse Phase 7** — PrimaryNav reset semantics; see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
-2. **Podcasts Phase 10** — figma nodes, react-learning, acceptance QA
-3. **TV-2** — limited Home layout B polish if needed; layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
-4. **Backlog** — Radio player layouts, TV in-player visual ads
+2. **TV-2** — limited Home layout B polish if needed; layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
+3. **Backlog** — My Library typed Listen again rails; Radio player layouts; TV in-player visual ads
 
 Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 
@@ -99,4 +98,4 @@ Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan
 - Do not replace **`figma-nodes.md`** or mobile product stories; this file **coordinates** implementation.
 - Append TV lessons to **`docs/tv/react-learning.md`** as patterns land in code.
 
-_Last updated: 2026-06-12_
+_Last updated: 2026-06-12 — Podcasts Phase 10 docs; Listen again Clear/More._

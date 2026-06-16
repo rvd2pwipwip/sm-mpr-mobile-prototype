@@ -78,16 +78,17 @@ Living plan for **podcasts and episodes** in **`apps/tv/`**, mirroring the **mob
 | Piece | Status |
 |-------|--------|
 | Shared `podcasts.js`, `getPodcastById`, `findPodcastAndEpisode` | **Done** |
-| Home / Search / Limited Home → `/podcast/:id` | **Done** (lands on stub) |
-| `/podcast/:podcastId` route | **Stub** — `TvContentTypeUnavailable` |
-| `/podcast/.../play/...` route | **Missing** |
-| `PodcastUserStateContext` | **Mobile only** (`apps/mobile/src/context/`) |
-| `PODCAST_SPEED_STEPS` | **Mobile only** (`apps/mobile/src/constants/podcastPlayback.js`) |
-| `PlaybackContext.upsertPodcastSession` | **Mobile only**; TV has music session only |
-| `TvMiniPlayer` podcast variant | **Not wired** (`session.variant === "music"` only) |
-| `TvEpisodeRow` | **Search results only** (no bookmark/download) |
-| `TvPlayerPrerollAd`, grace, tier gates | **Done** (music player) |
-| Podcast library swimlanes (Continue listening, Your Podcasts, …) | **Done** — limited Home (podcasts tab) + broad My Library; More at `/search/browse/podcasts/library/:slug` |
+| Home / Search / Limited Home → `/podcast/:id` | **Done** |
+| `/podcast/:podcastId` route | **Done** — `PodcastInfo.jsx` |
+| `/podcast/.../play/...` route | **Done** — `PodcastPlayer.jsx` |
+| `PodcastUserStateContext` | **Done** — `@sm-mpr/shared/context/PodcastUserStateContext.jsx` |
+| `PODCAST_SPEED_STEPS` | **Done** — `@sm-mpr/shared/constants/podcastPlayback.js` |
+| `PlaybackContext.upsertPodcastSession` | **Done** |
+| `TvMiniPlayer` podcast variant | **Done** |
+| `TvEpisodeListItem` / `TvEpisodeCard` | **Done** |
+| `TvPlayerPrerollAd`, grace, tier gates, account dialog | **Done** |
+| Podcast library swimlanes (Continue listening, Your Podcasts, …) | **Done** — limited Home (podcasts tab) + broad My Library |
+| Listen again (compact Home rail + `/more/listen-again`) | **Done** |
 
 ---
 
@@ -290,30 +291,34 @@ Conditional rows:
 - Shared **`ListenHistoryContext`** on TV; **`recordMusicChannelListen`** / **`recordPodcastShowListen`** after preroll gate
 - **Listen again** on **broad Home** (mixed, profile-filtered) and **limited Home** (tab-scoped by kind)
 - **Compact thumb-only tiles** (`--tv-card-size-compact`, 192px) — no labels, mobile parity
+- **Trailing tile:** **Clear** when `<= 9` items; **More** when `10+` (same as other TV swimlanes)
+- **Clear** opens mobile-parity speed bump (`TvListenHistoryClearDialog`, viewport portal); grid **`/more/listen-again`** has header **Clear**
+- After clear, focus restores to **first card** of the next swimlane (horizontal scroll reset)
 - **More** drill: `/more/listen-again` (full-size labeled grid)
 
-**Status:** Done — `TvListenAgainSwimlane`, shared listen history module, Home wiring.
+**Status:** Done — `TvListenAgainSwimlane`, `SwimlaneClearTile`, shared listen history module, Home wiring.
 
 **Deferred:** My Library typed history rails (music / podcasts / radio segments).
 
 ---
 
-## Phase 10 — Docs + acceptance
+## Phase 10 — Docs + acceptance — **done**
 
-- Add nodes to **`docs/tv/figma-nodes.md`**
-- Update **`docs/tv/Plans/plan.md`** milestones
-- Append **`docs/tv/react-learning.md`** (episode row focus, podcast session)
-- Cross-link mobile tutorial: [`Podcasts-and-episodes-deep-dive-tutorial.md`](../../mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md)
+- [x] Podcast Figma nodes in **`docs/tv/figma-nodes.md`**
+- [x] **`docs/tv/Plans/plan.md`** milestones updated
+- [x] **`docs/tv/react-learning.md`** — podcast session, episode row focus, Listen again Clear/More
+- [x] Cross-link mobile tutorial: [`Podcasts-and-episodes-deep-dive-tutorial.md`](../../mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md)
 
-### Acceptance checklist (manual, after Phase 6 minimum)
+### Acceptance checklist (manual)
 
 1. Home podcast tile → **Podcast Info** → episode → **full player** (nav hidden) → **Esc** → info + **mini in nav** → mini Enter → full player (no repeat preroll when grace / expand flag applies).
-2. **Subscribe** toggles; row appears on **limited Home (podcasts)** or **My Library (broad)** when Phase 7 done.
+2. **Subscribe** toggles; row appears on **limited Home (podcasts)** or **My Library (broad)**.
 3. **Bookmark / download** on episode row update icon state; guest gets account dialog.
 4. **Speed** cycles `0.6` … `2` and wraps.
 5. **−15 / +30** move progress bar (stub).
 6. Invalid `/podcast/bad` or bad episode id → **Home**.
 7. **Music-only** profile still blocks podcast routes with unavailable copy (`ContentProfileContext`).
+8. **Listen again** — Clear speed bump from swimlane or grid header; rail removal focuses next swimlane card 0.
 
 ---
 
@@ -329,11 +334,11 @@ Phase 0 (shared hoist + routes + shell)
   → Phase 6 (entry points)
   → Phase 7 (browse library rows)
   → Phase 8 (monetization QA)
-  → Phase 9 (history — optional)
-  → Phase 10 (docs)
+  → Phase 9 (Listen again)
+  → Phase 10 (docs) — **complete**
 ```
 
-**Minimum vertical slice for a demo:** Phases **0 → 1 → 2 → 4 → 5 → 6** (info + play + mini + Home tile).
+**Podcasts TV slice is feature-complete for prototype demo.** Next product work: Search Phase 7, limited Home polish, backlog items in **`plan.md`**.
 
 **Parallel-friendly:** Phase 3 components while Phase 1 lands; Phase 8 can be validated alongside Phase 4.
 
@@ -366,4 +371,4 @@ Phase 0 (shared hoist + routes + shell)
 
 ---
 
-_Last updated: 2026-06-12 — initial TV plan; Figma nodes from user links + MCP._
+_Last updated: 2026-06-12 — Phase 10 done; Figma podcast nodes indexed._

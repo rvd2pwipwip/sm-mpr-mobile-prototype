@@ -6,6 +6,7 @@ import {
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import { showUpgradeCallToAction } from "@sm-mpr/shared/utils/userTierRules.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
+import { useToggleCatalogScope } from "../hooks/useToggleCatalogScope.js";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import KeyboardWrapper from "./focus/KeyboardWrapper.jsx";
 import TvUpgradeButton from "./TvUpgradeButton.jsx";
@@ -77,7 +78,8 @@ export default function TvHomeHeader({
 }) {
   const navigate = useNavigate();
   const { userType } = useUserType();
-  const { musicLineupMode, toggleMusicLineupMode } = useTerritory();
+  const { musicLineupMode } = useTerritory();
+  const toggleCatalogScope = useToggleCatalogScope();
   const showUpgrade = showUpgradeCallToAction(userType);
   const subscribed = userType === "subscribed";
 
@@ -105,7 +107,7 @@ export default function TvHomeHeader({
         <button
           type="button"
           className="tv-home-header__wordmark-toggle"
-          onClick={toggleMusicLineupMode}
+          onClick={toggleCatalogScope}
           title={`Catalog: ${musicLineupLabel(musicLineupMode)} (click to toggle)`}
           tabIndex={-1}
           aria-label={`Stingray Music. Catalog ${musicLineupLabel(musicLineupMode)}. Click to toggle territory.`}

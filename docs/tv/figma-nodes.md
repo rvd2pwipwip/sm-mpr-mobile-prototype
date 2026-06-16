@@ -127,11 +127,51 @@ Use as starting tokens in `apps/tv/src/index.css`; tune during build.
 
 ---
 
+## Podcasts & episodes
+
+**Implementation plan:** [`docs/tv/Plans/Podcasts-implementation-plan.md`](./Plans/Podcasts-implementation-plan.md)  
+**Mobile deep dive (behavior reference):** [`docs/mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md`](../mobile/Tutorials/Podcasts-and-episodes-deep-dive-tutorial.md)
+
+| Screen / component | Node | Notes |
+|--------------------|------|--------|
+| **Podcast info** (hero + episode list) | [7551:27042](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=7551-27042) | `PodcastInfo.jsx` — 400px art, subscribe pill, vertical episode rows |
+| **Episode list row** | [7545:22722](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=7545-22722) | `TvEpisodeListItem` — body + bookmark + download focus slots |
+| **Episode card** (swimlane / grid) | [10841:24500](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=10841-24500) | `TvEpisodeCard` — ~656px wide; library + Continue listening rails |
+| **Podcast full player** | [7531:342033](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=7531-342033) | `PodcastPlayer.jsx` — structural parity with music `23:20013` |
+
+### Measurements from `7551:27042` / `7545:22722` (implementation hints)
+
+| Element | Value |
+|---------|--------|
+| Body inset | `px 100px`, top `110px`, column gap `70px` |
+| Hero art | `400×400`, radius `30px` |
+| Show title | Roboto Black `34px` |
+| Subscribe pill | height `80px`, border `2px`, padding `24px` / `34px` |
+| Episode row | max `1240px`, `p 20px`, gap `25px`, radius `30px` |
+| Episode thumb | `160×160` area; image `120×120` |
+| Row actions | bookmark / download `80×80`, gap `26px` |
+| Progress bar | `4px` height when in progress |
+
+### Measurements from `10841:24500` (episode card)
+
+| Element | Value |
+|---------|--------|
+| Card | `656×308`, `p 30px`, gap `20px`, radius `30px` |
+| Thumb | `100×100` top-left |
+
+---
+
+## Listen again (Home compact rail)
+
+No dedicated TV Figma frame — follows mobile compact thumb-only pattern. TV uses **`--tv-card-size-compact` (192px)** on **`TvListenAgainSwimlane`**. Trailing tile: **Clear** when `<= 9` items, **More** when `10+` (same cap as other TV swimlanes). Full grid: `/more/listen-again`.
+
+---
+
 ## To index (add when implementing)
 
 - Channel Info screen (indexed elsewhere when expanded)
 - Search results mode (TV frame TBD)
-- Podcasts / Radio browse (TV frames TBD — use mobile IA)
+- Radio player layouts (TV frames TBD)
 
 ---
 
