@@ -1,5 +1,7 @@
+import { SWIMLANE_CARD_MAX } from "./swimlane.js";
+
 /** Max real + ghost slots in the Home "Listen again" horizontal rail. */
-export const LISTEN_AGAIN_RAIL_SLOT_CAP = 12;
+export const LISTEN_AGAIN_RAIL_SLOT_CAP = SWIMLANE_CARD_MAX;
 
 /** Copy for **Listen again More** Clear speed bump (`AppStackedDialog`, Figma dialogsClear parity). */
 export const LISTEN_AGAIN_CLEAR_CONFIRM = Object.freeze({

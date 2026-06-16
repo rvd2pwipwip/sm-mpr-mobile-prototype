@@ -7,6 +7,10 @@ import {
 } from "../constants/limitedHomeLayout.js";
 import { MUSIC_CHANNELS } from "@sm-mpr/shared/data/musicChannels.js";
 import { PODCASTS } from "@sm-mpr/shared/data/podcasts.js";
+import { SWIMLANE_CARD_MAX } from "@sm-mpr/shared/constants/swimlane.js";
+import { CLEAR_MORE_DEMO_ITEM_COUNT } from "@sm-mpr/shared/utils/seedClearMoreSwimlaneDemo.js";
+import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
+import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import { USER_TYPES } from "@sm-mpr/shared/constants/userTypes.js";
 import {
   showPlayerPreroll,
@@ -56,6 +60,9 @@ export default function TvUserTypePreview() {
   );
   const { userType, setUserType } = useUserType();
   const { contentProfileMode, setContentProfileMode } = useContentProfile();
+  const { seedClearMoreDemo: seedListenHistoryDemo } = useListenHistory();
+  const { seedClearMoreDemo: seedPodcastLibraryDemo } = usePodcastUserState();
+  const [clearMoreSeedStatus, setClearMoreSeedStatus] = useState("");
   const prerollOnPlay = showPlayerPreroll(userType);
   const upgradeInPlayer = showUpgradeInFullPlayerHeader(userType);
   const maySubscribe = userMaySubscribePodcasts(userType);
@@ -67,6 +74,14 @@ export default function TvUserTypePreview() {
     TEST_PODCAST && TEST_PODCAST_EPISODE
       ? `/podcast/${TEST_PODCAST.id}/play/${TEST_PODCAST_EPISODE.id}`
       : null;
+
+  const handleSeedClearMoreSwimlanes = () => {
+    seedListenHistoryDemo();
+    seedPodcastLibraryDemo();
+    setClearMoreSeedStatus(
+      `Seeded ${CLEAR_MORE_DEMO_ITEM_COUNT} random items per Clear/More rail. Open Home (Listen again), Limited Home Podcasts tab, or My Library (Full MPR).`,
+    );
+  };
 
   return (
     <main className="tv-user-type-preview">
@@ -214,6 +229,36 @@ export default function TvUserTypePreview() {
           </FocusableButton>
         </section>
       ) : null}
+      <section
+        className="tv-user-type-preview__test"
+        aria-labelledby="tv-user-type-preview-clear-more-heading"
+      >
+        <h2
+          id="tv-user-type-preview-clear-more-heading"
+          className="tv-user-type-preview__test-title"
+        >
+          Seed Clear / More swimlanes
+        </h2>
+        <p className="tv-user-type-preview__test-lead">
+          Fills listen history (music, podcast, radio) and podcast library rails
+          with {CLEAR_MORE_DEMO_ITEM_COUNT} random catalog items each —{" "}
+          {SWIMLANE_CARD_MAX} cards plus a <strong>More</strong> tile. Use{" "}
+          <strong>Full MPR</strong> and
+          visit Home, Limited Home (Podcasts tab), or My Library.
+        </p>
+        <FocusableButton
+          type="button"
+          className="tv-user-type-preview__test-btn"
+          onClick={handleSeedClearMoreSwimlanes}
+        >
+          Populate Clear / More demo data
+        </FocusableButton>
+        {clearMoreSeedStatus ? (
+          <p className="tv-user-type-preview__status" aria-live="polite">
+            {clearMoreSeedStatus}
+          </p>
+        ) : null}
+      </section>
       <section
         className="tv-user-type-preview__prototype"
         aria-labelledby="tv-user-type-preview-limited-layout-heading"

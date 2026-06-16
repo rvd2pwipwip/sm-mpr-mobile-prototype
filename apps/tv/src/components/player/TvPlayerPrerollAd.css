@@ -14,7 +14,7 @@
 .tv-player-preroll__backdrop {
   position: absolute;
   inset: 0;
-  background-color: color-mix(in srgb, var(--color-bg) 88%, var(--color-text) 12%);
+  background-color: var(--tv-dialog-scrim-bg);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }

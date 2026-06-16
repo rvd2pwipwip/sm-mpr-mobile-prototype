@@ -90,7 +90,7 @@ Files: `context/TvNavFocusContext.jsx`, `hooks/useScreenContentFocus.js`, `compo
 
 ## 2026-05-27 — FixedSwimlane (transform parking)
 
-**`FixedSwimlane`** slides a row with **`translateX`** so the focused **308px** card stays in view (SMTV03 pattern). **Left/Right** are handled on `window` when the swimlane group is active; **Up/Down/Enter** stay on **`KeyboardWrapper`** + cards. **`SwimlaneRow`** adds the inset title; **`SwimlaneMoreTile`** is the trailing square when `sourceCount > 9` (`SWIMLANE_CARD_MAX`). Home **Most popular music** row uses **`MusicChannelSwimlane`**.
+**`FixedSwimlane`** slides a row with **`translateX`** so the focused **308px** card stays in view (SMTV03 pattern). **Left/Right** are handled on `window` when the swimlane group is active; **Up/Down/Enter** stay on **`KeyboardWrapper`** + cards. **`SwimlaneRow`** adds the inset title; **`SwimlaneMoreTile`** is the trailing square when `sourceCount > SWIMLANE_CARD_MAX` (shared default **12**, More at **13+**). Home **Most popular music** row uses **`MusicChannelSwimlane`**.
 
 ## 2026-05-27 — Home: two music swimlanes (Phase 4)
 

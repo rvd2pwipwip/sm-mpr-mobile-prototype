@@ -10,7 +10,7 @@
 .tv-guest-skip-dialog__backdrop {
   position: absolute;
   inset: 0;
-  background: rgb(0 0 0 / 0.55);
+  background-color: var(--tv-dialog-scrim-bg);
 }
 
 .tv-guest-skip-dialog__panel {

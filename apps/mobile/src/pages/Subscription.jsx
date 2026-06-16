@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import OpenInNewIcon from "../components/OpenInNewIcon";
@@ -11,7 +12,10 @@ import {
   CONTENT_PROFILE_MODE,
   useContentProfile,
 } from "../context/ContentProfileContext";
+import { useListenHistory } from "../context/ListenHistoryContext";
+import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
+import { CLEAR_MORE_DEMO_ITEM_COUNT } from "@sm-mpr/shared/utils/seedClearMoreSwimlaneDemo.js";
 import { useRestorePurchasePrototypeDialog } from "../hooks/useRestorePurchasePrototypeDialog";
 import RestorePurchasePrototypeDialog from "../components/RestorePurchasePrototypeDialog";
 import "./Subscription.css";
@@ -40,6 +44,9 @@ export default function Subscription() {
   const navigate = useNavigate();
   const { userType, setUserType } = useUserType();
   const { contentProfileMode, setContentProfileMode } = useContentProfile();
+  const { seedClearMoreDemo: seedListenHistoryDemo } = useListenHistory();
+  const { seedClearMoreDemo: seedPodcastLibraryDemo } = usePodcastUserState();
+  const [clearMoreSeedStatus, setClearMoreSeedStatus] = useState("");
   const {
     dialogOpen: restoreDialogOpen,
     working: restoreWorking,
@@ -58,6 +65,14 @@ export default function Subscription() {
     setUserType("freeProvided");
     window.open(PROVIDER_SSO_URL, "_blank", "noopener,noreferrer");
     navigate("/");
+  };
+
+  const handleSeedClearMoreSwimlanes = () => {
+    seedListenHistoryDemo();
+    seedPodcastLibraryDemo();
+    setClearMoreSeedStatus(
+      `Seeded ${CLEAR_MORE_DEMO_ITEM_COUNT} random items per rail. Open Home (Listen again), Search (Limited podcasts), or My Library (Full MPR).`,
+    );
   };
 
   return (
@@ -206,6 +221,37 @@ export default function Subscription() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div
+            className="subscription-screen__prototype"
+            role="group"
+            aria-label="Prototype: seed Clear and More swimlanes"
+          >
+            <p className="subscription-screen__prototype-label">
+              Seed Clear / More swimlanes
+            </p>
+            <p className="subscription-screen__prototype-lead">
+              Fills listen history (music, podcast, radio) and podcast library
+              rails with {CLEAR_MORE_DEMO_ITEM_COUNT} random catalog items each.
+              Use <strong>Full MPR</strong>, then visit Home, Limited podcasts
+              browse, or My Library.
+            </p>
+            <Button
+              variant="secondary"
+              className="subscription-screen__btn-secondary subscription-screen__prototype-seed-btn"
+              onClick={handleSeedClearMoreSwimlanes}
+            >
+              Populate Clear / More demo data
+            </Button>
+            {clearMoreSeedStatus ? (
+              <p
+                className="subscription-screen__prototype-status"
+                aria-live="polite"
+              >
+                {clearMoreSeedStatus}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

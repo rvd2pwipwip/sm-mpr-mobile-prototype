@@ -6,14 +6,12 @@
  * Browse Radio swimlanes without mocked country lists use generic placeholder rows (see {@link getInternationalBrowseLaneRows}).
  */
 
+import { SWIMLANE_CARD_MAX } from "@sm-mpr/shared/constants/swimlane.js";
 import {
   INTERNATIONAL_CONTINENTS_PLANNED,
   getRadioStationById,
   radioStationThumbnailUrl,
 } from "@sm-mpr/shared/data/radioStations.js";
-
-/** Prototype cap for placeholder country rows (mobile Home uses 12; TV uses 9). */
-const SWIMLANE_CARD_MAX = 12;
 
 export { INTERNATIONAL_CONTINENTS_PLANNED };
 

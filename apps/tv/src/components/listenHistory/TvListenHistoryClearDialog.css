@@ -15,24 +15,10 @@
   margin: 0;
   padding: 0;
   border: none;
-  background-color: rgb(0 0 0 / 0.25);
+  background-color: var(--tv-dialog-scrim-bg);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   cursor: pointer;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .tv-listen-history-clear-dialog__scrim {
-    background-color: rgb(255 255 255 / 0.25);
-  }
-}
-
-html[data-theme="dark"] .tv-listen-history-clear-dialog__scrim {
-  background-color: rgb(255 255 255 / 0.25);
-}
-
-html[data-theme="light"] .tv-listen-history-clear-dialog__scrim {
-  background-color: rgb(0 0 0 / 0.25);
 }
 
 .tv-listen-history-clear-dialog__panel {

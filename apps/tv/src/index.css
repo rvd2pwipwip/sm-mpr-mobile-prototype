@@ -65,6 +65,8 @@
   --tv-stacked-dialog-header-bg: #191919;
   --tv-stacked-dialog-header-fg: #fafafa;
   --tv-stacked-dialog-panel-max-width: 560px;
+  /* Modal scrim — always black (light and dark). */
+  --tv-dialog-scrim-bg: rgb(0 0 0 / 0.55);
 
   /* Full-screen music player — Figma `23:20013` */
   --tv-player-column-max-width: 1000px;

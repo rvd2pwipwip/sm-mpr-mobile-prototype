@@ -87,7 +87,7 @@ export default function Home() {
             alwaysShowMore
             onMore={() => navigate("/more/listen-again")}
           >
-            {listenAgainFiltered.map((item) => (
+            {listenAgainFiltered.slice(0, SWIMLANE_CARD_MAX).map((item) => (
               <ListenAgainCard
                 key={`${item.kind}-${item.id}`}
                 item={item}

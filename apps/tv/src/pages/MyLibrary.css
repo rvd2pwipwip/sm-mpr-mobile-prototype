@@ -15,6 +15,11 @@
   width: 100%;
 }
 
+/* Hub swimlanes are full-bleed like Home; row gutters live on fixed-swimlane__row. */
+.tv-my-library .tv-home__scroll-inner {
+  padding-inline: 0;
+}
+
 .tv-my-library-body .tv-home__scroll-group {
   flex-shrink: 0;
 }

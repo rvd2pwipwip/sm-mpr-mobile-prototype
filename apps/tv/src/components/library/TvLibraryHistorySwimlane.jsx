@@ -26,7 +26,7 @@ import "./TvLibraryHistoryEmptyTile.css";
 
 /**
  * Typed listen-history swimlane (music, podcasts, or radio).
- * Empty: placeholder + More. With items: up to 9 tiles + Clear or More.
+ * Empty: placeholder only (tap opens More grid). With items: up to 9 tiles + Clear or More.
  *
  * @param {{ segment: 'music' | 'podcasts' | 'radio' }} props
  */
@@ -71,7 +71,7 @@ export default function TvLibraryHistorySwimlane({
   const slotCount = getLibraryHistorySwimlaneSlotCount(tiles.length);
   const isEmpty = tiles.length === 0;
   const showMoreTile = showsLibraryHistoryMoreTile(tiles.length);
-  const trailingIndex = isEmpty ? 1 : visibleTiles.length;
+  const trailingIndex = isEmpty ? -1 : visibleTiles.length;
   const morePath = myLibraryHistoryMorePath(segment);
 
   const clearConfirm = {
@@ -90,7 +90,7 @@ export default function TvLibraryHistorySwimlane({
   };
 
   const renderSlot = (index, isFocused, setRef) => {
-    if (index === trailingIndex) {
+    if (!isEmpty && index === trailingIndex) {
       if (showMoreTile) {
         return (
           <KeyboardWrapper

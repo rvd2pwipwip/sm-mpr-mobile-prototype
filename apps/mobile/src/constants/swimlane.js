@@ -1,2 +1,1 @@
-/** Default max cards shown on Home-style content rails before "More" (see `ContentSwimlane`). */
-export const SWIMLANE_CARD_MAX = 12;
+export { SWIMLANE_CARD_MAX } from "@sm-mpr/shared/constants/swimlane.js";

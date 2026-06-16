@@ -9,6 +9,7 @@ import {
   LISTEN_HISTORY_MAX_STORED,
   isListenHistoryKind,
 } from "../constants/listenHistory.js";
+import { buildClearMoreDemoListenHistory } from "../utils/seedClearMoreSwimlaneDemo.js";
 
 /**
  * Recently listened entries for "Listen again" (prototype). In-memory only; starts empty.
@@ -53,6 +54,11 @@ export function ListenHistoryProvider({ children }) {
     setItems((prev) => prev.filter((x) => x.kind !== kind));
   }, []);
 
+  /** Prototype QA: 10 random items per history kind for Clear/More swimlanes. */
+  const seedClearMoreDemo = useCallback(() => {
+    setItems(buildClearMoreDemoListenHistory());
+  }, []);
+
   const value = useMemo(
     () => ({
       items,
@@ -61,6 +67,7 @@ export function ListenHistoryProvider({ children }) {
       recordRadioStationListen,
       clearListenHistory,
       clearHistoryByKind,
+      seedClearMoreDemo,
     }),
     [
       items,
@@ -69,6 +76,7 @@ export function ListenHistoryProvider({ children }) {
       recordRadioStationListen,
       clearListenHistory,
       clearHistoryByKind,
+      seedClearMoreDemo,
     ],
   );
 

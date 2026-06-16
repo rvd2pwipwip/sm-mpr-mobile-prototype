@@ -10,6 +10,7 @@ import {
   findPodcastAndEpisode,
 } from "../data/podcasts.js";
 import { deriveContinueListening } from "../utils/deriveContinueListening.js";
+import { buildClearMoreDemoPodcastUserState } from "../utils/seedClearMoreSwimlaneDemo.js";
 
 /**
  * Stub "my library" for podcasts (prototype). In-memory; resets on full reload.
@@ -100,6 +101,15 @@ export function PodcastUserStateProvider({ children }) {
     setSubscribedPodcastIds((prev) => prev.filter((id) => !remove.has(id)));
   }, []);
 
+  /** Prototype QA: 10 random items per podcast library rail for Clear/More swimlanes. */
+  const seedClearMoreDemo = useCallback(() => {
+    const demo = buildClearMoreDemoPodcastUserState();
+    setSubscribedPodcastIds(demo.subscribedPodcastIds);
+    setBookmarkedEpisodeIds(demo.bookmarkedEpisodeIds);
+    setDownloadedEpisodeIds(demo.downloadedEpisodeIds);
+    setEpisodeProgressById(demo.episodeProgressById);
+  }, []);
+
   /** @param {number} [whenMissing] defaults to `0`. */
   const getEpisodeProgress = useCallback(
     (episodeId, whenMissing = 0) => {
@@ -182,6 +192,7 @@ export function PodcastUserStateProvider({ children }) {
       clearAllBookmarks,
       clearAllDownloads,
       unsubscribePodcasts,
+      seedClearMoreDemo,
       getEpisodeProgress,
       isSubscribed,
       isBookmarked,
@@ -205,6 +216,7 @@ export function PodcastUserStateProvider({ children }) {
       clearAllBookmarks,
       clearAllDownloads,
       unsubscribePodcasts,
+      seedClearMoreDemo,
       getEpisodeProgress,
       isSubscribed,
       isBookmarked,

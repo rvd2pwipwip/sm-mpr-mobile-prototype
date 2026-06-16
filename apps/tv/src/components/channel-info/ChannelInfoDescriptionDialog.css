@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--tv-space-screen-gap);
-  background: color-mix(in srgb, var(--color-bg2) 50%, transparent);
+  background-color: var(--tv-dialog-scrim-bg);
   backdrop-filter: blur(4px);
 }
 
