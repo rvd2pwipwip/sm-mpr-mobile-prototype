@@ -53,6 +53,8 @@ import SwimlaneMore from "./pages/SwimlaneMore.jsx";
 import ListenAgainMore from "./pages/ListenAgainMore.jsx";
 import TvAccountSettings from "./pages/TvAccountSettings.jsx";
 import TvInfo from "./pages/TvInfo.jsx";
+import TvInfoAbout from "./pages/TvInfoAbout.jsx";
+import TvInfoContact from "./pages/TvInfoContact.jsx";
 import TvSubscription from "./pages/TvSubscription.jsx";
 import TvUpgradeStoreMock from "./pages/TvUpgradeStoreMock.jsx";
 import TvUserTypePreview from "./pages/TvUserTypePreview.jsx";
@@ -230,14 +232,8 @@ export default function App() {
                                   </RequireContentType>
                                 }
                               />
-                              <Route
-                                path="/info/contact"
-                                element={<TvSearchRouteStub title="Contact us" />}
-                              />
-                              <Route
-                                path="/info/about"
-                                element={<TvSearchRouteStub title="About" />}
-                              />
+                              <Route path="/info/contact" element={<TvInfoContact />} />
+                              <Route path="/info/about" element={<TvInfoAbout />} />
                               <Route path="/focus-demo" element={<FocusDemo />} />
                               <Route path="/music/:channelId" element={<MusicChannelInfo />} />
                               <Route

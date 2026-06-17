@@ -208,6 +208,8 @@ On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 
 ## Phase 5 — Contact and About TV pages
 
+**Status: done (2026-06-17).** `TvInfoContact`, `TvInfoAbout`, shared `TvInfoSubPageLayout`; stubs replaced in `App.jsx`.
+
 **Goal:** Replace stubs with real copy from mobile.
 
 1. **`TvInfoContact.jsx`** — body from **`infoContactCopy.js`**; overlay header title **Contact us**; title easter egg **not** required on sub-pages
