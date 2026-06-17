@@ -47,6 +47,8 @@ import MyLibraryPodcastEpisodeLibraryMore from "./pages/MyLibraryPodcastEpisodeL
 import FocusDemo from "./pages/FocusDemo.jsx";
 import MusicChannelInfo from "./pages/MusicChannelInfo.jsx";
 import MusicPlayer from "./pages/MusicPlayer.jsx";
+import RadioPlayer from "./pages/RadioPlayer.jsx";
+import RadioStationInfo from "./pages/RadioStationInfo.jsx";
 import SwimlaneMore from "./pages/SwimlaneMore.jsx";
 import ListenAgainMore from "./pages/ListenAgainMore.jsx";
 import TvUserTypePreview from "./pages/TvUserTypePreview.jsx";
@@ -65,6 +67,13 @@ function PodcastPlayerRoute() {
   return (
     <PodcastPlayer key={`${podcastId}-${episodeId}-${userType}`} />
   );
+}
+
+/** Remount when station or user type changes so preroll + transport reset. */
+function RadioPlayerRoute() {
+  const { stationId } = useParams();
+  const { userType } = useUserType();
+  return <RadioPlayer key={`${stationId}-${userType}`} />;
 }
 
 export default function App() {
@@ -175,7 +184,17 @@ export default function App() {
                               <Route
                                 path="/radio/:stationId"
                                 element={
-                                  <TvContentTypeUnavailable contentLabel="Radio" />
+                                  <RequireContentType contentType={CONTENT_TYPE.radio}>
+                                    <RadioStationInfo />
+                                  </RequireContentType>
+                                }
+                              />
+                              <Route
+                                path="/radio/:stationId/play"
+                                element={
+                                  <RequireContentType contentType={CONTENT_TYPE.radio}>
+                                    <RadioPlayerRoute />
+                                  </RequireContentType>
                                 }
                               />
                               <Route path="/my-library" element={<MyLibrary />} />
@@ -234,6 +253,7 @@ export default function App() {
                                 path="/more/country-essentials"
                                 element={<SwimlaneMore />}
                               />
+                              <Route path="/more/radio" element={<SwimlaneMore />} />
                               <Route path="/settings/user-type" element={<TvUserTypePreview />} />
                               <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>

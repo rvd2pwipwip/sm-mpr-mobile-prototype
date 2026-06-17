@@ -4,7 +4,7 @@ import { useTerritory } from "../context/TerritoryContext.jsx";
 import PrimaryNav from "./nav/PrimaryNav.jsx";
 
 const FULL_PLAYER_PATH =
-  /^\/music\/[^/]+\/play\/?$|^\/podcast\/[^/]+\/play\/[^/]+\/?$/;
+  /^\/music\/[^/]+\/play\/?$|^\/podcast\/[^/]+\/play\/[^/]+\/?$|^\/radio\/[^/]+\/play\/?$/;
 
 export default function TvShell({ children }) {
   const { pathname } = useLocation();

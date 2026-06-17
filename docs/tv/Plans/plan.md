@@ -79,6 +79,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Search & Browse Phase 5** — live search result swimlanes (`TvSearchResultsBody`, profile-gated lanes, episode list row); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Search & Browse Phase 6** — Search More catalog/tags grids + artist channel drill (`TvSearchCatalogMore`, `TvSearchTagsMore`, `SearchMusicArtistChannels`); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Podcasts Phase 0–10** — full flow, library swimlanes, monetization, Listen again, docs + acceptance checklist; see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
+- [x] **Radio stations Phases 0–5** — Home + More wiring, station info, full player, limited Home radio tab, history/playing indicators; see [`Radio-implementation-plan.md`](./Radio-implementation-plan.md)
 
 ---
 
@@ -86,7 +87,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 
 1. **Search & Browse Phase 7** — PrimaryNav reset semantics; see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 2. **TV-2** — limited Home layout B polish if needed; layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
-3. **Backlog** — My Library typed Listen again rails; Radio player layouts; TV in-player visual ads
+3. **Backlog** — Radio mini player variant; TV in-player visual ads
 
 Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 
@@ -98,4 +99,4 @@ Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan
 - Do not replace **`figma-nodes.md`** or mobile product stories; this file **coordinates** implementation.
 - Append TV lessons to **`docs/tv/react-learning.md`** as patterns land in code.
 
-_Last updated: 2026-06-12 — Podcasts Phase 10 docs; Listen again Clear/More._
+_Last updated: 2026-06-16 — Radio stations Phases 0–5 complete._

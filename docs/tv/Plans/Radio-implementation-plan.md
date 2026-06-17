@@ -82,21 +82,21 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 | Piece | Status |
 |-------|--------|
 | Shared `radioStations.js`, `radioInternationalBrowse.js`, `resolveRadioStationForStub` | **Done** |
-| Broad Home — Top radio stations swimlane (tiles render) | **Partial** — `onSelectItem` / `onMore` go to `/search` instead of station info / More grid |
-| Home More `/more/radio` | **Missing** — `SwimlaneMore.jsx` has no radio category |
+| Broad Home — Top radio stations swimlane (tiles render) | **Done** — tiles → `/radio/:id`; More → `/more/radio` |
+| Home More `/more/radio` | **Done** — `SwimlaneMore.jsx` radio grid |
 | Search Radio browse + International drill | **Done** |
 | Search results / station grids → `/radio/:id` | **Done** (lands on stub) |
-| `/radio/:stationId` | **Stub** — `TvContentTypeUnavailable` |
-| `/radio/:stationId/play` | **Missing** |
-| `RadioStationInfo` page | **Missing** |
-| `RadioPlayer` page | **Missing** |
-| `PlaybackContext.upsertRadioSession` | **Missing** |
-| `ListenHistory.recordRadioStationListen` on TV | **Not called** |
+| `/radio/:stationId` | **Done** — `RadioStationInfo.jsx` |
+| `/radio/:stationId/play` | **Done** — Phase 1 shell (`RadioPlayer.jsx`) |
+| `RadioStationInfo` page | **Done** |
+| `RadioPlayer` page | **Done** — full player UI (preroll, info, like, live transport) |
+| `PlaybackContext.upsertRadioSession` | **Done** |
+| `ListenHistory.recordRadioStationListen` on TV | **Done** — called from `RadioPlayer` |
 | My Library — radio history swimlane (empty state) | **Done** (`TvLibraryHistorySwimlane` segment `radio`) |
 | My Library — liked radio swimlane | **Done** (hidden when empty; navigates to stub) |
 | Limited Home — Listen again on Radio tab | **Done** (`LISTEN_HISTORY_KIND_FOR_BROWSE_TAB.radio`) |
-| Limited Home — Your radio stations | **Missing** — no `TvLibraryLikedRadioSection` in stacked body |
-| Limited Home — Near You + International + format taxonomy | **Partial** — format rows only; missing Near You + International + mobile mid-stack ad placement |
+| Limited Home — Your radio stations | **Done** — `TvLibraryLikedRadioSection` on Radio tab |
+| Limited Home — Near You + International + format taxonomy | **Done** — `limitedHomeRadioStackedLayout.js` |
 | `useMusicRadioLikeAction` | **Done** |
 | `TvPlayerPrerollAd`, grace, tier gates | **Done** (music player) |
 | Radio mini player variant | **Deferred** |
@@ -120,7 +120,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ---
 
-## Phase 0 — Navigation glue + Home More
+## Phase 0 — Navigation glue + Home More — **done**
 
 **Goal:** Every existing radio entry point reaches a real route (stub replaced in Phase 1).
 
@@ -139,7 +139,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ---
 
-## Phase 1 — Playback foundation + play route shell
+## Phase 1 — Playback foundation + play route shell — **done**
 
 **Goal:** TV session model supports radio; play URL registered; nav hides on full player.
 
@@ -156,7 +156,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ---
 
-## Phase 2 — Radio station info (`/radio/:stationId`)
+## Phase 2 — Radio station info (`/radio/:stationId`) — **done**
 
 **Goal:** In-car **`13524:34458`** layout using existing TV info components.
 
@@ -198,7 +198,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ---
 
-## Phase 3 — Radio full player (`/radio/:stationId/play`)
+## Phase 3 — Radio full player (`/radio/:stationId/play`) — **done**
 
 **Goal:** Play from info works; listen history records; back lands on info.
 
@@ -238,7 +238,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ---
 
-## Phase 4 — Limited Home radio tab parity
+## Phase 4 — Limited Home radio tab parity — **done**
 
 **Goal:** Layout B stacked body matches mobile `LimitedBrowseTaxonomyRails` for **Radio** tab.
 
@@ -265,7 +265,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ---
 
-## Phase 5 — History, library, and playing indicators polish
+## Phase 5 — History, library, and playing indicators polish — **done**
 
 **Goal:** All radio history surfaces show tiles and playing state consistently.
 
@@ -316,17 +316,17 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 ## Acceptance checklist (end-to-end)
 
-- [ ] Broad Home — Top radio stations → info; More → grid → info
-- [ ] Search Radio — category / International / grids → info
-- [ ] Station info — Play, Like, description, metadata match in-car layout (TV buttons)
-- [ ] Play — full player, preroll for guest/freeStingray, play/pause, Live label, no skip
-- [ ] Info from player returns to station info
-- [ ] Like on info + player; guest sees account-required dialog
-- [ ] My Library — Radio history populates after listen; clear works
-- [ ] My Library — Your radio stations (when liked) → info
-- [ ] Limited Home — Radio tab: Listen again + Your radio stations + Near You + International + formats
-- [ ] Invalid station id redirects to `/search/radio`
-- [ ] `npm run build` passes for `apps/tv`
+- [x] Broad Home — Top radio stations → info; More → grid → info
+- [x] Search Radio — category / International / grids → info
+- [x] Station info — Play, Like, description, metadata match in-car layout (TV buttons)
+- [x] Play — full player, preroll for guest/freeStingray, play/pause, Live label, no skip
+- [x] Info from player returns to station info
+- [x] Like on info + player; guest sees account-required dialog
+- [x] My Library — Radio history populates after listen; clear works
+- [x] My Library — Your radio stations (when liked) → info
+- [x] Limited Home — Radio tab: Listen again + Your radio stations + Near You + International + formats
+- [x] Invalid station id redirects to `/search/radio`
+- [x] `npm run build` passes for `apps/tv`
 
 ---
 

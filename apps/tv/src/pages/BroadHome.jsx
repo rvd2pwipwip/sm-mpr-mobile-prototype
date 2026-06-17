@@ -40,7 +40,7 @@ import {
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useRestoreFocusAfterListenAgainClear } from "../hooks/useRestoreFocusAfterListenAgainClear.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
-import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
+import { getActivePodcastShowId, getActiveRadioStationId } from "../utils/playbackMiniPlayer.js";
 import {
   getListenAgainSwimlaneSlotCount,
   getMusicSwimlaneSlotCount,
@@ -246,6 +246,7 @@ export default function BroadHome() {
   const playingChannelId =
     session.active && session.channelId ? session.channelId : null;
   const playingPodcastId = getActivePodcastShowId(session);
+  const playingRadioStationId = getActiveRadioStationId(session);
 
   const openChannelInfo = (channel) => {
     navigate(`/music/${channel.id}`);
@@ -280,6 +281,7 @@ export default function BroadHome() {
             groupIndex={lane.groupIndex}
             playingChannelId={playingChannelId}
             playingPodcastId={playingPodcastId}
+            playingRadioStationId={playingRadioStationId}
             focused={isContentGroupActive(lane.groupIndex)}
             focusedIndex={getItemFocusIndex(lane.groupIndex)}
             onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
@@ -368,8 +370,9 @@ export default function BroadHome() {
             focused={isContentGroupActive(lane.groupIndex)}
             focusedIndex={getItemFocusIndex(lane.groupIndex)}
             onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
-            onSelectItem={() => navigate("/search")}
-            onMore={() => navigate("/search")}
+            onSelectItem={(item) => navigate(`/radio/${item.id}`)}
+            onMore={() => navigate("/more/radio")}
+            playingItemId={playingRadioStationId}
             {...swimlaneNav}
           />
         );

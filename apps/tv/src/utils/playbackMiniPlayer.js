@@ -21,3 +21,12 @@ export function getActivePodcastShowId(session) {
     ? session.podcastId
     : null;
 }
+
+/** Station id for now-playing highlight when a radio session is active. */
+export function getActiveRadioStationId(session) {
+  return session?.active &&
+    session.variant === "radio" &&
+    session.radioStationId
+    ? session.radioStationId
+    : null;
+}

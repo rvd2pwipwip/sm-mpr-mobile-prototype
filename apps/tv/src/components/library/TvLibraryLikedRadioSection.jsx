@@ -17,6 +17,7 @@ export default function TvLibraryLikedRadioSection({
   registerItemRef,
   onMoveUp,
   onMoveDown,
+  playingItemId = null,
 }) {
   const navigate = useNavigate();
   const { items } = useLikes();
@@ -55,6 +56,7 @@ export default function TvLibraryLikedRadioSection({
       onMoveDown={onMoveDown}
       onMore={() => navigate(myLibraryLikesMorePath("radio"))}
       onSelectItem={(station) => navigate(`/radio/${station.id}`)}
+      playingItemId={playingItemId}
     />
   );
 }

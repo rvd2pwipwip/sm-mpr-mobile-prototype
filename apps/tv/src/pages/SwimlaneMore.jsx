@@ -5,6 +5,8 @@ import {
   getMusicChannelsByCategory,
   MUSIC_CHANNELS,
 } from "@sm-mpr/shared/data/musicChannels.js";
+import { RADIO_STATIONS } from "@sm-mpr/shared/data/radioStations.js";
+import ContentTileCard from "../components/cards/ContentTileCard.jsx";
 import MusicChannelCard from "../components/cards/MusicChannelCard.jsx";
 import TvDrillGridPage from "../components/drill/TvDrillGridPage.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
@@ -18,11 +20,21 @@ import { getLimitedHomeFilterLabel } from "../utils/limitedHomeData.js";
 import "../components/cards/ContentTileCard.css";
 
 function resolveMoreConfig(pathname, categoryId) {
+  if (pathname === "/more/radio") {
+    return {
+      screenId: "more-radio",
+      title: "Top radio stations",
+      variant: "radio",
+      getItems: () => RADIO_STATIONS,
+    };
+  }
+
   if (pathname === "/more/recommendations") {
     return {
       screenId: "more-recommendations",
       title: "Recommendations",
-      getChannels: () => getRecommendationsMusicChannels(),
+      variant: "music",
+      getItems: () => getRecommendationsMusicChannels(),
     };
   }
 
@@ -30,7 +42,8 @@ function resolveMoreConfig(pathname, categoryId) {
     return {
       screenId: "more-new-releases",
       title: getHomeMusicSwimlaneTitle("newReleases"),
-      getChannels: () => getHomeMusicSwimlaneChannels("newReleases"),
+      variant: "music",
+      getItems: () => getHomeMusicSwimlaneChannels("newReleases"),
     };
   }
 
@@ -38,7 +51,8 @@ function resolveMoreConfig(pathname, categoryId) {
     return {
       screenId: "more-country-essentials",
       title: getHomeMusicSwimlaneTitle("countryEssentials"),
-      getChannels: () => getHomeMusicSwimlaneChannels("countryEssentials"),
+      variant: "music",
+      getItems: () => getHomeMusicSwimlaneChannels("countryEssentials"),
     };
   }
 
@@ -47,14 +61,16 @@ function resolveMoreConfig(pathname, categoryId) {
       return {
         screenId: `more-music-${categoryId}`,
         title: getLimitedHomeFilterLabel(categoryId),
-        getChannels: () => getMusicChannelsByCategory(categoryId),
+        variant: "music",
+        getItems: () => getMusicChannelsByCategory(categoryId),
       };
     }
 
     return {
       screenId: "more-music",
       title: "Most popular music",
-      getChannels: () => MUSIC_CHANNELS,
+      variant: "music",
+      getItems: () => MUSIC_CHANNELS,
     };
   }
 
@@ -70,43 +86,59 @@ export default function SwimlaneMore() {
     [pathname, categoryId],
   );
 
-  const channels = useMemo(
-    () => (config ? config.getChannels() : []),
+  const items = useMemo(
+    () => (config ? config.getItems() : []),
     [config],
   );
 
-  const handleChannelSelect = useCallback(
-    (channel) => {
-      navigate(`/music/${channel.id}`);
+  const handleSelect = useCallback(
+    (item) => {
+      if (config?.variant === "radio") {
+        navigate(`/radio/${item.id}`);
+        return;
+      }
+      navigate(`/music/${item.id}`);
     },
-    [navigate],
+    [config?.variant, navigate],
   );
 
   if (!config) {
     return <Navigate to="/" replace />;
   }
 
+  const emptyMessage =
+    config.variant === "radio" ? "No stations to show." : "No channels to show.";
+
   return (
     <TvDrillGridPage
       screenId={config.screenId}
       title={config.title}
-      items={channels}
-      emptyMessage="No channels to show."
-      onSelectItem={handleChannelSelect}
-      renderItem={(channel, isFocused, setRef, onSelect, cellNav) => (
+      items={items}
+      emptyMessage={emptyMessage}
+      onSelectItem={handleSelect}
+      renderItem={(item, isFocused, setRef, onSelect, cellNav) => (
         <KeyboardWrapper
           ref={setRef}
-          selectData={channel}
-          onSelect={() => onSelect(channel)}
+          selectData={item}
+          onSelect={() => onSelect(item)}
           {...gridCellKeyboardProps(cellNav)}
         >
-          {(focusProps) => (
-            <MusicChannelCard
-              {...focusProps}
-              channel={channel}
-              focused={isFocused}
-            />
-          )}
+          {(focusProps) =>
+            config.variant === "radio" ? (
+              <ContentTileCard
+                {...focusProps}
+                title={item.name}
+                imageUrl={item.thumbnail}
+                focused={isFocused}
+              />
+            ) : (
+              <MusicChannelCard
+                {...focusProps}
+                channel={item}
+                focused={isFocused}
+              />
+            )
+          }
         </KeyboardWrapper>
       )}
     />

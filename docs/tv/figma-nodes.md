@@ -167,11 +167,33 @@ No dedicated TV Figma frame — follows mobile compact thumb-only pattern. TV us
 
 ---
 
+## Radio stations
+
+**Implementation plan:** [`docs/tv/Plans/Radio-implementation-plan.md`](./Plans/Radio-implementation-plan.md)
+
+| Screen / component | Node | Notes |
+|--------------------|------|--------|
+| **Radio station info** (in-car layout source) | [13524:34458](https://www.figma.com/design/sMhTukUlNNedadBSyRnOq5/SM-HTML-InCar-MPR?node-id=13524-34458) | `RadioStationInfo.jsx` — 308px art, Play + Like, metadata row (Location, Genres, Language, Website) |
+| **Radio full player** (TV structural reference) | [23:20013](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=23-20013) | `RadioPlayer.jsx` — same centered column as music; info + like only; **Live** progress; play/pause only (no skip) |
+| **Radio browse** (category + International) | Mobile [19868:32686](https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=19868-32686) | TV: `TvSearchRadioBrowseBody` + `TvSearchRadioInternationalSection` |
+
+### Measurements from in-car `13524:34458` (radio info)
+
+| Element | Value |
+|---------|--------|
+| Body inset | `pt 150px`, `px 100px` (TV uses `100px` top to match channel info) |
+| Hero art | `308×308`, radius `30px` |
+| Title | Roboto Black `34px` |
+| Description | Regular `28px` |
+| Actions | Play (primary) + Like (secondary); TV uses `TvUpgradeButton` |
+| Metadata row | four columns — label Black `24px`, value Regular `28px` |
+
+---
+
 ## To index (add when implementing)
 
 - Channel Info screen (indexed elsewhere when expanded)
 - Search results mode (TV frame TBD)
-- Radio player layouts (TV frames TBD)
 
 ---
 

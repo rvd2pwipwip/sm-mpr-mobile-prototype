@@ -43,6 +43,7 @@ export default function TvLibraryHistorySwimlane({
   onHistoryCleared,
   playingChannelId = null,
   playingPodcastId = null,
+  playingRadioStationId = null,
 }) {
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
@@ -171,7 +172,8 @@ export default function TvLibraryHistorySwimlane({
             focused={isFocused}
             playing={
               (tile.kind === "music" && playingChannelId === tile.id) ||
-              (tile.kind === "podcast" && playingPodcastId === tile.id)
+              (tile.kind === "podcast" && playingPodcastId === tile.id) ||
+              (tile.kind === "radio" && playingRadioStationId === tile.id)
             }
           />
         )}

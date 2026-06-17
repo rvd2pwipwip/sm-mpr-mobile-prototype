@@ -20,6 +20,7 @@ import LimitedHomeFilterBody, {
 import LimitedHomeStackedBody from "../components/limited/LimitedHomeStackedBody.jsx";
 import TvLimitedHomeHeaderSection from "../components/TvLimitedHomeHeaderSection.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
+import { useLikes } from "../context/LikesContext.jsx";
 import { useLimitedHomeEsc } from "../context/LimitedHomeEscContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { shouldShowTvMiniPlayer } from "../utils/playbackMiniPlayer.js";
@@ -58,6 +59,11 @@ import {
   limitedHomeHeaderItemCount,
 } from "../utils/limitedHomeHeaderFocus.js";
 import { buildLimitedHomeStackedLanes } from "../utils/limitedHomeStackedLanes.js";
+import {
+  buildLimitedHomeRadioStackedLayout,
+  DEFAULT_RADIO_INTL_CONTINENT,
+} from "../utils/limitedHomeRadioStackedLayout.js";
+import { getLikedRadioStations } from "../utils/likedRadioCount.js";
 import { buildTvPodcastLibraryRails } from "../utils/tvPodcastLibraryRails.js";
 import {
   getListenAgainSwimlaneSlotCount,
@@ -92,6 +98,9 @@ export default function LimitedHome() {
     resolveLimitedBrowseTab(enabledContentTypes),
   );
   const [bannerVisible, setBannerVisible] = useState(true);
+  const [radioIntlContinent, setRadioIntlContinent] = useState(
+    DEFAULT_RADIO_INTL_CONTINENT,
+  );
 
   const effectiveBrowseTab = useMemo(() => {
     if (!shouldShowBrowseContentSwitcher) {
@@ -177,6 +186,8 @@ export default function LimitedHome() {
     isStackedLayout && tabListenItems.length > 0 ? 1 : 0;
 
   const podcastUserState = usePodcastUserState();
+  const { items: likeItems } = useLikes();
+
   const podcastLibraryRails = useMemo(() => {
     if (!isStackedLayout || effectiveBrowseTab !== CONTENT_TYPE.podcasts) {
       return [];
@@ -192,16 +203,44 @@ export default function LimitedHome() {
     podcastUserState.downloadedEpisodes,
   ]);
 
+  const likedRadioStations = useMemo(() => {
+    if (!isStackedLayout || effectiveBrowseTab !== CONTENT_TYPE.radio) {
+      return [];
+    }
+    return getLikedRadioStations(likeItems);
+  }, [isStackedLayout, effectiveBrowseTab, likeItems]);
+
+  const radioLikedLaneCount = likedRadioStations.length > 0 ? 1 : 0;
+
+  const radioStackedLayout = useMemo(() => {
+    if (!isStackedLayout || effectiveBrowseTab !== CONTENT_TYPE.radio) {
+      return null;
+    }
+    return buildLimitedHomeRadioStackedLayout(radioIntlContinent);
+  }, [isStackedLayout, effectiveBrowseTab, radioIntlContinent]);
+
   const stackedLanes = useMemo(
     () =>
-      isStackedLayout
+      isStackedLayout && effectiveBrowseTab !== CONTENT_TYPE.radio
         ? buildLimitedHomeStackedLanes(effectiveBrowseTab)
         : [],
     [isStackedLayout, effectiveBrowseTab],
   );
 
+  const userLibraryRailCount =
+    effectiveBrowseTab === CONTENT_TYPE.podcasts
+      ? podcastLibraryRails.length
+      : effectiveBrowseTab === CONTENT_TYPE.radio
+        ? radioLikedLaneCount
+        : 0;
+
+  const taxonomyFocusLaneCount =
+    effectiveBrowseTab === CONTENT_TYPE.radio
+      ? (radioStackedLayout?.focusLaneCount ?? 0)
+      : stackedLanes.length;
+
   const stackedBodyLaneCount =
-    listenAgainLaneCount + podcastLibraryRails.length + stackedLanes.length;
+    listenAgainLaneCount + userLibraryRailCount + taxonomyFocusLaneCount;
 
   const swimlaneSlotCount =
     !isStackedLayout && isMusicBrowse
@@ -227,6 +266,14 @@ export default function LimitedHome() {
         swimlaneGroups.push(groupIndex);
       });
 
+      if (radioLikedLaneCount > 0) {
+        const groupIndex = laneGroupOffset + listenAgainLaneCount;
+        itemCounts[groupIndex] = getMusicSwimlaneSlotCount(
+          likedRadioStations.length,
+        );
+        swimlaneGroups.push(groupIndex);
+      }
+
       if (listenAgainLaneCount > 0) {
         const groupIndex = laneGroupOffset;
         itemCounts[groupIndex] = getListenAgainSwimlaneSlotCount(
@@ -235,12 +282,34 @@ export default function LimitedHome() {
         swimlaneGroups.unshift(groupIndex);
       }
 
-      stackedLanes.forEach((lane, index) => {
-        const groupIndex =
-          laneGroupOffset + listenAgainLaneCount + podcastLibraryRails.length + index;
-        itemCounts[groupIndex] = lane.slotCount;
-        swimlaneGroups.push(groupIndex);
-      });
+      if (
+        effectiveBrowseTab === CONTENT_TYPE.radio &&
+        radioStackedLayout
+      ) {
+        let focusIdx = 0;
+        for (const section of radioStackedLayout.sections) {
+          for (const focusGroup of section.focusGroups) {
+            const groupIndex =
+              laneGroupOffset +
+              listenAgainLaneCount +
+              userLibraryRailCount +
+              focusIdx;
+            itemCounts[groupIndex] = focusGroup.slotCount;
+            swimlaneGroups.push(groupIndex);
+            focusIdx += 1;
+          }
+        }
+      } else {
+        stackedLanes.forEach((lane, index) => {
+          const groupIndex =
+            laneGroupOffset +
+            listenAgainLaneCount +
+            userLibraryRailCount +
+            index;
+          itemCounts[groupIndex] = lane.slotCount;
+          swimlaneGroups.push(groupIndex);
+        });
+      }
 
       const groupCount = Math.max(
         laneGroupOffset + stackedBodyLaneCount,
@@ -302,6 +371,12 @@ export default function LimitedHome() {
     tabListenItems.length,
     stackedLanes,
     stackedBodyLaneCount,
+    effectiveBrowseTab,
+    radioStackedLayout,
+    radioLikedLaneCount,
+    likedRadioStations.length,
+    userLibraryRailCount,
+    taxonomyFocusLaneCount,
     isMusicBrowse,
     filters.length,
     swimlaneSlotCount,
@@ -605,6 +680,8 @@ export default function LimitedHome() {
             <LimitedHomeStackedBody
               activeBrowseTab={effectiveBrowseTab}
               showMidStackAd={showBannerAd}
+              radioStackedLayout={radioStackedLayout}
+              onRadioIntlContinentChange={setRadioIntlContinent}
               registerGroupRef={registerGroupRef}
               registerItemRef={registerItemRef}
               isContentGroupActive={isContentGroupActive}

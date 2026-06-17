@@ -32,6 +32,7 @@ export default function TvListenAgainSwimlane({
   onMoveDown,
   playingChannelId = null,
   playingPodcastId = null,
+  playingRadioStationId = null,
   onMore = "/more/listen-again",
   onHistoryCleared,
 }) {
@@ -69,6 +70,9 @@ export default function TvListenAgainSwimlane({
     }
     if (tile.kind === "podcast" && playingPodcastId) {
       return playingPodcastId === tile.id;
+    }
+    if (tile.kind === "radio" && playingRadioStationId) {
+      return playingRadioStationId === tile.id;
     }
     return false;
   };

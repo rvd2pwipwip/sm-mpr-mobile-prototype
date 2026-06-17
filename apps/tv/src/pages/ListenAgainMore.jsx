@@ -16,7 +16,7 @@ import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
-import { getActivePodcastShowId } from "../utils/playbackMiniPlayer.js";
+import { getActivePodcastShowId, getActiveRadioStationId } from "../utils/playbackMiniPlayer.js";
 import { getTvBrowseGridLayout } from "../utils/tvLayout.js";
 import { FOCUS_ZONE_CONTENT, useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import "../components/cards/ContentTileCard.css";
@@ -43,6 +43,7 @@ export default function ListenAgainMore() {
   const playingChannelId =
     session.active && session.channelId ? session.channelId : null;
   const playingPodcastId = getActivePodcastShowId(session);
+  const playingRadioStationId = getActiveRadioStationId(session);
 
   const gridLayout = useMemo(() => getTvBrowseGridLayout(), []);
   const gridRef = useRef(null);
@@ -216,7 +217,9 @@ export default function ListenAgainMore() {
                           (item.kind === "music" &&
                             playingChannelId === item.id) ||
                           (item.kind === "podcast" &&
-                            playingPodcastId === item.id)
+                            playingPodcastId === item.id) ||
+                          (item.kind === "radio" &&
+                            playingRadioStationId === item.id)
                         }
                       />
                     )}

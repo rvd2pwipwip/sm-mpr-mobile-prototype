@@ -1,5 +1,5 @@
 import { usePlayback } from "../../context/PlaybackContext.jsx";
-import { getActivePodcastShowId } from "../../utils/playbackMiniPlayer.js";
+import { getActivePodcastShowId, getActiveRadioStationId } from "../../utils/playbackMiniPlayer.js";
 import TvLibraryHistorySwimlane from "./TvLibraryHistorySwimlane.jsx";
 
 /**
@@ -23,6 +23,7 @@ export default function TvLibraryHistorySection({
   const playingChannelId =
     session.active && session.channelId ? session.channelId : null;
   const playingPodcastId = getActivePodcastShowId(session);
+  const playingRadioStationId = getActiveRadioStationId(session);
 
   return (
     <TvLibraryHistorySwimlane
@@ -38,6 +39,7 @@ export default function TvLibraryHistorySection({
       onHistoryCleared={onHistoryCleared}
       playingChannelId={playingChannelId}
       playingPodcastId={playingPodcastId}
+      playingRadioStationId={playingRadioStationId}
     />
   );
 }
