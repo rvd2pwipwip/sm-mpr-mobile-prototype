@@ -20,6 +20,7 @@ export default function ChannelInfoTagsSwimlane({
   registerItemRef,
   onMoveUp,
   onMoveDown,
+  onSelectTag,
 }) {
   const items = useMemo(
     () => tags.map((tag, index) => ({ id: `${tag}-${index}`, label: tag })),
@@ -41,7 +42,7 @@ export default function ChannelInfoTagsSwimlane({
         renderItem={(item, index, isFocused) => (
           <KeyboardWrapper
             ref={(node) => registerItemRef(groupIndex, index, node)}
-            onSelect={() => {}}
+            onSelect={() => onSelectTag?.(item.label)}
             onUp={onMoveUp}
             onDown={onMoveDown}
           >

@@ -31,6 +31,7 @@ import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.js
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
+import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import "./MusicPlayer.css";
 import "./PodcastPlayer.css";
@@ -74,7 +75,8 @@ export default function PodcastPlayer() {
   const { session, upsertPodcastSession } = usePlayback();
   const { graceActive } = useGuestPrerollGrace();
   const { recordPodcastShowListen } = useListenHistory();
-  const { userType, setUserType } = useUserType();
+  const { userType } = useUserType();
+  const goUpgrade = useGoUpgrade();
   const { openAccountRequiredDialog } = useAccountRequiredDialog();
 
   const needsPreroll = showPlayerPreroll(userType);
@@ -296,13 +298,6 @@ export default function PodcastPlayer() {
     setSpeedIdx((i) => (i + 1) % PODCAST_SPEED_STEPS.length);
   };
 
-  const onUpgradePress = () => {
-    if (userType === "guest") {
-      setUserType("freeStingray");
-    }
-    navigate("/settings/user-type");
-  };
-
   const showPreroll = needsPreroll && !prerollComplete;
 
   return (
@@ -326,7 +321,7 @@ export default function PodcastPlayer() {
                 ref={(node) =>
                   registerItemRef(META_GROUP, metaSlots.upgrade, node)
                 }
-                onSelect={onUpgradePress}
+                onSelect={goUpgrade}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
                 onMoveLeft={handleMoveLeft}

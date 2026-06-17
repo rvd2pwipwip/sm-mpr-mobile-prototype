@@ -7,6 +7,7 @@ import {
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import { showUpgradeCallToAction } from "@sm-mpr/shared/utils/userTierRules.js";
 import { useTerritory } from "../context/TerritoryContext.jsx";
+import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import { useToggleCatalogScope } from "../hooks/useToggleCatalogScope.js";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import {
@@ -97,6 +98,7 @@ export default function TvLimitedHomeHeaderStacked({
   onMiniPlayerSelect,
 }) {
   const navigate = useNavigate();
+  const goUpgrade = useGoUpgrade();
   const { userType } = useUserType();
   const { musicLineupMode } = useTerritory();
   const toggleCatalogScope = useToggleCatalogScope();
@@ -184,7 +186,7 @@ export default function TvLimitedHomeHeaderStacked({
               ref={(node) =>
                 registerItemRef?.(groupIndex, upgradeIndex, node)
               }
-              onSelect={() => navigate("/settings/user-type")}
+              onSelect={goUpgrade}
               onUp={onMoveUp}
               onDown={onMoveDown}
             >

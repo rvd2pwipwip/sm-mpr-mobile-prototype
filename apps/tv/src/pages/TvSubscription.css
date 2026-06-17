@@ -1,0 +1,134 @@
+.tv-subscription__inner {
+  align-items: center;
+}
+
+.tv-subscription__column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tv-search-stack-gap);
+  width: 100%;
+  max-width: 50vw;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+.tv-subscription__hero {
+  width: 100%;
+  text-align: center;
+}
+
+.tv-subscription__title {
+  margin: 0 0 24px;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-on-bkg);
+}
+
+.tv-subscription__price-intro,
+.tv-subscription__price {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--color-on-bkg);
+}
+
+.tv-subscription__price {
+  margin-top: 8px;
+}
+
+.tv-subscription__benefits {
+  align-self: stretch;
+  margin: 0;
+  padding-left: 2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--color-on-bkg);
+}
+
+.tv-subscription__benefits li {
+  margin-bottom: 8px;
+}
+
+.tv-subscription__benefits li:last-child {
+  margin-bottom: 0;
+}
+
+.tv-subscription__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+}
+
+.tv-subscription__btn-primary.tv-upgrade-button {
+  width: 100%;
+  justify-content: center;
+}
+
+.tv-subscription__btn-secondary {
+  width: 100%;
+  min-height: var(--tv-button-min-height, 60px);
+  padding: 16px 24px;
+  font-size: var(--tv-button-font-size);
+  font-weight: 500;
+  color: var(--color-text);
+  background: transparent;
+  border: 2px solid var(--tv-button-secondary-border);
+  border-radius: var(--tv-button-radius);
+}
+
+.tv-subscription__btn-secondary.focusable-button--focused {
+  outline-color: var(--tv-focus-ring-color);
+}
+
+.tv-subscription__provider-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.tv-subscription__provider-label {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.tv-subscription__legal {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tv-subscription__legal-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.tv-subscription__legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.tv-subscription__legal-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

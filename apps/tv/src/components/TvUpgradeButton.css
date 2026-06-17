@@ -1,4 +1,4 @@
-/* Figma TV `.button_lg` — stingray/500 fill; focus ring matches card / FilterButton (10px outline). */
+/* Figma TV `.button_lg` — primary CTA = accent; subscribe = accent2; secondary = outline. */
 
 .tv-upgrade-button.focusable-button {
   display: inline-flex;
@@ -50,6 +50,30 @@
   object-fit: contain;
 }
 
+/* Mask icons inherit button `color` — theme-aware on secondary actions (like / unlike). */
+.tv-upgrade-button__icon-mask {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.tv-upgrade-button__icon-mask--like {
+  mask-image: url("/like.svg");
+  -webkit-mask-image: url("/like.svg");
+}
+
+.tv-upgrade-button__icon-mask--unlike {
+  mask-image: url("/unlike.svg");
+  -webkit-mask-image: url("/unlike.svg");
+}
+
 .tv-upgrade-button__label {
   white-space: nowrap;
 }
@@ -58,6 +82,12 @@
   color: var(--color-on-bkg);
   background: transparent;
   border: 2px solid color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+}
+
+.tv-upgrade-button--subscribe.focusable-button {
+  color: var(--color-on-accent);
+  background: var(--color-accent2);
+  border: none;
 }
 
 .tv-upgrade-button--disabled.focusable-button {

@@ -50,27 +50,32 @@ export default function RadioStationInfo() {
     ];
   }, [station]);
 
-  const { descriptionGroup, actionsGroup, groupCount, itemCounts, defaultGroupIndex } =
-    useMemo(() => {
-      const counts = {};
-      let next = 0;
-      let descG = null;
-      if (hasDescription && descriptionOverflows) {
-        descG = next;
-        counts[descG] = 1;
-        next += 1;
-      }
-      const actG = next;
-      counts[actG] = 2;
+  const {
+    descriptionGroup,
+    actionsGroup,
+    groupCount,
+    itemCounts,
+    defaultGroupIndex,
+  } = useMemo(() => {
+    const counts = {};
+    let next = 0;
+    let descG = null;
+    if (hasDescription && descriptionOverflows) {
+      descG = next;
+      counts[descG] = 1;
       next += 1;
-      return {
-        descriptionGroup: descG,
-        actionsGroup: actG,
-        groupCount: next,
-        itemCounts: counts,
-        defaultGroupIndex: actG,
-      };
-    }, [hasDescription, descriptionOverflows]);
+    }
+    const actG = next;
+    counts[actG] = 2;
+    next += 1;
+    return {
+      descriptionGroup: descG,
+      actionsGroup: actG,
+      groupCount: next,
+      itemCounts: counts,
+      defaultGroupIndex: actG,
+    };
+  }, [hasDescription, descriptionOverflows]);
 
   const {
     handleMoveUp,
@@ -142,9 +147,7 @@ export default function RadioStationInfo() {
 
             <div className="radio-station-info__actions-row">
               <KeyboardWrapper
-                ref={(node) =>
-                  registerItemRef(actionsGroup, PLAY_ACTION, node)
-                }
+                ref={(node) => registerItemRef(actionsGroup, PLAY_ACTION, node)}
                 onSelect={goPlay}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
@@ -162,9 +165,7 @@ export default function RadioStationInfo() {
               </KeyboardWrapper>
 
               <KeyboardWrapper
-                ref={(node) =>
-                  registerItemRef(actionsGroup, LIKE_ACTION, node)
-                }
+                ref={(node) => registerItemRef(actionsGroup, LIKE_ACTION, node)}
                 onSelect={() => radioLike.onPress()}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
@@ -176,11 +177,7 @@ export default function RadioStationInfo() {
                     {...focusProps}
                     variant="secondary"
                     focused={isItemFocused(actionsGroup, LIKE_ACTION)}
-                    iconSrc={
-                      radioLike.iconVariant === "unlike"
-                        ? "/unlike.svg"
-                        : "/like.svg"
-                    }
+                    iconMaskVariant={radioLike.iconVariant}
                     label={radioLike.label}
                     ariaLabel={radioLike.ariaLabel}
                   />
@@ -211,8 +208,6 @@ export default function RadioStationInfo() {
         description={descriptionText}
         onClose={() => setDescriptionDialogOpen(false)}
       />
-
-      <p className="tv-page__lede">Press Esc to go back.</p>
     </div>
   );
 }

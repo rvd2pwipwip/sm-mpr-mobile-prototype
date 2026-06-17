@@ -168,7 +168,7 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 ### Radio session + mini player
 
 - **`PlaybackContext.upsertRadioSession`** — same loop as music/podcasts; `variant === "radio"`, `fullPlayerPath` `/radio/:id/play`.
-- **`TV_MINI_PLAYER_VARIANTS`** includes **`radio`** — broad catalog shows mini in **`PrimaryNav`**; limited Home layout B uses **`TvMiniPlayer`** with **`tv-mini-player--radio`** header gradient (warm orange; podcasts use teal, music uses purple).
+- **`TV_MINI_PLAYER_VARIANTS`** includes **`radio`** — broad catalog shows mini in **`PrimaryNav`**; limited Home layout B uses **`TvMiniPlayer`** with solid **`--color-accent2`** header background (all content types).
 - **Subtitle:** station frequency or format label (falls back to **Live**).
 - **Listen history:** `recordPodcastShowListen` after preroll + play or >5% progress stub.
 

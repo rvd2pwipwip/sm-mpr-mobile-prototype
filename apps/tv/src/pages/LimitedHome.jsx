@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
 import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
@@ -148,15 +155,13 @@ export default function LimitedHome() {
   );
 
   const headerItemCount = limitedHomeHeaderItemCount(headerFocusSlots);
-  const miniPlayerSlotIndex = getLimitedHomeMiniPlayerSlotIndex(
-    headerFocusSlots,
-  );
+  const miniPlayerSlotIndex =
+    getLimitedHomeMiniPlayerSlotIndex(headerFocusSlots);
 
   const isMusicBrowse = effectiveBrowseTab === CONTENT_TYPE.music;
 
   const { memory, setField } = useScreenMemory("home-limited");
-  const activeFilterId =
-    memory.activeFilterId ?? filters[0]?.id ?? null;
+  const activeFilterId = memory.activeFilterId ?? filters[0]?.id ?? null;
 
   const channels = useMemo(
     () =>
@@ -282,10 +287,7 @@ export default function LimitedHome() {
         swimlaneGroups.unshift(groupIndex);
       }
 
-      if (
-        effectiveBrowseTab === CONTENT_TYPE.radio &&
-        radioStackedLayout
-      ) {
+      if (effectiveBrowseTab === CONTENT_TYPE.radio && radioStackedLayout) {
         let focusIdx = 0;
         for (const section of radioStackedLayout.sections) {
           for (const focusGroup of section.focusGroups) {
@@ -539,19 +541,14 @@ export default function LimitedHome() {
     skipBannerGroup();
   }, [skipBannerGroup]);
 
-  const {
-    viewportRef,
-    innerRef,
-    registerGroupRef,
-    offsetY,
-    innerClassName,
-  } = useTvVerticalGroupScroll(focusedGroupIndex, {
-    landingGroupIndex: focusConfig.firstBodyGroup,
-    lastFocusableGroupIndex: focusConfig.lastBodyGroup,
-    getFocusedElement,
-    screenId: isStackedLayout ? "home-limited" : undefined,
-    scrollEnabled: isStackedLayout,
-  });
+  const { viewportRef, innerRef, registerGroupRef, offsetY, innerClassName } =
+    useTvVerticalGroupScroll(focusedGroupIndex, {
+      landingGroupIndex: focusConfig.firstBodyGroup,
+      lastFocusableGroupIndex: focusConfig.lastBodyGroup,
+      getFocusedElement,
+      screenId: isStackedLayout ? "home-limited" : undefined,
+      scrollEnabled: isStackedLayout,
+    });
 
   const prevFocusedGroupRef = useRef(focusedGroupIndex);
 
@@ -629,21 +626,26 @@ export default function LimitedHome() {
         "tv-home",
         "tv-home--limited",
         "tv-screen-overlay",
-        isStackedLayout ? "tv-home--limited-stacked" : "tv-home--limited-filter",
+        isStackedLayout
+          ? "tv-home--limited-stacked"
+          : "tv-home--limited-filter",
         scrollableHeader ? "tv-home--header-scroll" : "tv-home--header-sticky",
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <p className="tv-home__ab-badge" aria-hidden="true">
+      {/* <p className="tv-home__ab-badge" aria-hidden="true">
         Header {headerLayout} · Layout {layoutMode}
-      </p>
+      </p> */}
       {!scrollableHeader ? (
         <div ref={headerRef} className="tv-screen-overlay__header">
           <TvLimitedHomeHeaderSection {...headerProps} />
         </div>
       ) : null}
-      <div ref={viewportRef} className="tv-home__scroll tv-screen-overlay__scroll">
+      <div
+        ref={viewportRef}
+        className="tv-home__scroll tv-screen-overlay__scroll"
+      >
         <div
           ref={innerRef}
           className={innerClassName}

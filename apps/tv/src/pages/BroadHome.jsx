@@ -40,7 +40,10 @@ import {
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useRestoreFocusAfterListenAgainClear } from "../hooks/useRestoreFocusAfterListenAgainClear.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
-import { getActivePodcastShowId, getActiveRadioStationId } from "../utils/playbackMiniPlayer.js";
+import {
+  getActivePodcastShowId,
+  getActiveRadioStationId,
+} from "../utils/playbackMiniPlayer.js";
 import {
   getListenAgainSwimlaneSlotCount,
   getMusicSwimlaneSlotCount,
@@ -183,14 +186,18 @@ export default function BroadHome() {
         groupCount: groupIndex,
         itemCounts,
         swimlaneGroups,
-        firstSwimlaneGroup:
-          swimlaneGroups[0] ?? HOME_FIRST_SWIMLANE_GROUP,
+        firstSwimlaneGroup: swimlaneGroups[0] ?? HOME_FIRST_SWIMLANE_GROUP,
         lastSwimlaneGroup:
           swimlaneGroups[swimlaneGroups.length - 1] ??
           HOME_FIRST_SWIMLANE_GROUP,
       },
     };
-  }, [visibleTvSwimlanes, slotCountById, showListenAgain, listenAgainFiltered.length]);
+  }, [
+    visibleTvSwimlanes,
+    slotCountById,
+    showListenAgain,
+    listenAgainFiltered.length,
+  ]);
 
   const bannerAfterLaneId = bannerAfterSwimlaneId(
     visibleTvSwimlanes.map((s) => s.id),
@@ -230,18 +237,13 @@ export default function BroadHome() {
     [getItemElement, focusedGroupIndex, focusedIndex],
   );
 
-  const {
-    viewportRef,
-    innerRef,
-    registerGroupRef,
-    offsetY,
-    innerClassName,
-  } = useTvVerticalGroupScroll(focusedGroupIndex, {
-    landingGroupIndex: focusConfig.firstSwimlaneGroup,
-    lastFocusableGroupIndex: focusConfig.lastSwimlaneGroup,
-    getFocusedElement,
-    screenId: "home-broad",
-  });
+  const { viewportRef, innerRef, registerGroupRef, offsetY, innerClassName } =
+    useTvVerticalGroupScroll(focusedGroupIndex, {
+      landingGroupIndex: focusConfig.firstSwimlaneGroup,
+      lastFocusableGroupIndex: focusConfig.lastSwimlaneGroup,
+      getFocusedElement,
+      screenId: "home-broad",
+    });
 
   const playingChannelId =
     session.active && session.channelId ? session.channelId : null;
@@ -386,9 +388,7 @@ export default function BroadHome() {
             playingChannelId={playingChannelId}
             focused={isContentGroupActive(lane.groupIndex)}
             focusedIndex={getItemFocusIndex(lane.groupIndex)}
-            onFocusChange={(index) =>
-              setFocusedIndex(lane.groupIndex, index)
-            }
+            onFocusChange={(index) => setFocusedIndex(lane.groupIndex, index)}
             onSelectChannel={openChannelInfo}
             onMore={() => navigate("/more/recommendations")}
             {...swimlaneNav}
@@ -410,15 +410,18 @@ export default function BroadHome() {
         .filter(Boolean)
         .join(" ")}
     >
-      <p className="tv-home__ab-badge" aria-hidden="true">
+      {/* <p className="tv-home__ab-badge" aria-hidden="true">
         Header {headerLayout}
-      </p>
+      </p> */}
       {!scrollableHeader ? (
         <div ref={headerRef} className="tv-screen-overlay__header">
           <TvHomeHeaderSection {...headerProps} />
         </div>
       ) : null}
-      <div ref={viewportRef} className="tv-home__scroll tv-screen-overlay__scroll">
+      <div
+        ref={viewportRef}
+        className="tv-home__scroll tv-screen-overlay__scroll"
+      >
         <div
           ref={innerRef}
           className={innerClassName}

@@ -30,7 +30,7 @@ Living plan for **radio stations** in **`apps/tv/`**, mirroring the **mobile pro
 | **Preroll** | `showPlayerPreroll(userType)` + `GuestPrerollGraceContext` | Reuse **`TvPlayerPrerollAd`** |
 | **Listen history** | `ListenHistoryContext.recordRadioStationListen` on first allowed playback | Powers **Listen again** (limited Home radio tab) + **My Library radio history** |
 | **Nav chrome** | Hide **`PrimaryNav`** on `/radio/:stationId/play` | Extend **`TvShell`** `FULL_PLAYER_PATH` regex |
-| **Mini player** | **Done** — `radio` in `TV_MINI_PLAYER_VARIANTS`; limited Home header uses warm orange gradient (`tv-mini-player--radio`) |
+| **Mini player** | **Done** — `radio` in `TV_MINI_PLAYER_VARIANTS`; limited Home header uses solid `--color-accent2` (all variants) |
 | **Limited Home (layout B)** | Same as mobile when **Radio** tab selected: content switcher + **Listen again** (typed) + **Your radio stations** + taxonomy rails | See Phase 4 — TV is **partial** today (Listen again yes; liked radio + Near You / International missing) |
 
 ---

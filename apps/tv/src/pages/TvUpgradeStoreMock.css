@@ -1,0 +1,67 @@
+/* OS store subscription mock — mobile `UpgradeStoreMock.css`, TV viewport */
+
+.tv-upgrade-store-mock {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-chrome);
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-bg2);
+  overflow: hidden;
+  text-align: center;
+}
+
+.tv-upgrade-store-mock.focusable-button--focused {
+  outline: 3px solid var(--tv-focus-ring-color);
+  outline-offset: -3px;
+}
+
+.tv-upgrade-store-mock__bg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.tv-upgrade-store-mock__img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(100%, 830px);
+  max-width: none;
+  height: auto;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
+
+.tv-upgrade-store-mock__titles {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 32px;
+  pointer-events: none;
+  font-family: var(--font-sans);
+  font-size: clamp(2.5rem, 5vw, 3.375rem);
+  font-weight: 900;
+  line-height: normal;
+  color: #ec1a2b;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tv-upgrade-store-mock__title-line {
+  display: block;
+}

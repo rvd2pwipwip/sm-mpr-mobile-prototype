@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import {
   PROVIDER_LOGO_DARK_URL,
   PROVIDER_LOGO_LIGHT_URL,
@@ -76,16 +76,12 @@ export default function TvHomeHeader({
   onMoveDown,
   onBoundaryLeft,
 }) {
-  const navigate = useNavigate();
+  const goUpgrade = useGoUpgrade();
   const { userType } = useUserType();
   const { musicLineupMode } = useTerritory();
   const toggleCatalogScope = useToggleCatalogScope();
   const showUpgrade = showUpgradeCallToAction(userType);
   const subscribed = userType === "subscribed";
-
-  const handleUpgradeClick = () => {
-    navigate("/settings/user-type");
-  };
 
   return (
     <header
@@ -120,7 +116,7 @@ export default function TvHomeHeader({
           {showUpgrade ? (
             <KeyboardWrapper
               ref={(node) => registerItemRef?.(groupIndex, 0, node)}
-              onSelect={handleUpgradeClick}
+              onSelect={goUpgrade}
               onUp={onMoveUp}
               onDown={onMoveDown}
               onLeft={() => onBoundaryLeft?.()}

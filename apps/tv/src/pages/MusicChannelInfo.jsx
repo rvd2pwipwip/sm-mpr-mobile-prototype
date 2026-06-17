@@ -106,6 +106,10 @@ export default function MusicChannelInfo() {
     navigate(`/music/${targetChannel.id}`);
   };
 
+  const openTagGrid = (tag) => {
+    navigate(`/search/more/tags?q=${encodeURIComponent(tag)}`);
+  };
+
   const playDownTarget =
     descriptionGroup ?? tagsGroup ?? relatedGroup;
   const descriptionDownTarget = tagsGroup ?? relatedGroup;
@@ -178,6 +182,7 @@ export default function MusicChannelInfo() {
                 onMoveDown={
                   relatedGroup != null ? handleMoveDown : undefined
                 }
+                onSelectTag={openTagGrid}
               />
             ) : null}
           </div>

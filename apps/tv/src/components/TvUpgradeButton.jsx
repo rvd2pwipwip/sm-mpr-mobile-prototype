@@ -4,7 +4,7 @@ import "./TvUpgradeButton.css";
 
 /**
  * Figma TV header CTA (`15515:41291` / `.button_lg`) — Home Upgrade, Channel Info Play,
- * Podcast Info Play / Subscribe, etc. Rounded-rect focus ring via `FocusableButton`.
+ * Podcast Info Play (primary) / Subscribe (subscribe variant), etc.
  */
 const TvUpgradeButton = forwardRef(function TvUpgradeButton(
   {
@@ -13,6 +13,7 @@ const TvUpgradeButton = forwardRef(function TvUpgradeButton(
     className = "",
     variant = "primary",
     iconSrc = "/upgrade.svg",
+    iconMaskVariant = null,
     label = "Upgrade",
     ariaLabel,
     disabled = false,
@@ -23,6 +24,7 @@ const TvUpgradeButton = forwardRef(function TvUpgradeButton(
   const rootClass = [
     "tv-upgrade-button",
     variant === "secondary" ? "tv-upgrade-button--secondary" : "",
+    variant === "subscribe" ? "tv-upgrade-button--subscribe" : "",
     disabled ? "tv-upgrade-button--disabled" : "",
     className,
   ]
@@ -42,14 +44,23 @@ const TvUpgradeButton = forwardRef(function TvUpgradeButton(
       {...rest}
     >
       <span className="tv-upgrade-button__icon" aria-hidden="true">
-        <img
-          className="tv-upgrade-button__icon-asset"
-          src={iconSrc}
-          alt=""
-          width="40"
-          height="40"
-          decoding="async"
-        />
+        {iconMaskVariant ? (
+          <span
+            className={[
+              "tv-upgrade-button__icon-mask",
+              `tv-upgrade-button__icon-mask--${iconMaskVariant}`,
+            ].join(" ")}
+          />
+        ) : (
+          <img
+            className="tv-upgrade-button__icon-asset"
+            src={iconSrc}
+            alt=""
+            width="40"
+            height="40"
+            decoding="async"
+          />
+        )}
       </span>
       <span className="tv-upgrade-button__label">{label}</span>
     </FocusableButton>
