@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { STINGRAY_SIGNUP_EMAIL_URL } from "@sm-mpr/shared/constants/externalLinks.js";
 import FocusableButton from "../focus/FocusableButton.jsx";
 import { useAccountRequiredDialog } from "../../context/AccountRequiredDialogContext.jsx";
-import { useUserType } from "../../context/UserTypeContext.jsx";
 import { useTvStackedDialogOpenFlag } from "../../utils/tvStackedDialogFocus.js";
 import "./TvAccountRequiredDialog.css";
 
@@ -41,7 +39,6 @@ const BUTTON_COUNT = 3;
  */
 export default function TvAccountRequiredDialog() {
   const navigate = useNavigate();
-  const { setUserType } = useUserType();
   const {
     accountRequiredDialogOpen,
     accountRequiredDialogVariant,
@@ -69,9 +66,8 @@ export default function TvAccountRequiredDialog() {
 
   const createFreeAccount = useCallback(() => {
     dismissAccountRequiredDialog();
-    setUserType("freeStingray");
-    window.open(STINGRAY_SIGNUP_EMAIL_URL, "_blank", "noopener,noreferrer");
-  }, [dismissAccountRequiredDialog, setUserType]);
+    navigate("/create-account");
+  }, [dismissAccountRequiredDialog, navigate]);
 
   const goLogin = useCallback(() => {
     dismissAccountRequiredDialog();

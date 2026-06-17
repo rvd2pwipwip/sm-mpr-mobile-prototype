@@ -57,6 +57,7 @@ import TvInfoAbout from "./pages/TvInfoAbout.jsx";
 import TvInfoContact from "./pages/TvInfoContact.jsx";
 import TvSubscription from "./pages/TvSubscription.jsx";
 import TvUpgradeStoreMock from "./pages/TvUpgradeStoreMock.jsx";
+import TvCreateAccount from "./pages/TvCreateAccount.jsx";
 import TvLogin from "./pages/TvLogin.jsx";
 import TvUserTypePreview from "./pages/TvUserTypePreview.jsx";
 
@@ -263,6 +264,7 @@ export default function App() {
                               <Route path="/upgrade/store" element={<TvUpgradeStoreMock />} />
                               <Route path="/info" element={<TvInfo />} />
                               <Route path="/login" element={<TvLogin />} />
+                              <Route path="/create-account" element={<TvCreateAccount />} />
                               <Route path="/settings/user-type" element={<TvUserTypePreview />} />
                               <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>

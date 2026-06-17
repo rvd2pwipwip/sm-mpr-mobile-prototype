@@ -4,7 +4,6 @@ import {
   PROVIDER_LOGO_DARK_URL,
   PROVIDER_LOGO_LIGHT_URL,
   STINGRAY_ACCOUNT_LOGIN_URL,
-  STINGRAY_SIGNUP_EMAIL_URL,
 } from "@sm-mpr/shared/constants/externalLinks.js";
 import { PROVIDER_SSO_URL } from "../../../../mobile/src/constants/externalLinks.js";
 import {
@@ -35,7 +34,6 @@ const ACTION_LABELS = {
 };
 
 const EXTERNAL_ACTIONS = new Set([
-  "createAccount",
   "providerAccess",
   "manageAccount",
   "changeProvider",
@@ -76,10 +74,7 @@ export default function TvInfoAccountSection({
     () => ({
       upgrade: goUpgrade,
       restore: triggerRestore,
-      createAccount: () => {
-        setUserType("freeStingray");
-        window.open(STINGRAY_SIGNUP_EMAIL_URL, "_blank", "noopener,noreferrer");
-      },
+      createAccount: () => navigate("/create-account"),
       login: () => navigate("/login"),
       providerAccess: () => {
         setUserType("freeProvided");

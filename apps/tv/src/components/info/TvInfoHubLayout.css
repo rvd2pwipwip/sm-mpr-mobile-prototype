@@ -37,6 +37,16 @@
   --tv-info-hub-inline-end: var(--tv-info-hub-inline-end-symmetric);
 }
 
+[data-catalog-scope="broad"] .tv-create-account.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-nav-aware);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end);
+}
+
+[data-catalog-scope="limited"] .tv-create-account.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-symmetric);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end-symmetric);
+}
+
 .tv-info-hub-shell .tv-drill-screen__header {
   padding-inline: var(--tv-info-hub-inline-start) var(--tv-info-hub-inline-end);
 }

@@ -13,19 +13,19 @@ import "./TvLogin.css";
 const FOCUS_GROUP = {
   email: 0,
   password: 1,
-  login: 2,
-  signup: 3,
+  createAccount: 2,
+  login: 3,
 };
 
 const ITEM_INDEX = 0;
 
-/** Prototype TV login URL shown beside the QR code. */
-const TV_EASY_LOGIN_URL = "login-test.stingray.com/music/tv";
+/** Prototype TV signup URL shown beside the QR code (same handoff as log in for now). */
+const TV_EASY_SIGNUP_URL = "login-test.stingray.com/music/tv";
 
 /** Prototype pairing code for mobile / computer handoff. */
-const TV_EASY_LOGIN_CODE = "R24W";
+const TV_EASY_SIGNUP_CODE = "R24W";
 
-function TvLoginField({
+function TvAuthHandoffField({
   id,
   label,
   type,
@@ -97,7 +97,7 @@ function TvLoginField({
           id={id}
           type={type}
           name={id}
-          autoComplete={type === "password" ? "current-password" : "email"}
+          autoComplete={type === "password" ? "new-password" : "email"}
           className="tv-login__field-input"
           placeholder={placeholder}
           value={value}
@@ -109,8 +109,8 @@ function TvLoginField({
   );
 }
 
-/** Log in — TV fields or QR / mobile handoff (no browser required). */
-export default function TvLogin() {
+/** Create account — TV fields or QR / mobile handoff (no browser required). */
+export default function TvCreateAccount() {
   const navigate = useNavigate();
   const { setUserType } = useUserType();
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
@@ -126,32 +126,36 @@ export default function TvLogin() {
     handleMoveDown,
     handleMoveLeft,
     handleMoveRight,
-  } = useScreenContentFocus("tv-login", {
+  } = useScreenContentFocus("tv-create-account", {
     groupCount: 4,
     itemCount: 1,
     defaultGroupIndex: FOCUS_GROUP.email,
     defaultItemIndex: ITEM_INDEX,
   });
 
-  const completeLogin = () => {
+  const completeCreateAccount = () => {
     setUserType("freeStingray");
     navigate(-1);
   };
 
-  const goSignUp = () => {
-    navigate("/create-account");
+  const goLogin = () => {
+    navigate("/login");
   };
 
   return (
     <div
       ref={shellRef}
-      className="tv-drill-screen tv-login tv-info-hub-shell tv-screen-overlay"
+      className="tv-drill-screen tv-create-account tv-info-hub-shell tv-screen-overlay"
     >
-      <TvDrillScreenHeader title="Log in" headerRef={headerRef} />
+      <TvDrillScreenHeader title="Create account" headerRef={headerRef} />
 
       <div className="tv-drill-screen__scroll tv-home__scroll tv-screen-overlay__scroll">
         <div className="tv-home__scroll-inner tv-login__inner">
-          <div className="tv-login__panel" role="group" aria-label="Log in options">
+          <div
+            className="tv-login__panel"
+            role="group"
+            aria-label="Create account options"
+          >
             <section
               className="tv-login__column tv-login__column--form"
               aria-label="Email and password"
@@ -177,8 +181,8 @@ export default function TvLogin() {
                 />
               </div>
 
-              <TvLoginField
-                id="tv-login-email"
+              <TvAuthHandoffField
+                id="tv-create-account-email"
                 label="Enter email address"
                 type="email"
                 value={email}
@@ -194,8 +198,8 @@ export default function TvLogin() {
                 onMoveRight={handleMoveRight}
               />
 
-              <TvLoginField
-                id="tv-login-password"
+              <TvAuthHandoffField
+                id="tv-create-account-password"
                 label="Enter password"
                 type="password"
                 value={password}
@@ -213,9 +217,9 @@ export default function TvLogin() {
 
               <KeyboardWrapper
                 ref={(node) =>
-                  registerItemRef(FOCUS_GROUP.login, ITEM_INDEX, node)
+                  registerItemRef(FOCUS_GROUP.createAccount, ITEM_INDEX, node)
                 }
-                onSelect={completeLogin}
+                onSelect={completeCreateAccount}
                 onUp={handleMoveUp}
                 onDown={handleMoveDown}
                 onLeft={handleMoveLeft}
@@ -225,20 +229,25 @@ export default function TvLogin() {
                   <TvButton
                     {...focusProps}
                     variant="subscribe"
-                    label="Log in"
-                    focused={isItemFocused(FOCUS_GROUP.login, ITEM_INDEX)}
+                    label="Create account"
+                    focused={isItemFocused(
+                      FOCUS_GROUP.createAccount,
+                      ITEM_INDEX,
+                    )}
                     className="tv-login__submit"
                   />
                 )}
               </KeyboardWrapper>
 
-              <p className="tv-login__signup-prompt">Don&apos;t have an account?</p>
+              <p className="tv-login__signup-prompt">
+                Already have an account?
+              </p>
 
               <KeyboardWrapper
                 ref={(node) =>
-                  registerItemRef(FOCUS_GROUP.signup, ITEM_INDEX, node)
+                  registerItemRef(FOCUS_GROUP.login, ITEM_INDEX, node)
                 }
-                onSelect={goSignUp}
+                onSelect={goLogin}
                 onUp={handleMoveUp}
                 onDown={handleMoveDown}
                 onLeft={handleMoveLeft}
@@ -248,8 +257,8 @@ export default function TvLogin() {
                   <TvButton
                     {...focusProps}
                     variant="secondary"
-                    label="Sign up"
-                    focused={isItemFocused(FOCUS_GROUP.signup, ITEM_INDEX)}
+                    label="Log in"
+                    focused={isItemFocused(FOCUS_GROUP.login, ITEM_INDEX)}
                     className="tv-login__signup"
                   />
                 )}
@@ -264,15 +273,15 @@ export default function TvLogin() {
 
             <section
               className="tv-login__column tv-login__column--easy"
-              aria-label="Easy login with mobile device"
+              aria-label="Easy sign up with mobile device"
             >
-              <h2 className="tv-login__easy-title">Easy Login!</h2>
+              <h2 className="tv-login__easy-title">Easy Create Account!</h2>
 
               <div className="tv-login__qr-wrap">
                 <img
                   className="tv-login__qr"
                   src="/SM_login_QR.png"
-                  alt="QR code to log in on your mobile device or computer"
+                  alt="QR code to create an account on your mobile device or computer"
                   width={220}
                   height={220}
                   decoding="async"
@@ -289,19 +298,21 @@ export default function TvLogin() {
                   <span className="tv-login__step-text">
                     Scan the code with your mobile camera or go to:
                   </span>
-                  <span className="tv-login__step-url">{TV_EASY_LOGIN_URL}</span>
+                  <span className="tv-login__step-url">{TV_EASY_SIGNUP_URL}</span>
                 </li>
                 <li className="tv-login__step">
                   <span className="tv-login__step-label">Step 2:</span>
                   <span className="tv-login__step-text">
-                    Enter this code to log in:
+                    Enter this code to sign up:
                   </span>
-                  <span className="tv-login__step-code">{TV_EASY_LOGIN_CODE}</span>
+                  <span className="tv-login__step-code">
+                    {TV_EASY_SIGNUP_CODE}
+                  </span>
                 </li>
                 <li className="tv-login__step">
                   <span className="tv-login__step-label">Step 3:</span>
                   <span className="tv-login__step-text">
-                    Log in to Stingray Music.
+                    Create your Stingray Music account.
                   </span>
                 </li>
               </ol>
