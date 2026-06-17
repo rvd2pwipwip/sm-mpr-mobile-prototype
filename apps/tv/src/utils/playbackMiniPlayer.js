@@ -1,5 +1,5 @@
 /** Playback variants that use the TV mini player slot (nav + limited Home header). */
-export const TV_MINI_PLAYER_VARIANTS = ["music", "podcasts"];
+export const TV_MINI_PLAYER_VARIANTS = ["music", "podcasts", "radio"];
 
 export function hasTvMiniPlayerSession(session) {
   return (

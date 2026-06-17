@@ -105,10 +105,17 @@ export default function RadioPlayer() {
       stationId: station.id,
       thumbnail: station.thumbnail,
       title: station.name,
-      subtitle: "Now playing (prototype)",
+      subtitle: subtitleLine || "Live",
       isPaused: !playing,
     });
-  }, [station, needsPreroll, prerollComplete, playing, upsertRadioSession]);
+  }, [
+    station,
+    subtitleLine,
+    needsPreroll,
+    prerollComplete,
+    playing,
+    upsertRadioSession,
+  ]);
 
   useEffect(() => {
     if (!station) return;

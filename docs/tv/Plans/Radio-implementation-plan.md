@@ -30,7 +30,7 @@ Living plan for **radio stations** in **`apps/tv/`**, mirroring the **mobile pro
 | **Preroll** | `showPlayerPreroll(userType)` + `GuestPrerollGraceContext` | Reuse **`TvPlayerPrerollAd`** |
 | **Listen history** | `ListenHistoryContext.recordRadioStationListen` on first allowed playback | Powers **Listen again** (limited Home radio tab) + **My Library radio history** |
 | **Nav chrome** | Hide **`PrimaryNav`** on `/radio/:stationId/play` | Extend **`TvShell`** `FULL_PLAYER_PATH` regex |
-| **Mini player** | **Deferred** — radio variant not in v1 | Full player only; session still upserts for future mini player |
+| **Mini player** | **Done** — `radio` in `TV_MINI_PLAYER_VARIANTS`; limited Home header uses warm orange gradient (`tv-mini-player--radio`) |
 | **Limited Home (layout B)** | Same as mobile when **Radio** tab selected: content switcher + **Listen again** (typed) + **Your radio stations** + taxonomy rails | See Phase 4 — TV is **partial** today (Listen again yes; liked radio + Near You / International missing) |
 
 ---
@@ -283,7 +283,7 @@ Radio player differs from music: **info + like** only (no Share), cover + **Now 
 
 | Item | Notes |
 |------|--------|
-| **Radio mini player** | `TvMiniPlayer` variant; see [`Tv-miniplayer-implementation-plan.md`](./Tv-miniplayer-implementation-plan.md) |
+| **Radio mini player** | **Done** — broad `PrimaryNav` + limited Home header B |
 | **Cast / Share on player** | Out of TV scope |
 | **In-player visual ad strip** | Same open question as music TV player |
 | **Provider brand row on radio player** | Defer unless design adds |

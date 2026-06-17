@@ -87,7 +87,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 
 1. **Search & Browse Phase 7** — PrimaryNav reset semantics; see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 2. **TV-2** — limited Home layout B polish if needed; layout A via settings toggle — see [`Limited-Home-layout-comparison.md`](./Limited-Home-layout-comparison.md)
-3. **Backlog** — Radio mini player variant; TV in-player visual ads
+3. **Backlog** — TV in-player visual ads
 
 Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan.md`**.
 

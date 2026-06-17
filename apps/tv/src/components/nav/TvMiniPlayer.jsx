@@ -26,6 +26,7 @@ const TvMiniPlayer = forwardRef(function TvMiniPlayer(
     "tv-mini-player",
     expanded ? "tv-mini-player--expanded" : "tv-mini-player--collapsed",
     variant === "podcasts" ? "tv-mini-player--podcasts" : "",
+    variant === "radio" ? "tv-mini-player--radio" : "",
     className,
   ]
     .filter(Boolean)

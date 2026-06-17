@@ -45,6 +45,7 @@ function isNavItemActive(pathname, item) {
       pathname === "/" ||
       pathname.startsWith("/music/") ||
       pathname.startsWith("/podcast/") ||
+      pathname.startsWith("/radio/") ||
       pathname.startsWith("/more/")
     );
   }
