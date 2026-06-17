@@ -21,6 +21,7 @@ export default function TvInfo() {
   return (
     <TvInfoScreenLayout
       title="Info"
+      hubLayout="symmetric"
       titleEasterEgg={{
         ariaLabel:
           "Info. Click for prototype user type and layout settings.",

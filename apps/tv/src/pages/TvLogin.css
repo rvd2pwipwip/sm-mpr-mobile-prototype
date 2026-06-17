@@ -1,0 +1,237 @@
+.tv-login__inner {
+  align-items: center;
+  padding-block: 24px 60px;
+}
+
+.tv-login__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 48px;
+  width: 100%;
+  max-width: min(1400px, 78vw);
+  margin-inline: auto;
+  padding-block: 48px;
+  box-sizing: border-box;
+}
+
+.tv-login__column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tv-login__column--form {
+  gap: 28px;
+}
+
+.tv-login__column--easy {
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.tv-login__brand {
+  position: relative;
+  width: 210px;
+  min-height: 61px;
+  line-height: 0;
+}
+
+.tv-login__wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tv-login__wordmark--light {
+  display: block;
+}
+
+.tv-login__wordmark--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .tv-login__wordmark--light {
+    display: none;
+  }
+
+  :root:not([data-theme]) .tv-login__wordmark--dark {
+    display: block;
+  }
+}
+
+html[data-theme="light"] .tv-login__wordmark--light {
+  display: block;
+}
+
+html[data-theme="light"] .tv-login__wordmark--dark {
+  display: none;
+}
+
+html[data-theme="dark"] .tv-login__wordmark--light {
+  display: none;
+}
+
+html[data-theme="dark"] .tv-login__wordmark--dark {
+  display: block;
+}
+
+.tv-login__field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.tv-login__field-label {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-on-bkg);
+}
+
+.tv-login__field-wrap {
+  display: flex;
+  align-items: center;
+  min-height: var(--tv-header-button-height);
+  padding: 0 24px;
+  border-radius: var(--tv-header-button-radius);
+  background: color-mix(in srgb, var(--color-on-bkg) 10%, transparent);
+  outline: none;
+}
+
+.tv-login__field-wrap--focused {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring-color);
+  outline-offset: var(--tv-focus-ring-gap);
+}
+
+.tv-login__field-input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-on-bkg);
+  font-family: var(--font-sans);
+  font-size: var(--tv-header-button-font-size);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.tv-login__field-input::placeholder {
+  color: color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+}
+
+.tv-login__field-input:focus {
+  outline: none;
+}
+
+.tv-login__submit.focusable-button,
+.tv-login__submit.tv-button,
+.tv-login__signup.focusable-button,
+.tv-login__signup.tv-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tv-login__signup-prompt {
+  margin: 4px 0 0;
+  font-size: 1.125rem;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.tv-login__divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 2px;
+  min-height: 100%;
+}
+
+.tv-login__divider-line {
+  flex: 1 1 auto;
+  width: 2px;
+  min-height: 40px;
+  background: color-mix(in srgb, var(--color-on-bkg) 20%, transparent);
+}
+
+.tv-login__divider-label {
+  flex-shrink: 0;
+  font-size: 1.125rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  text-transform: lowercase;
+}
+
+.tv-login__easy-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-accent2);
+  text-align: center;
+}
+
+.tv-login__qr-wrap {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 16px;
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.tv-login__qr {
+  display: block;
+  width: 220px;
+  height: auto;
+}
+
+.tv-login__easy-lead {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-on-bkg);
+}
+
+.tv-login__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tv-login__step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tv-login__step-label {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-accent2);
+}
+
+.tv-login__step-text {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.tv-login__step-url,
+.tv-login__step-code {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-on-bkg);
+  letter-spacing: 0.04em;
+}

@@ -41,6 +41,13 @@
   --tv-content-inline-end: 100px;
   --tv-content-inline-start-limited: 100px;
   --tv-content-inline-end-limited: 100px;
+  /* Info / Account hub — center header + column in visible area (see TvInfoHubLayout.css) */
+  --tv-info-hub-inline-end: var(--tv-content-inline-end);
+  --tv-info-hub-inline-start-symmetric: var(--tv-content-inline-start-limited);
+  --tv-info-hub-inline-end-symmetric: var(--tv-content-inline-end-limited);
+  --tv-info-hub-inline-start-nav-aware: calc(
+    var(--tv-content-inline-end) + var(--nav-width-collapsed)
+  );
   --tv-header-inline-start: 130px;
   --tv-header-inline-end: 100px;
   --tv-header-button-height: 80px;

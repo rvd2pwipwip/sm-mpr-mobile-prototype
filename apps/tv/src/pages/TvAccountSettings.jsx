@@ -12,6 +12,7 @@ export default function TvAccountSettings() {
   return (
     <TvInfoScreenLayout
       title="Account and settings"
+      hubLayout="nav-aware"
       shellRef={focus.shellRef}
       headerRef={focus.headerRef}
       scrollViewportRef={focus.viewportRef}

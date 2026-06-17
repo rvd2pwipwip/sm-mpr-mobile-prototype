@@ -1,6 +1,7 @@
 import { useTvScreenHeaderOffset } from "../../hooks/useTvScreenHeaderOffset.js";
 import TvDrillScreenHeader from "../drill/TvDrillScreenHeader.jsx";
 import "../drill/TvDrillScreen.css";
+import "./TvInfoHubLayout.css";
 import "./TvInfoSubPage.css";
 
 /** Shared overlay shell for Info drill-ins (Contact, About) — 50vw column, Esc back. */
@@ -10,7 +11,7 @@ export default function TvInfoSubPageLayout({ title, children }) {
   return (
     <div
       ref={shellRef}
-      className="tv-drill-screen tv-info-sub-page tv-screen-overlay"
+      className="tv-drill-screen tv-info-sub-page tv-info-hub-shell tv-screen-overlay"
     >
       <TvDrillScreenHeader title={title} headerRef={headerRef} />
 

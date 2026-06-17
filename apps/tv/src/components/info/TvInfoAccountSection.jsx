@@ -36,7 +36,6 @@ const ACTION_LABELS = {
 
 const EXTERNAL_ACTIONS = new Set([
   "createAccount",
-  "login",
   "providerAccess",
   "manageAccount",
   "changeProvider",
@@ -81,10 +80,7 @@ export default function TvInfoAccountSection({
         setUserType("freeStingray");
         window.open(STINGRAY_SIGNUP_EMAIL_URL, "_blank", "noopener,noreferrer");
       },
-      login: () => {
-        setUserType("freeStingray");
-        window.open(STINGRAY_ACCOUNT_LOGIN_URL, "_blank", "noopener,noreferrer");
-      },
+      login: () => navigate("/login"),
       providerAccess: () => {
         setUserType("freeProvided");
         window.open(PROVIDER_SSO_URL, "_blank", "noopener,noreferrer");

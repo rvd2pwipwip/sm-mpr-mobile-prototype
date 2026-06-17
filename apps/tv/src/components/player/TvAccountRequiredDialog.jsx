@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  STINGRAY_ACCOUNT_LOGIN_URL,
-  STINGRAY_SIGNUP_EMAIL_URL,
-} from "@sm-mpr/shared/constants/externalLinks.js";
+import { useNavigate } from "react-router-dom";
+import { STINGRAY_SIGNUP_EMAIL_URL } from "@sm-mpr/shared/constants/externalLinks.js";
 import FocusableButton from "../focus/FocusableButton.jsx";
 import { useAccountRequiredDialog } from "../../context/AccountRequiredDialogContext.jsx";
 import { useUserType } from "../../context/UserTypeContext.jsx";
@@ -42,6 +40,7 @@ const BUTTON_COUNT = 3;
  * D-pad is trapped to the three action buttons while open.
  */
 export default function TvAccountRequiredDialog() {
+  const navigate = useNavigate();
   const { setUserType } = useUserType();
   const {
     accountRequiredDialogOpen,
@@ -76,9 +75,8 @@ export default function TvAccountRequiredDialog() {
 
   const goLogin = useCallback(() => {
     dismissAccountRequiredDialog();
-    setUserType("freeStingray");
-    window.open(STINGRAY_ACCOUNT_LOGIN_URL, "_blank", "noopener,noreferrer");
-  }, [dismissAccountRequiredDialog, setUserType]);
+    navigate("/login");
+  }, [dismissAccountRequiredDialog, navigate]);
 
   const activateFocusedButton = useCallback(() => {
     const current = focusedButtonRef.current;

@@ -1,0 +1,48 @@
+/*
+ * Info / Account hub shells — header title and scroll column share horizontal
+ * inset so the 50vw body column lines up with the centered overlay title.
+ *
+ * --nav-aware: broad catalog (PrimaryNav overlay) — extra start padding.
+ * --symmetric: limited Info (no side menu) — equal start/end padding.
+ */
+
+.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-symmetric);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end-symmetric);
+}
+
+.tv-info-hub-shell--nav-aware {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-nav-aware);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end);
+}
+
+/* Contact / About: scope follows entry (My Library vs limited Info). */
+[data-catalog-scope="broad"] .tv-info-sub-page.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-nav-aware);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end);
+}
+
+[data-catalog-scope="limited"] .tv-info-sub-page.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-symmetric);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end-symmetric);
+}
+
+[data-catalog-scope="broad"] .tv-login.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-nav-aware);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end);
+}
+
+[data-catalog-scope="limited"] .tv-login.tv-info-hub-shell {
+  --tv-info-hub-inline-start: var(--tv-info-hub-inline-start-symmetric);
+  --tv-info-hub-inline-end: var(--tv-info-hub-inline-end-symmetric);
+}
+
+.tv-info-hub-shell .tv-drill-screen__header {
+  padding-inline: var(--tv-info-hub-inline-start) var(--tv-info-hub-inline-end);
+}
+
+.tv-info-hub-shell .tv-home__scroll-inner.tv-info-screen__inner,
+.tv-info-hub-shell .tv-home__scroll-inner.tv-info-sub-page__inner,
+.tv-info-hub-shell .tv-home__scroll-inner.tv-login__inner {
+  padding-inline: var(--tv-info-hub-inline-start) var(--tv-info-hub-inline-end);
+}
