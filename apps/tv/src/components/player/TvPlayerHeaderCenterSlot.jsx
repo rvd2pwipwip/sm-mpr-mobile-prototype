@@ -1,5 +1,5 @@
 import { showUpgradeInFullPlayerHeader } from "@sm-mpr/shared/utils/userTierRules.js";
-import TvUpgradeButton from "../TvUpgradeButton.jsx";
+import TvButton from "../TvButton.jsx";
 import "./TvPlayerHeaderCenterSlot.css";
 
 /** Full-player header center: Upgrade for all except subscribed (mobile parity). */
@@ -15,9 +15,11 @@ export default function TvPlayerHeaderCenterSlot({
   }
 
   return (
-    <TvUpgradeButton
+    <TvButton
       focused={focused}
       onClick={onUpgrade}
+      label="Upgrade"
+      iconSrc="/upgrade.svg"
       className="tv-player-header-center-slot__upgrade"
     />
   );

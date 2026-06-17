@@ -11,7 +11,7 @@ import ChannelInfoDescription from "../components/channel-info/ChannelInfoDescri
 import ChannelInfoDescriptionDialog from "../components/channel-info/ChannelInfoDescriptionDialog.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import TvEpisodeListItem from "../components/podcasts/TvEpisodeListItem.jsx";
-import TvUpgradeButton from "../components/TvUpgradeButton.jsx";
+import TvButton from "../components/TvButton.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
@@ -195,7 +195,7 @@ export default function PodcastInfo() {
                       onRight={handleMoveRight}
                     >
                       {(focusProps) => (
-                        <TvUpgradeButton
+                        <TvButton
                           {...focusProps}
                           focused={isItemFocused(ACTIONS_GROUP, PLAY_ACTION)}
                           iconSrc="/play.svg"
@@ -220,7 +220,7 @@ export default function PodcastInfo() {
                       onRight={handleMoveRight}
                     >
                       {(focusProps) => (
-                        <TvUpgradeButton
+                        <TvButton
                           {...focusProps}
                           variant="subscribe"
                           focused={isItemFocused(

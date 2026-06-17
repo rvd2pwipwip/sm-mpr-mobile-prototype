@@ -23,7 +23,7 @@ import {
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
-import TvUpgradeButton from "../components/TvUpgradeButton.jsx";
+import TvButton from "../components/TvButton.jsx";
 import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
@@ -328,9 +328,11 @@ export default function PodcastPlayer() {
                 onMoveRight={handleMoveRight}
               >
                 {(focusProps) => (
-                  <TvUpgradeButton
+                  <TvButton
                     {...focusProps}
                     focused={isItemFocused(META_GROUP, metaSlots.upgrade)}
+                    label="Upgrade"
+                    iconSrc="/upgrade.svg"
                   />
                 )}
               </KeyboardWrapper>

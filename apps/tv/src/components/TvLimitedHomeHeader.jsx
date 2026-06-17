@@ -16,7 +16,7 @@ import {
 import KeyboardWrapper from "./focus/KeyboardWrapper.jsx";
 import TvHeaderIconButton from "./TvHeaderIconButton.jsx";
 import TvHomeContentSwitcher from "./TvHomeContentSwitcher.jsx";
-import TvUpgradeButton from "./TvUpgradeButton.jsx";
+import TvButton from "./TvButton.jsx";
 import "./TvLimitedHomeHeader.css";
 
 function TvWordmarkPair() {
@@ -161,9 +161,11 @@ export default function TvLimitedHomeHeader({
               onDown={onMoveDown}
             >
               {(focusProps) => (
-                <TvUpgradeButton
+                <TvButton
                   {...focusProps}
                   focused={focused && focusedItemIndex === upgradeIndex}
+                  label="Upgrade"
+                  iconSrc="/upgrade.svg"
                 />
               )}
             </KeyboardWrapper>

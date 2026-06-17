@@ -6,7 +6,7 @@ import ChannelInfoDescriptionDialog from "../components/channel-info/ChannelInfo
 import ChannelInfoRelatedRow from "../components/channel-info/ChannelInfoRelatedRow.jsx";
 import ChannelInfoTagsSwimlane from "../components/channel-info/ChannelInfoTagsSwimlane.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
-import TvUpgradeButton from "../components/TvUpgradeButton.jsx";
+import TvButton from "../components/TvButton.jsx";
 import {
   CHANNEL_INFO_RELATED_MAX,
   withChannelInfoTagScrollTest,
@@ -139,7 +139,7 @@ export default function MusicChannelInfo() {
                 onMoveDown={playDownTarget != null ? handleMoveDown : undefined}
               >
                 {(focusProps) => (
-                  <TvUpgradeButton
+                  <TvButton
                     {...focusProps}
                     focused={isItemFocused(ACTIONS_GROUP, 0)}
                     iconSrc="/play.svg"

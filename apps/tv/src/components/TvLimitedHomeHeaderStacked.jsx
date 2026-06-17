@@ -17,7 +17,7 @@ import KeyboardWrapper from "./focus/KeyboardWrapper.jsx";
 import TvHeaderIconButton from "./TvHeaderIconButton.jsx";
 import TvHomeContentSwitcher from "./TvHomeContentSwitcher.jsx";
 import TvMiniPlayer from "./nav/TvMiniPlayer.jsx";
-import TvUpgradeButton from "./TvUpgradeButton.jsx";
+import TvButton from "./TvButton.jsx";
 import "./TvLimitedHomeHeader.css";
 import "./TvLimitedHomeHeaderStacked.css";
 
@@ -191,9 +191,11 @@ export default function TvLimitedHomeHeaderStacked({
               onDown={onMoveDown}
             >
               {(focusProps) => (
-                <TvUpgradeButton
+                <TvButton
                   {...focusProps}
                   focused={focused && focusedItemIndex === upgradeIndex}
+                  label="Upgrade"
+                  iconSrc="/upgrade.svg"
                 />
               )}
             </KeyboardWrapper>

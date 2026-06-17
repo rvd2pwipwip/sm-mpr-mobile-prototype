@@ -6,10 +6,30 @@ import "./TvInfoScreen.css";
 
 /**
  * Overlay shell for Info / Account and settings — centered column.
- * Limited Info may pass `titleEasterEgg`; broad Account and settings uses a plain title.
+ * Pass scroll refs from `useTvInfoScreenFocus` when account actions need parked scroll.
  */
-export default function TvInfoScreenLayout({ title, titleEasterEgg = null, children }) {
-  const { shellRef, headerRef } = useTvScreenHeaderOffset();
+export default function TvInfoScreenLayout({
+  title,
+  titleEasterEgg = null,
+  shellRef: shellRefProp,
+  headerRef: headerRefProp,
+  scrollViewportRef,
+  scrollInnerRef,
+  scrollInnerClassName,
+  scrollInnerStyle,
+  children,
+}) {
+  const internalOffset = useTvScreenHeaderOffset();
+  const shellRef = shellRefProp ?? internalOffset.shellRef;
+  const headerRef = headerRefProp ?? internalOffset.headerRef;
+
+  const innerClass = [
+    "tv-home__scroll-inner",
+    "tv-info-screen__inner",
+    scrollInnerClassName,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div ref={shellRef} className="tv-drill-screen tv-info-screen tv-screen-overlay">
@@ -22,8 +42,15 @@ export default function TvInfoScreenLayout({ title, titleEasterEgg = null, child
         </div>
       </header>
 
-      <div className="tv-drill-screen__scroll tv-home__scroll tv-screen-overlay__scroll">
-        <div className="tv-home__scroll-inner tv-info-screen__inner">
+      <div
+        ref={scrollViewportRef}
+        className="tv-drill-screen__scroll tv-home__scroll tv-screen-overlay__scroll"
+      >
+        <div
+          ref={scrollInnerRef}
+          className={innerClass}
+          style={scrollInnerStyle}
+        >
           <div className="tv-info-screen__column">{children}</div>
         </div>
       </div>

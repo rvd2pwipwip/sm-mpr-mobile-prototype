@@ -7,7 +7,7 @@ import TvDrillScreenHeader from "../components/drill/TvDrillScreenHeader.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvRestorePurchasePrototypeDialog from "../components/info/TvRestorePurchasePrototypeDialog.jsx";
-import TvUpgradeButton from "../components/TvUpgradeButton.jsx";
+import TvButton from "../components/TvButton.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useRestorePurchasePrototypeDialog } from "../hooks/useRestorePurchasePrototypeDialog.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
@@ -98,10 +98,11 @@ export default function TvSubscription() {
                 onRight={handleMoveRight}
               >
                 {(focusProps) => (
-                  <TvUpgradeButton
+                  <TvButton
                     {...focusProps}
                     variant="subscribe"
                     label="Upgrade now"
+                    iconSrc="/upgrade.svg"
                     focused={isItemFocused(ACTION_GROUP, SLOT_UPGRADE)}
                     className="tv-subscription__btn-primary"
                   />

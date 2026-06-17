@@ -158,6 +158,8 @@ On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 
 ## Phase 2 — Static section components + Account block
 
+**Status: done (2026-06-17).** `TvInfoAccountSection` with four user types, D-pad focus, restore dialog.
+
 **Goal:** Account section matches mobile four user types; D-pad focus for actions.
 
 1. **`TvInfoSection.jsx`** — presentational wrapper (`title` + `children`, border under title)

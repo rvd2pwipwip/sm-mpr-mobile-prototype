@@ -4,7 +4,7 @@ import { resolveRadioStationForStub } from "@sm-mpr/shared/data/radioInternation
 import ChannelInfoDescription from "../components/channel-info/ChannelInfoDescription.jsx";
 import ChannelInfoDescriptionDialog from "../components/channel-info/ChannelInfoDescriptionDialog.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
-import TvUpgradeButton from "../components/TvUpgradeButton.jsx";
+import TvButton from "../components/TvButton.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow.js";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction.js";
@@ -155,7 +155,7 @@ export default function RadioStationInfo() {
                 onRight={handleMoveRight}
               >
                 {(focusProps) => (
-                  <TvUpgradeButton
+                  <TvButton
                     {...focusProps}
                     focused={isItemFocused(actionsGroup, PLAY_ACTION)}
                     iconSrc="/play.svg"
@@ -173,7 +173,7 @@ export default function RadioStationInfo() {
                 onRight={handleMoveRight}
               >
                 {(focusProps) => (
-                  <TvUpgradeButton
+                  <TvButton
                     {...focusProps}
                     variant="secondary"
                     focused={isItemFocused(actionsGroup, LIKE_ACTION)}

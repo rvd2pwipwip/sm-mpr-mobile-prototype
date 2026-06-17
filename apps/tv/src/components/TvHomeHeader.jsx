@@ -9,7 +9,7 @@ import { useTerritory } from "../context/TerritoryContext.jsx";
 import { useToggleCatalogScope } from "../hooks/useToggleCatalogScope.js";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import KeyboardWrapper from "./focus/KeyboardWrapper.jsx";
-import TvUpgradeButton from "./TvUpgradeButton.jsx";
+import TvButton from "./TvButton.jsx";
 import "./TvHomeHeader.css";
 
 function TvWordmarkPair() {
@@ -122,7 +122,12 @@ export default function TvHomeHeader({
               onLeft={() => onBoundaryLeft?.()}
             >
               {(focusProps) => (
-                <TvUpgradeButton {...focusProps} focused={focused} />
+                <TvButton
+                  {...focusProps}
+                  focused={focused}
+                  label="Upgrade"
+                  iconSrc="/upgrade.svg"
+                />
               )}
             </KeyboardWrapper>
           ) : (
