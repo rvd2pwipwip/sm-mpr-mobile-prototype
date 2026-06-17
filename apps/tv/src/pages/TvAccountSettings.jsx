@@ -1,4 +1,5 @@
 import TvInfoAccountSection from "../components/info/TvInfoAccountSection.jsx";
+import TvInfoSettingsSection from "../components/info/TvInfoSettingsSection.jsx";
 import TvInfoScreenLayout from "../components/info/TvInfoScreenLayout.jsx";
 import TvInfoSection from "../components/info/TvInfoSection.jsx";
 import { useTvInfoScreenFocus } from "../hooks/useTvInfoScreenFocus.js";
@@ -30,9 +31,15 @@ export default function TvAccountSettings() {
       </TvInfoSection>
 
       <TvInfoSection sectionId="settings" title="Settings">
-        <p className="tv-info-section__placeholder">
-          Autoplay and communication preferences ship in Phase 3.
-        </p>
+        <TvInfoSettingsSection
+          settingsGroupOffset={focus.settingsGroupOffset}
+          registerItemRef={focus.registerItemRef}
+          isItemFocused={focus.isItemFocused}
+          handleMoveUp={focus.handleMoveUp}
+          handleMoveDown={focus.handleMoveDown}
+          handleMoveLeft={focus.handleMoveLeft}
+          handleMoveRight={focus.handleMoveRight}
+        />
       </TvInfoSection>
     </TvInfoScreenLayout>
   );

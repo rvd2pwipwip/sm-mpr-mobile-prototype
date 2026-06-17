@@ -12,7 +12,7 @@
   margin-inline: auto;
   box-sizing: border-box;
   text-align: left;
-  --tv-info-action-max-width: 400px;
+  --tv-info-action-max-width: 500px;
 }
 
 .tv-info-section {
@@ -25,7 +25,10 @@
 .tv-info-section__title {
   margin: 0;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-button-secondary-border);
+  border-bottom: 3px solid
+    color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+  width: 100%;
+  box-sizing: border-box;
   font-size: 1.75rem;
   font-weight: 900;
   line-height: 1.2;

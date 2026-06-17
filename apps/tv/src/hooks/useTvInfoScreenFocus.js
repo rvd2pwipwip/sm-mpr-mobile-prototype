@@ -4,10 +4,11 @@ import { useScreenContentFocus } from "./useScreenContentFocus.js";
 import { useTvScreenHeaderOffset } from "./useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "./useTvVerticalGroupScroll.js";
 import { getTvInfoAccountActionCount } from "../utils/tvInfoAccountFocus.js";
+import { getTvInfoSettingsGroupCount } from "../utils/tvInfoSettingsFocus.js";
 
 /**
- * Shared overlay chrome + account-section focus for Info / Account and settings.
- * Each account action is its own vertical focus group (Down/Up moves between buttons).
+ * Shared overlay chrome + account/settings focus for Info / Account and settings.
+ * Each action or control is its own vertical focus group (Down/Up moves between items).
  */
 export function useTvInfoScreenFocus(screenId) {
   const { userType } = useUserType();
@@ -16,6 +17,9 @@ export function useTvInfoScreenFocus(screenId) {
     () => getTvInfoAccountActionCount(userType),
     [userType],
   );
+
+  const settingsGroupCount = getTvInfoSettingsGroupCount();
+  const totalGroupCount = accountActionCount + settingsGroupCount;
 
   const {
     registerItemRef,
@@ -28,7 +32,7 @@ export function useTvInfoScreenFocus(screenId) {
     focusedIndex,
     getItemElement,
   } = useScreenContentFocus(screenId, {
-    groupCount: Math.max(accountActionCount, 1),
+    groupCount: Math.max(totalGroupCount, 1),
     itemCount: 1,
     defaultGroupIndex: 0,
     defaultItemIndex: 0,
@@ -41,7 +45,7 @@ export function useTvInfoScreenFocus(screenId) {
     [getItemElement, focusedGroupIndex, focusedIndex],
   );
 
-  const lastAccountGroupIndex = Math.max(0, accountActionCount - 1);
+  const lastFocusableGroupIndex = Math.max(0, totalGroupCount - 1);
 
   const {
     viewportRef,
@@ -50,10 +54,10 @@ export function useTvInfoScreenFocus(screenId) {
     offsetY,
   } = useTvVerticalGroupScroll(focusedGroupIndex, {
     firstFocusableGroupIndex: 0,
-    lastFocusableGroupIndex: lastAccountGroupIndex,
+    lastFocusableGroupIndex: lastFocusableGroupIndex,
     getFocusedElement,
     screenId,
-    scrollEnabled: accountActionCount > 0,
+    scrollEnabled: totalGroupCount > 0,
   });
 
   return {
@@ -63,6 +67,7 @@ export function useTvInfoScreenFocus(screenId) {
     innerRef,
     innerClassName,
     offsetY,
+    settingsGroupOffset: accountActionCount,
     registerItemRef,
     isItemFocused,
     handleMoveUp,

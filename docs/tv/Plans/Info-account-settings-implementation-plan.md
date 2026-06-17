@@ -176,6 +176,8 @@ On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 
 ## Phase 3 — Settings section (no audio quality)
 
+**Status: done (2026-06-17).** `TvInfoSettingsSection` with autoplay toggle and communication preferences link; focus groups after Account.
+
 **Goal:** Autoplay + Communication preferences only.
 
 1. **`TvInfoSettingsSection.jsx`** — port from mobile **`InfoSettingsSection.jsx`** **minus** audio quality row, expand/collapse, and upsell dialog
