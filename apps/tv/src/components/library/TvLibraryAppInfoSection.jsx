@@ -3,6 +3,7 @@ import {
   INFO_ABOUT_PATH,
   INFO_CONTACT_PATH,
   INFO_FAQ_HREF,
+  MY_LIBRARY_ACCOUNT_SETTINGS_PATH,
 } from "@sm-mpr/shared/constants/infoHelpLinks.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
@@ -13,7 +14,7 @@ import "../swimlanes/FixedSwimlane.css";
 import "./TvLibraryAppInfoSection.css";
 
 const TILES = [
-  { id: "account", label: "Account and settings", to: "/settings/user-type" },
+  { id: "account", label: "Account and settings", to: MY_LIBRARY_ACCOUNT_SETTINGS_PATH },
   { id: "faq", label: "FAQ", href: INFO_FAQ_HREF },
   { id: "contact", label: "Contact us", to: INFO_CONTACT_PATH },
   { id: "about", label: "About", to: INFO_ABOUT_PATH },

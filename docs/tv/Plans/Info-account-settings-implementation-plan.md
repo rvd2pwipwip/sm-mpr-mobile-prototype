@@ -23,7 +23,7 @@ Living plan for **Account and settings** (broad catalog) and **Info** (limited c
 | **Collapsible sections** | **None on TV** | Static section headings + always-visible bodies; no chevron / toggle |
 | **Audio quality** | **Omit on TV** | Settings = **Autoplay** toggle + **Communication preferences** link only |
 | **Content column** | **~50% viewport**, horizontally centered | e.g. `max-width: 50vw` (or `min(50vw, …)` if a cap is needed later) inside overlay scroll |
-| **Prototype tier UI** | Keep **`/settings/user-type`** (`TvUserTypePreview`) | **Not** linked from info icon or Account tile; reachable only via **click on screen title** (mouse easter egg, `tabIndex={-1}`, not in D-pad order) — same pattern as Home **wordmark** |
+| **Prototype tier UI** | Keep **`/settings/user-type`** (`TvUserTypePreview`) | **Not** linked from info icon or Account tile; reachable via **limited Info** title or **broad My Library** title click (mouse easter egg, `tabIndex={-1}`, not in D-pad order) |
 | **Upgrade CTA** | **`/upgrade`** Subscription stub | Replace all navigations that today go to **`/settings/user-type`** for Upgrade (Home header, limited Home Upgrade, podcast player Upgrade, Account section Upgrade buttons, etc.) |
 | **FAQ / Contact / About (broad)** | **My Library App Info tiles only** | **`TvLibraryAppInfoSection`** keeps four tiles; Account tile → Account and settings route; FAQ external; Contact / About → in-app routes |
 | **FAQ / Contact / About (limited)** | **Info section rows** on **`/info`** | Plus same routes **`/info/contact`**, **`/info/about`** as broad |
@@ -43,7 +43,7 @@ Living plan for **Account and settings** (broad catalog) and **Info** (limited c
 | **`/info/about`** | **About** | Info help row or My Library tile |
 | **`/upgrade`** | **Subscription stub** | Upgrade buttons app-wide |
 | **`/upgrade/store`** | **Upgrade store mock** (optional follow-on) | Primary CTA on Subscription stub — mirror mobile if stub includes “Upgrade now” |
-| **`/settings/user-type`** | **Preview user type** (existing) | **Title easter egg only** on Info / Account and settings screens |
+| **`/settings/user-type`** | **Preview user type** (existing) | **Title easter egg** on limited **Info** or broad **My Library** title |
 
 **Broad `/info`:** not registered (mobile redirects broad **`/info`** to My Library). TV has no broad Info hub route.
 
@@ -88,11 +88,12 @@ Each section:
 
 ### Title easter egg (prototype entry)
 
-On **`TvInfo`** and **`TvAccountSettings`** only:
+On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 
 - Wrap the visible title in a **`<button type="button">`** with `tabIndex={-1}`, `onClick={() => navigate('/settings/user-type')}`
-- `aria-label` documents prototype entry (e.g. “Info. Click for prototype settings.”)
+- `aria-label` documents prototype entry (e.g. “My Library. Click for prototype settings.”)
 - **Not** registered in **`useScreenContentFocus`** — mouse / click only, like **`tv-home-header__wordmark-toggle`**
+- **Account and settings** uses a plain non-clickable title
 
 ---
 
@@ -135,6 +136,8 @@ On **`TvInfo`** and **`TvAccountSettings`** only:
 
 ## Phase 1 — Routing, shells, navigation entry points
 
+**Status: done (2026-06-17).** `TvInfo`, `TvAccountSettings`, shared shell + title easter egg; entry points wired.
+
 **Goal:** Routes exist; entry points reach correct shells (can use placeholder section bodies briefly).
 
 1. **`TvInfo.jsx`** — limited Info hub (3 section placeholders)
@@ -146,10 +149,10 @@ On **`TvInfo`** and **`TvAccountSettings`** only:
    - **`TvLimitedHomeHeader`** + **`TvLimitedHomeHeaderStacked`**: info icon → **`/info`**
    - **`TvLibraryAppInfoSection`**: Account tile → **`MY_LIBRARY_ACCOUNT_SETTINGS_PATH`** (`/my-library/account-settings` from shared **`infoHelpLinks.js`**)
 5. Remove **`/settings/user-type`** from public navigation paths (grep cleanup); update **`LimitedHome.jsx`** prototype hint text if it mentions info icon → user-type
-6. Wire **title easter egg** on both new pages → **`/settings/user-type`**
+6. Wire **title easter egg** on **Info** (limited) and **My Library** (broad) titles → **`/settings/user-type`**; Account and settings uses a plain title
 7. Apply **50vw centered column** + overlay shell CSS
 
-**Verify:** Limited info icon → Info screen with title; click title (mouse) → user-type preview; My Library Account tile → Account and settings; Esc returns.
+**Verify:** Limited info icon → Info screen with title; click Info title (mouse) → user-type preview; My Library Account tile → Account and settings (plain title); click My Library title (mouse) → user-type preview; Esc returns.
 
 ---
 
@@ -238,7 +241,7 @@ On **`TvInfo`** and **`TvAccountSettings`** only:
 - [ ] **Limited:** info icon → **`/info`**; three expanded sections; no collapse controls
 - [ ] **Broad:** My Library Account tile → **`/my-library/account-settings`**; two sections only
 - [ ] **Broad:** FAQ / Contact / About **not** on Account and settings; still on My Library App Info tiles
-- [ ] **Title click** (mouse) on Info / Account and settings → **`/settings/user-type`**; title **not** in D-pad order
+- [ ] **Title click** (mouse) on **Info** or **My Library** → **`/settings/user-type`**; title **not** in D-pad order; Account and settings title is **not** clickable
 - [ ] **Upgrade** from Home / limited Home / podcast player → **`/upgrade`**, not user-type preview
 - [ ] **All four user types** show correct Account copy and actions
 - [ ] **Settings:** Autoplay + Communication preferences only; **no** Audio quality

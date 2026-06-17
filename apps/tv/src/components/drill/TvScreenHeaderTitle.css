@@ -1,0 +1,22 @@
+.tv-screen-header-title-toggle {
+  display: inline-block;
+  margin: 0;
+  padding: var(--tv-focus-ring-gap);
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: inherit;
+  text-align: center;
+  border-radius: 8px;
+  color: inherit;
+  font: inherit;
+}
+
+.tv-screen-header-title-toggle:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring-color);
+  outline-offset: var(--tv-focus-ring-gap);
+}
+
+.tv-screen-header-title-toggle .tv-screen-header-title {
+  display: block;
+}

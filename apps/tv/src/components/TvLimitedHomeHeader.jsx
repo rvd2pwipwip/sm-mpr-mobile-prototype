@@ -181,7 +181,7 @@ export default function TvLimitedHomeHeader({
           <div className="tv-limited-home-header__icons">
             <KeyboardWrapper
               ref={(node) => registerItemRef?.(groupIndex, infoIndex, node)}
-              onSelect={() => navigate("/settings/user-type")}
+              onSelect={() => navigate("/info")}
               onUp={onMoveUp}
               onDown={onMoveDown}
             >

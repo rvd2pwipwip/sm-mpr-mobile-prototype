@@ -1,0 +1,40 @@
+.tv-info-screen__inner {
+  align-items: center;
+}
+
+.tv-info-screen__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-search-stack-gap);
+  width: 100%;
+  max-width: 50vw;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+.tv-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.tv-info-section__title {
+  margin: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-button-secondary-border);
+  font-size: 1.75rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--color-on-bkg);
+}
+
+.tv-info-section__body {
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.tv-info-section__placeholder {
+  margin: 0;
+}

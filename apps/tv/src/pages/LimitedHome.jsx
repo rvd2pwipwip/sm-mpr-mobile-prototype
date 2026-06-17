@@ -726,8 +726,9 @@ export default function LimitedHome() {
             <p className="tv-home__catalog-proof tv-home__content-inset">
               Limited Home ({layoutMode}). Territory:{" "}
               <strong>{musicLineupLabel(musicLineupMode)}</strong> (
-              <code>{catalogScope}</code>). Toggle layout on{" "}
-              <code>/settings/user-type</code> (prototype).
+              <code>{catalogScope}</code>). Prototype tier and layout: click the{" "}
+              <strong>Info</strong> screen title or visit{" "}
+              <code>/settings/user-type</code>.
             </p>
           ) : null}
         </div>

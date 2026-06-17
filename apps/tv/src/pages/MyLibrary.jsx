@@ -106,7 +106,14 @@ export default function MyLibrary() {
 
   return (
     <div ref={shellRef} className="tv-drill-screen tv-my-library tv-screen-overlay">
-      <TvDrillScreenHeader title="My Library" headerRef={headerRef} />
+      <TvDrillScreenHeader
+        title="My Library"
+        headerRef={headerRef}
+        titleEasterEgg={{
+          ariaLabel:
+            "My Library. Click for prototype user type and layout settings.",
+        }}
+      />
 
       <div
         ref={viewportRef}

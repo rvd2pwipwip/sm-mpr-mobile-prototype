@@ -51,6 +51,8 @@ import RadioPlayer from "./pages/RadioPlayer.jsx";
 import RadioStationInfo from "./pages/RadioStationInfo.jsx";
 import SwimlaneMore from "./pages/SwimlaneMore.jsx";
 import ListenAgainMore from "./pages/ListenAgainMore.jsx";
+import TvAccountSettings from "./pages/TvAccountSettings.jsx";
+import TvInfo from "./pages/TvInfo.jsx";
 import TvSubscription from "./pages/TvSubscription.jsx";
 import TvUpgradeStoreMock from "./pages/TvUpgradeStoreMock.jsx";
 import TvUserTypePreview from "./pages/TvUserTypePreview.jsx";
@@ -217,6 +219,10 @@ export default function App() {
                                 }
                               />
                               <Route
+                                path="/my-library/account-settings"
+                                element={<TvAccountSettings />}
+                              />
+                              <Route
                                 path="/my-library/:librarySection"
                                 element={
                                   <RequireContentType contentType={CONTENT_TYPE.podcasts}>
@@ -258,6 +264,7 @@ export default function App() {
                               <Route path="/more/radio" element={<SwimlaneMore />} />
                               <Route path="/upgrade" element={<TvSubscription />} />
                               <Route path="/upgrade/store" element={<TvUpgradeStoreMock />} />
+                              <Route path="/info" element={<TvInfo />} />
                               <Route path="/settings/user-type" element={<TvUserTypePreview />} />
                               <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
