@@ -79,6 +79,12 @@
   -webkit-mask-image: url("/openInNew.svg");
 }
 
+.tv-button__icon-mask--chevron-forward {
+  mask-image: url("/up.svg");
+  -webkit-mask-image: url("/up.svg");
+  transform: rotate(90deg);
+}
+
 .tv-button__label {
   white-space: nowrap;
 }

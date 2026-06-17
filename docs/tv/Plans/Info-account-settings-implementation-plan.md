@@ -191,6 +191,8 @@ On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 
 ## Phase 4 — Info help section (limited only)
 
+**Status: done (2026-06-17).** `TvInfoHelpSection` on limited `/info` only; FAQ external, Contact/About in-app routes.
+
 **Goal:** Third section on **`/info`** only.
 
 1. **`TvInfoHelpSection.jsx`** — port from mobile **`InfoHelpSection.jsx`**:

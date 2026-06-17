@@ -5,12 +5,13 @@ import { useTvScreenHeaderOffset } from "./useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "./useTvVerticalGroupScroll.js";
 import { getTvInfoAccountActionCount } from "../utils/tvInfoAccountFocus.js";
 import { getTvInfoSettingsGroupCount } from "../utils/tvInfoSettingsFocus.js";
+import { getTvInfoHelpGroupCount } from "../utils/tvInfoHelpFocus.js";
 
 /**
- * Shared overlay chrome + account/settings focus for Info / Account and settings.
+ * Shared overlay chrome + account/settings/help focus for Info / Account and settings.
  * Each action or control is its own vertical focus group (Down/Up moves between items).
  */
-export function useTvInfoScreenFocus(screenId) {
+export function useTvInfoScreenFocus(screenId, { includeHelpSection = false } = {}) {
   const { userType } = useUserType();
 
   const accountActionCount = useMemo(
@@ -19,7 +20,8 @@ export function useTvInfoScreenFocus(screenId) {
   );
 
   const settingsGroupCount = getTvInfoSettingsGroupCount();
-  const totalGroupCount = accountActionCount + settingsGroupCount;
+  const helpGroupCount = includeHelpSection ? getTvInfoHelpGroupCount() : 0;
+  const totalGroupCount = accountActionCount + settingsGroupCount + helpGroupCount;
 
   const {
     registerItemRef,
@@ -68,6 +70,7 @@ export function useTvInfoScreenFocus(screenId) {
     innerClassName,
     offsetY,
     settingsGroupOffset: accountActionCount,
+    helpGroupOffset: accountActionCount + settingsGroupCount,
     registerItemRef,
     isItemFocused,
     handleMoveUp,

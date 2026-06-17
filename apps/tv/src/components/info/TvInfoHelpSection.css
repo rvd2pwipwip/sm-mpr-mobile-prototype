@@ -1,0 +1,14 @@
+.tv-info-help {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+}
+
+.tv-info-help__action.focusable-button,
+.tv-info-help__action.tv-button {
+  width: 100%;
+  max-width: var(--tv-info-action-max-width, 400px);
+  box-sizing: border-box;
+}
