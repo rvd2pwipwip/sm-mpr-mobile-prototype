@@ -4,9 +4,9 @@ import { resolveListenAgainItems } from "@sm-mpr/shared/utils/listenAgainItems.j
 import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { SWIMLANE_CARD_MAX } from "../../constants/swimlane.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
+import { TV_HOME_LISTEN_AGAIN_VISIBLE_SLOTS } from "../../constants/homeListenAgain.js";
 import {
-  getTvCardSizeCompact,
-  getTvSwimlaneVisibleSlotCapacity,
+  getTvHomeListenAgainCardSize,
 } from "../../utils/tvLayout.js";
 import {
   getListenAgainGhostCount,
@@ -60,16 +60,31 @@ export default function TvListenAgainSwimlane({
     [tiles],
   );
 
-  const compactCardSize = getTvCardSizeCompact();
+  const listenAgainCardSize = useMemo(() => {
+    const width = viewportWidth > 0 ? viewportWidth : undefined;
+    return getTvHomeListenAgainCardSize(
+      TV_HOME_LISTEN_AGAIN_VISIBLE_SLOTS,
+      width,
+    );
+  }, [viewportWidth]);
+
   const realTileCount = visibleTiles.length;
 
-  const ghostCount = useMemo(() => {
-    const capacity =
-      viewportWidth > 0
-        ? getTvSwimlaneVisibleSlotCapacity(compactCardSize, viewportWidth)
-        : getTvSwimlaneVisibleSlotCapacity(compactCardSize);
-    return getListenAgainGhostCount(tiles.length, capacity);
-  }, [tiles.length, viewportWidth, compactCardSize]);
+  const ghostCount = useMemo(
+    () =>
+      getListenAgainGhostCount(
+        tiles.length,
+        TV_HOME_LISTEN_AGAIN_VISIBLE_SLOTS,
+      ),
+    [tiles.length],
+  );
+
+  const listenAgainViewportStyle = useMemo(
+    () => ({
+      "--tv-listen-again-card-size": `${listenAgainCardSize}px`,
+    }),
+    [listenAgainCardSize],
+  );
 
   const trailingVisualIndex = realTileCount + ghostCount;
   const showMoreTile = showsListenAgainMoreTile(tiles.length);
@@ -237,7 +252,8 @@ export default function TvListenAgainSwimlane({
           onBoundaryLeft,
           registerSlotRef,
           renderSlot,
-          slotWidth: compactCardSize,
+          slotWidth: listenAgainCardSize,
+          viewportStyle: listenAgainViewportStyle,
           className: "tv-listen-again-swimlane__scroller",
           onViewportWidth: setViewportWidth,
           onArrowRight: handleArrowRight,

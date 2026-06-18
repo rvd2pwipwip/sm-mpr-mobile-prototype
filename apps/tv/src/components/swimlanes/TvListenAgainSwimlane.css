@@ -1,10 +1,24 @@
+/* Sized at runtime so 8 tiles fit Home content inset (see homeListenAgain.js). */
+.tv-listen-again-swimlane__scroller {
+  --tv-listen-again-card-size: var(--tv-card-size-compact);
+}
+
+.tv-listen-again-swimlane__scroller .tv-content-tile--compact {
+  width: var(--tv-listen-again-card-size);
+}
+
+.tv-listen-again-swimlane__scroller .tv-content-tile--compact .tv-content-tile__thumb-wrap {
+  width: var(--tv-listen-again-card-size);
+  height: var(--tv-listen-again-card-size);
+}
+
 .tv-listen-again-swimlane__more,
 .tv-listen-again-swimlane__clear {
-  width: var(--tv-card-size-compact);
+  width: var(--tv-listen-again-card-size);
 }
 
 .tv-listen-again-swimlane__more .tv-content-tile__thumb-wrap,
 .tv-listen-again-swimlane__clear .tv-content-tile__thumb-wrap {
-  width: var(--tv-card-size-compact);
-  height: var(--tv-card-size-compact);
+  width: var(--tv-listen-again-card-size);
+  height: var(--tv-listen-again-card-size);
 }

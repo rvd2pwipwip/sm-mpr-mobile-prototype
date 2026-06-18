@@ -31,6 +31,8 @@ export default function FixedSwimlane({
   onArrowLeft,
   /** Called when scrollport width is measured or resized (e.g. ghost slot math). */
   onViewportWidth,
+  /** Inline styles on the scrollport (e.g. per-rail card size custom properties). */
+  viewportStyle,
 }) {
   const { focusZone, canEnterNavFromContent } = useTvNavFocus();
   const viewportRef = useRef(null);
@@ -153,7 +155,12 @@ export default function FixedSwimlane({
     .join(" ");
 
   return (
-    <div ref={viewportRef} className={viewportClass} aria-label="Swimlane">
+    <div
+      ref={viewportRef}
+      className={viewportClass}
+      style={viewportStyle}
+      aria-label="Swimlane"
+    >
       <div
         className={rowClass}
         style={{ transform: `translateX(-${offset}px)` }}

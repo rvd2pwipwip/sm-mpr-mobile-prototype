@@ -39,6 +39,33 @@ export function getTvSwimlaneInlineEnd() {
 }
 
 /**
+ * Content width inside Home inset padding (`tv-home__content-inset` / swimlane gutters).
+ *
+ * @param {number} [viewportWidth] — scrollport width (default `--tv-viewport-width`)
+ */
+export function getTvHomeContentWidth(viewportWidth) {
+  const width = viewportWidth ?? readCssPx("--tv-viewport-width", 1920);
+  return width - getTvSwimlaneInlineStart() - getTvSwimlaneInlineEnd();
+}
+
+/**
+ * Home Listen again card size so {@link TV_HOME_LISTEN_AGAIN_VISIBLE_SLOTS} tiles
+ * fit the inset content width (items, ghosts, and Clear/More share one size).
+ *
+ * @param {number} visibleSlots
+ * @param {number} [viewportWidth]
+ */
+export function getTvHomeListenAgainCardSize(
+  visibleSlots,
+  viewportWidth,
+) {
+  const cardGap = getTvCardGap();
+  const availableWidth = getTvHomeContentWidth(viewportWidth);
+  const slots = Math.max(1, visibleSlots);
+  return Math.floor((availableWidth - (slots - 1) * cardGap) / slots);
+}
+
+/**
  * How many equal-width swimlane slots fit in the scrollport at once.
  * Used to size ghost fillers so Clear/More stays on screen when history is short.
  *

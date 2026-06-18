@@ -7,8 +7,8 @@
 }
 
 .tv-library-history-empty-tile__icon {
-  width: 48px;
-  height: 48px;
+  width: 150px;
+  height: 150px;
   mask-image: url("/history.svg");
   -webkit-mask-image: url("/history.svg");
   mask-size: contain;

@@ -191,6 +191,7 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 
 - **`getTvSwimlaneVisibleSlotCapacity`** (`tvLayout.js`) — how many equal-width slots fit in the swimlane scrollport at once (~7 for compact tiles at 1920).
 - **`getListenAgainGhostCount`** (`swimlaneUtils.js`) — `max(0, capacity - realItems - 1)`; zero when **More** shows. **`getListenAgainSwimlaneSlotCount`** stays **focusable-only** (real + Clear/More) for screen memory.
+- **Home Listen again sizing** — **`getTvHomeListenAgainCardSize`** fits **8** tiles in the inset content width (`TV_HOME_LISTEN_AGAIN_VISIBLE_SLOTS`); sets **`--tv-listen-again-card-size`** on the swimlane scrollport (items, ghosts, Clear/More).
 - **`TvListenAgainSwimlane`** — renders muted **`ContentTileCard ghost compact`** between real tiles and the trailing Clear/More tile; D-pad skips ghosts (`onArrowRight` / `onArrowLeft` on **`FixedSwimlane`**). Only real items push Clear off-screen.
 - **`getSwimlaneTrailingGhostCount`** — shared math for Listen again and **My Library** typed history rails (`getLibraryHistoryGhostCount`). Empty library history: placeholder + ghosts (no trailing Clear). **`TvLibraryHistorySwimlane`** uses standard **`--tv-card-size`** tiles (~5 visible at 1920).
 

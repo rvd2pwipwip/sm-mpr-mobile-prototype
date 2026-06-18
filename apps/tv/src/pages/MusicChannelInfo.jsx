@@ -12,11 +12,14 @@ import {
   withChannelInfoTagScrollTest,
 } from "../constants/channelInfo.js";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow.js";
+import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import "./MusicChannelInfo.css";
 
 const ACTIONS_GROUP = 0;
+const PLAY_ACTION = 0;
+const LIKE_ACTION = 1;
 const EMPTY_RELATED = [];
 
 export default function MusicChannelInfo() {
@@ -26,6 +29,7 @@ export default function MusicChannelInfo() {
   const [descriptionDialogOpen, setDescriptionDialogOpen] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
+  const channelLike = useMusicRadioLikeAction("music", channel?.id);
   const descriptionText = channel?.description ?? "";
   const hasDescription = Boolean(descriptionText);
   const { ref: descriptionRef, overflows: descriptionOverflows } =
@@ -57,7 +61,7 @@ export default function MusicChannelInfo() {
       hasDescription && descriptionOverflows ? next++ : null;
     const tagsG = hasTags ? next++ : null;
     const relatedG = hasRelated ? next++ : null;
-    const counts = { [ACTIONS_GROUP]: 1 };
+    const counts = { [ACTIONS_GROUP]: 2 };
     if (descG != null) counts[descG] = 1;
     if (tagsG != null) counts[tagsG] = tags.length;
     if (relatedG != null) counts[relatedG] = relatedCount;
@@ -106,6 +110,11 @@ export default function MusicChannelInfo() {
     navigate(`/music/${targetChannel.id}`);
   };
 
+  const goPlay = () => {
+    enterContent();
+    navigate(`/music/${channel.id}/play`);
+  };
+
   const openTagGrid = (tag) => {
     navigate(`/search/more/tags?q=${encodeURIComponent(tag)}`);
   };
@@ -133,21 +142,42 @@ export default function MusicChannelInfo() {
 
             <div className="music-channel-info__actions-row">
               <KeyboardWrapper
-                ref={(node) => registerItemRef(ACTIONS_GROUP, 0, node)}
-                onSelect={() => navigate(`/music/${channel.id}/play`)}
+                ref={(node) => registerItemRef(ACTIONS_GROUP, PLAY_ACTION, node)}
+                onSelect={goPlay}
                 onMoveUp={handleMoveUp}
                 onMoveDown={playDownTarget != null ? handleMoveDown : undefined}
+                onLeft={enterNavFromContent}
+                onRight={handleMoveRight}
               >
                 {(focusProps) => (
                   <TvButton
                     {...focusProps}
-                    focused={isItemFocused(ACTIONS_GROUP, 0)}
+                    focused={isItemFocused(ACTIONS_GROUP, PLAY_ACTION)}
                     iconSrc="/play.svg"
                     label="Play"
                   />
                 )}
               </KeyboardWrapper>
 
+              <KeyboardWrapper
+                ref={(node) => registerItemRef(ACTIONS_GROUP, LIKE_ACTION, node)}
+                onSelect={() => channelLike.onPress()}
+                onMoveUp={handleMoveUp}
+                onMoveDown={playDownTarget != null ? handleMoveDown : undefined}
+                onLeft={handleMoveLeft}
+                onRight={handleMoveRight}
+              >
+                {(focusProps) => (
+                  <TvButton
+                    {...focusProps}
+                    variant="secondary"
+                    focused={isItemFocused(ACTIONS_GROUP, LIKE_ACTION)}
+                    iconMaskVariant={channelLike.iconVariant}
+                    label={channelLike.label}
+                    ariaLabel={channelLike.ariaLabel}
+                  />
+                )}
+              </KeyboardWrapper>
             </div>
 
             {hasDescription ? (
