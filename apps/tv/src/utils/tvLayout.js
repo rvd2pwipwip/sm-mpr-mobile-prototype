@@ -38,6 +38,31 @@ export function getTvSwimlaneInlineEnd() {
   return readCssPx("--tv-swimlane-inline-end", 100);
 }
 
+/**
+ * How many equal-width swimlane slots fit in the scrollport at once.
+ * Used to size ghost fillers so Clear/More stays on screen when history is short.
+ *
+ * @param {number} [slotWidth] — card width (default {@link getTvCardSize})
+ * @param {number} [viewportWidth] — scrollport width (default `--tv-viewport-width`)
+ */
+export function getTvSwimlaneVisibleSlotCapacity(
+  slotWidth,
+  viewportWidth,
+) {
+  const cardSize = slotWidth ?? getTvCardSize();
+  const cardGap = getTvCardGap();
+  const inlineStart = getTvSwimlaneInlineStart();
+  const inlineEnd = getTvSwimlaneInlineEnd();
+  const width =
+    viewportWidth ?? readCssPx("--tv-viewport-width", 1920);
+  const available = width - inlineStart - inlineEnd;
+  if (available <= 0) return 1;
+  return Math.max(
+    1,
+    Math.floor((available + cardGap) / (cardSize + cardGap)),
+  );
+}
+
 function readCssPx(token, fallback) {
   if (typeof window === "undefined") return fallback;
   const raw = getComputedStyle(document.documentElement).getPropertyValue(token);

@@ -187,6 +187,12 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 - **Grid:** `/more/listen-again` — header **Clear** (top right); Up from first row focuses Clear; **`ContentGrid`** skips window Enter when `focused={false}` so header buttons work.
 - **After clear:** `useRestoreFocusAfterListenAgainClear` — focus card 0 on the next swimlane; `FixedSwimlane` horizontal offset resets with index 0.
 
+### Listen again ghost fillers (experimental)
+
+- **`getTvSwimlaneVisibleSlotCapacity`** (`tvLayout.js`) — how many equal-width slots fit in the swimlane scrollport at once (~7 for compact tiles at 1920).
+- **`getListenAgainGhostCount`** (`swimlaneUtils.js`) — `max(0, capacity - realItems - 1)`; zero when **More** shows. **`getListenAgainSwimlaneSlotCount`** stays **focusable-only** (real + Clear/More) for screen memory.
+- **`TvListenAgainSwimlane`** — renders muted **`ContentTileCard ghost compact`** between real tiles and the trailing Clear/More tile; D-pad skips ghosts (`onArrowRight` / `onArrowLeft` on **`FixedSwimlane`**). Only real items push Clear off-screen.
+
 ---
 
 ## 2026-06-12 — MixedWidthSwimlane (variable card widths)

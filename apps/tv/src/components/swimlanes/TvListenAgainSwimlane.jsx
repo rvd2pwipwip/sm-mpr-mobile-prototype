@@ -1,11 +1,17 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { resolveListenAgainItems } from "@sm-mpr/shared/utils/listenAgainItems.js";
 import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { SWIMLANE_CARD_MAX } from "../../constants/swimlane.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
-import { getTvCardSizeCompact } from "../../utils/tvLayout.js";
-import { showsListenAgainMoreTile } from "../../utils/swimlaneUtils.js";
+import {
+  getTvCardSizeCompact,
+  getTvSwimlaneVisibleSlotCapacity,
+} from "../../utils/tvLayout.js";
+import {
+  getListenAgainGhostCount,
+  showsListenAgainMoreTile,
+} from "../../utils/swimlaneUtils.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import ContentTileCard from "../cards/ContentTileCard.jsx";
 import TvListenHistoryClearDialog from "../listenHistory/TvListenHistoryClearDialog.jsx";
@@ -17,6 +23,8 @@ import "./TvListenAgainSwimlane.css";
 
 /**
  * Mixed-type Listen again row — compact thumb-only tiles (mobile Home parity).
+ * Ghost fillers pad the row when history is short; they are visual-only (not focusable).
+ *
  * @param {{ kind: string, id: string }[]} historyItems
  */
 export default function TvListenAgainSwimlane({
@@ -40,6 +48,7 @@ export default function TvListenAgainSwimlane({
   const { enterContent } = useTvNavFocus();
   const { clearListenHistory } = useListenHistory();
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   const tiles = useMemo(
     () => resolveListenAgainItems(historyItems),
@@ -51,17 +60,70 @@ export default function TvListenAgainSwimlane({
     [tiles],
   );
 
+  const compactCardSize = getTvCardSizeCompact();
+  const realTileCount = visibleTiles.length;
+
+  const ghostCount = useMemo(() => {
+    const capacity =
+      viewportWidth > 0
+        ? getTvSwimlaneVisibleSlotCapacity(compactCardSize, viewportWidth)
+        : getTvSwimlaneVisibleSlotCapacity(compactCardSize);
+    return getListenAgainGhostCount(tiles.length, capacity);
+  }, [tiles.length, viewportWidth, compactCardSize]);
+
+  const trailingVisualIndex = realTileCount + ghostCount;
+  const showMoreTile = showsListenAgainMoreTile(tiles.length);
+
+  const visualFocusedIndex =
+    focusedIndex >= realTileCount ? trailingVisualIndex : focusedIndex;
+
+  const handleVisualFocusChange = useCallback(
+    (visualIdx) => {
+      if (visualIdx > realTileCount - 1 && visualIdx < trailingVisualIndex) {
+        return;
+      }
+      const focusableIdx =
+        visualIdx === trailingVisualIndex ? realTileCount : visualIdx;
+      onFocusChange?.(focusableIdx);
+    },
+    [onFocusChange, trailingVisualIndex, realTileCount],
+  );
+
+  const handleArrowRight = useCallback(
+    ({ focusedIndex: visualIdx }) => {
+      if (ghostCount > 0 && visualIdx === realTileCount - 1) {
+        handleVisualFocusChange(trailingVisualIndex);
+        return true;
+      }
+      return false;
+    },
+    [ghostCount, handleVisualFocusChange, trailingVisualIndex, realTileCount],
+  );
+
+  const handleArrowLeft = useCallback(
+    ({ focusedIndex: visualIdx }) => {
+      if (ghostCount > 0 && visualIdx === trailingVisualIndex) {
+        handleVisualFocusChange(realTileCount - 1);
+        return true;
+      }
+      return false;
+    },
+    [ghostCount, handleVisualFocusChange, trailingVisualIndex, realTileCount],
+  );
+
   if (tiles.length === 0) {
     return null;
   }
 
-  const slotCount = visibleTiles.length + 1;
-  const trailingIndex = visibleTiles.length;
-  const showMoreTile = showsListenAgainMoreTile(tiles.length);
-  const compactCardSize = getTvCardSizeCompact();
+  const visualSlotCount = trailingVisualIndex + 1;
 
-  const registerSlotRef = (index, node) => {
-    registerItemRef?.(groupIndex, index, node);
+  const registerSlotRef = (visualIndex, node) => {
+    if (visualIndex >= realTileCount && visualIndex < trailingVisualIndex) {
+      return;
+    }
+    const focusableIdx =
+      visualIndex === trailingVisualIndex ? realTileCount : visualIndex;
+    registerItemRef?.(groupIndex, focusableIdx, node);
   };
 
   const isPlaying = (tile) => {
@@ -78,7 +140,19 @@ export default function TvListenAgainSwimlane({
   };
 
   const renderSlot = (index, isFocused, setRef) => {
-    if (index === trailingIndex) {
+    if (index >= realTileCount && index < trailingVisualIndex) {
+      return (
+        <ContentTileCard
+          key={`ghost-${index}`}
+          ghost
+          compact
+          imageUrl=""
+          title=""
+        />
+      );
+    }
+
+    if (index === trailingVisualIndex) {
       if (showMoreTile) {
         return (
           <KeyboardWrapper
@@ -156,15 +230,18 @@ export default function TvListenAgainSwimlane({
       <SwimlaneRow
         title={title}
         swimlaneProps={{
-          slotCount,
-          focusedIndex,
-          onFocusChange,
+          slotCount: visualSlotCount,
+          focusedIndex: visualFocusedIndex,
+          onFocusChange: handleVisualFocusChange,
           focused,
           onBoundaryLeft,
           registerSlotRef,
           renderSlot,
           slotWidth: compactCardSize,
           className: "tv-listen-again-swimlane__scroller",
+          onViewportWidth: setViewportWidth,
+          onArrowRight: handleArrowRight,
+          onArrowLeft: handleArrowLeft,
         }}
       />
       <TvListenHistoryClearDialog

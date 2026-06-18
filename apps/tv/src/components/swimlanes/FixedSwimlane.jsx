@@ -29,6 +29,8 @@ export default function FixedSwimlane({
   /** Return true when handled (e.g. intra-card focus before moving to next slot). */
   onArrowRight,
   onArrowLeft,
+  /** Called when scrollport width is measured or resized (e.g. ghost slot math). */
+  onViewportWidth,
 }) {
   const { focusZone, canEnterNavFromContent } = useTvNavFocus();
   const viewportRef = useRef(null);
@@ -44,14 +46,18 @@ export default function FixedSwimlane({
     if (!node) return undefined;
 
     setTransitionEnabled(false);
-    setViewportWidth(node.offsetWidth);
+    const width = node.offsetWidth;
+    setViewportWidth(width);
+    onViewportWidth?.(width);
 
     const observer = new ResizeObserver(() => {
-      setViewportWidth(node.offsetWidth);
+      const nextWidth = node.offsetWidth;
+      setViewportWidth(nextWidth);
+      onViewportWidth?.(nextWidth);
     });
     observer.observe(node);
     return () => observer.disconnect();
-  }, [slotCount]);
+  }, [slotCount, onViewportWidth]);
 
   useEffect(() => {
     if (viewportWidth <= 0) return undefined;
