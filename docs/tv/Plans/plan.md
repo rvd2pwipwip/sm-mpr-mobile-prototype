@@ -9,7 +9,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 **See also:**
 
 - **`docs/mobile/Plans/music-only-mvp-plan.md`** — music-only content profile: mobile Phases 0–5 shipped; TV **Broad Home** gating + profile toggle (§7 **TV-0**, **TV-1**); **TV-2** limited Home pending
-- **`docs/tv/Plans/Music-player-agent-handoff.md`** — **start here** for music player implementation (clean-slate agent brief)
+- **`docs/tv/Plans/Tv-player-screensaver-implementation-plan.md`** — full player idle screensaver (moving frame + provider promo)
 - **`docs/tv/Plans/Music-player-implementation-plan.md`** — detailed player plan (reference)
 - **`docs/tv/vertical-parked-navigation.md`** — vertical parked focus spec + implementation (canonical)
 - **`docs/tv/Plans/vertical-parked-navigation-plan.md`** — vertical parked focus phases / QA log
@@ -80,6 +80,7 @@ Living plan for **`apps/tv/`**: what we intend to do, what we have done, and wha
 - [x] **Search & Browse Phase 6** — Search More catalog/tags grids + artist channel drill (`TvSearchCatalogMore`, `TvSearchTagsMore`, `SearchMusicArtistChannels`); see [`Search-Browse-implementation-plan.md`](./Search-Browse-implementation-plan.md)
 - [x] **Podcasts Phase 0–10** — full flow, library swimlanes, monetization, Listen again, docs + acceptance checklist; see [`Podcasts-implementation-plan.md`](./Podcasts-implementation-plan.md)
 - [x] **Radio stations Phases 0–5** — Home + More wiring, station info, full player, limited Home radio tab, history/playing indicators; see [`Radio-implementation-plan.md`](./Radio-implementation-plan.md)
+- [x] **Player screensaver** — Phases 0–5 complete: idle overlay, moving frame, provider promo on music/podcast/radio full players; see [`Tv-player-screensaver-implementation-plan.md`](./Tv-player-screensaver-implementation-plan.md)
 
 ---
 
@@ -100,4 +101,4 @@ Detail for cards/rails: **`docs/tv/Plans/cards-and-swimlanes-implementation-plan
 - Do not replace **`figma-nodes.md`** or mobile product stories; this file **coordinates** implementation.
 - Append TV lessons to **`docs/tv/react-learning.md`** as patterns land in code.
 
-_Last updated: 2026-06-17 — Info / Account and settings plan added._
+_Last updated: 2026-06-18 — Player screensaver slice complete (Phases 0–5)._

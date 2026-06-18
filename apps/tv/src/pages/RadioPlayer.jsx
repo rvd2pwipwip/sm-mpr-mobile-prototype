@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { resolveRadioStationForStub } from "@sm-mpr/shared/data/radioInternationalBrowse.js";
 import {
@@ -9,6 +9,7 @@ import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.js
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
+import TvPlayerScreensaver from "../components/player/TvPlayerScreensaver.jsx";
 import TvPlayerTransport from "../components/player/TvPlayerTransport.jsx";
 import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
@@ -18,6 +19,7 @@ import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction.js";
 import { useTvPlayerScreenFocus } from "../hooks/useTvPlayerScreenFocus.js";
+import { useTvPlayerScreensaver } from "../hooks/useTvPlayerScreensaver.js";
 import "./MusicPlayer.css";
 import "./RadioPlayer.css";
 
@@ -58,6 +60,25 @@ export default function RadioPlayer() {
   const subtitleLine =
     station?.frequencyLabel ?? station?.categoryLabel ?? "";
 
+  const showPreroll = needsPreroll && !prerollComplete;
+  const screensaverEnabled = !showPreroll && prerollComplete;
+
+  const screensaverModel = useMemo(
+    () => ({
+      thumbnail: station?.thumbnail ?? "",
+      line1: station?.name ?? "",
+      line2: subtitleLine || "Now playing (prototype)",
+    }),
+    [station?.thumbnail, station?.name, subtitleLine],
+  );
+
+  const syncDomFocusRef = useRef(() => {});
+
+  const { isActive: screensaverActive } = useTvPlayerScreensaver({
+    enabled: screensaverEnabled && Boolean(station),
+    onWake: () => syncDomFocusRef.current(),
+  });
+
   const {
     handleMoveUp,
     handleMoveDown,
@@ -73,9 +94,11 @@ export default function RadioPlayer() {
     showUpgrade: showPlayerUpgrade,
     metaItemCount: 2,
     transportItemCount: 1,
-    contentKeysEnabled: prerollComplete,
-    suspendDomFocus: !prerollComplete,
+    contentKeysEnabled: prerollComplete && !screensaverActive,
+    suspendDomFocus: !prerollComplete || screensaverActive,
   });
+
+  syncDomFocusRef.current = syncDomFocus;
 
   useEffect(() => {
     enterContent();
@@ -128,10 +151,17 @@ export default function RadioPlayer() {
     navigate(`/radio/${station.id}`, { replace: true });
   };
 
-  const showPreroll = needsPreroll && !prerollComplete;
-
   return (
-    <div className="tv-page tv-music-player tv-radio-player">
+    <div
+      className={[
+        "tv-page",
+        "tv-music-player",
+        "tv-radio-player",
+        screensaverActive ? "tv-music-player--screensaver" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {showPreroll ? (
         <TvPlayerPrerollAd
           onComplete={() => {
@@ -243,6 +273,8 @@ export default function RadioPlayer() {
         </div>
         </>
       ) : null}
+
+      {screensaverActive ? <TvPlayerScreensaver model={screensaverModel} /> : null}
     </div>
   );
 }

@@ -65,6 +65,7 @@
   --tv-focus-ring-gap: 4px;
 
   --z-primary-nav: 100;
+  --z-tv-player-screensaver: 200;
   --z-tv-player-preroll: 250;
   --z-tv-stacked-dialog: 300;
 
@@ -94,6 +95,16 @@
   --tv-player-play-pause-radius: 10px;
   --tv-player-play-pause-icon-size: 60px;
   --tv-player-play-pause-focus-ring-width: 10px;
+
+  /* Full-screen player screensaver — Figma `15881:37493` */
+  --tv-safe-area-inset: 48px;
+  --tv-screensaver-backdrop: #000;
+  --tv-screensaver-promo-height: 140px;
+  --tv-screensaver-fade-duration: 500ms;
+  --tv-screensaver-z-index: var(--z-tv-player-screensaver);
+  --tv-screensaver-cover-radius: 32px;
+  --tv-screensaver-line1-size: 2.125rem;
+  --tv-screensaver-line2-size: 2.5rem;
 
   /* Optional extra bottom padding on vertical scroll inners (prototype: unused). */
   --tv-scroll-ad-reserve: 0px;

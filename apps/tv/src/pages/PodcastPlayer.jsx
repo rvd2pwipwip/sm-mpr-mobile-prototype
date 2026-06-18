@@ -23,6 +23,7 @@ import {
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
+import TvPlayerScreensaver from "../components/player/TvPlayerScreensaver.jsx";
 import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
@@ -33,6 +34,7 @@ import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import { useTvPlayerScreenFocus } from "../hooks/useTvPlayerScreenFocus.js";
+import { useTvPlayerScreensaver } from "../hooks/useTvPlayerScreensaver.js";
 import "./MusicPlayer.css";
 import "./PodcastPlayer.css";
 
@@ -116,6 +118,25 @@ export default function PodcastPlayer() {
       ? Math.min(1, Math.max(0, position01Raw))
       : 0;
 
+  const showPreroll = needsPreroll && !prerollComplete;
+  const screensaverEnabled = !showPreroll && prerollComplete;
+
+  const screensaverModel = useMemo(
+    () => ({
+      thumbnail: episode?.thumbnail ?? "",
+      line1: podcast?.title ?? "",
+      line2: episode?.title ?? "",
+    }),
+    [episode?.thumbnail, episode?.title, podcast?.title],
+  );
+
+  const syncDomFocusRef = useRef(() => {});
+
+  const { isActive: screensaverActive } = useTvPlayerScreensaver({
+    enabled: screensaverEnabled && Boolean(podcast && episode),
+    onWake: () => syncDomFocusRef.current(),
+  });
+
   const {
     handleMoveUp,
     handleMoveDown,
@@ -134,10 +155,12 @@ export default function PodcastPlayer() {
       metaItemCount: 2,
       transportItemCount: 5,
       defaultTransportItemIndex: TRANSPORT_SLOT.play,
-      contentKeysEnabled: prerollComplete,
-      suspendDomFocus: !prerollComplete,
+      contentKeysEnabled: prerollComplete && !screensaverActive,
+      suspendDomFocus: !prerollComplete || screensaverActive,
     },
   );
+
+  syncDomFocusRef.current = syncDomFocus;
 
   useEffect(() => {
     enterContent();
@@ -281,10 +304,17 @@ export default function PodcastPlayer() {
     setSpeedIdx((i) => (i + 1) % PODCAST_SPEED_STEPS.length);
   };
 
-  const showPreroll = needsPreroll && !prerollComplete;
-
   return (
-    <div className="tv-page tv-music-player tv-podcast-player">
+    <div
+      className={[
+        "tv-page",
+        "tv-music-player",
+        "tv-podcast-player",
+        screensaverActive ? "tv-music-player--screensaver" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {showPreroll ? (
         <TvPlayerPrerollAd
           onComplete={() => {
@@ -433,6 +463,8 @@ export default function PodcastPlayer() {
         </div>
         </>
       ) : null}
+
+      {screensaverActive ? <TvPlayerScreensaver model={screensaverModel} /> : null}
     </div>
   );
 }

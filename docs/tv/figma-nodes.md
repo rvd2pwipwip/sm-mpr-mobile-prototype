@@ -74,6 +74,33 @@ Use as starting tokens in `apps/tv/src/index.css`; tune during build.
 | Transport row gap | `40px` |
 | Progress bar height | `4px` |
 
+### Player screensaver (`15881:37493`)
+
+| Screen | Node | Notes |
+|--------|------|--------|
+| Screensaver frame | [15881:37493](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=15881-37493) | Floating frame on **solid black** full viewport: cover + two metadata lines + **TV provider promo** footer. Moves inside **48px** safe area after idle timeout on full player routes. |
+
+**Implementation plan:** `docs/tv/Plans/Tv-player-screensaver-implementation-plan.md`
+
+### Measurements from `15881:37493` (implementation hints)
+
+| Element | Value |
+|---------|--------|
+| Frame max width | `1000px` (reuse `--tv-player-column-max-width`) |
+| Frame height (with promo) | ~`540px` (360 cover row + 40 gap + 140 promo) |
+| Cover | `360px` square, ~`32px` radius |
+| Cover + metadata gap | `30px` |
+| Metadata line gap | `5px` |
+| Line 1 typography | Roboto Black `34px` |
+| Line 2 typography | Roboto SemiBold `40px` |
+| Cover row to promo gap | `40px` |
+| Provider promo footer height | `140px` |
+| Promo label typography | Roboto Thin `40px` (prototype placeholder) |
+| Safe area inset | `48px` from viewport edges |
+| Backdrop | Solid black |
+| Hold at position | `10s` (prototype) |
+| Position crossfade | `500ms` |
+
 ---
 
 ## Primary nav — mini player

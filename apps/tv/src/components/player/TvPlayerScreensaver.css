@@ -1,0 +1,134 @@
+/* Full-screen player screensaver — Figma `15881:37493` */
+
+.tv-player-screensaver {
+  position: fixed;
+  inset: 0;
+  z-index: var(--tv-screensaver-z-index);
+  overflow: hidden;
+  background: var(--tv-screensaver-backdrop);
+  pointer-events: none;
+}
+
+.tv-player-screensaver__layer {
+  position: absolute;
+  width: var(--tv-player-column-max-width);
+  transition: opacity var(--tv-screensaver-fade-duration) ease-in-out;
+  will-change: opacity, top, left;
+}
+
+.tv-player-screensaver__frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-screen-gap);
+  width: 100%;
+  border-radius: var(--tv-screensaver-cover-radius);
+  background: var(--color-bg);
+  box-shadow: 0 12px 48px rgb(0 0 0 / 0.45);
+  overflow: hidden;
+}
+
+.tv-player-screensaver__cover-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--tv-player-cover-tta-gap);
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.tv-player-screensaver__cover {
+  flex-shrink: 0;
+  width: var(--tv-player-cover-size);
+  height: var(--tv-player-cover-size);
+  border-radius: var(--tv-screensaver-cover-radius);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-text) 20%, transparent);
+}
+
+.tv-player-screensaver__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tv-player-screensaver__meta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--tv-player-tta-line-gap);
+  min-width: 0;
+  padding-inline-end: 24px;
+}
+
+.tv-player-screensaver__line1 {
+  margin: 0;
+  font-size: var(--tv-screensaver-line1-size);
+  font-weight: 900;
+  line-height: 1.15;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+  word-break: break-word;
+}
+
+.tv-player-screensaver__line2 {
+  margin: 0;
+  font-size: var(--tv-screensaver-line2-size);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--color-on-bkg);
+  word-break: break-word;
+}
+
+.tv-player-screensaver-promo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--tv-screensaver-promo-height);
+  background: #7a7a7a;
+}
+
+.tv-player-screensaver-promo__logo {
+  display: block;
+  max-width: min(201px, 80%);
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+.tv-player-screensaver-promo__logo--dark {
+  display: none;
+}
+
+.tv-player-screensaver-promo__label {
+  margin: 0;
+  font-size: var(--tv-screensaver-line2-size);
+  font-weight: 100;
+  line-height: 1.15;
+  color: var(--color-on-bkg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tv-player-screensaver-promo__logo--light {
+    display: none;
+  }
+
+  :root:not([data-theme="light"]) .tv-player-screensaver-promo__logo--dark {
+    display: block;
+  }
+}
+
+:root[data-theme="dark"] .tv-player-screensaver-promo__logo--light {
+  display: none;
+}
+
+:root[data-theme="dark"] .tv-player-screensaver-promo__logo--dark {
+  display: block;
+}
+
+/* Hide player chrome while screensaver is active (state kept in DOM). */
+.tv-music-player--screensaver .tv-music-player__column,
+.tv-music-player--screensaver .tv-player-upgrade-cta {
+  visibility: hidden;
+}

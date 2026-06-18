@@ -213,3 +213,11 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 - **Pill memory:** **`CategoryRailMemoryProvider`** + **`useCategoryRailMemorySlug`** (same session keys as mobile).
 - **Drill-downs:** **`TvSearchBrowseDrillPage`** wraps **`ContentGrid`** (4 columns); Esc → **`navigate(-1)`** via **`GlobalTvKeys`**.
 - **Vertical scroll:** Search browse body reuses **`useTvVerticalGroupScroll`** with screen memory **`search`** (same Home tab-switch fix).
+
+---
+
+## 2026-06-18 — Full-screen player screensaver
+
+- **Idle overlay** — **`useTvPlayerScreensaver`** starts a **30s** timer when the full player is visible (after preroll). Any D-pad key, **click**, or **Esc** (via **`tryDismissTvPlayerScreensaver`** in **`GlobalTvKeys`**) wakes the player; **S** forces screensaver for QA.
+- **`TvPlayerScreensaver`** — fixed black backdrop; floating frame (cover + two labels + **`TvPlayerScreensaverPromo`** provider footer, not tier-gated). Two absolutely positioned layers crossfade every **10s** to a new random position inside **`--tv-safe-area-inset`** (48px).
+- **Player pages** — hide column with **`tv-music-player--screensaver`** (`visibility: hidden`); suspend **`useTvPlayerScreenFocus`** while active. Wired on music, podcast, and radio **`/play`** routes.

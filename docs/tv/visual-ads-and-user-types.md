@@ -15,6 +15,12 @@ Route **`/settings/user-type`** — four toggles (`guest`, `freeStingray`, `free
 
 **Subscribed:** no in-feed banner.
 
+## Player screensaver promo (not a visual ad)
+
+Full-screen player **screensaver** (`TvPlayerScreensaver` on `/music/.../play`, `/podcast/.../play/...`, `/radio/.../play`) includes a **TV provider promo** footer in the moving frame. This is **not** gated by **`showVisualAds(userType)`** — it shows for **all** user types including **subscribed**. Distinct from in-feed visual ads and preroll.
+
+See **`docs/tv/Plans/Tv-player-screensaver-implementation-plan.md`**.
+
 ## Home swimlanes (broad)
 
 Matches mobile broad Home ordering (music-first slice):

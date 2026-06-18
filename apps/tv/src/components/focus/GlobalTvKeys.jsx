@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLimitedHomeEsc } from "../../context/LimitedHomeEscContext.jsx";
+import { tryDismissTvPlayerScreensaver } from "../../utils/tvPlayerScreensaverEscape.js";
 
 /** Global TV remote keys: Esc = back; Tab disabled outside text fields. */
 export default function GlobalTvKeys() {
@@ -11,6 +12,10 @@ export default function GlobalTvKeys() {
     const onKeyDown = (event) => {
       if (event.key === "Escape") {
         if (document.querySelector('[aria-modal="true"]')) {
+          return;
+        }
+        if (tryDismissTvPlayerScreensaver()) {
+          event.preventDefault();
           return;
         }
         if (limitedHomeEsc?.tryHandleEscape()) {
