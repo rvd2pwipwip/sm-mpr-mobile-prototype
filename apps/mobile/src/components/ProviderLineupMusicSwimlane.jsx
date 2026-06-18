@@ -4,9 +4,13 @@ import CategoryPillsRail from "./CategoryPillsRail";
 import ContentSwimlane from "./ContentSwimlane";
 import MusicChannelCard from "./MusicChannelCard";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
+import { CATALOG_SCOPE } from "../constants/catalogScope.js";
+import { useTerritory } from "../context/TerritoryContext";
 import {
-  MUSIC_GENRES,
   getMusicChannelsByCategory,
+  getLimitedMusicChannelsByCategory,
+  getLimitedMusicGenres,
+  MUSIC_GENRES,
 } from "../data/musicChannels";
 import { useCategoryRailMemorySlug } from "../hooks/useCategoryRailMemorySlug";
 
@@ -17,14 +21,15 @@ const MEMORY_KEY = "home-provider-lineup-music";
  */
 export default function ProviderLineupMusicSwimlane() {
   const navigate = useNavigate();
+  const { catalogScope } = useTerritory();
+  const isLimitedCatalog = catalogScope === CATALOG_SCOPE.limited;
 
-  const pillRows = useMemo(
-    () =>
-      MUSIC_GENRES.filter((g) => getMusicChannelsByCategory(g.id).length > 0).map(
-        (g) => ({ slug: g.id, label: g.label }),
-      ),
-    [],
-  );
+  const pillRows = useMemo(() => {
+    const genres = isLimitedCatalog
+      ? getLimitedMusicGenres()
+      : MUSIC_GENRES.filter((g) => getMusicChannelsByCategory(g.id).length > 0);
+    return genres.map((g) => ({ slug: g.id, label: g.label }));
+  }, [isLimitedCatalog]);
 
   const [selectedSlug, setSelectedSlug] = useCategoryRailMemorySlug(
     MEMORY_KEY,
@@ -33,8 +38,10 @@ export default function ProviderLineupMusicSwimlane() {
 
   const channels = useMemo(() => {
     if (!selectedSlug) return [];
-    return getMusicChannelsByCategory(selectedSlug);
-  }, [selectedSlug]);
+    return isLimitedCatalog
+      ? getLimitedMusicChannelsByCategory(selectedSlug)
+      : getMusicChannelsByCategory(selectedSlug);
+  }, [selectedSlug, isLimitedCatalog]);
 
   if (pillRows.length === 0 || !selectedSlug) {
     return null;

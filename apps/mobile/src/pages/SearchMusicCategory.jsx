@@ -2,16 +2,27 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import MusicChannelCard from "../components/MusicChannelCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { SEARCH_BROWSE } from "../constants/searchBrowsePaths.js";
-import { MUSIC_GENRES, getMusicChannelsByCategory } from "../data/musicChannels";
+import { CATALOG_SCOPE } from "../constants/catalogScope.js";
+import { useTerritory } from "../context/TerritoryContext";
+import {
+  MUSIC_GENRES,
+  getMusicChannelsByCategory,
+  getLimitedMusicChannelsByCategory,
+} from "../data/musicChannels";
 import "./SwimlaneMore.css";
 
 /** Limited + broad **Genre** vibe: channels for one lineup genre (`categoryId`). */
 export default function SearchMusicCategory() {
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const { catalogScope } = useTerritory();
 
   const genre = categoryId ? MUSIC_GENRES.find((g) => g.id === categoryId) : null;
-  const channels = genre ? getMusicChannelsByCategory(categoryId) : [];
+  const channels = genre
+    ? catalogScope === CATALOG_SCOPE.limited
+      ? getLimitedMusicChannelsByCategory(categoryId)
+      : getMusicChannelsByCategory(categoryId)
+    : [];
 
   if (!categoryId || !genre) {
     return <Navigate to={SEARCH_BROWSE.music} replace />;

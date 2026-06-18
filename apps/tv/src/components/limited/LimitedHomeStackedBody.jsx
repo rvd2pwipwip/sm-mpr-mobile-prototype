@@ -10,7 +10,7 @@ import { LISTEN_HISTORY_KIND_FOR_BROWSE_TAB } from "@sm-mpr/shared/constants/lis
 import { usePodcastUserState } from "@sm-mpr/shared/context/PodcastUserStateContext.jsx";
 import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import {
-  getMusicChannelsByCategory,
+  getLimitedMusicChannelsByCategory,
 } from "@sm-mpr/shared/data/musicChannels.js";
 import {
   getPodcastsByCategory,
@@ -319,7 +319,7 @@ export default function LimitedHomeStackedBody({
                   {lane.type === CONTENT_TYPE.music ? (
                     <MusicChannelSwimlane
                       title={lane.title}
-                      channels={getMusicChannelsByCategory(lane.categoryId)}
+                      channels={getLimitedMusicChannelsByCategory(lane.categoryId)}
                       sourceCount={lane.sourceCount}
                       groupIndex={groupIndex}
                       focused={isContentGroupActive(groupIndex)}

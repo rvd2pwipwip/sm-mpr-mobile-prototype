@@ -13,6 +13,7 @@
  * https://www.figma.com/design/duguG08ZOCWXQemLw59XJW/UX-SM-MPR-Mobile-2604?node-id=25-7067
  */
 
+import { LIMITED_MUSIC_CHANNELS_PER_GENRE } from "../constants/limitedMusicCatalog.js";
 import {
   flattenVibeTagLabels,
   getPrototypeCategoryTagGroups,
@@ -452,6 +453,27 @@ export function getMusicChannelByName(name) {
 
 export function getMusicChannelsByCategory(categoryId) {
   return MUSIC_CHANNELS.filter((c) => c.categoryId === categoryId);
+}
+
+/** Max channels for a genre in limited-catalog territories; 0 when genre is not in the lineup. */
+export function getLimitedMusicChannelLimit(categoryId) {
+  return LIMITED_MUSIC_CHANNELS_PER_GENRE[categoryId] ?? 0;
+}
+
+/** Limited-catalog slice of {@link getMusicChannelsByCategory} (stable catalog order). */
+export function getLimitedMusicChannelsByCategory(categoryId) {
+  const limit = getLimitedMusicChannelLimit(categoryId);
+  if (limit <= 0) return [];
+  return getMusicChannelsByCategory(categoryId).slice(0, limit);
+}
+
+/** Genres that appear in limited-catalog browse (cap > 0 and at least one channel). */
+export function getLimitedMusicGenres() {
+  return MUSIC_GENRES.filter(
+    (g) =>
+      getLimitedMusicChannelLimit(g.id) > 0 &&
+      getMusicChannelsByCategory(g.id).length > 0,
+  );
 }
 
 /** Channels whose vibe-tag list (`tags`) includes this label (case-insensitive exact chip match). */

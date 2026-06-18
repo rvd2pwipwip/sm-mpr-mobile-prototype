@@ -20,8 +20,8 @@ import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useUserType } from "../context/UserTypeContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import {
-  MUSIC_GENRES,
-  getMusicChannelsByCategory,
+  getLimitedMusicChannelsByCategory,
+  getLimitedMusicGenres,
 } from "../data/musicChannels";
 import { PODCAST_CATEGORIES, getPodcastsByCategory } from "../data/podcasts";
 import {
@@ -53,13 +53,11 @@ function LimitedBrowseMidStackAd({ showBannerAd }) {
 }
 
 function LimitedMusicTaxonomySwimlanes({ navigate, showBannerAd }) {
-  const genres = MUSIC_GENRES.filter(
-    (g) => getMusicChannelsByCategory(g.id).length > 0,
-  );
+  const genres = getLimitedMusicGenres();
   if (genres.length === 0) return null;
 
   const renderLane = (genre) => {
-    const channels = getMusicChannelsByCategory(genre.id);
+    const channels = getLimitedMusicChannelsByCategory(genre.id);
     return (
       <ContentSwimlane
         key={`limited-music-${genre.id}`}

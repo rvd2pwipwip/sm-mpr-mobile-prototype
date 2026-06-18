@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   getRecommendationsMusicChannels,
-  getMusicChannelsByCategory,
+  getLimitedMusicChannelsByCategory,
   MUSIC_CHANNELS,
 } from "@sm-mpr/shared/data/musicChannels.js";
 import { RADIO_STATIONS } from "@sm-mpr/shared/data/radioStations.js";
@@ -62,7 +62,7 @@ function resolveMoreConfig(pathname, categoryId) {
         screenId: `more-music-${categoryId}`,
         title: getLimitedHomeFilterLabel(categoryId),
         variant: "music",
-        getItems: () => getMusicChannelsByCategory(categoryId),
+        getItems: () => getLimitedMusicChannelsByCategory(categoryId),
       };
     }
 

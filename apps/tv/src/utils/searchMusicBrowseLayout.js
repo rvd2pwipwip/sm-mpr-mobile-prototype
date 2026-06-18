@@ -5,7 +5,8 @@ import {
   getChildTagsForBroadVibe,
 } from "@sm-mpr/shared/data/musicBrowseTaxonomy.js";
 import {
-  MUSIC_GENRES,
+  getLimitedMusicChannelsByCategory,
+  getLimitedMusicGenres,
   getMusicChannelsByCategory,
   getMusicChannelsWithTag,
 } from "@sm-mpr/shared/data/musicChannels.js";
@@ -55,9 +56,7 @@ export function buildSearchMusicBrowseFocusLayout(
   const bodyStart = SEARCH_FOCUS.bodyStart;
 
   if (musicLineupMode === MUSIC_LINEUP.limited) {
-    const genres = MUSIC_GENRES.filter(
-      (g) => getMusicChannelsByCategory(g.id).length > 0,
-    );
+    const genres = getLimitedMusicGenres();
     const groupIndex = bodyStart;
     return {
       groupCount: groupIndex + 1,

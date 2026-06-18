@@ -1,7 +1,7 @@
 import { CONTENT_TYPE } from "@sm-mpr/shared/constants/contentTypes.js";
 import {
-  MUSIC_GENRES,
-  getMusicChannelsByCategory,
+  getLimitedMusicChannelsByCategory,
+  getLimitedMusicGenres,
 } from "@sm-mpr/shared/data/musicChannels.js";
 import {
   PODCAST_CATEGORIES,
@@ -32,10 +32,8 @@ const RADIO_FORMAT_CATEGORIES = RADIO_STATION_CATEGORIES.filter(
 
 /** @returns {LimitedStackedLane[]} */
 function musicGenreLanes() {
-  return MUSIC_GENRES.filter(
-    (g) => getMusicChannelsByCategory(g.id).length > 0,
-  ).map((genre) => {
-    const count = getMusicChannelsByCategory(genre.id).length;
+  return getLimitedMusicGenres().map((genre) => {
+    const count = getLimitedMusicChannelsByCategory(genre.id).length;
     return {
       id: `limited-music-${genre.id}`,
       type: "music",
