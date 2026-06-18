@@ -84,6 +84,8 @@
   --tv-player-channel-title-size: 2.125rem;
   --tv-player-meta-actions-gap: 24px;
   --tv-player-meta-btn-size: 60px;
+  /* Guest skip count digit on full player: icon --color-text, digit "cuts" to --color-bg. */
+  --music-skip-count-on-full: var(--color-bg);
   --tv-player-cover-size: 360px;
   --tv-player-cover-tta-gap: 30px;
   --tv-player-tta-line-gap: 5px;
