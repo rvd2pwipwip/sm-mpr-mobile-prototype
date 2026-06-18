@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import {
   INFO_ABOUT_PATH,
   INFO_CONTACT_PATH,
-  INFO_FAQ_HREF,
 } from "@sm-mpr/shared/constants/infoHelpLinks.js";
+import { navigateToTvFaq } from "../../utils/tvFaqNavigation.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import TvButton from "../TvButton.jsx";
 import {
@@ -19,10 +19,8 @@ const HELP_ROWS = [
     id: "faq",
     label: "FAQ",
     groupOffset: HELP_FAQ_GROUP_OFFSET,
-    endIconMaskVariant: "open-in-new",
-    onSelect: () => {
-      window.open(INFO_FAQ_HREF, "_blank", "noopener,noreferrer");
-    },
+    endIconMaskVariant: "chevron-forward",
+    onSelect: (navigate) => navigateToTvFaq(navigate),
   },
   {
     id: "contact",

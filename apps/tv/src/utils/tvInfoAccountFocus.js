@@ -3,12 +3,12 @@
 export const TV_INFO_ACCOUNT_ACTIONS = {
   guest: [
     "upgrade",
-    "restore",
+    // "restore",
     "createAccount",
     "login",
     "providerAccess",
   ],
-  freeStingray: ["upgrade", "restore", "logout", "providerAccess"],
+  freeStingray: ["upgrade", /* "restore", */ "logout", "providerAccess"],
   subscribed: ["manageAccount", "logout"],
   freeProvided: ["changeProvider", "logout"],
 };

@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getVisibleMyLibrarySections,
 } from "@sm-mpr/shared/constants/myLibrarySections.js";
@@ -10,6 +11,7 @@ import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useLikes } from "../context/LikesContext.jsx";
 import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvRestoreFocusOnMount } from "../hooks/useTvRestoreFocusOnMount.js";
 import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import { buildTvMyLibraryFocusLayout } from "../utils/tvMyLibraryLayout.js";
@@ -18,6 +20,9 @@ import "./MyLibrary.css";
 
 /** Broad catalog My Library hub (mobile {@link MyLibrary} parity, TV swimlanes). */
 export default function MyLibrary() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const restoreFocus = location.state?.restoreFocus ?? null;
   const { enabledContentTypes, filterListenHistory } = useContentProfile();
   const { items: listenHistoryItems } = useListenHistory();
   const { items: likesItems } = useLikes();
@@ -62,6 +67,7 @@ export default function MyLibrary() {
     focusedIndex,
     getItemElement,
     enterNavFromContent,
+    setFocusedGroupIndex,
   } = useScreenContentFocus("my-library", {
     groupCount: focusLayout.groupCount,
     itemCounts: focusLayout.itemCounts,
@@ -86,6 +92,18 @@ export default function MyLibrary() {
   );
 
   const onEpisodeRailCleared = onHistoryCleared;
+
+  const clearRestoreState = useCallback(() => {
+    navigate(".", { replace: true, state: {} });
+  }, [navigate]);
+
+  useTvRestoreFocusOnMount({
+    restoreFocus,
+    setFocusedGroupIndex,
+    setFocusedIndex,
+    getItemElement,
+    onRestored: clearRestoreState,
+  });
 
   const { shellRef, headerRef } = useTvScreenHeaderOffset();
 

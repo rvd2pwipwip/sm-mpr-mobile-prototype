@@ -1,0 +1,84 @@
+/* Focusable scrollbar column — Channel Info description dialog parity. */
+
+.tv-scrollbar-scroll-pane {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 20px;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.tv-scrollbar-scroll-pane__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.tv-scrollbar-scroll-pane__body::-webkit-scrollbar {
+  display: none;
+}
+
+.tv-scrollbar-scroll-pane__scrollbar-col {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  min-height: 0;
+  padding-block-end: 10px;
+  box-sizing: border-box;
+}
+
+.tv-scrollbar-scroll-pane__scrollbar-rail {
+  position: relative;
+  flex: 1 1 auto;
+  width: 8px;
+  min-height: 48px;
+}
+
+.tv-scrollbar-scroll-pane__scrollbar-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--color-on-bkg) 30%, transparent);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.tv-scrollbar-scroll-pane__scrollbar-thumb.focusable-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: #acacac;
+  outline: none;
+  box-shadow: none;
+  transition:
+    background-color var(--tv-button-transition-duration) ease,
+    box-shadow var(--tv-button-transition-duration) ease;
+}
+
+.tv-scrollbar-scroll-pane__scrollbar-thumb.focusable-button--focused {
+  background: var(--color-on-bkg);
+  outline: none;
+  box-shadow: inset 0 0 0 var(--tv-focus-ring-width) var(--tv-focus-ring-color);
+}
+
+.tv-scrollbar-scroll-pane__scrollbar-thumb.focusable-button:active {
+  transform: none;
+}

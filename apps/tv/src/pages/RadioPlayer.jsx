@@ -1,23 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { resolveRadioStationForStub } from "@sm-mpr/shared/data/radioInternationalBrowse.js";
-import { showPlayerPreroll } from "@sm-mpr/shared/utils/userTierRules.js";
+import {
+  showPlayerPreroll,
+  showUpgradeInFullPlayerHeader,
+} from "@sm-mpr/shared/utils/userTierRules.js";
 import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
 import TvPlayerTransport from "../components/player/TvPlayerTransport.jsx";
+import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
+import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction.js";
-import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvPlayerScreenFocus } from "../hooks/useTvPlayerScreenFocus.js";
 import "./MusicPlayer.css";
 import "./RadioPlayer.css";
-
-const META_GROUP = 0;
-const TRANSPORT_GROUP = 1;
 
 function PlayerMetaIcon({ variant }) {
   return (
@@ -41,8 +43,10 @@ export default function RadioPlayer() {
   const { graceActive } = useGuestPrerollGrace();
   const { recordRadioStationListen } = useListenHistory();
   const { userType } = useUserType();
+  const goUpgrade = useGoUpgrade();
 
   const needsPreroll = showPlayerPreroll(userType);
+  const showPlayerUpgrade = showUpgradeInFullPlayerHeader(userType);
   const expandFromMini = location.state?.expandFromMiniPlayer === true;
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
@@ -54,14 +58,6 @@ export default function RadioPlayer() {
   const subtitleLine =
     station?.frequencyLabel ?? station?.categoryLabel ?? "";
 
-  const itemCounts = useMemo(
-    () => ({
-      [META_GROUP]: 2,
-      [TRANSPORT_GROUP]: 1,
-    }),
-    [],
-  );
-
   const {
     handleMoveUp,
     handleMoveDown,
@@ -70,12 +66,13 @@ export default function RadioPlayer() {
     registerItemRef,
     isItemFocused,
     syncDomFocus,
-  } = useScreenContentFocus(`radio-player-${stationId}`, {
-    groupCount: 2,
-    itemCounts,
-    defaultGroupIndex: TRANSPORT_GROUP,
-    defaultItemIndex: 0,
-    navEnterEnabled: false,
+    metaGroup,
+    transportGroup,
+    upgradeGroup,
+  } = useTvPlayerScreenFocus(`radio-player-${stationId}`, {
+    showUpgrade: showPlayerUpgrade,
+    metaItemCount: 2,
+    transportItemCount: 1,
     contentKeysEnabled: prerollComplete,
     suspendDomFocus: !prerollComplete,
   });
@@ -145,12 +142,25 @@ export default function RadioPlayer() {
       ) : null}
 
       {!showPreroll ? (
+        <>
+        {showPlayerUpgrade ? (
+          <TvPlayerUpgradeCta
+            groupIndex={upgradeGroup}
+            registerItemRef={registerItemRef}
+            isItemFocused={isItemFocused}
+            onSelect={goUpgrade}
+            onMoveUp={handleMoveUp}
+            onMoveDown={handleMoveDown}
+            onMoveLeft={handleMoveLeft}
+            onMoveRight={handleMoveRight}
+          />
+        ) : null}
         <div className="tv-music-player__column">
           <header className="tv-music-player__channel-block">
             <h1 className="tv-music-player__channel-name">{station.name}</h1>
             <div className="tv-music-player__meta-actions">
               <KeyboardWrapper
-                ref={(node) => registerItemRef(META_GROUP, 0, node)}
+                ref={(node) => registerItemRef(metaGroup, 0, node)}
                 onSelect={leaveForStationInfo}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
@@ -162,7 +172,7 @@ export default function RadioPlayer() {
                     {...focusProps}
                     type="button"
                     className="tv-music-player__meta-btn"
-                    focused={isItemFocused(META_GROUP, 0)}
+                    focused={isItemFocused(metaGroup, 0)}
                     aria-label="Station info"
                   >
                     <PlayerMetaIcon variant="info" />
@@ -171,7 +181,7 @@ export default function RadioPlayer() {
               </KeyboardWrapper>
 
               <KeyboardWrapper
-                ref={(node) => registerItemRef(META_GROUP, 1, node)}
+                ref={(node) => registerItemRef(metaGroup, 1, node)}
                 onSelect={() => likeAction.onPress()}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
@@ -183,7 +193,7 @@ export default function RadioPlayer() {
                     {...focusProps}
                     type="button"
                     className="tv-music-player__meta-btn"
-                    focused={isItemFocused(META_GROUP, 1)}
+                    focused={isItemFocused(metaGroup, 1)}
                     aria-label={likeAction.ariaLabel}
                   >
                     <PlayerMetaIcon variant={likeAction.iconVariant} />
@@ -219,9 +229,9 @@ export default function RadioPlayer() {
             <TvPlayerTransport
               playing={playing}
               playPauseAriaLabel={playing ? "Pause" : "Play"}
-              playPauseFocused={isItemFocused(TRANSPORT_GROUP, 0)}
+              playPauseFocused={isItemFocused(transportGroup, 0)}
               registerPlayPauseRef={(node) =>
-                registerItemRef(TRANSPORT_GROUP, 0, node)
+                registerItemRef(transportGroup, 0, node)
               }
               onTogglePlayPause={() => setPlaying((p) => !p)}
               onMoveUp={handleMoveUp}
@@ -231,6 +241,7 @@ export default function RadioPlayer() {
             />
           </div>
         </div>
+        </>
       ) : null}
     </div>
   );

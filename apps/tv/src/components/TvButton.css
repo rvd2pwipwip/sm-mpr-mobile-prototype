@@ -6,8 +6,8 @@
   justify-content: center;
   gap: var(--tv-header-button-gap);
   min-height: var(--tv-header-button-height);
-  padding: 20px var(--tv-header-button-padding-inline-end) 20px
-    var(--tv-header-button-padding-inline-start);
+  padding-block: 20px;
+  padding-inline: var(--tv-header-button-padding-inline-start);
   font-size: var(--tv-header-button-font-size);
   font-weight: 500;
   line-height: 1;
@@ -86,7 +86,15 @@
 }
 
 .tv-button__label {
+  flex: 0 1 auto;
   white-space: nowrap;
+}
+
+/* Asymmetric inline padding balances trailing/leading icon slots (Figma `.button_lg`). */
+.tv-button--has-start-icon.focusable-button,
+.tv-button--has-end-icon.focusable-button {
+  padding-inline-start: var(--tv-header-button-padding-inline-start);
+  padding-inline-end: var(--tv-header-button-padding-inline-end);
 }
 
 .tv-button--secondary.focusable-button {

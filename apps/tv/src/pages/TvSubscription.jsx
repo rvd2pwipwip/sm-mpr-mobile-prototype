@@ -12,7 +12,6 @@ import { useUserType } from "../context/UserTypeContext.jsx";
 import { useRestorePurchasePrototypeDialog } from "../hooks/useRestorePurchasePrototypeDialog.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
 import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
-import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import "../components/drill/TvDrillScreen.css";
 import "./TvSubscription.css";
 
@@ -23,10 +22,13 @@ const BENEFITS = [
   "Unlimited skips",
 ];
 
-const ACTION_GROUP = 0;
-const SLOT_UPGRADE = 0;
-const SLOT_RESTORE = 1;
-const SLOT_PROVIDER = 2;
+const FOCUS_GROUP = {
+  upgrade: 0,
+  // restore: 1,
+  provider: 1, // use 2 when restore is re-enabled (groupCount: 3)
+};
+
+const ITEM_INDEX = 0;
 
 /**
  * Subscription (Upgrade) stub — mobile `Subscription.jsx` without prototype tier blocks.
@@ -52,10 +54,10 @@ export default function TvSubscription() {
     handleMoveLeft,
     handleMoveRight,
   } = useScreenContentFocus("tv-subscription", {
-    groupCount: 1,
-    itemCounts: [3],
-    defaultGroupIndex: 0,
-    defaultItemIndex: 0,
+    groupCount: 2,
+    itemCount: 1,
+    defaultGroupIndex: FOCUS_GROUP.upgrade,
+    defaultItemIndex: ITEM_INDEX,
   });
 
   const handleSubscribe = () => {
@@ -90,7 +92,9 @@ export default function TvSubscription() {
 
             <div className="tv-subscription__actions">
               <KeyboardWrapper
-                ref={(node) => registerItemRef(ACTION_GROUP, SLOT_UPGRADE, node)}
+                ref={(node) =>
+                  registerItemRef(FOCUS_GROUP.upgrade, ITEM_INDEX, node)
+                }
                 onSelect={handleSubscribe}
                 onUp={handleMoveUp}
                 onDown={handleMoveDown}
@@ -103,14 +107,17 @@ export default function TvSubscription() {
                     variant="subscribe"
                     label="Upgrade now"
                     iconSrc="/upgrade.svg"
-                    focused={isItemFocused(ACTION_GROUP, SLOT_UPGRADE)}
+                    focused={isItemFocused(FOCUS_GROUP.upgrade, ITEM_INDEX)}
                     className="tv-subscription__btn-primary"
                   />
                 )}
               </KeyboardWrapper>
 
+              {/* Restore purchases — hidden for now; hook kept for later.
               <KeyboardWrapper
-                ref={(node) => registerItemRef(ACTION_GROUP, SLOT_RESTORE, node)}
+                ref={(node) =>
+                  registerItemRef(FOCUS_GROUP.restore, ITEM_INDEX, node)
+                }
                 onSelect={triggerRestore}
                 onUp={handleMoveUp}
                 onDown={handleMoveDown}
@@ -122,7 +129,7 @@ export default function TvSubscription() {
                     {...focusProps}
                     type="button"
                     className="tv-subscription__btn-secondary focusable-button"
-                    focused={isItemFocused(ACTION_GROUP, SLOT_RESTORE)}
+                    focused={isItemFocused(FOCUS_GROUP.restore, ITEM_INDEX)}
                     disabled={restoreWorking}
                   >
                     {restoreWorking
@@ -131,6 +138,7 @@ export default function TvSubscription() {
                   </FocusableButton>
                 )}
               </KeyboardWrapper>
+              */}
 
               <div className="tv-subscription__provider-block">
                 <p className="tv-subscription__provider-label">
@@ -138,7 +146,7 @@ export default function TvSubscription() {
                 </p>
                 <KeyboardWrapper
                   ref={(node) =>
-                    registerItemRef(ACTION_GROUP, SLOT_PROVIDER, node)
+                    registerItemRef(FOCUS_GROUP.provider, ITEM_INDEX, node)
                   }
                   onSelect={handleProvider}
                   onUp={handleMoveUp}
@@ -151,7 +159,7 @@ export default function TvSubscription() {
                       {...focusProps}
                       type="button"
                       className="tv-subscription__btn-secondary focusable-button"
-                      focused={isItemFocused(ACTION_GROUP, SLOT_PROVIDER)}
+                      focused={isItemFocused(FOCUS_GROUP.provider, ITEM_INDEX)}
                     >
                       Select provider
                     </FocusableButton>
@@ -197,10 +205,12 @@ export default function TvSubscription() {
         </div>
       </div>
 
+      {/* Restore purchases — hidden for now; dialog kept for later.
       <TvRestorePurchasePrototypeDialog
         open={restoreDialogOpen}
         onClose={closeRestoreDialog}
       />
+      */}
     </div>
   );
 }

@@ -25,8 +25,8 @@ Living plan for **Account and settings** (broad catalog) and **Info** (limited c
 | **Content column** | **~50% viewport**, horizontally centered | e.g. `max-width: 50vw` (or `min(50vw, …)` if a cap is needed later) inside overlay scroll |
 | **Prototype tier UI** | Keep **`/settings/user-type`** (`TvUserTypePreview`) | **Not** linked from info icon or Account tile; reachable via **limited Info** title or **broad My Library** title click (mouse easter egg, `tabIndex={-1}`, not in D-pad order) |
 | **Upgrade CTA** | **`/upgrade`** Subscription stub | Replace all navigations that today go to **`/settings/user-type`** for Upgrade (Home header, limited Home Upgrade, podcast player Upgrade, Account section Upgrade buttons, etc.) |
-| **FAQ / Contact / About (broad)** | **My Library App Info tiles only** | **`TvLibraryAppInfoSection`** keeps four tiles; Account tile → Account and settings route; FAQ external; Contact / About → in-app routes |
-| **FAQ / Contact / About (limited)** | **Info section rows** on **`/info`** | Plus same routes **`/info/contact`**, **`/info/about`** as broad |
+| **FAQ / Contact / About (broad)** | **My Library App Info tiles only** | **`TvLibraryAppInfoSection`** keeps four tiles; Account tile → Account and settings route; FAQ / Contact / About → in-app routes |
+| **FAQ / Contact / About (limited)** | **Info section rows** on **`/info`** | Plus same routes **`/info/faq`**, **`/info/contact`**, **`/info/about`** as broad |
 | **Contact / About copy** | **Mobile strings** | Import from mobile constants modules (see Phase 5) or promote to **`@sm-mpr/shared`** if duplication is awkward |
 | **Back** | **Esc** → `navigate(-1)` | Existing **`GlobalTvKeys`**; limited catalog has no **`PrimaryNav`** on overlay routes |
 | **Nav chrome** | **`PrimaryNav` visible** on broad Account and settings + Subscription stub | **`TvShell`** unchanged (nav hidden only on full-screen player routes + limited catalog scope) |
@@ -191,15 +191,15 @@ On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 
 ## Phase 4 — Info help section (limited only)
 
-**Status: done (2026-06-17).** `TvInfoHelpSection` on limited `/info` only; FAQ external, Contact/About in-app routes.
+**Status: done (2026-06-17); FAQ embedded (2026-06-17); Terms/Privacy embedded (2026-06-17).** `TvInfoHelpSection` on limited `/info` only; FAQ in-app route `/info/faq`; Contact/About in-app routes; About legal buttons drill to `/info/terms` and `/info/privacy`.
 
 **Goal:** Third section on **`/info`** only.
 
 1. **`TvInfoHelpSection.jsx`** — port from mobile **`InfoHelpSection.jsx`**:
-   - FAQ → external (`INFO_FAQ_HREF`)
+   - FAQ → navigate **`/info/faq`** (embedded scroll; mobile still external `INFO_FAQ_HREF`)
    - Contact us → navigate **`/info/contact`**
    - About → navigate **`/info/about`**
-2. Focusable rows (3 items); chevron on internal rows, external icon on FAQ
+2. Focusable rows (3 items); chevron on all drill-in rows
 3. **`TvAccountSettings`** does **not** mount this section
 
 **Verify:** Limited `/info` shows three sections stacked; broad Account and settings shows two only; My Library tiles still reach Contact / About on broad.
@@ -213,7 +213,7 @@ On **`TvInfo`** (limited) and **`MyLibrary`** (broad) screen titles only:
 **Goal:** Replace stubs with real copy from mobile.
 
 1. **`TvInfoContact.jsx`** — body from **`infoContactCopy.js`**; overlay header title **Contact us**; title easter egg **not** required on sub-pages
-2. **`TvInfoAbout.jsx`** — wordmark pair, version, copyright, trademark, legal buttons from **`infoAboutCopy.js`** + **`LEGAL_LINKS`**
+2. **`TvInfoAbout.jsx`** — wordmark pair, version, copyright, trademark, legal buttons from **`infoAboutCopy.js`** + **`LEGAL_LINKS`**; Terms/Privacy drill in-app (`/info/terms`, `/info/privacy`) with focus restore on About
 3. Shared sub-page layout: **`tv-info-sub-page`** — same **50vw** centered column, scroll under **`TvDrillScreenHeader`**
 4. Replace **`TvSearchRouteStub`** routes in **`App.jsx`**
 5. Focus: static text not focusable; mailto / legal links / back via Esc sufficient for v1 (optional focusable legal buttons if time)

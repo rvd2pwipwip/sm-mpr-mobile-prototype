@@ -193,6 +193,16 @@ No dedicated TV Figma frame — follows mobile compact thumb-only pattern. TV us
 ## To index (add when implementing)
 
 - Channel Info screen (indexed elsewhere when expanded)
+
+---
+
+## Info / help
+
+| Screen | Node | Notes |
+|--------|------|--------|
+| FAQ (embedded) | [7775:23803](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=7775-23803) | `TvInfoFaq.jsx` — shared `TvInfoEmbeddedDocLayout`; Q/A max 1100px |
+| Terms and Conditions (embedded) | [7778:26181](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=7778-26181) | `TvInfoTerms.jsx` — legal body max 1200px, 24px |
+| Privacy Policy (embedded) | [7778:26361](https://www.figma.com/design/DfwtFG53ud7EHhvlPutvI8/SM-HTML-TV-MPR?node-id=7778-26361) | `TvInfoPrivacy.jsx` — same scroll shell as FAQ |
 - Search results mode (TV frame TBD)
 
 ---

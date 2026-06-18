@@ -222,7 +222,7 @@ export default function PodcastInfo() {
                       {(focusProps) => (
                         <TvButton
                           {...focusProps}
-                          variant="subscribe"
+                          variant="secondary"
                           focused={isItemFocused(
                             ACTIONS_GROUP,
                             SUBSCRIBE_ACTION,

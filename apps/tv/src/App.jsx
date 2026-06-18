@@ -55,6 +55,9 @@ import TvAccountSettings from "./pages/TvAccountSettings.jsx";
 import TvInfo from "./pages/TvInfo.jsx";
 import TvInfoAbout from "./pages/TvInfoAbout.jsx";
 import TvInfoContact from "./pages/TvInfoContact.jsx";
+import TvInfoFaq from "./pages/TvInfoFaq.jsx";
+import TvInfoPrivacy from "./pages/TvInfoPrivacy.jsx";
+import TvInfoTerms from "./pages/TvInfoTerms.jsx";
 import TvSubscription from "./pages/TvSubscription.jsx";
 import TvUpgradeStoreMock from "./pages/TvUpgradeStoreMock.jsx";
 import TvCreateAccount from "./pages/TvCreateAccount.jsx";
@@ -236,6 +239,9 @@ export default function App() {
                               />
                               <Route path="/info/contact" element={<TvInfoContact />} />
                               <Route path="/info/about" element={<TvInfoAbout />} />
+                              <Route path="/info/faq" element={<TvInfoFaq />} />
+                              <Route path="/info/terms" element={<TvInfoTerms />} />
+                              <Route path="/info/privacy" element={<TvInfoPrivacy />} />
                               <Route path="/focus-demo" element={<FocusDemo />} />
                               <Route path="/music/:channelId" element={<MusicChannelInfo />} />
                               <Route

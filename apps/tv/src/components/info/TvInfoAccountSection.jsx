@@ -138,7 +138,7 @@ export default function TvInfoAccountSection({
         <div className="tv-info-account__actions tv-info-account__actions--grouped">
           <div className="tv-info-account__action-group">
             {renderAction("upgrade", groupIndex++)}
-            {renderAction("restore", groupIndex++)}
+            {/* {renderAction("restore", groupIndex++)} */}
           </div>
           <div className="tv-info-account__action-group">
             {renderAction("createAccount", groupIndex++)}
@@ -155,7 +155,7 @@ export default function TvInfoAccountSection({
       <div className="tv-info-account__actions tv-info-account__actions--grouped">
         <div className="tv-info-account__action-group">
           {renderAction("upgrade", groupIndex++)}
-          {renderAction("restore", groupIndex++)}
+          {/* {renderAction("restore", groupIndex++)} */}
           {renderAction("logout", groupIndex++)}
         </div>
         <div className="tv-info-account__action-group">
@@ -200,10 +200,12 @@ export default function TvInfoAccountSection({
         </div>
       )}
 
+      {/* Restore purchases — hidden for now; hook + dialog kept for later.
       <TvRestorePurchasePrototypeDialog
         open={restoreDialogOpen}
         onClose={closeRestoreDialog}
       />
+      */}
     </div>
   );
 }

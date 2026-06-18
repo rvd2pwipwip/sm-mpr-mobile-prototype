@@ -53,12 +53,16 @@ const TvButton = forwardRef(function TvButton(
   ref,
 ) {
   const startIconSrc = iconMaskVariant ? null : iconSrc;
+  const hasStartIcon = Boolean(iconMaskVariant || startIconSrc);
+  const hasEndIcon = Boolean(endIconMaskVariant || endIconSrc);
 
   const rootClass = [
     "tv-button",
     variant === "secondary" ? "tv-button--secondary" : "",
     variant === "subscribe" ? "tv-button--subscribe" : "",
     disabled ? "tv-button--disabled" : "",
+    hasStartIcon ? "tv-button--has-start-icon" : "",
+    hasEndIcon ? "tv-button--has-end-icon" : "",
     className,
   ]
     .filter(Boolean)

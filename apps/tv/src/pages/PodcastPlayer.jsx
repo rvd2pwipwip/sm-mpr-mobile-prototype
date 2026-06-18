@@ -23,7 +23,7 @@ import {
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
-import TvButton from "../components/TvButton.jsx";
+import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
@@ -32,12 +32,9 @@ import { usePlayback } from "../context/PlaybackContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
-import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvPlayerScreenFocus } from "../hooks/useTvPlayerScreenFocus.js";
 import "./MusicPlayer.css";
 import "./PodcastPlayer.css";
-
-const META_GROUP = 0;
-const TRANSPORT_GROUP = 1;
 
 const TRANSPORT_SLOT = {
   speed: 0,
@@ -46,13 +43,6 @@ const TRANSPORT_SLOT = {
   seekForward: 3,
   bookmark: 4,
 };
-
-function buildMetaSlots(showPlayerUpgrade) {
-  if (showPlayerUpgrade) {
-    return { upgrade: 0, info: 1, subscribe: 2 };
-  }
-  return { info: 0, subscribe: 1 };
-}
 
 function PlayerMetaIcon({ variant }) {
   return (
@@ -81,7 +71,6 @@ export default function PodcastPlayer() {
 
   const needsPreroll = showPlayerPreroll(userType);
   const showPlayerUpgrade = showUpgradeInFullPlayerHeader(userType);
-  const metaSlots = buildMetaSlots(showPlayerUpgrade);
   const expandFromMini = location.state?.expandFromMiniPlayer === true;
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
@@ -127,14 +116,6 @@ export default function PodcastPlayer() {
       ? Math.min(1, Math.max(0, position01Raw))
       : 0;
 
-  const itemCounts = useMemo(
-    () => ({
-      [META_GROUP]: showPlayerUpgrade ? 3 : 2,
-      [TRANSPORT_GROUP]: 5,
-    }),
-    [showPlayerUpgrade],
-  );
-
   const {
     handleMoveUp,
     handleMoveDown,
@@ -143,14 +124,16 @@ export default function PodcastPlayer() {
     registerItemRef,
     isItemFocused,
     syncDomFocus,
-  } = useScreenContentFocus(
+    metaGroup,
+    transportGroup,
+    upgradeGroup,
+  } = useTvPlayerScreenFocus(
     `podcast-player-${podcastId}-${episodeId}`,
     {
-      groupCount: 2,
-      itemCounts,
-      defaultGroupIndex: TRANSPORT_GROUP,
-      defaultItemIndex: TRANSPORT_SLOT.play,
-      navEnterEnabled: false,
+      showUpgrade: showPlayerUpgrade,
+      metaItemCount: 2,
+      transportItemCount: 5,
+      defaultTransportItemIndex: TRANSPORT_SLOT.play,
       contentKeysEnabled: prerollComplete,
       suspendDomFocus: !prerollComplete,
     },
@@ -312,35 +295,26 @@ export default function PodcastPlayer() {
       ) : null}
 
       {!showPreroll ? (
+        <>
+        {showPlayerUpgrade ? (
+          <TvPlayerUpgradeCta
+            groupIndex={upgradeGroup}
+            registerItemRef={registerItemRef}
+            isItemFocused={isItemFocused}
+            onSelect={goUpgrade}
+            onMoveUp={handleMoveUp}
+            onMoveDown={handleMoveDown}
+            onMoveLeft={handleMoveLeft}
+            onMoveRight={handleMoveRight}
+          />
+        ) : null}
         <div className="tv-music-player__column">
           <header className="tv-music-player__channel-block">
             <h1 className="tv-music-player__channel-name">{podcast.title}</h1>
 
-            {showPlayerUpgrade ? (
-              <KeyboardWrapper
-                ref={(node) =>
-                  registerItemRef(META_GROUP, metaSlots.upgrade, node)
-                }
-                onSelect={goUpgrade}
-                onMoveUp={handleMoveUp}
-                onMoveDown={handleMoveDown}
-                onMoveLeft={handleMoveLeft}
-                onMoveRight={handleMoveRight}
-              >
-                {(focusProps) => (
-                  <TvButton
-                    {...focusProps}
-                    focused={isItemFocused(META_GROUP, metaSlots.upgrade)}
-                    label="Upgrade"
-                    iconSrc="/upgrade.svg"
-                  />
-                )}
-              </KeyboardWrapper>
-            ) : null}
-
             <div className="tv-music-player__meta-actions">
               <KeyboardWrapper
-                ref={(node) => registerItemRef(META_GROUP, metaSlots.info, node)}
+                ref={(node) => registerItemRef(metaGroup, 0, node)}
                 onSelect={leaveForPodcastInfo}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
@@ -352,7 +326,7 @@ export default function PodcastPlayer() {
                     {...focusProps}
                     type="button"
                     className="tv-music-player__meta-btn"
-                    focused={isItemFocused(META_GROUP, metaSlots.info)}
+                    focused={isItemFocused(metaGroup, 0)}
                     aria-label="Podcast info"
                   >
                     <PlayerMetaIcon variant="info" />
@@ -361,9 +335,7 @@ export default function PodcastPlayer() {
               </KeyboardWrapper>
 
               <KeyboardWrapper
-                ref={(node) =>
-                  registerItemRef(META_GROUP, metaSlots.subscribe, node)
-                }
+                ref={(node) => registerItemRef(metaGroup, 1, node)}
                 onSelect={onSubscribePress}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
@@ -378,7 +350,7 @@ export default function PodcastPlayer() {
                       "tv-music-player__meta-btn",
                       subscribedHere ? "tv-podcast-player__meta-btn--active" : "",
                     ].join(" ")}
-                    focused={isItemFocused(META_GROUP, metaSlots.subscribe)}
+                    focused={isItemFocused(metaGroup, 1)}
                     aria-label={
                       subscribedHere ? "Unsubscribe from podcast" : "Subscribe"
                     }
@@ -440,7 +412,7 @@ export default function PodcastPlayer() {
             </div>
 
             <TvPodcastPlayerTransport
-              groupIndex={TRANSPORT_GROUP}
+              groupIndex={transportGroup}
               transportSlots={TRANSPORT_SLOT}
               playing={playing}
               speed={speed}
@@ -459,6 +431,7 @@ export default function PodcastPlayer() {
             />
           </div>
         </div>
+        </>
       ) : null}
     </div>
   );

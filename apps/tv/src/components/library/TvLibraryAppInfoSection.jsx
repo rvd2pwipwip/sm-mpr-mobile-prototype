@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 import {
   INFO_ABOUT_PATH,
   INFO_CONTACT_PATH,
-  INFO_FAQ_HREF,
+  INFO_FAQ_PATH,
   MY_LIBRARY_ACCOUNT_SETTINGS_PATH,
 } from "@sm-mpr/shared/constants/infoHelpLinks.js";
+import { navigateToTvFaq } from "../../utils/tvFaqNavigation.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
 import FixedSwimlane from "../swimlanes/FixedSwimlane.jsx";
@@ -15,7 +16,7 @@ import "./TvLibraryAppInfoSection.css";
 
 const TILES = [
   { id: "account", label: "Account and settings", to: MY_LIBRARY_ACCOUNT_SETTINGS_PATH },
-  { id: "faq", label: "FAQ", href: INFO_FAQ_HREF },
+  { id: "faq", label: "FAQ", to: INFO_FAQ_PATH },
   { id: "contact", label: "Contact us", to: INFO_CONTACT_PATH },
   { id: "about", label: "About", to: INFO_ABOUT_PATH },
 ];
@@ -38,10 +39,14 @@ export default function TvLibraryAppInfoSection({
     registerItemRef?.(groupIndex, index, node);
   };
 
-  const handleSelect = (tile) => {
+  const handleSelect = (tile, tileIndex) => {
     enterContent();
     if (tile.href) {
       window.open(tile.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (tile.to === INFO_FAQ_PATH) {
+      navigateToTvFaq(navigate, { groupIndex, itemIndex: tileIndex });
       return;
     }
     if (tile.to) navigate(tile.to);
@@ -72,7 +77,7 @@ export default function TvLibraryAppInfoSection({
             <KeyboardWrapper
               key={tile.id}
               ref={setRef}
-              onSelect={() => handleSelect(tile)}
+              onSelect={() => handleSelect(tile, index)}
               onUp={onMoveUp}
               onDown={onMoveDown}
             >

@@ -28,6 +28,8 @@ export function useScreenContentFocus(
     suspendDomFocus = false,
     resolveMoveDown,
     resolveMoveUp,
+    resolveMoveLeft,
+    resolveMoveRight,
   } = {},
 ) {
   const { catalogScope } = useTerritory();
@@ -233,9 +235,22 @@ export function useScreenContentFocus(
     focusGroup,
   ]);
 
+  const applyResolvedMove = useCallback(
+    (resolved) => {
+      if (resolved == null || typeof resolved !== "object") return false;
+      setFocusedGroupIndex(resolved.groupIndex);
+      setFocusedIndex(resolved.groupIndex, resolved.itemIndex);
+      return true;
+    },
+    [setFocusedGroupIndex, setFocusedIndex],
+  );
+
   const handleMoveLeft = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
     if (swimlaneGroupSet.has(focusedGroupIndex)) return;
+    const resolved = resolveMoveLeft?.(focusedGroupIndex, focusedIndex);
+    if (resolved === false) return;
+    if (applyResolvedMove(resolved)) return;
     if (focusedIndex === 0) {
       if (navActive) {
         enterNavFromContent();
@@ -248,6 +263,8 @@ export function useScreenContentFocus(
     focusedIndex,
     focusedGroupIndex,
     swimlaneGroupSet,
+    resolveMoveLeft,
+    applyResolvedMove,
     navActive,
     enterNavFromContent,
     setFocusedIndex,
@@ -256,6 +273,9 @@ export function useScreenContentFocus(
   const handleMoveRight = useCallback(() => {
     if (focusZone !== FOCUS_ZONE_CONTENT) return;
     if (swimlaneGroupSet.has(focusedGroupIndex)) return;
+    const resolved = resolveMoveRight?.(focusedGroupIndex, focusedIndex);
+    if (resolved === false) return;
+    if (applyResolvedMove(resolved)) return;
     const max = getItemCount(focusedGroupIndex) - 1;
     if (focusedIndex >= max) return;
     setFocusedIndex(focusedGroupIndex, focusedIndex + 1);
@@ -264,6 +284,8 @@ export function useScreenContentFocus(
     focusedIndex,
     focusedGroupIndex,
     swimlaneGroupSet,
+    resolveMoveRight,
+    applyResolvedMove,
     getItemCount,
     setFocusedIndex,
   ]);

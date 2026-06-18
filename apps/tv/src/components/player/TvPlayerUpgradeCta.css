@@ -1,0 +1,6 @@
+.tv-player-upgrade-cta {
+  position: absolute;
+  top: 60px;
+  left: var(--tv-header-inline-start);
+  z-index: 2;
+}

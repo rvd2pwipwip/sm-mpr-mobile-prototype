@@ -13,6 +13,13 @@ export const MY_LIBRARY_ACCOUNT_SETTINGS_PATH = "/my-library/account-settings";
 export const INFO_CONTACT_PATH = "/info/contact";
 export const INFO_ABOUT_PATH = "/info/about";
 
+/** Embedded FAQ screen (TV prototype); mobile keeps external {@link INFO_FAQ_HREF}. */
+export const INFO_FAQ_PATH = "/info/faq";
+
+/** Embedded legal screens (TV prototype); mobile keeps external legal URLs. */
+export const INFO_TERMS_PATH = "/info/terms";
+export const INFO_PRIVACY_PATH = "/info/privacy";
+
 /** @param {string} href */
 export function externalFaqAnchorProps(href) {
   const faqIsHttp = /^https?:\/\//i.test(href);
