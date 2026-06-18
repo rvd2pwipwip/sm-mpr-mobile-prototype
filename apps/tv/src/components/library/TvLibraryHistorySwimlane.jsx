@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MY_LIBRARY_HISTORY_BY_SEGMENT,
@@ -11,7 +11,11 @@ import { SWIMLANE_CARD_MAX } from "../../constants/swimlane.js";
 import { useContentProfile } from "../../context/ContentProfileContext.jsx";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import {
-  getLibraryHistorySwimlaneSlotCount,
+  getTvCardSize,
+  getTvSwimlaneVisibleSlotCapacity,
+} from "../../utils/tvLayout.js";
+import {
+  getLibraryHistoryGhostCount,
   showsLibraryHistoryMoreTile,
 } from "../../utils/swimlaneUtils.js";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
@@ -26,7 +30,8 @@ import "./TvLibraryHistoryEmptyTile.css";
 
 /**
  * Typed listen-history swimlane (music, podcasts, or radio).
- * Empty: placeholder only (tap opens More grid). With items: up to 9 tiles + Clear or More.
+ * Empty: placeholder + ghost fillers. With items: tiles + ghosts + Clear or More.
+ * Ghost tiles are visual-only (not focusable).
  *
  * @param {{ segment: 'music' | 'podcasts' | 'radio' }} props
  */
@@ -51,6 +56,7 @@ export default function TvLibraryHistorySwimlane({
   const { items, clearHistoryByKind } = useListenHistory();
   const { clearAllEpisodeProgress } = usePodcastUserState();
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   const config = MY_LIBRARY_HISTORY_BY_SEGMENT[segment];
 
@@ -67,12 +73,94 @@ export default function TvLibraryHistorySwimlane({
     [tiles],
   );
 
+  const cardSize = getTvCardSize();
+  const isEmpty = tiles.length === 0;
+  const realTileCount = visibleTiles.length;
+  const leadingCount = isEmpty ? 1 : realTileCount;
+  const trailingCount = isEmpty ? 0 : 1;
+
+  const ghostCount = useMemo(() => {
+    const capacity =
+      viewportWidth > 0
+        ? getTvSwimlaneVisibleSlotCapacity(cardSize, viewportWidth)
+        : getTvSwimlaneVisibleSlotCapacity(cardSize);
+    return getLibraryHistoryGhostCount(tiles.length, capacity);
+  }, [tiles.length, viewportWidth, cardSize]);
+
+  const trailingVisualIndex = leadingCount + ghostCount;
+  const showMoreTile = showsLibraryHistoryMoreTile(tiles.length);
+
+  const visualFocusedIndex = isEmpty
+    ? 0
+    : focusedIndex >= realTileCount
+      ? trailingVisualIndex
+      : focusedIndex;
+
+  const handleVisualFocusChange = useCallback(
+    (visualIdx) => {
+      if (visualIdx > leadingCount - 1 && visualIdx < trailingVisualIndex) {
+        return;
+      }
+      if (isEmpty) {
+        if (visualIdx === 0) {
+          onFocusChange?.(0);
+        }
+        return;
+      }
+      const focusableIdx =
+        visualIdx === trailingVisualIndex ? realTileCount : visualIdx;
+      onFocusChange?.(focusableIdx);
+    },
+    [
+      isEmpty,
+      leadingCount,
+      onFocusChange,
+      realTileCount,
+      trailingVisualIndex,
+    ],
+  );
+
+  const handleArrowRight = useCallback(
+    ({ focusedIndex: visualIdx }) => {
+      if (ghostCount <= 0) return false;
+      if (isEmpty && visualIdx === 0) {
+        return true;
+      }
+      if (!isEmpty && visualIdx === realTileCount - 1) {
+        handleVisualFocusChange(trailingVisualIndex);
+        return true;
+      }
+      return false;
+    },
+    [
+      ghostCount,
+      handleVisualFocusChange,
+      isEmpty,
+      realTileCount,
+      trailingVisualIndex,
+    ],
+  );
+
+  const handleArrowLeft = useCallback(
+    ({ focusedIndex: visualIdx }) => {
+      if (ghostCount > 0 && !isEmpty && visualIdx === trailingVisualIndex) {
+        handleVisualFocusChange(realTileCount - 1);
+        return true;
+      }
+      return false;
+    },
+    [
+      ghostCount,
+      handleVisualFocusChange,
+      isEmpty,
+      realTileCount,
+      trailingVisualIndex,
+    ],
+  );
+
   if (!config) return null;
 
-  const slotCount = getLibraryHistorySwimlaneSlotCount(tiles.length);
-  const isEmpty = tiles.length === 0;
-  const showMoreTile = showsLibraryHistoryMoreTile(tiles.length);
-  const trailingIndex = isEmpty ? -1 : visibleTiles.length;
+  const visualSlotCount = leadingCount + ghostCount + trailingCount;
   const morePath = myLibraryHistoryMorePath(segment);
 
   const clearConfirm = {
@@ -81,8 +169,19 @@ export default function TvLibraryHistorySwimlane({
     primaryLabel: config.clearConfirmPrimaryLabel,
   };
 
-  const registerSlotRef = (index, node) => {
-    registerItemRef?.(groupIndex, index, node);
+  const registerSlotRef = (visualIndex, node) => {
+    if (visualIndex >= leadingCount && visualIndex < trailingVisualIndex) {
+      return;
+    }
+    if (isEmpty) {
+      if (visualIndex === 0) {
+        registerItemRef?.(groupIndex, 0, node);
+      }
+      return;
+    }
+    const focusableIdx =
+      visualIndex === trailingVisualIndex ? realTileCount : visualIndex;
+    registerItemRef?.(groupIndex, focusableIdx, node);
   };
 
   const goToMore = () => {
@@ -91,7 +190,18 @@ export default function TvLibraryHistorySwimlane({
   };
 
   const renderSlot = (index, isFocused, setRef) => {
-    if (!isEmpty && index === trailingIndex) {
+    if (index >= leadingCount && index < trailingVisualIndex) {
+      return (
+        <ContentTileCard
+          key={`ghost-${index}`}
+          ghost
+          imageUrl=""
+          title=""
+        />
+      );
+    }
+
+    if (!isEmpty && index === trailingVisualIndex) {
       if (showMoreTile) {
         return (
           <KeyboardWrapper
@@ -186,13 +296,16 @@ export default function TvLibraryHistorySwimlane({
       <SwimlaneRow
         title={config.swimlaneTitle}
         swimlaneProps={{
-          slotCount,
-          focusedIndex,
-          onFocusChange,
+          slotCount: visualSlotCount,
+          focusedIndex: visualFocusedIndex,
+          onFocusChange: handleVisualFocusChange,
           focused,
           onBoundaryLeft,
           registerSlotRef,
           renderSlot,
+          onViewportWidth: setViewportWidth,
+          onArrowRight: handleArrowRight,
+          onArrowLeft: handleArrowLeft,
         }}
       />
       <TvListenHistoryClearDialog

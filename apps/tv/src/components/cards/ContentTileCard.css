@@ -24,7 +24,8 @@
 }
 
 .tv-content-tile__thumbnail--ghost {
-  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--color-text-muted));
+  opacity: 0.45;
   box-shadow: none;
 }
 
