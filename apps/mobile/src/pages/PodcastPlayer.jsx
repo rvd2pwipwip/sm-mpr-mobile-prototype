@@ -12,6 +12,7 @@ import {
   useParams,
 } from "react-router-dom";
 import FullScreenPlayerShell from "../components/FullScreenPlayerShell";
+import PodcastPlayerInfoSheet from "../components/player/PodcastPlayerInfoSheet";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
 import { EpisodeActionIconMask } from "../components/EpisodeCard";
@@ -137,6 +138,7 @@ export default function PodcastPlayer() {
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
   const [speedIdx, setSpeedIdx] = useState(() =>
     Math.max(0, PODCAST_SPEED_STEPS.indexOf(1)),
   );
@@ -354,9 +356,8 @@ export default function PodcastPlayer() {
     navigate(`/podcast/${podcast.id}`, { replace: true });
   };
 
-  /** Podcast info replaces the player entry (still not a stacked “back → play”). */
-  const goToPodcastInfoPage = () => {
-    navigate(`/podcast/${podcast.id}`, { replace: true });
+  const switchEpisode = (nextEpisodeId) => {
+    navigate(`/podcast/${podcast.id}/play/${nextEpisodeId}`, { replace: true });
   };
 
   const dismiss = leaveFullPlayerForShow;
@@ -382,7 +383,14 @@ export default function PodcastPlayer() {
   return (
     <main
       ref={mainRef}
-      className="app-shell music-player-screen podcast-player-shell"
+      className={[
+        "app-shell",
+        "music-player-screen",
+        "podcast-player-shell",
+        infoSheetOpen ? "music-player-screen--info-sheet" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       style={{ "--player-thumb-side": `${thumbSidePx}px` }}
     >
       {needsPreroll && !prerollComplete ? (
@@ -426,7 +434,7 @@ export default function PodcastPlayer() {
                 type="button"
                 className="music-player__icon-btn"
                 aria-label="Podcast info"
-                onClick={goToPodcastInfoPage}
+                onClick={() => setInfoSheetOpen(true)}
               >
                 <PlayerMetaActionIcon variant="info" />
               </button>
@@ -682,6 +690,16 @@ export default function PodcastPlayer() {
         }
         showProviderBrand={userType === "freeProvided"}
         showPlayerAd={showAds}
+      />
+
+      <PodcastPlayerInfoSheet
+        open={infoSheetOpen}
+        onClose={() => setInfoSheetOpen(false)}
+        podcastId={podcast.id}
+        currentEpisodeId={episode.id}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
+        onSelectEpisode={switchEpisode}
       />
     </main>
   );

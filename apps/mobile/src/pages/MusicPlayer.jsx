@@ -6,6 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import FullScreenPlayerShell from "../components/FullScreenPlayerShell";
+import MusicPlayerInfoSheet from "../components/player/MusicPlayerInfoSheet";
 import MusicSkipButton from "../components/MusicSkipButton";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
@@ -79,6 +80,7 @@ export default function MusicPlayer() {
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
   const likeAction = useMusicRadioLikeAction("music", channel?.id);
@@ -129,9 +131,9 @@ export default function MusicPlayer() {
     navigate(`/music/${channel.id}`, { replace: true });
   };
 
-  /** Info icon always opens Channel Info — never pop mini stack (often Home). */
-  const leaveFullPlayerForChannel = () => {
-    navigate(`/music/${channel.id}`, { replace: true });
+  /** Info opens in-player bottom sheet — does not leave `/play`. */
+  const leavePlayer = (path) => {
+    navigate(path, { replace: true });
   };
 
   const dismiss = leaveFullPlayerMinimize;
@@ -141,7 +143,13 @@ export default function MusicPlayer() {
   return (
     <main
       ref={mainRef}
-      className="app-shell music-player-screen"
+      className={[
+        "app-shell",
+        "music-player-screen",
+        infoSheetOpen ? "music-player-screen--info-sheet" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       style={{ "--player-thumb-side": `${thumbSidePx}px` }}
     >
       {needsPreroll && !prerollComplete ? (
@@ -184,7 +192,7 @@ export default function MusicPlayer() {
                 type="button"
                 className="music-player__icon-btn"
                 aria-label="Channel info"
-                onClick={leaveFullPlayerForChannel}
+                onClick={() => setInfoSheetOpen(true)}
               >
                 <PlayerMetaActionIcon variant="info" />
               </button>
@@ -283,6 +291,15 @@ export default function MusicPlayer() {
         }
         showProviderBrand={userType === "freeProvided"}
         showPlayerAd={showAds}
+      />
+
+      <MusicPlayerInfoSheet
+        open={infoSheetOpen}
+        onClose={() => setInfoSheetOpen(false)}
+        channelId={channel.id}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
+        onLeavePlayer={leavePlayer}
       />
     </main>
   );

@@ -27,6 +27,7 @@ const SUBSCRIBE_ACTION = 1;
 const EPISODE_SLOTS = 3;
 
 function TvPodcastPlayerInfoSheetBody({
+  open,
   podcast,
   currentEpisodeId,
   playing,
@@ -52,7 +53,7 @@ function TvPodcastPlayerInfoSheetBody({
   const descriptionText = podcast.description ?? "";
   const hasDescription = Boolean(descriptionText);
   const { ref: descriptionRef, overflows: descriptionOverflows } =
-    useDescriptionClampOverflow(descriptionText, hasDescription);
+    useDescriptionClampOverflow(descriptionText, hasDescription, open);
 
   const episodeCount = podcast.episodes.length;
 
@@ -134,7 +135,7 @@ function TvPodcastPlayerInfoSheetBody({
   useEffect(() => {
     if (descriptionDialogOpen) return;
     syncDomFocus();
-  }, [descriptionDialogOpen, syncDomFocus]);
+  }, [descriptionDialogOpen, descriptionOverflows, syncDomFocus]);
 
   const subscribedHere = isSubscribed(podcast.id);
   const titleId = `tv-podcast-player-info-sheet-title-${podcast.id}`;
@@ -400,6 +401,7 @@ export default function TvPodcastPlayerInfoSheet({
     >
       <TvPodcastPlayerInfoSheetBody
         key={contentKey}
+        open={open}
         podcast={podcast}
         currentEpisodeId={currentEpisodeId}
         playing={playing}

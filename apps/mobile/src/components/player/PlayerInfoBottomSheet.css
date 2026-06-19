@@ -1,0 +1,107 @@
+/* Player info bottom sheet — full shell width; top radius matches mini player / cards. */
+
+.player-info-bottom-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-player-info-sheet);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  max-width: var(--app-max-width);
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.player-info-bottom-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  pointer-events: auto;
+  background-color: rgb(0 0 0 / 0.5);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .player-info-bottom-sheet__scrim {
+    background-color: rgb(0 0 0 / 0.55);
+  }
+}
+
+html[data-theme="dark"] .player-info-bottom-sheet__scrim {
+  background-color: rgb(0 0 0 / 0.55);
+}
+
+.player-info-bottom-sheet__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  margin-top: var(--player-info-sheet-top);
+  pointer-events: auto;
+  overflow: hidden;
+  border-radius: var(--player-info-sheet-radius)
+    var(--player-info-sheet-radius) 0 0;
+  background: var(--color-bg2);
+  box-shadow: 0 -8px 32px rgb(0 0 0 / 0.12);
+  transform: translateY(100%);
+  animation: player-info-bottom-sheet-in 0.35s cubic-bezier(0.16, 1, 0.3, 1)
+    forwards;
+}
+
+@keyframes player-info-bottom-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.player-info-bottom-sheet__grab {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) 0 var(--space-2);
+  touch-action: none;
+  cursor: grab;
+}
+
+.player-info-bottom-sheet__grab-bar {
+  display: block;
+  width: 2.5rem;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 28%, transparent);
+}
+
+.player-info-bottom-sheet__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Info body inside sheet — reuse `music-info` column without page chrome. */
+.player-info-bottom-sheet__content.music-info__column {
+  padding-bottom: calc(
+    env(safe-area-inset-bottom, 0px) + var(--space-8)
+  );
+}
+
+.player-info-bottom-sheet__content .music-info__inset {
+  padding-top: 0;
+}

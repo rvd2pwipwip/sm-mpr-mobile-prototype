@@ -94,6 +94,11 @@
   -webkit-mask-image: url("/play.svg");
 }
 
+.music-info__action-icon-mask--pause {
+  mask-image: url("/pause.svg");
+  -webkit-mask-image: url("/pause.svg");
+}
+
 .music-info__action-icon-mask--like {
   mask-image: url("/like.svg");
   -webkit-mask-image: url("/like.svg");

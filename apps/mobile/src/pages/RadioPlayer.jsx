@@ -6,6 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import FullScreenPlayerShell from "../components/FullScreenPlayerShell";
+import RadioPlayerInfoSheet from "../components/player/RadioPlayerInfoSheet";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
@@ -78,6 +79,7 @@ export default function RadioPlayer() {
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
 
   const station = stationId ? resolveRadioStationForStub(stationId) : null;
   const likeAction = useMusicRadioLikeAction("radio", station?.id);
@@ -127,11 +129,7 @@ export default function RadioPlayer() {
     navigate(`/radio/${station.id}`, { replace: true });
   };
 
-  /** Info icon always opens Radio Info — never `history.back()`, which often lands on Home after mini expand. */
-  const leaveFullPlayerForStationInfo = () => {
-    navigate(`/radio/${station.id}`, { replace: true });
-  };
-
+  /** Info opens in-player bottom sheet — does not leave `/play`. */
   const dismiss = leaveFullPlayerMinimize;
 
   const subtitleLine =
@@ -142,7 +140,14 @@ export default function RadioPlayer() {
   return (
     <main
       ref={mainRef}
-      className="app-shell music-player-screen radio-player-screen"
+      className={[
+        "app-shell",
+        "music-player-screen",
+        "radio-player-screen",
+        infoSheetOpen ? "music-player-screen--info-sheet" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       style={{ "--player-thumb-side": `${thumbSidePx}px` }}
     >
       {needsPreroll && !prerollComplete ? (
@@ -185,7 +190,7 @@ export default function RadioPlayer() {
                 type="button"
                 className="music-player__icon-btn"
                 aria-label="Station info"
-                onClick={leaveFullPlayerForStationInfo}
+                onClick={() => setInfoSheetOpen(true)}
               >
                 <PlayerMetaActionIcon variant="info" />
               </button>
@@ -277,6 +282,14 @@ export default function RadioPlayer() {
         }
         showProviderBrand={userType === "freeProvided"}
         showPlayerAd={showAds}
+      />
+
+      <RadioPlayerInfoSheet
+        open={infoSheetOpen}
+        onClose={() => setInfoSheetOpen(false)}
+        stationId={station.id}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
       />
     </main>
   );

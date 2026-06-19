@@ -41,7 +41,7 @@ export default function TvMusicPlayerInfoSheet({
   const descriptionText = channel?.description ?? "";
   const hasDescription = Boolean(descriptionText);
   const { ref: descriptionRef, overflows: descriptionOverflows } =
-    useDescriptionClampOverflow(descriptionText, hasDescription);
+    useDescriptionClampOverflow(descriptionText, hasDescription, open);
 
   const tags = useMemo(() => {
     if (!channel) return [];
@@ -127,7 +127,7 @@ export default function TvMusicPlayerInfoSheet({
   useEffect(() => {
     if (!open || descriptionDialogOpen) return;
     syncDomFocus();
-  }, [open, descriptionDialogOpen, syncDomFocus]);
+  }, [open, descriptionDialogOpen, descriptionOverflows, syncDomFocus]);
 
   useEffect(() => {
     if (open) return;

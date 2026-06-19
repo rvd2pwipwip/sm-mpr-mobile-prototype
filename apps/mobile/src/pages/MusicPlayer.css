@@ -185,6 +185,13 @@
   color: color-mix(in srgb, var(--color-text) 80%, transparent);
 }
 
+.music-player-screen--info-sheet .music-player__channel-name {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
 .music-player__meta-actions {
   display: flex;
   flex-direction: row;

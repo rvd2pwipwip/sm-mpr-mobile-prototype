@@ -31,7 +31,7 @@ export default function TvRadioPlayerInfoSheet({
   const descriptionText = station?.description ?? "";
   const hasDescription = Boolean(descriptionText);
   const { ref: descriptionRef, overflows: descriptionOverflows } =
-    useDescriptionClampOverflow(descriptionText, hasDescription);
+    useDescriptionClampOverflow(descriptionText, hasDescription, open);
 
   const metaRows = useMemo(() => {
     if (!station) return [];
@@ -108,7 +108,7 @@ export default function TvRadioPlayerInfoSheet({
   useEffect(() => {
     if (!open || descriptionDialogOpen) return;
     syncDomFocus();
-  }, [open, descriptionDialogOpen, syncDomFocus]);
+  }, [open, descriptionDialogOpen, descriptionOverflows, syncDomFocus]);
 
   useEffect(() => {
     if (open) return;

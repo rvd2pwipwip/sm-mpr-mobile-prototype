@@ -69,6 +69,9 @@
   --radius-md: 12px;
   /* Square media in swimlane / grid cards (adjust to match Figma card component) */
   --radius-media-thumb: 15px;
+  /* Player info sheet — top corners match `.mini-player` */
+  --player-info-sheet-radius: var(--space-5);
+  --player-info-sheet-top: calc(var(--screen-header-height) + var(--space-5));
 
   /* —— Swimlane “tile” cards (horizontal row); width from Figma card component */
   --card-tile-width: 175px;
@@ -168,6 +171,8 @@
   --z-visual-ad-player: 105;
   /* Above player chrome — guest pre-roll overlay */
   --z-player-preroll: 250;
+  /* Player info bottom sheet over full-screen play routes */
+  --z-player-info-sheet: 255;
   /* Stacked-header modal (guest skip, audio upsell, …) — above footer chrome */
   --z-stacked-modal: 260;
   /* Dumb share PNG mocks — above stacked modals when stacked */
