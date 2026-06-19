@@ -225,6 +225,8 @@ export default function MusicPlayer() {
               >
                 <PlayerMetaActionIcon variant={likeAction.iconVariant} />
               </button>
+              {/* Share — hidden for v1; restore when share ships */}
+              {/*
               <button
                 type="button"
                 className="music-player__icon-btn"
@@ -233,6 +235,7 @@ export default function MusicPlayer() {
               >
                 <PlayerMetaActionIcon variant="share" />
               </button>
+              */}
             </div>
 
             <div className="music-player__cover-block">

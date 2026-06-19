@@ -1,6 +1,6 @@
 /**
- * Full-screen routes hide fixed footer chrome (`MiniPlayer`, tab bar / limited ad strip).
- * Single source of truth for `App.jsx` and `LimitedCatalogFooterAd.jsx`.
+ * Full-screen routes hide fixed footer chrome (`FooterChromeAd`, `MiniPlayer`, tab bar).
+ * Single source of truth for `App.jsx` and `FooterChromeAd.jsx`.
  *
  * @param {string} pathname
  */

@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { resolveRadioStationForStub } from "../data/radioInternationalBrowse.js";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import { useMediaInfoPlayAction } from "../hooks/useMediaInfoPlayAction";
 import { useSharePrototype } from "../context/SharePrototypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import "./MusicChannelInfo.css";
@@ -66,16 +67,22 @@ export default function RadioStationInfo() {
     !descExpanded,
   );
 
+  const goPlay = useCallback(() => {
+    if (!stationId) return;
+    navigate(`/radio/${stationId}/play`, {
+      replace: true,
+      state: playOverDetailNavigateState(),
+    });
+  }, [stationId, navigate]);
+
+  const { playing, onPlayActionPress, playButtonIconMaskVariant } =
+    useMediaInfoPlayAction("radio", stationId, { onStartPlay: goPlay });
+
   if (!station) {
     return <Navigate to="/search/radio" replace />;
   }
 
   const goBack = () => navigate(-1);
-  const goPlay = () =>
-    navigate(`/radio/${station.id}/play`, {
-      replace: true,
-      state: playOverDetailNavigateState(),
-    });
 
   return (
     <main className="app-shell app-shell--footer-fixed music-info">
@@ -113,10 +120,12 @@ export default function RadioStationInfo() {
                 <ButtonSmall
                   variant="cta"
                   fullWidth
-                  startIcon={<ActionIconMask variant="play" />}
-                  onClick={goPlay}
+                  startIcon={
+                    <ActionIconMask variant={playButtonIconMaskVariant} />
+                  }
+                  onClick={onPlayActionPress}
                 >
-                  Play
+                  {playing ? "Pause" : "Play"}
                 </ButtonSmall>
                 <ButtonSmall
                   variant="secondary"
@@ -128,6 +137,8 @@ export default function RadioStationInfo() {
                 >
                   {radioLike.label}
                 </ButtonSmall>
+                {/* Share — hidden for v1; restore when share ships */}
+                {/*
                 <ButtonSmall
                   variant="secondary"
                   fullWidth
@@ -136,6 +147,7 @@ export default function RadioStationInfo() {
                 >
                   Share
                 </ButtonSmall>
+                */}
               </div>
             </div>
 

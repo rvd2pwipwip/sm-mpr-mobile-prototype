@@ -10,14 +10,16 @@ export default function MusicSkipButton({
   onClick: onClickOuter,
   onSkip,
 }) {
-  const { guestActiveSkipCount, consumeGuestMusicSkip, guestMusicMaxActiveSkips } =
+  const { guestRemainingSkipCount, consumeGuestMusicSkip, guestMusicMaxActiveSkips } =
     useGuestMusicSkips();
 
-  const badgeCount = guestActiveSkipCount;
-  const showBadge = badgeCount > 0;
+  const showBadge = guestRemainingSkipCount != null;
+  const badgeCount = guestRemainingSkipCount ?? 0;
   const ariaLabel =
     showBadge && guestMusicMaxActiveSkips != null
-      ? `Skip forward, ${badgeCount} of ${guestMusicMaxActiveSkips} hourly skips in use`
+      ? guestRemainingSkipCount === 0
+        ? "Skip forward, no hourly skips remaining"
+        : `Skip forward, ${guestRemainingSkipCount} of ${guestMusicMaxActiveSkips} hourly skips remaining`
       : "Skip forward";
 
   const handleClick = (e) => {

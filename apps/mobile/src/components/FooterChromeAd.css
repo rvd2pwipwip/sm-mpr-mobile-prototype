@@ -1,0 +1,23 @@
+/* Topmost footer ad — above `MiniPlayer`, then `BottomNav` tabs (or sole strip when limited). */
+.footer-chrome-ad {
+  position: fixed;
+  bottom: calc(
+    var(--mini-player-offset) + var(--bottom-nav-tabs-height) +
+      env(safe-area-inset-bottom, 0px)
+  );
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-footer-chrome-ad);
+  width: 100%;
+  max-width: var(--app-max-width);
+  box-sizing: border-box;
+  background-color: var(--color-nav-bar-bg);
+  backdrop-filter: blur(var(--chrome-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--chrome-backdrop-blur));
+}
+
+/* Limited catalog with no mini player: ad is the bottom anchor (home indicator inset). */
+.footer-chrome-ad--bottommost {
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

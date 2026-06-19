@@ -456,6 +456,8 @@ export default function PodcastPlayer() {
               >
                 <PlayerSubscribeMask subscribed={subscribedHere} />
               </button>
+              {/* Share — hidden for v1; restore when share ships */}
+              {/*
               <button
                 type="button"
                 className="music-player__icon-btn"
@@ -464,6 +466,7 @@ export default function PodcastPlayer() {
               >
                 <PlayerMetaActionIcon variant="share" />
               </button>
+              */}
             </div>
 
             <div className="music-player__cover-block podcast-player__hero-cover">

@@ -6,7 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
-import LimitedCatalogFooterAd from "./components/LimitedCatalogFooterAd";
+import FooterChromeAd from "./components/FooterChromeAd";
 import AccountRequiredDialog from "./components/AccountRequiredDialog";
 import GuestSkipLimitDialog from "./components/GuestSkipLimitDialog";
 import MiniPlayer from "./components/MiniPlayer";
@@ -275,8 +275,9 @@ function AppRoutes() {
       </Routes>
       {hideBottomNav ? null : (
         <>
+          <FooterChromeAd />
           <MiniPlayer />
-          {showBottomNav ? <BottomNav /> : <LimitedCatalogFooterAd />}
+          {showBottomNav ? <BottomNav /> : null}
         </>
       )}
     </>

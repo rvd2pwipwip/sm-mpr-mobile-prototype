@@ -129,18 +129,20 @@
   --bottom-nav-gap-to-indicator: 10px;
   --bottom-nav-indicator-height: 4px;
   --bottom-nav-label-size: 16px;
-  /* Visual ad strip under tabs when `html[data-visual-ads]` (non-subscribed tiers). */
+  /* Visual ad strip — topmost footer chrome when `html[data-visual-ads]` (non-subscribed tiers). */
   --visual-ad-strip-min-height: 86px;
   /* Fixed `VisualAdStrip--player` footprint (strip min-height + home indicator inset). */
   --visual-ad-player-reserve-height: calc(
     var(--visual-ad-strip-min-height) + env(safe-area-inset-bottom, 0px)
   );
   --bottom-nav-ad-height: 0px;
-  --bottom-nav-stack-height: calc(
+  --bottom-nav-tabs-height: calc(
     var(--bottom-nav-padding-top) + var(--bottom-nav-icon-size) +
       var(--bottom-nav-gap-icon-label) + var(--bottom-nav-label-size) +
-      var(--bottom-nav-gap-to-indicator) + var(--bottom-nav-indicator-height) +
-      var(--bottom-nav-ad-height)
+      var(--bottom-nav-gap-to-indicator) + var(--bottom-nav-indicator-height)
+  );
+  --bottom-nav-stack-height: calc(
+    var(--bottom-nav-tabs-height) + var(--bottom-nav-ad-height)
   );
   /* Reserve space above the tab strip when MiniPlayer is visible (`PlaybackContext`). */
   --mini-player-height: 80px;
@@ -166,6 +168,7 @@
   /* Overlays: bottom nav + Home header (Figma: same chrome layer). */
   --z-chrome: 100;
   --z-mini-player: 110;
+  --z-footer-chrome-ad: 111;
   --z-bottom-nav: 100;
   /* Fixed bottom strip on music / podcast full-screen player when visual ads on. */
   --z-visual-ad-player: 105;
@@ -204,6 +207,7 @@ html[data-visual-ads] {
 
 /* Limited catalog: no primary tab bar — default stack height 0 for scroll + mini player anchor. */
 html[data-catalog-scope="limited"] {
+  --bottom-nav-tabs-height: 0px;
   --bottom-nav-stack-height: 0px;
 }
 

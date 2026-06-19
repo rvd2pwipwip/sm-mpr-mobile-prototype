@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import EpisodeCard from "../components/EpisodeCard";
@@ -10,6 +10,7 @@ import { usePodcastUserState } from "../context/PodcastUserStateContext";
 import { useUserType } from "../context/UserTypeContext";
 import { getPodcastById } from "../data/podcasts";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import { useMediaInfoPlayAction } from "../hooks/useMediaInfoPlayAction";
 import {
   userMayBookmarkEpisodes,
   userMayDownloadEpisodesOffline,
@@ -56,6 +57,7 @@ export default function PodcastInfo() {
   const { openSharePrototype } = useSharePrototype();
 
   const podcast = podcastId ? getPodcastById(podcastId) : null;
+  const firstEpisode = podcast?.episodes[0] ?? null;
 
   useEffect(() => {
     setDescExpanded(false);
@@ -65,6 +67,23 @@ export default function PodcastInfo() {
     podcast?.description ?? "",
     !descExpanded,
   );
+
+  const playLatestEpisode = useCallback(() => {
+    if (!podcastId || !firstEpisode) return;
+    navigate(`/podcast/${podcastId}/play/${firstEpisode.id}`, {
+      replace: true,
+      state: playOverDetailNavigateState(),
+    });
+  }, [podcastId, firstEpisode, navigate]);
+
+  const {
+    playing,
+    isSessionMatch,
+    onPlayActionPress,
+    playButtonIconMaskVariant,
+  } = useMediaInfoPlayAction("podcast", podcastId, {
+    onStartPlay: playLatestEpisode,
+  });
 
   if (!podcast) {
     return <Navigate to="/" replace />;
@@ -81,15 +100,14 @@ export default function PodcastInfo() {
   };
 
   const goBack = () => navigate(-1);
-  const firstEpisode = podcast.episodes[0] ?? null;
-  const playFirstEpisode = () => {
-    if (firstEpisode) {
-      navigate(`/podcast/${podcast.id}/play/${firstEpisode.id}`, {
-        replace: true,
-        state: playOverDetailNavigateState(),
-      });
-    }
-  };
+
+  const playActionLabel = isSessionMatch
+    ? playing
+      ? "Pause"
+      : "Play"
+    : firstEpisode
+      ? "Play latest"
+      : "No episodes";
 
   const toggleStubResume = (episodeId) => {
     const f = getEpisodeProgress(episodeId);
@@ -144,10 +162,12 @@ export default function PodcastInfo() {
                   variant="cta"
                   fullWidth
                   disabled={!firstEpisode}
-                  startIcon={<ActionIconMask variant="play" />}
-                  onClick={playFirstEpisode}
+                  startIcon={
+                    <ActionIconMask variant={playButtonIconMaskVariant} />
+                  }
+                  onClick={onPlayActionPress}
                 >
-                  {firstEpisode ? "Play latest" : "No episodes"}
+                  {playActionLabel}
                 </ButtonSmall>
                 <ButtonSmall
                   variant="secondary"
@@ -165,6 +185,8 @@ export default function PodcastInfo() {
                 >
                   {subscribedHere ? "Unsubscribe" : "Subscribe"}
                 </ButtonSmall>
+                {/* Share — hidden for v1; restore when share ships */}
+                {/*
                 <ButtonSmall
                   variant="secondary"
                   fullWidth
@@ -173,6 +195,7 @@ export default function PodcastInfo() {
                 >
                   Share
                 </ButtonSmall>
+                */}
               </div>
             </div>
 

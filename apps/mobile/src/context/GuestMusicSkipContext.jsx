@@ -92,9 +92,14 @@ function GuestMusicSkipInnerProvider({ children }) {
     ? expiries.length
     : 0;
 
+  const guestRemainingSkipCount = usesGuestMusicSkipCap(userType)
+    ? GUEST_MUSIC_MAX_ACTIVE_SKIPS - expiries.length
+    : null;
+
   const value = useMemo(
     () => ({
       guestActiveSkipCount,
+      guestRemainingSkipCount,
       consumeGuestMusicSkip,
       skipLimitDialogOpen,
       skipLimitDialogMinutes,
@@ -103,6 +108,7 @@ function GuestMusicSkipInnerProvider({ children }) {
     }),
     [
       guestActiveSkipCount,
+      guestRemainingSkipCount,
       consumeGuestMusicSkip,
       skipLimitDialogOpen,
       skipLimitDialogMinutes,

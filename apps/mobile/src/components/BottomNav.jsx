@@ -3,9 +3,6 @@ import { CATALOG_SCOPE } from "../constants/catalogScope.js";
 import { resolveBroadSearchBrowseTab } from "../constants/searchBrowsePaths.js";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
 import { useTerritory } from "../context/TerritoryContext.jsx";
-import { useUserType } from "../context/UserTypeContext";
-import { showVisualAds } from "../utils/showVisualAds";
-import VisualAdStrip from "./VisualAdStrip";
 import "./BottomNav.css";
 
 const NAV_ITEMS_BASE = [
@@ -42,10 +39,8 @@ const INFO_TAB = {
 export default function BottomNav({ className = "" }) {
   const rootClass = ["bottom-nav", className].filter(Boolean).join(" ");
   const location = useLocation();
-  const { userType } = useUserType();
   const { catalogScope } = useTerritory();
   const { enabledContentTypes } = useContentProfile();
-  const adsOn = showVisualAds(userType);
   const broadSearchTab = resolveBroadSearchBrowseTab(enabledContentTypes);
 
   const fourthTab = catalogScope === CATALOG_SCOPE.broad ? LIBRARY_TAB : INFO_TAB;
@@ -109,7 +104,6 @@ export default function BottomNav({ className = "" }) {
           );
         })}
       </div>
-      {adsOn ? <VisualAdStrip variant="nav" /> : null}
     </nav>
   );
 }

@@ -1,4 +1,4 @@
-/* MiniPlayer — Figma `19777:32024`; fixed above `BottomNav`, inverse footer chrome. */
+/* MiniPlayer — Figma `19777:32024`; fixed above tab bar, below footer ad when ads on. */
 
 /*
  * Inverse of app theme: dark strip on light app, light strip on dark app (overlay contrast).
@@ -38,7 +38,7 @@ html[data-theme="dark"] .mini-player {
 .mini-player {
   position: fixed;
   bottom: calc(
-    var(--bottom-nav-stack-height) + env(safe-area-inset-bottom, 0px)
+    var(--bottom-nav-tabs-height) + env(safe-area-inset-bottom, 0px)
   );
   left: 50%;
   transform: translateX(-50%);

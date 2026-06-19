@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
 import ContentTileCard from "../components/ContentTileCard";
@@ -6,6 +6,7 @@ import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeade
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { getMusicChannelById } from "../data/musicChannels";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow";
+import { useMediaInfoPlayAction } from "../hooks/useMediaInfoPlayAction";
 import { useSharePrototype } from "../context/SharePrototypeContext";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction";
 import "./MusicChannelInfo.css";
@@ -41,16 +42,22 @@ export default function MusicChannelInfo() {
     !descExpanded,
   );
 
+  const goPlay = useCallback(() => {
+    if (!channelId) return;
+    navigate(`/music/${channelId}/play`, {
+      replace: true,
+      state: playOverDetailNavigateState(),
+    });
+  }, [channelId, navigate]);
+
+  const { playing, onPlayActionPress, playButtonIconMaskVariant } =
+    useMediaInfoPlayAction("music", channelId, { onStartPlay: goPlay });
+
   if (!channel) {
     return <Navigate to="/" replace />;
   }
 
   const goBack = () => navigate(-1);
-  const goPlay = () =>
-    navigate(`/music/${channel.id}/play`, {
-      replace: true,
-      state: playOverDetailNavigateState(),
-    });
 
   return (
     <main className="app-shell app-shell--footer-fixed music-info">
@@ -88,10 +95,12 @@ export default function MusicChannelInfo() {
                 <ButtonSmall
                   variant="cta"
                   fullWidth
-                  startIcon={<ActionIconMask variant="play" />}
-                  onClick={goPlay}
+                  startIcon={
+                    <ActionIconMask variant={playButtonIconMaskVariant} />
+                  }
+                  onClick={onPlayActionPress}
                 >
-                  Play
+                  {playing ? "Pause" : "Play"}
                 </ButtonSmall>
                 <ButtonSmall
                   variant="secondary"
@@ -103,6 +112,8 @@ export default function MusicChannelInfo() {
                 >
                   {musicLike.label}
                 </ButtonSmall>
+                {/* Share — hidden for v1; restore when share ships */}
+                {/*
                 <ButtonSmall
                   variant="secondary"
                   fullWidth
@@ -111,6 +122,7 @@ export default function MusicChannelInfo() {
                 >
                   Share
                 </ButtonSmall>
+                */}
               </div>
             </div>
 
