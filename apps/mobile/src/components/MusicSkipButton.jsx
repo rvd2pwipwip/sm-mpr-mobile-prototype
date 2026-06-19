@@ -5,7 +5,11 @@ import "./MusicSkipButton.css";
  * Skip forward control with optional badge (guest hourly cap).
  * Sizes match `MiniPlayer` small ctrl vs `MusicPlayer` transport skip.
  */
-export default function MusicSkipButton({ size = "full", onClick: onClickOuter }) {
+export default function MusicSkipButton({
+  size = "full",
+  onClick: onClickOuter,
+  onSkip,
+}) {
   const { guestActiveSkipCount, consumeGuestMusicSkip, guestMusicMaxActiveSkips } =
     useGuestMusicSkips();
 
@@ -17,8 +21,12 @@ export default function MusicSkipButton({ size = "full", onClick: onClickOuter }
       : "Skip forward";
 
   const handleClick = (e) => {
+    if (onSkip) {
+      onSkip();
+    } else {
+      consumeGuestMusicSkip();
+    }
     onClickOuter?.(e);
-    consumeGuestMusicSkip();
   };
 
   if (size === "mini") {

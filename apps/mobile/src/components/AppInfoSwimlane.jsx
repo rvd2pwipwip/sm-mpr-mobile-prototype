@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import BrowseTagCard from "./BrowseTagCard.jsx";
+import { STINGRAY_ACCOUNT_LOGIN_URL } from "../constants/externalLinks";
 import {
   externalFaqAnchorProps,
   INFO_ABOUT_PATH,
@@ -7,6 +8,11 @@ import {
   INFO_FAQ_HREF,
   MY_LIBRARY_ACCOUNT_SETTINGS_PATH,
 } from "../constants/infoHelpLinks";
+import { useUserType } from "../context/UserTypeContext";
+import {
+  appInfoLoginTileLabel,
+  isAppInfoLoggedIn,
+} from "@sm-mpr/shared/utils/appInfoLoginTile.js";
 import "./AppInfoSwimlane.css";
 
 function publicAssetHref(relativePath) {
@@ -46,6 +52,9 @@ const TILE_ABOUT = {
 /** Top row on My Library: gear + App Info title, square tiles (`docs/mobile/Plans/My-Library-implementation-plan` Phase 2). */
 export default function AppInfoSwimlane() {
   const faqExtras = externalFaqAnchorProps(INFO_FAQ_HREF);
+  const { userType, setUserType } = useUserType();
+  const loginLabel = appInfoLoginTileLabel(userType);
+  const loggedIn = isAppInfoLoggedIn(userType);
 
   return (
     <section className="app-info-swimlane" aria-labelledby="app-info-swimlane-title">
@@ -62,6 +71,26 @@ export default function AppInfoSwimlane() {
             label={TILE_ACCOUNT.label}
             accentIconSvg="gear.svg"
           />
+
+          {loggedIn ? (
+            <button
+              type="button"
+              className="app-info-swimlane__tile"
+              onClick={() => setUserType("guest")}
+            >
+              <span className="app-info-swimlane__tile-label">{loginLabel}</span>
+            </button>
+          ) : (
+            <a
+              href={STINGRAY_ACCOUNT_LOGIN_URL}
+              className="app-info-swimlane__tile"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setUserType("freeStingray")}
+            >
+              <span className="app-info-swimlane__tile-label">{loginLabel}</span>
+            </a>
+          )}
 
           <a
             href={TILE_FAQ.href}

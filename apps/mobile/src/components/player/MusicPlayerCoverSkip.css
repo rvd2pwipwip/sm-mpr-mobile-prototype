@@ -1,0 +1,75 @@
+/* Draggable cover skip — full-bleed clip at shell edges (breaks out of body padding). */
+
+.music-player-cover-skip {
+  --music-cover-skip-bleed: var(--space-content-inline);
+  --music-cover-skip-release-duration: 0.42s;
+  /* Ease-out with near-zero velocity at the end. */
+  --music-cover-skip-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  width: calc(100% + 2 * var(--music-cover-skip-bleed));
+  max-width: 100vw;
+  margin-inline: calc(-1 * var(--music-cover-skip-bleed));
+  min-width: 0;
+  touch-action: pan-y;
+  box-sizing: border-box;
+}
+
+.music-player-cover-skip__viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.music-player-cover-skip__track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  will-change: transform;
+}
+
+.music-player-cover-skip__track--animating {
+  transition: transform var(--music-cover-skip-release-duration)
+    var(--music-cover-skip-ease-out);
+}
+
+.music-player-cover-skip__slide {
+  flex: 0 0 auto;
+  width: var(--music-cover-skip-size, 300px);
+  aspect-ratio: 1 / 1;
+  border-radius: 30px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-text) 50%, transparent);
+  box-shadow: var(--shadow-card);
+}
+
+.music-player-cover-skip__slide--incoming {
+  transform-origin: left center;
+  opacity: var(--music-cover-skip-incoming-opacity, 0);
+  transform: scale(var(--music-cover-skip-incoming-scale, 0.6));
+}
+
+.music-player-cover-skip__track--animating .music-player-cover-skip__slide--incoming {
+  transition:
+    opacity var(--music-cover-skip-release-duration) var(--music-cover-skip-ease-out),
+    transform var(--music-cover-skip-release-duration) var(--music-cover-skip-ease-out);
+}
+
+.music-player-cover-skip__gap {
+  flex: 0 0 auto;
+  width: var(--music-cover-skip-gap, 0px);
+  pointer-events: none;
+}
+
+.music-player-cover-skip__slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.music-player-cover-skip--disabled {
+  pointer-events: none;
+}

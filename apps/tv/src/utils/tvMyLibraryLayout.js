@@ -2,6 +2,7 @@ import {
   getVisibleMyLibrarySections,
   MY_LIBRARY_SECTION_ID,
 } from "@sm-mpr/shared/constants/myLibrarySections.js";
+import { MY_LIBRARY_APP_INFO_TILE_COUNT } from "@sm-mpr/shared/utils/appInfoLoginTile.js";
 import { MY_LIBRARY_HISTORY_BY_SEGMENT } from "@sm-mpr/shared/constants/myLibraryHistory.js";
 import { getMusicChannelById } from "@sm-mpr/shared/data/musicChannels.js";
 import { getRadioStationById } from "@sm-mpr/shared/data/radioStations.js";
@@ -12,8 +13,6 @@ import {
   getEpisodeLibrarySwimlaneSlotCount,
 } from "./swimlaneUtils.js";
 import { buildTvPodcastLibraryRails } from "./tvPodcastLibraryRails.js";
-
-const APP_INFO_SLOT_COUNT = 4;
 
 /**
  * @param {readonly string[]} enabledContentTypes
@@ -49,7 +48,7 @@ export function buildTvMyLibraryFocusLayout(
   for (const section of visibleSections) {
     switch (section.id) {
       case MY_LIBRARY_SECTION_ID.appInfo:
-        addGroup(section.id, APP_INFO_SLOT_COUNT);
+        addGroup(section.id, MY_LIBRARY_APP_INFO_TILE_COUNT);
         break;
 
       case MY_LIBRARY_SECTION_ID.musicHistory: {

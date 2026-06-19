@@ -36,6 +36,7 @@
     "./utils/deriveContinueListening.js": "./utils/deriveContinueListening.js",
     "./utils/seedClearMoreSwimlaneDemo.js": "./utils/seedClearMoreSwimlaneDemo.js",
     "./utils/podcastLibraryClear.js": "./utils/podcastLibraryClear.js",
+    "./utils/appInfoLoginTile.js": "./utils/appInfoLoginTile.js",
     "./context/PodcastUserStateContext.jsx": "./context/PodcastUserStateContext.jsx",
     "./context/ListenHistoryContext.jsx": "./context/ListenHistoryContext.jsx",
     "./utils/listenAgainItems.js": "./utils/listenAgainItems.js"

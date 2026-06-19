@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Navigate,
   useLocation,
@@ -6,10 +6,12 @@ import {
   useParams,
 } from "react-router-dom";
 import FullScreenPlayerShell from "../components/FullScreenPlayerShell";
+import MusicPlayerCoverSkip from "../components/player/MusicPlayerCoverSkip";
 import MusicPlayerInfoSheet from "../components/player/MusicPlayerInfoSheet";
 import MusicSkipButton from "../components/MusicSkipButton";
 import PlayerPrerollAd from "../components/PlayerPrerollAd";
 import PlayerHeaderCenterSlot from "../components/PlayerHeaderCenterSlot";
+import { useGuestMusicSkips } from "../context/GuestMusicSkipContext";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext";
 import { useListenHistory } from "../context/ListenHistoryContext";
 import { usePlayback } from "../context/PlaybackContext";
@@ -23,6 +25,9 @@ import { CASTING_ON } from "../constants/castPrototypeCopy";
 import { useCastPrototype } from "../context/CastPrototypeContext";
 import { useSharePrototype } from "../context/SharePrototypeContext";
 import "./MusicPlayer.css";
+
+const SONG_TITLE_INITIAL = "Song title (prototype)";
+const SONG_TITLE_AFTER_SKIP = "Song title after skip";
 
 /** `public/down.svg`, `cast.svg` — mask + `currentColor`. */
 function PlayerHeaderIcon({ variant }) {
@@ -74,6 +79,7 @@ export default function MusicPlayer() {
   const { session, upsertMusicSession } = usePlayback();
   const { recordMusicChannelListen } = useListenHistory();
   const { graceActive } = useGuestPrerollGrace();
+  const { consumeGuestMusicSkip } = useGuestMusicSkips();
   const { userType } = useUserType();
   const needsPreroll = showPlayerPreroll(userType);
   const expandFromMini = location.state?.expandFromMiniPlayer === true;
@@ -81,6 +87,7 @@ export default function MusicPlayer() {
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
   const [infoSheetOpen, setInfoSheetOpen] = useState(false);
+  const [songTitle, setSongTitle] = useState(SONG_TITLE_INITIAL);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
   const likeAction = useMusicRadioLikeAction("music", channel?.id);
@@ -90,6 +97,20 @@ export default function MusicPlayer() {
 
   const mainRef = useRef(/** @type {HTMLElement | null} */ (null));
   const thumbSidePx = useFullscreenPlayerThumbSidePx(mainRef, Boolean(channel));
+
+  useEffect(() => {
+    setSongTitle(SONG_TITLE_INITIAL);
+  }, [channelId]);
+
+  const handleMusicSkip = useCallback(() => {
+    const allowed = consumeGuestMusicSkip();
+    if (allowed) {
+      setSongTitle(SONG_TITLE_AFTER_SKIP);
+    }
+    return allowed;
+  }, [consumeGuestMusicSkip]);
+
+  const coverSkipEnabled = prerollComplete && !infoSheetOpen;
 
   useLayoutEffect(() => {
     if (!channel) return;
@@ -105,11 +126,11 @@ export default function MusicPlayer() {
     upsertMusicSession({
       channelId: channel.id,
       thumbnail: channel.thumbnail,
-      title: "Song title (prototype)",
+      title: songTitle,
       subtitle: "Artist name",
       isPaused: !playing,
     });
-  }, [channel, needsPreroll, prerollComplete, playing, upsertMusicSession]);
+  }, [channel, needsPreroll, prerollComplete, playing, songTitle, upsertMusicSession]);
 
   /** History once playback is allowed (after preroll or when skipped) — not on pause toggles. */
   useEffect(() => {
@@ -215,48 +236,32 @@ export default function MusicPlayer() {
             </div>
 
             <div className="music-player__cover-block">
-              {isCasting && castDeviceName ? (
-                <button
-                  type="button"
-                  className="music-player__cover music-player__cover--casting-touch"
-                  onClick={openCastTo}
-                  aria-label="Casting on"
-                >
-                  <img
-                    src={channel.thumbnail}
-                    alt=""
-                    width={thumbSidePx}
-                    height={thumbSidePx}
-                    loading="eager"
-                    decoding="async"
-                  />
-                  <span className="music-player__cover-scrim" aria-hidden={true} />
-                  <span className="music-player__cover-casting-label">
-                    <span className="music-player__cover-casting-line1">
-                      {CASTING_ON.lineCasting}
-                    </span>
-                    <span className="music-player__cover-casting-line2">
-                      {castDeviceName}
-                    </span>
-                  </span>
-                </button>
-              ) : (
-                <div className="music-player__cover">
-                  <img
-                    src={channel.thumbnail}
-                    alt=""
-                    width={thumbSidePx}
-                    height={thumbSidePx}
-                    loading="eager"
-                    decoding="async"
-                  />
-                </div>
-              )}
+              <MusicPlayerCoverSkip
+                imageUrl={channel.thumbnail}
+                thumbSidePx={thumbSidePx}
+                enabled={coverSkipEnabled}
+                onSkip={handleMusicSkip}
+              />
               <div className="music-player__track-text">
-                <p className="music-player__song">Song title (prototype)</p>
+                <p className="music-player__song">{songTitle}</p>
                 <p className="music-player__artist">Artist name</p>
                 <p className="music-player__album">Album name</p>
               </div>
+              {isCasting && castDeviceName ? (
+                <button
+                  type="button"
+                  className="music-player__casting-status"
+                  onClick={openCastTo}
+                  aria-label={`${CASTING_ON.lineCasting} ${castDeviceName}`}
+                >
+                  <span className="music-player__casting-status-line">
+                    {CASTING_ON.lineCasting}
+                  </span>
+                  <span className="music-player__casting-status-device">
+                    {castDeviceName}
+                  </span>
+                </button>
+              ) : null}
             </div>
           </div>
         }
@@ -283,7 +288,7 @@ export default function MusicPlayer() {
               </div>
               <div className="music-player__transport-end">
                 <div className="music-player__transport-end-cluster">
-                  <MusicSkipButton size="full" />
+                  <MusicSkipButton size="full" onSkip={handleMusicSkip} />
                 </div>
               </div>
             </div>

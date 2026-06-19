@@ -5,6 +5,11 @@ import {
   INFO_FAQ_PATH,
   MY_LIBRARY_ACCOUNT_SETTINGS_PATH,
 } from "@sm-mpr/shared/constants/infoHelpLinks.js";
+import {
+  appInfoLoginTileLabel,
+  isAppInfoLoggedIn,
+} from "@sm-mpr/shared/utils/appInfoLoginTile.js";
+import { useUserType } from "../../context/UserTypeContext.jsx";
 import { navigateToTvFaq } from "../../utils/tvFaqNavigation.js";
 import { useTvNavFocus } from "../../context/TvNavFocusContext.jsx";
 import KeyboardWrapper from "../focus/KeyboardWrapper.jsx";
@@ -16,6 +21,7 @@ import "./TvLibraryAppInfoSection.css";
 
 const TILES = [
   { id: "account", label: "Account and settings", to: MY_LIBRARY_ACCOUNT_SETTINGS_PATH },
+  { id: "login", kind: "login" },
   { id: "faq", label: "FAQ", to: INFO_FAQ_PATH },
   { id: "contact", label: "Contact us", to: INFO_CONTACT_PATH },
   { id: "about", label: "About", to: INFO_ABOUT_PATH },
@@ -34,6 +40,7 @@ export default function TvLibraryAppInfoSection({
 }) {
   const navigate = useNavigate();
   const { enterContent } = useTvNavFocus();
+  const { userType, setUserType } = useUserType();
 
   const registerSlotRef = (index, node) => {
     registerItemRef?.(groupIndex, index, node);
@@ -41,6 +48,14 @@ export default function TvLibraryAppInfoSection({
 
   const handleSelect = (tile, tileIndex) => {
     enterContent();
+    if (tile.kind === "login") {
+      if (isAppInfoLoggedIn(userType)) {
+        setUserType("guest");
+      } else {
+        navigate("/login");
+      }
+      return;
+    }
     if (tile.href) {
       window.open(tile.href, "_blank", "noopener,noreferrer");
       return;
@@ -73,6 +88,10 @@ export default function TvLibraryAppInfoSection({
         registerSlotRef={registerSlotRef}
         renderSlot={(index, isFocused, setRef) => {
           const tile = TILES[index];
+          const label =
+            tile.kind === "login"
+              ? appInfoLoginTileLabel(userType)
+              : tile.label;
           return (
             <KeyboardWrapper
               key={tile.id}
@@ -84,7 +103,7 @@ export default function TvLibraryAppInfoSection({
               {(focusProps) => (
                 <TvSearchLabelTile
                   {...focusProps}
-                  label={tile.label}
+                  label={label}
                   focused={isFocused}
                 />
               )}
