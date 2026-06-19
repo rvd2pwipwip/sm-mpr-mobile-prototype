@@ -38,6 +38,10 @@ import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { musicLineupLabel } from "@sm-mpr/shared/constants/musicLineup.js";
 import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
 import {
+  getProviderLineupChannels,
+  getProviderLineupPillRows,
+} from "@sm-mpr/shared/data/providerLineupMusic.js";
+import {
   LIMITED_HOME_LAYOUT,
   useLimitedHomeLayout,
 } from "../constants/limitedHomeLayout.js";
@@ -160,6 +164,27 @@ export default function LimitedHome() {
 
   const isMusicBrowse = effectiveBrowseTab === CONTENT_TYPE.music;
 
+  const showProviderLineup =
+    isStackedLayout &&
+    isMusicBrowse &&
+    userType === "freeProvided" &&
+    enabledContentTypes.includes(CONTENT_TYPE.music);
+
+  const providerLineupPillRows = useMemo(() => {
+    if (!showProviderLineup) return [];
+    return getProviderLineupPillRows(catalogScope);
+  }, [showProviderLineup, catalogScope]);
+
+  const providerLineupCardsSlotCount = useMemo(() => {
+    if (!showProviderLineup || providerLineupPillRows.length === 0) return 1;
+    const defaultSlug = providerLineupPillRows[0]?.slug;
+    return getMusicSwimlaneSlotCount(
+      getProviderLineupChannels(defaultSlug, catalogScope).length,
+    );
+  }, [showProviderLineup, providerLineupPillRows, catalogScope]);
+
+  const providerLineupGroupCount = showProviderLineup ? 2 : 0;
+
   const { memory, setField } = useScreenMemory("home-limited");
   const activeFilterId = memory.activeFilterId ?? filters[0]?.id ?? null;
 
@@ -245,7 +270,10 @@ export default function LimitedHome() {
       : stackedLanes.length;
 
   const stackedBodyLaneCount =
-    listenAgainLaneCount + userLibraryRailCount + taxonomyFocusLaneCount;
+    listenAgainLaneCount +
+    providerLineupGroupCount +
+    userLibraryRailCount +
+    taxonomyFocusLaneCount;
 
   const swimlaneSlotCount =
     !isStackedLayout && isMusicBrowse
@@ -266,13 +294,18 @@ export default function LimitedHome() {
       const swimlaneGroups = [];
 
       podcastLibraryRails.forEach((rail, index) => {
-        const groupIndex = laneGroupOffset + listenAgainLaneCount + index;
+        const groupIndex =
+          laneGroupOffset +
+          listenAgainLaneCount +
+          providerLineupGroupCount +
+          index;
         itemCounts[groupIndex] = rail.slotCount;
         swimlaneGroups.push(groupIndex);
       });
 
       if (radioLikedLaneCount > 0) {
-        const groupIndex = laneGroupOffset + listenAgainLaneCount;
+        const groupIndex =
+          laneGroupOffset + listenAgainLaneCount + providerLineupGroupCount;
         itemCounts[groupIndex] = getMusicSwimlaneSlotCount(
           likedRadioStations.length,
         );
@@ -287,6 +320,14 @@ export default function LimitedHome() {
         swimlaneGroups.unshift(groupIndex);
       }
 
+      if (showProviderLineup) {
+        const pillsGroup = laneGroupOffset + listenAgainLaneCount;
+        const cardsGroup = pillsGroup + 1;
+        itemCounts[pillsGroup] = providerLineupPillRows.length;
+        itemCounts[cardsGroup] = providerLineupCardsSlotCount;
+        swimlaneGroups.push(pillsGroup, cardsGroup);
+      }
+
       if (effectiveBrowseTab === CONTENT_TYPE.radio && radioStackedLayout) {
         let focusIdx = 0;
         for (const section of radioStackedLayout.sections) {
@@ -294,6 +335,7 @@ export default function LimitedHome() {
             const groupIndex =
               laneGroupOffset +
               listenAgainLaneCount +
+              providerLineupGroupCount +
               userLibraryRailCount +
               focusIdx;
             itemCounts[groupIndex] = focusGroup.slotCount;
@@ -306,6 +348,7 @@ export default function LimitedHome() {
           const groupIndex =
             laneGroupOffset +
             listenAgainLaneCount +
+            providerLineupGroupCount +
             userLibraryRailCount +
             index;
           itemCounts[groupIndex] = lane.slotCount;
@@ -379,6 +422,10 @@ export default function LimitedHome() {
     likedRadioStations.length,
     userLibraryRailCount,
     taxonomyFocusLaneCount,
+    showProviderLineup,
+    providerLineupPillRows.length,
+    providerLineupCardsSlotCount,
+    providerLineupGroupCount,
     isMusicBrowse,
     filters.length,
     swimlaneSlotCount,
@@ -684,6 +731,7 @@ export default function LimitedHome() {
               showMidStackAd={showBannerAd}
               radioStackedLayout={radioStackedLayout}
               onRadioIntlContinentChange={setRadioIntlContinent}
+              providerLineupGroupCount={providerLineupGroupCount}
               registerGroupRef={registerGroupRef}
               registerItemRef={registerItemRef}
               isContentGroupActive={isContentGroupActive}

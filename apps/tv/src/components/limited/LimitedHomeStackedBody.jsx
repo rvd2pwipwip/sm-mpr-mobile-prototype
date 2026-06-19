@@ -26,7 +26,10 @@ import ContentTileSwimlane from "../swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../swimlanes/MusicChannelSwimlane.jsx";
 import TvLibraryPodcastUserSwimlanes from "../podcasts/TvLibraryPodcastUserSwimlanes.jsx";
 import TvListenAgainSwimlane from "../swimlanes/TvListenAgainSwimlane.jsx";
+import TvProviderLineupMusicSwimlane from "../swimlanes/TvProviderLineupMusicSwimlane.jsx";
 import { useContentProfile } from "../../context/ContentProfileContext.jsx";
+import { useUserType } from "../../context/UserTypeContext.jsx";
+import { useTerritory } from "../../context/TerritoryContext.jsx";
 import { useLikes } from "../../context/LikesContext.jsx";
 import { buildLimitedHomeStackedLanes } from "../../utils/limitedHomeStackedLanes.js";
 import { getLikedRadioStations } from "../../utils/likedRadioCount.js";
@@ -52,14 +55,17 @@ export default function LimitedHomeStackedBody({
   onHistoryCleared,
   laneGroupOffset = HOME_FIRST_SWIMLANE_GROUP,
   onEpisodeRailCleared,
+  providerLineupGroupCount = 0,
 }) {
   const navigate = useNavigate();
   const { session } = usePlayback();
+  const { userType } = useUserType();
+  const { catalogScope } = useTerritory();
   const playingChannelId =
     session.active && session.channelId ? session.channelId : null;
   const playingPodcastId = getActivePodcastShowId(session);
   const playingRadioStationId = getActiveRadioStationId(session);
-  const { filterListenHistory } = useContentProfile();
+  const { filterListenHistory, enabledContentTypes } = useContentProfile();
   const { items: likeItems } = useLikes();
   const { items: listenHistoryItems } = useListenHistory();
   const podcastUserState = usePodcastUserState();
@@ -96,7 +102,17 @@ export default function LimitedHomeStackedBody({
       : showRadioLiked
         ? 1
         : 0;
-  const libraryLaneOffset = laneGroupOffset + listenAgainLaneCount;
+  const showProviderLineup =
+    activeBrowseTab === CONTENT_TYPE.music &&
+    userType === "freeProvided" &&
+    enabledContentTypes.includes(CONTENT_TYPE.music);
+
+  const providerLineupPillsGroup =
+    laneGroupOffset + listenAgainLaneCount;
+  const providerLineupCardsGroup = providerLineupPillsGroup + 1;
+
+  const libraryLaneOffset =
+    laneGroupOffset + listenAgainLaneCount + providerLineupGroupCount;
 
   const lanes = useMemo(
     () =>
@@ -131,7 +147,10 @@ export default function LimitedHomeStackedBody({
   }
 
   let taxonomyGroupIndex =
-    laneGroupOffset + listenAgainLaneCount + libraryRailCount;
+    laneGroupOffset +
+    listenAgainLaneCount +
+    providerLineupGroupCount +
+    libraryRailCount;
 
   const renderMidStackAd = (sectionIndex) =>
     showMidStackAd &&
@@ -265,6 +284,23 @@ export default function LimitedHomeStackedBody({
             onHistoryCleared={onHistoryCleared}
           />
         </div>
+      ) : null}
+
+      {showProviderLineup && providerLineupGroupCount > 0 ? (
+        <TvProviderLineupMusicSwimlane
+          catalogScope={catalogScope}
+          pillsGroup={providerLineupPillsGroup}
+          cardsGroup={providerLineupCardsGroup}
+          playingChannelId={playingChannelId}
+          registerGroupRef={registerGroupRef}
+          registerItemRef={registerItemRef}
+          isContentGroupActive={isContentGroupActive}
+          getItemFocusIndex={getItemFocusIndex}
+          setFocusedIndex={setFocusedIndex}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+          enterNavFromContent={enterNavFromContent}
+        />
       ) : null}
 
       {activeBrowseTab === CONTENT_TYPE.podcasts && libraryRailCount > 0 ? (

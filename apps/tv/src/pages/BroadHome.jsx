@@ -1,10 +1,15 @@
 import { useMemo, useCallback } from "react";
 import { useTvScreenHeaderOffset } from "../hooks/useTvScreenHeaderOffset.js";
 import { useNavigate } from "react-router-dom";
+import { CATALOG_SCOPE } from "@sm-mpr/shared/constants/catalogScope.js";
 import {
   getRecommendationsMusicChannels,
   MUSIC_CHANNELS,
 } from "@sm-mpr/shared/data/musicChannels.js";
+import {
+  getProviderLineupChannels,
+  getProviderLineupPillRows,
+} from "@sm-mpr/shared/data/providerLineupMusic.js";
 import { PODCASTS } from "@sm-mpr/shared/data/podcasts.js";
 import { RADIO_STATIONS } from "@sm-mpr/shared/data/radioStations.js";
 import {
@@ -21,6 +26,7 @@ import TvSwimlaneBannerAd from "../components/ads/TvSwimlaneBannerAd.jsx";
 import TvHomeBanner from "../components/TvHomeBanner.jsx";
 import TvHomeHeaderSection from "../components/TvHomeHeaderSection.jsx";
 import TvListenAgainSwimlane from "../components/swimlanes/TvListenAgainSwimlane.jsx";
+import TvProviderLineupMusicSwimlane from "../components/swimlanes/TvProviderLineupMusicSwimlane.jsx";
 import ContentTileSwimlane from "../components/swimlanes/ContentTileSwimlane.jsx";
 import MusicChannelSwimlane from "../components/swimlanes/MusicChannelSwimlane.jsx";
 import { useContentProfile } from "../context/ContentProfileContext.jsx";
@@ -118,6 +124,19 @@ export default function BroadHome() {
     [enabledContentTypes, userType, isMusicOnlyProfile],
   );
 
+  const providerLineupPillRows = useMemo(
+    () => getProviderLineupPillRows(CATALOG_SCOPE.broad),
+    [],
+  );
+
+  const providerLineupCardsSlotCount = useMemo(() => {
+    const defaultSlug = providerLineupPillRows[0]?.slug;
+    if (!defaultSlug) return 1;
+    return getMusicSwimlaneSlotCount(
+      getProviderLineupChannels(defaultSlug, CATALOG_SCOPE.broad).length,
+    );
+  }, [providerLineupPillRows]);
+
   const slotCountById = useMemo(
     () => ({
       [BROAD_HOME_SWIMLANE_ID.mostPopularMusic]: getMusicSwimlaneSlotCount(
@@ -161,6 +180,19 @@ export default function BroadHome() {
     }
 
     for (const swimlane of visibleTvSwimlanes) {
+      if (swimlane.id === BROAD_HOME_SWIMLANE_ID.providerLineup) {
+        lanes.push({
+          id: swimlane.id,
+          kind: "provider-lineup",
+          groupIndex,
+          cardsGroupIndex: groupIndex + 1,
+          pillSlotCount: providerLineupPillRows.length,
+          cardsSlotCount: providerLineupCardsSlotCount,
+        });
+        groupIndex += 2;
+        continue;
+      }
+
       lanes.push({
         id: swimlane.id,
         groupIndex,
@@ -176,6 +208,13 @@ export default function BroadHome() {
     const swimlaneGroups = [];
 
     for (const lane of lanes) {
+      if (lane.kind === "provider-lineup") {
+        itemCounts[lane.groupIndex] = lane.pillSlotCount;
+        itemCounts[lane.cardsGroupIndex] = lane.cardsSlotCount;
+        swimlaneGroups.push(lane.groupIndex, lane.cardsGroupIndex);
+        continue;
+      }
+
       itemCounts[lane.groupIndex] = lane.slotCount;
       swimlaneGroups.push(lane.groupIndex);
     }
@@ -197,6 +236,8 @@ export default function BroadHome() {
     slotCountById,
     showListenAgain,
     listenAgainFiltered.length,
+    providerLineupPillRows.length,
+    providerLineupCardsSlotCount,
   ]);
 
   const bannerAfterLaneId = bannerAfterSwimlaneId(
@@ -449,13 +490,30 @@ export default function BroadHome() {
           </div>
 
           {swimlaneLayout.map((lane) => (
-            <div key={lane.id}>
-              <div
-                className="tv-home__scroll-group"
-                ref={(node) => registerGroupRef(lane.groupIndex, node)}
-              >
-                {renderSwimlane(lane)}
-              </div>
+            <div key={`${lane.id}-${lane.groupIndex}`}>
+              {lane.kind === "provider-lineup" ? (
+                <TvProviderLineupMusicSwimlane
+                  catalogScope={CATALOG_SCOPE.broad}
+                  pillsGroup={lane.groupIndex}
+                  cardsGroup={lane.cardsGroupIndex}
+                  playingChannelId={playingChannelId}
+                  registerGroupRef={registerGroupRef}
+                  registerItemRef={registerItemRef}
+                  isContentGroupActive={isContentGroupActive}
+                  getItemFocusIndex={getItemFocusIndex}
+                  setFocusedIndex={setFocusedIndex}
+                  onMoveUp={handleMoveUp}
+                  onMoveDown={handleMoveDown}
+                  enterNavFromContent={enterNavFromContent}
+                />
+              ) : (
+                <div
+                  className="tv-home__scroll-group"
+                  ref={(node) => registerGroupRef(lane.groupIndex, node)}
+                >
+                  {renderSwimlane(lane)}
+                </div>
+              )}
               {bannerAfterLaneId === lane.id ? (
                 <div className="tv-home__scroll-group tv-home__content-inset">
                   <TvSwimlaneBannerAd />

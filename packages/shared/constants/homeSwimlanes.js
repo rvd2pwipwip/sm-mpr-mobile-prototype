@@ -68,9 +68,10 @@ export const BROAD_HOME_SWIMLANES = Object.freeze([
   },
 ]);
 
-/** Content swimlanes on TV broad Home (no listen-again, provider lineup). */
+/** Content swimlanes on TV broad Home (no listen-again). */
 export const BROAD_HOME_TV_SWIMLANE_IDS = Object.freeze(
   new Set([
+    BROAD_HOME_SWIMLANE_ID.providerLineup,
     BROAD_HOME_SWIMLANE_ID.mostPopularMusic,
     BROAD_HOME_SWIMLANE_ID.newReleases,
     BROAD_HOME_SWIMLANE_ID.countryEssentials,

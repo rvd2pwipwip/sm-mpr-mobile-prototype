@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./data/musicChannels.js": "./data/musicChannels.js",
+    "./data/providerLineupMusic.js": "./data/providerLineupMusic.js",
     "./data/musicBrowseTaxonomy.js": "./data/musicBrowseTaxonomy.js",
     "./data/podcasts.js": "./data/podcasts.js",
     "./data/radioStations.js": "./data/radioStations.js",

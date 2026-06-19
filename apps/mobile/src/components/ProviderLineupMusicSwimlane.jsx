@@ -4,17 +4,15 @@ import CategoryPillsRail from "./CategoryPillsRail";
 import ContentSwimlane from "./ContentSwimlane";
 import MusicChannelCard from "./MusicChannelCard";
 import { SWIMLANE_CARD_MAX } from "../constants/swimlane";
-import { CATALOG_SCOPE } from "../constants/catalogScope.js";
 import { useTerritory } from "../context/TerritoryContext";
 import {
-  getMusicChannelsByCategory,
-  getLimitedMusicChannelsByCategory,
-  getLimitedMusicGenres,
-  MUSIC_GENRES,
-} from "../data/musicChannels";
+  getProviderLineupChannels,
+  getProviderLineupPillRows,
+  PROVIDER_LINEUP_MEMORY_KEY,
+} from "@sm-mpr/shared/data/providerLineupMusic.js";
 import { useCategoryRailMemorySlug } from "../hooks/useCategoryRailMemorySlug";
 
-const MEMORY_KEY = "home-provider-lineup-music";
+const MEMORY_KEY = PROVIDER_LINEUP_MEMORY_KEY;
 
 /**
  * **`freeProvided`** tier: genre pills + channels — broad **`Home`** and limited Browse **music** tab (`MEMORY_KEY` keeps pill choice in sync).
@@ -22,26 +20,21 @@ const MEMORY_KEY = "home-provider-lineup-music";
 export default function ProviderLineupMusicSwimlane() {
   const navigate = useNavigate();
   const { catalogScope } = useTerritory();
-  const isLimitedCatalog = catalogScope === CATALOG_SCOPE.limited;
 
-  const pillRows = useMemo(() => {
-    const genres = isLimitedCatalog
-      ? getLimitedMusicGenres()
-      : MUSIC_GENRES.filter((g) => getMusicChannelsByCategory(g.id).length > 0);
-    return genres.map((g) => ({ slug: g.id, label: g.label }));
-  }, [isLimitedCatalog]);
+  const pillRows = useMemo(
+    () => getProviderLineupPillRows(catalogScope),
+    [catalogScope],
+  );
 
   const [selectedSlug, setSelectedSlug] = useCategoryRailMemorySlug(
     MEMORY_KEY,
     pillRows,
   );
 
-  const channels = useMemo(() => {
-    if (!selectedSlug) return [];
-    return isLimitedCatalog
-      ? getLimitedMusicChannelsByCategory(selectedSlug)
-      : getMusicChannelsByCategory(selectedSlug);
-  }, [selectedSlug, isLimitedCatalog]);
+  const channels = useMemo(
+    () => getProviderLineupChannels(selectedSlug, catalogScope),
+    [selectedSlug, catalogScope],
+  );
 
   if (pillRows.length === 0 || !selectedSlug) {
     return null;
