@@ -1,0 +1,91 @@
+/* Player info bottom sheet — Figma `15883:37549` (infoBottomSheet). */
+
+.tv-player-info-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-tv-player-info-sheet);
+  pointer-events: none;
+}
+
+.tv-player-info-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  pointer-events: auto;
+  background: var(--tv-player-info-sheet-scrim);
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tv-player-info-sheet__panel {
+  position: absolute;
+  top: var(--tv-player-info-sheet-top);
+  left: var(--tv-player-info-sheet-inline-margin);
+  right: var(--tv-player-info-sheet-inline-margin);
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  pointer-events: auto;
+  overflow: hidden;
+  border-radius: var(--tv-player-info-sheet-radius)
+    var(--tv-player-info-sheet-radius) 0 0;
+  background: var(--color-bg);
+  box-shadow: 0 -12px 48px rgb(0 0 0 / 0.18);
+  transform: translateY(100%);
+  animation: tv-player-info-sheet-in 0.35s cubic-bezier(0.16, 1, 0.3, 1)
+    forwards;
+}
+
+@keyframes tv-player-info-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.tv-player-info-sheet__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tv-player-info-sheet__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--tv-player-info-sheet-body-padding);
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+.tv-player-info-sheet__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tv-player-info-sheet__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-player-info-sheet-section-gap);
+  width: 100%;
+  min-width: 0;
+}
+
+/* Reuse channel-info hero inside sheet — tags bleed like standalone Info. */
+.tv-player-info-sheet__content .music-channel-info__tags {
+  left: 0;
+  width: calc(100% + var(--tv-player-info-sheet-body-padding));
+  margin-inline-end: calc(-1 * var(--tv-player-info-sheet-body-padding));
+}
+
+.tv-player-info-sheet__content .music-channel-info__related .swimlane-row__title {
+  padding-inline-start: 0;
+}

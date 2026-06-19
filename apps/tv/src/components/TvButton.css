@@ -69,6 +69,16 @@
   -webkit-mask-image: url("/like.svg");
 }
 
+.tv-button__icon-mask--play {
+  mask-image: url("/play.svg");
+  -webkit-mask-image: url("/play.svg");
+}
+
+.tv-button__icon-mask--pause {
+  mask-image: url("/pause.svg");
+  -webkit-mask-image: url("/pause.svg");
+}
+
 .tv-button__icon-mask--unlike {
   mask-image: url("/unlike.svg");
   -webkit-mask-image: url("/unlike.svg");

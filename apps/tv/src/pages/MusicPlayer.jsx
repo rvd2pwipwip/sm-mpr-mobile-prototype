@@ -11,6 +11,7 @@ import TvMusicSkipButton from "../components/player/TvMusicSkipButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
 import TvPlayerScreensaver from "../components/player/TvPlayerScreensaver.jsx";
 import TvPlayerTransport from "../components/player/TvPlayerTransport.jsx";
+import TvMusicPlayerInfoSheet from "../components/player/TvMusicPlayerInfoSheet.jsx";
 import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
 import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
@@ -53,6 +54,7 @@ export default function MusicPlayer() {
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
 
   const channel = channelId ? getMusicChannelById(channelId) : null;
   const likeAction = useMusicRadioLikeAction("music", channel?.id);
@@ -72,7 +74,7 @@ export default function MusicPlayer() {
   const syncDomFocusRef = useRef(() => {});
 
   const { isActive: screensaverActive } = useTvPlayerScreensaver({
-    enabled: screensaverEnabled,
+    enabled: screensaverEnabled && !infoSheetOpen,
     onWake: () => syncDomFocusRef.current(),
   });
 
@@ -91,8 +93,9 @@ export default function MusicPlayer() {
     showUpgrade: showPlayerUpgrade,
     metaItemCount: 2,
     transportItemCount: 2,
-    contentKeysEnabled: prerollComplete && !screensaverActive,
-    suspendDomFocus: !prerollComplete || screensaverActive,
+    contentKeysEnabled:
+      prerollComplete && !screensaverActive && !infoSheetOpen,
+    suspendDomFocus: !prerollComplete || screensaverActive || infoSheetOpen,
   });
 
   syncDomFocusRef.current = syncDomFocus;
@@ -131,12 +134,18 @@ export default function MusicPlayer() {
     recordMusicChannelListen(channel.id);
   }, [channel?.id, needsPreroll, prerollComplete, recordMusicChannelListen]);
 
+  useEffect(() => {
+    if (infoSheetOpen) return;
+    if (!prerollComplete) return;
+    syncDomFocus();
+  }, [infoSheetOpen, prerollComplete, syncDomFocus]);
+
   if (!channel) {
     return <Navigate to="/" replace />;
   }
 
-  const leaveForChannelInfo = () => {
-    navigate(`/music/${channel.id}`, { replace: true });
+  const leavePlayer = (path) => {
+    navigate(path, { replace: true });
   };
 
   return (
@@ -144,6 +153,7 @@ export default function MusicPlayer() {
       className={[
         "tv-page",
         "tv-music-player",
+        infoSheetOpen ? "tv-music-player--info-sheet" : "",
         screensaverActive ? "tv-music-player--screensaver" : "",
       ]
         .filter(Boolean)
@@ -178,7 +188,7 @@ export default function MusicPlayer() {
           <div className="tv-music-player__meta-actions">
             <KeyboardWrapper
               ref={(node) => registerItemRef(metaGroup, 0, node)}
-              onSelect={leaveForChannelInfo}
+              onSelect={() => setInfoSheetOpen(true)}
               onMoveUp={handleMoveUp}
               onMoveDown={handleMoveDown}
               onMoveLeft={handleMoveLeft}
@@ -268,6 +278,15 @@ export default function MusicPlayer() {
       ) : null}
 
       {screensaverActive ? <TvPlayerScreensaver model={screensaverModel} /> : null}
+
+      <TvMusicPlayerInfoSheet
+        open={infoSheetOpen}
+        onClose={() => setInfoSheetOpen(false)}
+        channelId={channel.id}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
+        onLeavePlayer={leavePlayer}
+      />
     </div>
   );
 }

@@ -25,6 +25,7 @@ import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
 import TvPlayerScreensaver from "../components/player/TvPlayerScreensaver.jsx";
 import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
+import TvPodcastPlayerInfoSheet from "../components/player/TvPodcastPlayerInfoSheet.jsx";
 import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
 import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContext.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
@@ -77,6 +78,7 @@ export default function PodcastPlayer() {
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
   const [speedIdx, setSpeedIdx] = useState(() =>
     Math.max(0, PODCAST_SPEED_STEPS.indexOf(1)),
   );
@@ -133,7 +135,7 @@ export default function PodcastPlayer() {
   const syncDomFocusRef = useRef(() => {});
 
   const { isActive: screensaverActive } = useTvPlayerScreensaver({
-    enabled: screensaverEnabled && Boolean(podcast && episode),
+    enabled: screensaverEnabled && Boolean(podcast && episode) && !infoSheetOpen,
     onWake: () => syncDomFocusRef.current(),
   });
 
@@ -155,8 +157,9 @@ export default function PodcastPlayer() {
       metaItemCount: 2,
       transportItemCount: 5,
       defaultTransportItemIndex: TRANSPORT_SLOT.play,
-      contentKeysEnabled: prerollComplete && !screensaverActive,
-      suspendDomFocus: !prerollComplete || screensaverActive,
+      contentKeysEnabled:
+        prerollComplete && !screensaverActive && !infoSheetOpen,
+      suspendDomFocus: !prerollComplete || screensaverActive || infoSheetOpen,
     },
   );
 
@@ -254,6 +257,12 @@ export default function PodcastPlayer() {
     recordPodcastShowListen,
   ]);
 
+  useEffect(() => {
+    if (infoSheetOpen) return;
+    if (!prerollComplete) return;
+    syncDomFocus();
+  }, [infoSheetOpen, prerollComplete, syncDomFocus]);
+
   if (!podcastId) {
     return <Navigate to="/" replace />;
   }
@@ -269,12 +278,8 @@ export default function PodcastPlayer() {
   const subscribedHere = isSubscribed(podcast.id);
   const bookmarkedHere = isBookmarked(episode.id);
 
-  const leaveForPodcastInfo = () => {
-    if (expandFromMini) {
-      navigate(-1);
-      return;
-    }
-    navigate(`/podcast/${podcast.id}`, { replace: true });
+  const switchEpisode = (nextEpisodeId) => {
+    navigate(`/podcast/${podcast.id}/play/${nextEpisodeId}`, { replace: true });
   };
 
   const onSubscribePress = () => {
@@ -310,6 +315,7 @@ export default function PodcastPlayer() {
         "tv-page",
         "tv-music-player",
         "tv-podcast-player",
+        infoSheetOpen ? "tv-music-player--info-sheet" : "",
         screensaverActive ? "tv-music-player--screensaver" : "",
       ]
         .filter(Boolean)
@@ -345,7 +351,7 @@ export default function PodcastPlayer() {
             <div className="tv-music-player__meta-actions">
               <KeyboardWrapper
                 ref={(node) => registerItemRef(metaGroup, 0, node)}
-                onSelect={leaveForPodcastInfo}
+                onSelect={() => setInfoSheetOpen(true)}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
                 onMoveLeft={handleMoveLeft}
@@ -465,6 +471,16 @@ export default function PodcastPlayer() {
       ) : null}
 
       {screensaverActive ? <TvPlayerScreensaver model={screensaverModel} /> : null}
+
+      <TvPodcastPlayerInfoSheet
+        open={infoSheetOpen}
+        onClose={() => setInfoSheetOpen(false)}
+        podcastId={podcast.id}
+        currentEpisodeId={episode.id}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
+        onSelectEpisode={switchEpisode}
+      />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
 import TvPlayerScreensaver from "../components/player/TvPlayerScreensaver.jsx";
+import TvRadioPlayerInfoSheet from "../components/player/TvRadioPlayerInfoSheet.jsx";
 import TvPlayerTransport from "../components/player/TvPlayerTransport.jsx";
 import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
@@ -53,6 +54,7 @@ export default function RadioPlayer() {
   const skipPrerollGate = !needsPreroll || expandFromMini || graceActive;
   const [prerollComplete, setPrerollComplete] = useState(() => skipPrerollGate);
   const [playing, setPlaying] = useState(() => skipPrerollGate);
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
 
   const station = stationId ? resolveRadioStationForStub(stationId) : null;
   const likeAction = useMusicRadioLikeAction("radio", station?.id);
@@ -75,7 +77,7 @@ export default function RadioPlayer() {
   const syncDomFocusRef = useRef(() => {});
 
   const { isActive: screensaverActive } = useTvPlayerScreensaver({
-    enabled: screensaverEnabled && Boolean(station),
+    enabled: screensaverEnabled && Boolean(station) && !infoSheetOpen,
     onWake: () => syncDomFocusRef.current(),
   });
 
@@ -94,8 +96,9 @@ export default function RadioPlayer() {
     showUpgrade: showPlayerUpgrade,
     metaItemCount: 2,
     transportItemCount: 1,
-    contentKeysEnabled: prerollComplete && !screensaverActive,
-    suspendDomFocus: !prerollComplete || screensaverActive,
+    contentKeysEnabled:
+      prerollComplete && !screensaverActive && !infoSheetOpen,
+    suspendDomFocus: !prerollComplete || screensaverActive || infoSheetOpen,
   });
 
   syncDomFocusRef.current = syncDomFocus;
@@ -143,13 +146,15 @@ export default function RadioPlayer() {
     recordRadioStationListen(station.id);
   }, [station?.id, needsPreroll, prerollComplete, recordRadioStationListen]);
 
+  useEffect(() => {
+    if (infoSheetOpen) return;
+    if (!prerollComplete) return;
+    syncDomFocus();
+  }, [infoSheetOpen, prerollComplete, syncDomFocus]);
+
   if (!station) {
     return <Navigate to="/search/radio" replace />;
   }
-
-  const leaveForStationInfo = () => {
-    navigate(`/radio/${station.id}`, { replace: true });
-  };
 
   return (
     <div
@@ -157,6 +162,7 @@ export default function RadioPlayer() {
         "tv-page",
         "tv-music-player",
         "tv-radio-player",
+        infoSheetOpen ? "tv-music-player--info-sheet" : "",
         screensaverActive ? "tv-music-player--screensaver" : "",
       ]
         .filter(Boolean)
@@ -191,7 +197,7 @@ export default function RadioPlayer() {
             <div className="tv-music-player__meta-actions">
               <KeyboardWrapper
                 ref={(node) => registerItemRef(metaGroup, 0, node)}
-                onSelect={leaveForStationInfo}
+                onSelect={() => setInfoSheetOpen(true)}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
                 onMoveLeft={handleMoveLeft}
@@ -275,6 +281,14 @@ export default function RadioPlayer() {
       ) : null}
 
       {screensaverActive ? <TvPlayerScreensaver model={screensaverModel} /> : null}
+
+      <TvRadioPlayerInfoSheet
+        open={infoSheetOpen}
+        onClose={() => setInfoSheetOpen(false)}
+        stationId={station.id}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
+      />
     </div>
   );
 }

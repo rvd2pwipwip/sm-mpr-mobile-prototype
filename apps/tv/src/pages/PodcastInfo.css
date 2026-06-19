@@ -93,3 +93,12 @@
   font-size: 0.9375rem;
   color: var(--color-text-muted);
 }
+
+/* Player info sheet — podcast episode list inside bottom sheet. */
+.tv-podcast-info__sheet-inner {
+  gap: 4.375rem;
+  padding-inline: 0;
+  padding-bottom: 2rem;
+  box-sizing: border-box;
+  overflow: visible;
+}

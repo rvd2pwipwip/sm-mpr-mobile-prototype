@@ -9,6 +9,10 @@
   box-sizing: border-box;
 }
 
+.tv-music-player--info-sheet .tv-music-player__channel-name {
+  display: none;
+}
+
 .tv-music-player__column {
   display: flex;
   flex-direction: column;

@@ -67,7 +67,16 @@
   --z-primary-nav: 100;
   --z-tv-player-screensaver: 200;
   --z-tv-player-preroll: 250;
+  --z-tv-player-info-sheet: 275;
   --z-tv-stacked-dialog: 300;
+
+  /* Player info bottom sheet — Figma `15883:37549` */
+  --tv-player-info-sheet-inline-margin: 60px;
+  --tv-player-info-sheet-top: 60px;
+  --tv-player-info-sheet-radius: 80px;
+  --tv-player-info-sheet-scrim: rgb(0 0 0 / 0.5);
+  --tv-player-info-sheet-body-padding: 60px;
+  --tv-player-info-sheet-section-gap: 60px;
 
   /* AppStackedDialog parity (mobile `app-stacked-dialog__header`) */
   --tv-stacked-dialog-header-bg: #191919;
