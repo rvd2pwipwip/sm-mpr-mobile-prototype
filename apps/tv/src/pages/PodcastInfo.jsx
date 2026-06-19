@@ -18,6 +18,7 @@ import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvMediaInfoPlayAction } from "../hooks/useTvMediaInfoPlayAction.js";
 import { useTvVerticalGroupScroll } from "../hooks/useTvVerticalGroupScroll.js";
 import "./PodcastInfo.css";
 
@@ -48,6 +49,7 @@ export default function PodcastInfo() {
   } = usePodcastUserState();
 
   const podcast = podcastId ? getPodcastById(podcastId) : null;
+  const firstEpisode = podcast?.episodes[0] ?? null;
   const descriptionText = podcast?.description ?? "";
   const hasDescription = Boolean(descriptionText);
   const { ref: descriptionRef, overflows: descriptionOverflows } =
@@ -126,12 +128,26 @@ export default function PodcastInfo() {
     scrollEnabled: groupCount > 0,
   });
 
+  const playLatestEpisode = useCallback(() => {
+    if (!podcastId || !firstEpisode) return;
+    enterContent();
+    navigate(`/podcast/${podcastId}/play/${firstEpisode.id}`);
+  }, [podcastId, firstEpisode, enterContent, navigate]);
+
+  const {
+    playing,
+    isSessionMatch,
+    onPlayActionPress,
+    playButtonIconMaskVariant,
+  } = useTvMediaInfoPlayAction("podcast", podcastId, {
+    onStartPlay: playLatestEpisode,
+  });
+
   if (!podcast) {
     return <Navigate to="/" replace />;
   }
 
   const subscribedHere = isSubscribed(podcast.id);
-  const firstEpisode = podcast.episodes[0] ?? null;
 
   const onSubscribePress = () => {
     if (!subscribedHere && !userMaySubscribePodcasts(userType)) {
@@ -146,11 +162,13 @@ export default function PodcastInfo() {
     navigate(`/podcast/${podcast.id}/play/${episodeId}`);
   };
 
-  const playLatestEpisode = () => {
-    if (firstEpisode) {
-      playEpisode(firstEpisode.id);
-    }
-  };
+  const playActionLabel = isSessionMatch
+    ? playing
+      ? "Pause"
+      : "Play"
+    : firstEpisode
+      ? "Play latest"
+      : "No episodes";
 
   return (
     <div className="tv-podcast-info tv-screen-overlay">
@@ -186,7 +204,7 @@ export default function PodcastInfo() {
                       ref={(node) =>
                         registerItemRef(ACTIONS_GROUP, PLAY_ACTION, node)
                       }
-                      onSelect={playLatestEpisode}
+                      onSelect={onPlayActionPress}
                       onUp={handleMoveUp}
                       onDown={
                         actionsDownTarget != null ? handleMoveDown : undefined
@@ -198,10 +216,8 @@ export default function PodcastInfo() {
                         <TvButton
                           {...focusProps}
                           focused={isItemFocused(ACTIONS_GROUP, PLAY_ACTION)}
-                          iconSrc="/play.svg"
-                          label={
-                            firstEpisode ? "Play latest" : "No episodes"
-                          }
+                          iconMaskVariant={playButtonIconMaskVariant}
+                          label={playActionLabel}
                           disabled={!firstEpisode}
                         />
                       )}

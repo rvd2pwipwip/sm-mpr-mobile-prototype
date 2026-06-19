@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { getMusicChannelById } from "@sm-mpr/shared/data/musicChannels.js";
 import ChannelInfoDescription from "../components/channel-info/ChannelInfoDescription.jsx";
@@ -14,6 +14,7 @@ import {
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow.js";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvMediaInfoPlayAction } from "../hooks/useTvMediaInfoPlayAction.js";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import "./MusicChannelInfo.css";
 
@@ -101,6 +102,15 @@ export default function MusicChannelInfo() {
     suspendDomFocus: descriptionDialogOpen,
   });
 
+  const goPlay = useCallback(() => {
+    if (!channelId) return;
+    enterContent();
+    navigate(`/music/${channelId}/play`);
+  }, [channelId, enterContent, navigate]);
+
+  const { playing, onPlayActionPress, playButtonIconMaskVariant } =
+    useTvMediaInfoPlayAction("music", channelId, { onStartPlay: goPlay });
+
   if (!channel) {
     return <Navigate to="/" replace />;
   }
@@ -108,11 +118,6 @@ export default function MusicChannelInfo() {
   const openChannel = (targetChannel) => {
     enterContent();
     navigate(`/music/${targetChannel.id}`);
-  };
-
-  const goPlay = () => {
-    enterContent();
-    navigate(`/music/${channel.id}/play`);
   };
 
   const openTagGrid = (tag) => {
@@ -143,7 +148,7 @@ export default function MusicChannelInfo() {
             <div className="music-channel-info__actions-row">
               <KeyboardWrapper
                 ref={(node) => registerItemRef(ACTIONS_GROUP, PLAY_ACTION, node)}
-                onSelect={goPlay}
+                onSelect={onPlayActionPress}
                 onMoveUp={handleMoveUp}
                 onMoveDown={playDownTarget != null ? handleMoveDown : undefined}
                 onLeft={enterNavFromContent}
@@ -153,8 +158,8 @@ export default function MusicChannelInfo() {
                   <TvButton
                     {...focusProps}
                     focused={isItemFocused(ACTIONS_GROUP, PLAY_ACTION)}
-                    iconSrc="/play.svg"
-                    label="Play"
+                    iconMaskVariant={playButtonIconMaskVariant}
+                    label={playing ? "Pause" : "Play"}
                   />
                 )}
               </KeyboardWrapper>

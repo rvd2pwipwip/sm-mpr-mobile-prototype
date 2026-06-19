@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { resolveRadioStationForStub } from "@sm-mpr/shared/data/radioInternationalBrowse.js";
 import ChannelInfoDescription from "../components/channel-info/ChannelInfoDescription.jsx";
@@ -9,6 +9,7 @@ import { HOME_LANDING_ITEM_INDEX } from "../constants/homeFocusGroups.js";
 import { useDescriptionClampOverflow } from "../hooks/useDescriptionClampOverflow.js";
 import { useMusicRadioLikeAction } from "../hooks/useMusicRadioLikeAction.js";
 import { useScreenContentFocus } from "../hooks/useScreenContentFocus.js";
+import { useTvMediaInfoPlayAction } from "../hooks/useTvMediaInfoPlayAction.js";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import "./RadioStationInfo.css";
 
@@ -95,14 +96,18 @@ export default function RadioStationInfo() {
     suspendDomFocus: descriptionDialogOpen,
   });
 
+  const goPlay = useCallback(() => {
+    if (!stationId) return;
+    enterContent();
+    navigate(`/radio/${stationId}/play`, { replace: true });
+  }, [stationId, enterContent, navigate]);
+
+  const { playing, onPlayActionPress, playButtonIconMaskVariant } =
+    useTvMediaInfoPlayAction("radio", stationId, { onStartPlay: goPlay });
+
   if (!station) {
     return <Navigate to="/search/radio" replace />;
   }
-
-  const goPlay = () => {
-    enterContent();
-    navigate(`/radio/${station.id}/play`, { replace: true });
-  };
 
   return (
     <div className="tv-page radio-station-info">
@@ -148,7 +153,7 @@ export default function RadioStationInfo() {
             <div className="radio-station-info__actions-row">
               <KeyboardWrapper
                 ref={(node) => registerItemRef(actionsGroup, PLAY_ACTION, node)}
-                onSelect={goPlay}
+                onSelect={onPlayActionPress}
                 onMoveUp={handleMoveUp}
                 onMoveDown={handleMoveDown}
                 onLeft={enterNavFromContent}
@@ -158,8 +163,8 @@ export default function RadioStationInfo() {
                   <TvButton
                     {...focusProps}
                     focused={isItemFocused(actionsGroup, PLAY_ACTION)}
-                    iconSrc="/play.svg"
-                    label="Play"
+                    iconMaskVariant={playButtonIconMaskVariant}
+                    label={playing ? "Pause" : "Play"}
                   />
                 )}
               </KeyboardWrapper>
