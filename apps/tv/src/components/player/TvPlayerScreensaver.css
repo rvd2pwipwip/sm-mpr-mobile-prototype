@@ -129,6 +129,7 @@
 
 /* Hide player chrome while screensaver is active (state kept in DOM). */
 .tv-music-player--screensaver .tv-music-player__column,
-.tv-music-player--screensaver .tv-player-upgrade-cta {
+.tv-music-player--screensaver .tv-player-upgrade-cta,
+.tv-music-player--screensaver .tv-player-provider-logo {
   visibility: hidden;
 }

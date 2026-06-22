@@ -75,6 +75,7 @@ Four **independent** axes drive what you see. Combine them deliberately — e.g.
 | **Content profile**                   | `/upgrade` → **Content profile**                                  | `/settings/user-type`                                                       | Touch / mouse | `sessionStorage` per tab |
 | **Catalog scope**                     | Tap **wordmark** on broad Home or Limited Browse header           | Click **wordmark** on Home header                                           | Mouse only    | `sessionStorage` per tab |
 | **Seed Listen again / library rails** | `/upgrade` → **Populate Clear / More demo data**                  | `/settings/user-type` → same control                                        | Touch / mouse | In-memory until reload   |
+| **Player screensaver**                | —                                                                 | On a full-screen player (`/music/.../play`, podcast, radio): press **S** to show immediately (also enters after **30s** idle). **Esc** dismisses; D-pad / Enter wakes. | Keyboard      | Session only             |
 | **Theme**                             | System light/dark, or `data-theme="light"` / `"dark"` on `<html>` | Same                                                                        | —             | —                        |
 
 **Mobile tier screen:** Home → **Upgrade** (or `/upgrade`). Also holds subscription UI stubs and provider SSO demo.
@@ -96,7 +97,7 @@ Four **independent** axes drive what you see. Combine them deliberately — e.g.
 
 Detail and placement map: `docs/mobile/visual-ads-and-user-types.md` (TV summary: `docs/tv/visual-ads-and-user-types.md`).
 
-**TV player screensaver:** Full-screen idle screensaver includes a **provider promo** in the moving frame. This is **not** a visual ad — it shows for **all** tiers including subscribed. See `docs/tv/Plans/Tv-player-screensaver-implementation-plan.md`.
+**TV player screensaver:** Full-screen idle screensaver includes a **provider promo** in the moving frame. This is **not** a visual ad — it shows for **all** tiers including subscribed. Demo: on any full-screen player after preroll, press **S** (or wait 30s idle). See `docs/tv/Plans/Tv-player-screensaver-implementation-plan.md`.
 
 ---
 
@@ -262,6 +263,7 @@ Use these to self-QA a requirement before inferring behavior from code alone.
 | No ads                                 | Preview as **subscribed**                                         |
 | Guest skip cap + preroll               | `guest` or `freeStingray` → play music                            |
 | Provider branding, no preroll          | **freeProvided**                                                  |
+| TV player screensaver                  | Full-screen play route → press **S** (or wait 30s idle); **Esc** to dismiss |
 | Local cover art missing                | `npm run media:sync` once on Wi-Fi                                |
 
 **Tier quick matrix**

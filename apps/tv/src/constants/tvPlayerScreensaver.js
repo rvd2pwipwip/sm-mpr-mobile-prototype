@@ -1,5 +1,10 @@
 /** Full-screen player screensaver — prototype timings (see plan doc). */
-export const TV_PLAYER_SCREENSAVER_IDLE_MS = 30_000;
+export const TV_SCREENSAVER_IDLE_MS_PLAYER = 30_000;
+export const TV_SCREENSAVER_IDLE_MS_APP = 60_000;
+
+/** @deprecated Use TV_SCREENSAVER_IDLE_MS_PLAYER */
+export const TV_PLAYER_SCREENSAVER_IDLE_MS = TV_SCREENSAVER_IDLE_MS_PLAYER;
+
 export const TV_PLAYER_SCREENSAVER_HOLD_MS = 10_000;
 export const TV_PLAYER_SCREENSAVER_FADE_MS = 500;
 

@@ -1,0 +1,50 @@
+/* Same top Y as `.tv-player-upgrade-cta` (Upgrade button). */
+.tv-player-provider-logo {
+  position: absolute;
+  top: 60px;
+  right: var(--tv-header-inline-end);
+  z-index: 2;
+  line-height: 0;
+}
+
+.tv-player-provider-logo__img {
+  display: block;
+  height: 63px;
+  width: auto;
+  max-width: 201px;
+  object-fit: contain;
+}
+
+.tv-player-provider-logo__img--light {
+  display: block;
+}
+
+.tv-player-provider-logo__img--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .tv-player-provider-logo__img--light {
+    display: none;
+  }
+
+  :root:not([data-theme]) .tv-player-provider-logo__img--dark {
+    display: block;
+  }
+}
+
+html[data-theme="light"] .tv-player-provider-logo__img--light {
+  display: block;
+}
+
+html[data-theme="light"] .tv-player-provider-logo__img--dark {
+  display: none;
+}
+
+html[data-theme="dark"] .tv-player-provider-logo__img--light {
+  display: none;
+}
+
+html[data-theme="dark"] .tv-player-provider-logo__img--dark {
+  display: block;
+}

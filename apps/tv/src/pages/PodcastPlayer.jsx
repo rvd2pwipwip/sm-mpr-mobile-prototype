@@ -23,7 +23,7 @@ import {
 import KeyboardWrapper from "../components/focus/KeyboardWrapper.jsx";
 import FocusableButton from "../components/focus/FocusableButton.jsx";
 import TvPlayerPrerollAd from "../components/player/TvPlayerPrerollAd.jsx";
-import TvPlayerScreensaver from "../components/player/TvPlayerScreensaver.jsx";
+import TvPlayerProviderLogo from "../components/player/TvPlayerProviderLogo.jsx";
 import TvPlayerUpgradeCta from "../components/player/TvPlayerUpgradeCta.jsx";
 import TvPodcastPlayerInfoSheet from "../components/player/TvPodcastPlayerInfoSheet.jsx";
 import TvPodcastPlayerTransport from "../components/player/TvPodcastPlayerTransport.jsx";
@@ -31,11 +31,14 @@ import { useAccountRequiredDialog } from "../context/AccountRequiredDialogContex
 import { useGuestPrerollGrace } from "../context/GuestPrerollGraceContext.jsx";
 import { useListenHistory } from "@sm-mpr/shared/context/ListenHistoryContext.jsx";
 import { usePlayback } from "../context/PlaybackContext.jsx";
+import {
+  useTvScreensaver,
+  useTvScreensaverSuppression,
+} from "../context/TvScreensaverContext.jsx";
 import { useUserType } from "../context/UserTypeContext.jsx";
 import { useTvNavFocus } from "../context/TvNavFocusContext.jsx";
 import { useGoUpgrade } from "../hooks/useGoUpgrade.js";
 import { useTvPlayerScreenFocus } from "../hooks/useTvPlayerScreenFocus.js";
-import { useTvPlayerScreensaver } from "../hooks/useTvPlayerScreensaver.js";
 import "./MusicPlayer.css";
 import "./PodcastPlayer.css";
 
@@ -121,23 +124,14 @@ export default function PodcastPlayer() {
       : 0;
 
   const showPreroll = needsPreroll && !prerollComplete;
-  const screensaverEnabled = !showPreroll && prerollComplete;
-
-  const screensaverModel = useMemo(
-    () => ({
-      thumbnail: episode?.thumbnail ?? "",
-      line1: podcast?.title ?? "",
-      line2: episode?.title ?? "",
-    }),
-    [episode?.thumbnail, episode?.title, podcast?.title],
-  );
 
   const syncDomFocusRef = useRef(() => {});
 
-  const { isActive: screensaverActive } = useTvPlayerScreensaver({
-    enabled: screensaverEnabled && Boolean(podcast && episode) && !infoSheetOpen,
-    onWake: () => syncDomFocusRef.current(),
-  });
+  useTvScreensaverSuppression(
+    showPreroll || infoSheetOpen,
+    () => syncDomFocusRef.current(),
+  );
+  const { isActive: screensaverActive } = useTvScreensaver();
 
   const {
     handleMoveUp,
@@ -344,6 +338,7 @@ export default function PodcastPlayer() {
             onMoveRight={handleMoveRight}
           />
         ) : null}
+        <TvPlayerProviderLogo />
         <div className="tv-music-player__column">
           <header className="tv-music-player__channel-block">
             <h1 className="tv-music-player__channel-name">{podcast.title}</h1>
@@ -469,8 +464,6 @@ export default function PodcastPlayer() {
         </div>
         </>
       ) : null}
-
-      {screensaverActive ? <TvPlayerScreensaver model={screensaverModel} /> : null}
 
       <TvPodcastPlayerInfoSheet
         open={infoSheetOpen}

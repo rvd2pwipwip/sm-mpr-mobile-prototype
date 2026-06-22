@@ -10,6 +10,9 @@ import { GuestPrerollGraceProvider } from "./context/GuestPrerollGraceContext.js
 import { GuestMusicSkipProvider } from "./context/GuestMusicSkipContext.jsx";
 import { LikesProvider } from "./context/LikesContext.jsx";
 import { PlaybackProvider } from "./context/PlaybackContext.jsx";
+import {
+  TvScreensaverProvider,
+} from "./context/TvScreensaverContext.jsx";
 import { LimitedHomeEscProvider } from "./context/LimitedHomeEscContext.jsx";
 import { TvNavFocusProvider } from "./context/TvNavFocusContext.jsx";
 import GlobalTvKeys from "./components/focus/GlobalTvKeys.jsx";
@@ -99,6 +102,7 @@ export default function App() {
                 <ListenHistoryProvider>
                 <PodcastUserStateProvider>
                 <PlaybackProvider>
+                  <TvScreensaverProvider>
                   <TerritoryProvider>
                     <CategoryRailMemoryProvider>
                     <ScreenMemoryProvider>
@@ -281,6 +285,7 @@ export default function App() {
                     </ScreenMemoryProvider>
                     </CategoryRailMemoryProvider>
                   </TerritoryProvider>
+                  </TvScreensaverProvider>
                 </PlaybackProvider>
                 </PodcastUserStateProvider>
                 </ListenHistoryProvider>

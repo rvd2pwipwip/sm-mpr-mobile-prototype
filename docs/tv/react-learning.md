@@ -218,6 +218,6 @@ Limited catalog hides **`PrimaryNav`**, so Search must live in the header. **`Tv
 
 ## 2026-06-18 — Full-screen player screensaver
 
-- **Idle overlay** — **`useTvPlayerScreensaver`** starts a **30s** timer when the full player is visible (after preroll). Any D-pad key, **click**, or **Esc** (via **`tryDismissTvPlayerScreensaver`** in **`GlobalTvKeys`**) wakes the player; **S** forces screensaver for QA.
+- **Idle overlay** — **`TvScreensaverProvider`** in **`App.jsx`**: **30s** idle on full player routes, **60s** on all other screens. Any D-pad key, **click**, or **Esc** wakes; **S** forces screensaver from **any** route (blocked while `aria-modal` dialogs are open).
 - **`TvPlayerScreensaver`** — fixed black backdrop; floating frame (cover + two labels + **`TvPlayerScreensaverPromo`** provider footer, not tier-gated). Two absolutely positioned layers crossfade every **10s** to a new random position inside **`--tv-safe-area-inset`** (48px).
-- **Player pages** — hide column with **`tv-music-player--screensaver`** (`visibility: hidden`); suspend **`useTvPlayerScreenFocus`** while active. Wired on music, podcast, and radio **`/play`** routes.
+- **Player pages** — **`useTvScreensaverSuppression`** during preroll / info sheet; hide column with **`tv-music-player--screensaver`** when active on play routes. Model from **`buildScreensaverModel(session)`**.

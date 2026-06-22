@@ -17,15 +17,15 @@ Living plan for **screensaver mode** on TV **full-screen player** routes in **`a
 
 | Topic | Choice |
 |--------|--------|
-| **Trigger** | **30 s** with no user input while full-screen player is active (prototype constant) |
-| **Scope** | All **full-screen player** routes: `/music/:id/play`, `/podcast/:id/play/:episodeId`, `/radio/:id/play` |
+| **Trigger** | **30 s** idle on full-screen player routes; **60 s** elsewhere (prototype) |
+| **Scope** | **App-wide** — all TV routes; metadata from **`PlaybackContext`** session (fallback Stingray placeholder when idle) |
 | **Visual** | Player UI **replaced** (hidden); playback session **continues** (audio stub unchanged) |
 | **Frame content** | Media thumbnail, **two** metadata lines, **TV provider promo** footer (per Figma `adFooterBanner` slot — not tier-gated) |
 | **Motion** | Frame stays at one position **10 s**, then **500 ms** crossfade to a **new** position (old fades out while new fades in) |
 | **Safe placement** | Frame must **never clip** viewport edges; **`--tv-safe-area-inset: 48px`** on 1080p |
 | **Backdrop** | **Solid black** full viewport behind the moving frame |
 | **Wake** | **Any D-pad input** (arrows, Enter, Select) **or click** (browser QA) exits screensaver and restores full player |
-| **QA shortcut** | **`S`** key on full player route immediately enters screensaver (keyboard only; not in D-pad order) |
+| **QA shortcut** | **`S`** key on **any** screen forces screensaver (keyboard only; not in D-pad order) |
 
 ---
 

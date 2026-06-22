@@ -19,10 +19,6 @@ Node.js with npm.
 | `npm run dev`        | Same as `npm run dev:mobile`                   |
 | `npm run dev:mobile` | Vite dev server for mobile                     |
 | `npm run dev:tv`     | Vite dev server for TV (5174)                  |
-| `npm run build`      | Production build (`apps/mobile`)               |
-| `npm run build:tv`   | Production build (`apps/tv`)                   |
-| `npm run lint`       | ESLint (`apps/mobile`)                         |
-| `npm run lint:tv`    | ESLint (`apps/tv`)                             |
 | `npm run media:sync` | Download local cover art (optional; see guide) |
 
 ## Shared package
