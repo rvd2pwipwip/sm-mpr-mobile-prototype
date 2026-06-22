@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ButtonSmall from "../components/ButtonSmall";
-import ContentTileCard from "../components/ContentTileCard";
+import MusicChannelCard from "../components/MusicChannelCard";
 import ScreenHeader, { ScreenHeaderChevronBack } from "../components/ScreenHeader";
 import { playOverDetailNavigateState } from "../constants/fullPlayerNavigation";
 import { getMusicChannelById } from "../data/musicChannels";
@@ -181,10 +181,9 @@ export default function MusicChannelInfo() {
               <div className="music-info__h-scroll">
                 <div className="music-info__h-scroll-inner music-info__h-scroll-inner--cards">
                   {channel.relatedChannels.map((rel) => (
-                    <ContentTileCard
+                    <MusicChannelCard
                       key={rel.id}
-                      title={rel.name}
-                      imageUrl={rel.thumbnail}
+                      channel={rel}
                       onSelect={() => navigate(`/music/${rel.id}`)}
                     />
                   ))}

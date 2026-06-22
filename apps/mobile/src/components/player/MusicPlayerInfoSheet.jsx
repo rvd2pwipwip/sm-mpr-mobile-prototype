@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMusicChannelById } from "../../data/musicChannels";
 import ButtonSmall from "../ButtonSmall";
-import ContentTileCard from "../ContentTileCard";
+import MusicChannelCard from "../MusicChannelCard";
 import { useDescriptionClampOverflow } from "../../hooks/useDescriptionClampOverflow";
 import { useMusicRadioLikeAction } from "../../hooks/useMusicRadioLikeAction";
 import PlayerInfoBottomSheet from "./PlayerInfoBottomSheet";
@@ -156,10 +156,9 @@ export default function MusicPlayerInfoSheet({
             <div className="music-info__h-scroll">
               <div className="music-info__h-scroll-inner music-info__h-scroll-inner--cards">
                 {channel.relatedChannels.map((rel) => (
-                  <ContentTileCard
+                  <MusicChannelCard
                     key={rel.id}
-                    title={rel.name}
-                    imageUrl={rel.thumbnail}
+                    channel={rel}
                     onSelect={() => leaveForChannel(rel.id)}
                   />
                 ))}

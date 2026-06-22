@@ -11,6 +11,7 @@ import "./ContentTileCard.css";
  *   onSelect?: () => void,
  *   compact?: boolean,
  *   ghost?: boolean,
+ *   playing?: boolean,
  * }} props
  */
 export default function ContentTileCard({
@@ -20,6 +21,7 @@ export default function ContentTileCard({
   onSelect,
   compact = false,
   ghost = false,
+  playing = false,
 }) {
   const rootClass = [
     "content-tile",
@@ -29,8 +31,15 @@ export default function ContentTileCard({
     .filter(Boolean)
     .join(" ");
 
+  const mediaClass = [
+    "content-tile__media",
+    playing ? "content-tile__media--playing" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   const media = (
-    <div className="content-tile__media">
+    <div className={mediaClass}>
       {!ghost ? (
         <img
           className="content-tile__img"
@@ -41,6 +50,15 @@ export default function ContentTileCard({
           width={175}
           height={175}
         />
+      ) : null}
+      {playing ? (
+        <span className="content-tile__playing" aria-label="Now playing">
+          <span className="content-tile__playing-bars" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        </span>
       ) : null}
     </div>
   );
